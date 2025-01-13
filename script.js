@@ -24,12 +24,12 @@ loadFiles();
 function switchSection(sectionId) {
     const sections = document.querySelectorAll('.site-section');
     sections.forEach(section => {
-        section.classList.remove('active', 'fade-in'); // remove class
+        section.classList.remove('active', 'fade-in');
     });
 
     const activeSection = document.getElementById(sectionId);
     if (activeSection) {
-        activeSection.classList.add('active', 'fade-in'); // Thêm class animation
+        activeSection.classList.add('active', 'fade-in');
          setTimeout(() => {
                 activeSection.classList.remove('fade-in');
             }, 500);
