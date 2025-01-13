@@ -18,6 +18,7 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
 }
+
 header {
     background-color: var(--primary-color);
     color: var(--white-color);
@@ -26,18 +27,21 @@ header {
     justify-content: space-between;
     align-items: center;
 }
+
 header .logo {
     font-size: 1.5em;
     font-weight: bold;
 }
+
 header nav a {
     color: var(--white-color);
     text-decoration: none;
     margin: 0 15px;
-    transition: color 0.3s ease; /* transition cho hover */
+    transition: color 0.3s ease;
 }
+
 header nav a:hover {
-    color: var(--secondary-color); /* hiệu ứng hover */
+    color: var(--secondary-color);
 }
 
 main {
@@ -45,6 +49,12 @@ main {
     max-width: 1200px;
     margin: 0 auto;
 }
+
+.container {
+    max-width: 1140px;
+    margin: 0 auto;
+}
+
 .site-section {
     margin-bottom: 20px;
     background-color: var(--white-color);
@@ -53,14 +63,16 @@ main {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: none;
 }
+
 .site-section.active {
     display: block;
 }
+
 .video-container {
     width: 100%;
     max-width: 600px;
     margin: 10px auto;
-    position: relative; /* Để căn chỉnh button bên trong */
+    position: relative;
 }
 
 .video-container video {
@@ -77,6 +89,7 @@ main {
     float: left;
     transition: transform 0.3s ease;
 }
+
 .avatar:hover {
     transform: scale(1.2);
 }
@@ -85,6 +98,7 @@ main {
 .profile-info p {
     margin: 0;
 }
+
 #notification-list {
     list-style: none;
     padding: 0;
@@ -94,9 +108,11 @@ main {
     padding: 5px 0;
     border-bottom: 1px solid #eee;
 }
+
 #notification-list li:last-child {
     border-bottom: none;
 }
+
 .video-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -106,17 +122,21 @@ main {
 .video-item {
     transition: transform 0.3s ease;
 }
+
 .video-item:hover {
     transform: scale(1.05);
 }
+
 .video-item video {
     width: 100%;
     max-height: 200px;
     border-radius: 8px;
 }
+
 .video-item p {
     text-align: center;
 }
+
 footer {
     background-color: var(--primary-color);
     color: var(--white-color);
@@ -128,22 +148,26 @@ footer {
     list-style: none;
     padding: 0;
 }
+
 .file-upload ul li {
     padding: 5px 0;
     border-bottom: 1px solid #eee;
 }
+
 .file-upload ul li a {
     color: var(--text-color);
     text-decoration: none;
     transition: color 0.3s ease;
 }
+
 .file-upload ul li a:hover {
     color: var(--secondary-color);
 }
+
 /* Button like và share */
 .video-actions {
     margin-top: 10px;
-    text-align: center; /* Căn giữa các nút */
+    text-align: center;
 }
 
 .video-actions button {
@@ -154,21 +178,23 @@ footer {
     color: var(--text-color);
     padding: 5px 10px;
     margin: 0 5px;
-    transition: color 0.3s ease; /* transition cho hover */
+    transition: color 0.3s ease;
 }
 
 .video-actions button:hover {
-    color: var(--secondary-color); /* hiệu ứng hover */
+    color: var(--secondary-color);
 }
 
-/*  CSS animation chuyển trang */
+/* CSS animation chuyển trang */
 .site-section.fade-in {
     animation: fadein 0.5s ease forwards;
 }
+
 @keyframes fadein {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
