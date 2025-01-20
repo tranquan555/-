@@ -3,669 +3,600 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cosmic Shift (Enhanced)</title>
+    <title>Biolink - Tên Của Bạn</title>
     <style>
         body {
-          margin: 0;
-          overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        nav {
+            display: flex;
+            justify-content: center; /* Center the navigation */
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        nav .logo {
+             font-size: 1.8em;
+            font-weight: bold;
+            letter-spacing: 1px;
+             transition: transform 0.3s ease;
+            text-align: center;
+             flex: 1;
+        }
+        nav .logo:hover {
+          transform: scale(1.1);
+         }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+              flex: 1;
+              justify-content: flex-end;
+        }
+
+        nav ul li {
+            margin-left: 25px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+         nav ul li a:hover {
+              background-color: #555;
+            transform: translateY(-2px);
+         }
+        .main-content {
+           flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+             animation: fadeIn 0.7s ease;
+        }
+        @keyframes fadeIn {
+        from {opacity: 0;transform: translateY(20px);}
+        to {opacity: 1; transform: translateY(0);}
+        }
+       .profile-container {
+           display: flex;
+           flex-direction: column;
+           align-items: center;
+           margin-bottom: 20px;
+       }
+       .profile-image {
+           max-width: 150px;
+           border-radius: 50%;
+            margin-bottom: 15px;
+             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+       }
+        .profile-image:hover{
+             transform: scale(1.05);
+        }
+        .profile-name{
+            text-align: center;
+             font-size: 1.6em;
+             margin-bottom: 10px;
+              letter-spacing: 1px;
+        }
+        .profile-bio{
+            text-align: center;
+             font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+             color: #555;
+        }
+
+        .link-container {
+          width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+             margin-bottom: 30px;
+              animation: fadeInUp 0.8s ease;
+        }
+         @keyframes fadeInUp {
+         from {opacity: 0;transform: translateY(30px);}
+         to {opacity: 1; transform: translateY(0);}
+        }
+
+        .link-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+             font-size: 1.1em;
+             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+          .link-item:hover {
+              background-color: #f0f0f0;
+              transform: translateY(-3px);
+             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+         }
+        .link-item i {
+            margin-right: 10px;
+        }
+         .section {
+           max-width: 1200px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+             transform: translateY(0);
+              transition: transform 0.5s ease, opacity 0.5s ease; /* Animation section */
+               opacity: 0;
+         }
+         .section.active{
+             transform: translateY(-10px);
+            opacity: 1;
+        }
+
+        .section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 10px;
+            font-size: 2.2em;
+        }
+         .section h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            height: 3px;
+            width: 70px;
+            background-color: #333;
+        }
+
+        .skill-container {
           display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 100vh;
-          background-color: #0a0a0a;
-          font-family: 'Arial', sans-serif;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+              animation: fadeInUp 1s ease;
         }
-        #gameContainer {
-          position: relative;
+
+
+        .skill {
+            width: calc(30% - 25px);
+            padding: 25px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+             border: 1px solid transparent;
+              transition: transform 0.3s ease;
         }
-        canvas {
-          display: block;
-          background: #0a0a0a;
+         .skill:hover {
+             transform: translateY(-5px);
+               border-color: #ddd;
+         }
+
+        .skill h3 {
+            margin-bottom: 15px;
+            text-align: center;
+             font-size: 1.5em;
+             color: #444;
         }
-        #menu {
-           position: absolute;
-           top: 50%;
-           left: 50%;
-           transform: translate(-50%, -50%);
-           text-align: center;
+
+        .skill ul {
+            padding-left: 25px;
+            margin: 0;
+        }
+
+        .skill ul li {
+            list-style: disc;
+            margin-bottom: 5px;
+        }
+         .project-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+            animation: fadeIn 1s ease;
+         }
+
+        .project {
+            width: calc(30% - 25px);
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+             transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .project:hover {
+            transform: translateY(-8px);
+             box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .project img {
+           width: 100%;
+           height: 250px;
+           object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .project img:hover{
+             transform: scale(1.05);
+        }
+
+         .project-description {
+           padding: 20px;
+         }
+
+         .project-description h3 {
+             margin-bottom: 8px;
+              font-size: 1.4em;
+         }
+
+        .project-link {
+             display: inline-block;
+             margin-top: 15px;
+            padding: 10px 20px;
+             background-color: #333;
+            color: white;
+             text-decoration: none;
+             border-radius: 6px;
+             transition: background-color 0.3s ease;
+        }
+         .project-link:hover {
+             background-color: #555;
+         }
+        .contact-container{
+          display: flex;
+            gap: 30px;
+            animation: fadeIn 1s ease;
+        }
+       .contact-form{
+         flex: 1;
+       }
+        .contact-form h3 {
+           margin-bottom: 15px;
+              font-size: 1.5em;
+        }
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 12px;
+             margin-bottom: 15px;
+            border: 1px solid #ddd;
+           border-radius: 6px;
+             transition: border-color 0.3s ease;
+        }
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            border-color: #333;
+           outline: none;
+        }
+
+        .contact-form textarea {
+           height: 180px;
+       }
+
+        .contact-form button {
+            padding: 12px 25px;
+            background-color: #333;
            color: white;
-        }
-        #playButton {
-          background-color: #3498db;
-          color: white;
-          border: none;
-          padding: 15px 30px;
-          font-size: 1.2em;
+            border: none;
+           border-radius: 6px;
            cursor: pointer;
-           border-radius: 8px;
-           transition: background-color 0.3s ease;
+             transition: background-color 0.3s ease, transform 0.2s ease;
         }
-        #playButton:hover {
-          background-color: #2980b9;
-       }
-      .game-over-screen {
-         position: absolute;
-          top: 0;
-        left: 0;
-         width: 100%;
-          height: 100%;
-         background-color: rgba(0,0,0,0.8);
-         color: white;
-        display: none;
-        flex-direction: column;
-         align-items: center;
-        justify-content: center;
-         text-align: center;
-         z-index: 10;
-       }
-      .game-over-screen h2{
-        font-size: 2em;
-        margin-bottom: 10px;
-      }
-      .game-over-screen button{
-        background-color: #3498db;
-         color: white;
-         border: none;
-       padding: 15px 30px;
-          font-size: 1.2em;
-         cursor: pointer;
-        border-radius: 8px;
-         transition: background-color 0.3s ease;
-          margin-top: 10px;
-        }
-       .game-over-screen button:hover {
-        background-color: #2980b9;
-       }
 
-       /* Styles cho inventory */
-        #inventory {
-        position: absolute;
-         top: 10px;
-          left: 10px;
-         background-color: rgba(0, 0, 0, 0.7);
-        padding: 10px;
-        border: 2px solid #fff;
-        z-index: 5;
-          color: white;
-         display: none;
-        border-radius: 8px;
-      }
-      #inventory h2 {
-        margin-top: 0;
-      }
-       #inventory ul {
-         padding: 0;
-        list-style: none;
-      }
+         .contact-form button:hover {
+             background-color: #555;
+              transform: scale(1.05);
+         }
 
-       #inventory ul li {
-        margin-bottom: 5px;
+        .contact-details {
+           flex: 1;
+            font-size: 1.1em;
+             line-height: 1.8;
+         }
+         .contact-details h3 {
+             margin-bottom: 15px;
+              font-size: 1.5em;
+         }
+        footer {
+            text-align: center;
+            padding: 30px;
+            background-color: #333;
+            color: white;
         }
-    </style>
-</head>
-<body>
-<div id="gameContainer">
-    <div id="menu">
-        <h1>Cosmic Shift</h1>
-        <button id="playButton">Play</button>
-    </div>
-    <canvas id="gameCanvas"></canvas>
-    <div class="game-over-screen" id="gameOverScreen">
-        <h2 id="gameOverText">Game Over</h2>
-        <p id="finalScore">Score:</p>
-        <button id="restartButton">Restart</button>
-    </div>
-    <div id="inventory">
-        <h2>Inventory</h2>
-        <ul id="inventoryList">
+        @media (max-width: 768px) {
+           nav {
+                flex-direction: column;
+                text-align: center;
+             }
+            nav ul {
+                 flex-direction: column;
+                 align-items: center;
+             }
 
-        </ul>
-    </div>
-</div>
-<script>
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    const gameContainer = document.getElementById('gameContainer');
-    const menu = document.getElementById('menu');
-    const playButton = document.getElementById('playButton');
-    const gameOverScreen = document.getElementById('gameOverScreen');
-    const gameOverText = document.getElementById('gameOverText');
-    const finalScoreText = document.getElementById('finalScore');
-    const restartButton = document.getElementById('restartButton');
-    const inventoryDiv = document.getElementById('inventory');
-    const inventoryList = document.getElementById('inventoryList');
-    let game;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const TILE_SIZE = 30;
-    class Player {
-      constructor(x, y) {
-           this.x = x;
-           this.y = y;
-            this.size = TILE_SIZE;
-            this.speed = 200;
-            this.vx = 0;
-            this.vy = 0;
-           this.color = 'yellow';
-           this.inventory = {};
-           this.equippedWeapon = null;
-           this.maxHealth = 100;
-           this.health = this.maxHealth;
-            this.level = 1;
-            this.exp = 0;
-            this.expToNextLevel = 100;
-           this.init();
-        }
-     init() {
-       document.addEventListener('keydown', (e) => {
-          switch (e.key) {
-             case 'ArrowUp':
-                 this.vy = -this.speed;
-                  break;
-              case 'ArrowDown':
-                  this.vy = this.speed;
-                  break;
-              case 'ArrowLeft':
-                  this.vx = -this.speed;
-                  break;
-              case 'ArrowRight':
-                 this.vx = this.speed;
-                 break;
-            case 'i':
-                inventoryDiv.style.display = inventoryDiv.style.display === 'block' ? 'none' : 'block';
-                 this.updateInventoryUI();
-               break;
-            case '1':
-               this.equipWeapon('pistol');
-                 break;
-            case '2':
-                this.equipWeapon('shotgun');
-                 break;
-             case '3':
-               this.equipWeapon('flamethrower');
-               break;
-
-          }
-         });
-      document.addEventListener('keyup', (e) => {
-        switch (e.key) {
-            case 'ArrowUp':
-           case 'ArrowDown':
-               this.vy = 0;
-               break;
-            case 'ArrowLeft':
-            case 'ArrowRight':
-              this.vx = 0;
-             break;
-       }
-      });
-   }
-  update(deltaTime, canvas) {
-     this.x += this.vx * deltaTime;
-     this.y += this.vy * deltaTime;
-     if (this.x < 0) this.x = 0
-     if (this.x > canvas.width - this.size) this.x = canvas.width - this.size
-    if(this.y < 0) this.y = 0;
-      if (this.y > canvas.height - this.size) this.y = canvas.height - this.size;
-    }
-     draw(ctx, cameraX, cameraY) {
-         ctx.fillStyle = this.color;
-         ctx.fillRect(this.x - cameraX, this.y-cameraY, this.size, this.size);
-      }
-       addItem(item, quantity) {
-            if(this.inventory[item]) {
-             this.inventory[item] += quantity;
-            } else {
-                this.inventory[item] = quantity;
-            }
-       }
-       updateInventoryUI() {
-            inventoryList.innerHTML = '';
-           for(const item in this.inventory) {
-                const li = document.createElement('li');
-               li.textContent = `${item} x ${this.inventory[item]}`;
-                inventoryList.appendChild(li);
-           }
-        }
-        equipWeapon(weapon){
-           if(Object.keys(this.inventory).includes(weapon)){
-                this.equippedWeapon = weapon;
-               console.log('equipped with', weapon)
-            }else {
-                 console.log("dont have weapon")
-            }
-        }
-         addExp(amount){
-             this.exp+= amount;
-              while(this.exp >= this.expToNextLevel) {
-               this.level++;
-                this.exp -= this.expToNextLevel;
-                  this.expToNextLevel = Math.floor(this.expToNextLevel * 1.5)
-               console.log('level up', this.level)
+            nav ul li {
+                 margin-left: 0;
+               margin-top: 10px;
+             }
+             .section {
+                padding: 20px;
+             }
+             .skill {
+                width: calc(50% - 25px);
+             }
+             .project {
+                width: calc(50% - 25px);
+             }
+              .contact-container {
+               flex-direction: column;
               }
          }
-        takeDamage(damage){
-          this.health -= damage;
-            if(this.health <= 0){
-               game.isGameOver = true;
-               console.log('game over')
-           }
-       }
-   }
-    class Tile {
-     constructor(x, y, type) {
-        this.x = x;
-           this.y = y;
-        this.type = type;
-       this.size = TILE_SIZE;
-      }
-      draw(ctx, cameraX, cameraY) {
-        switch (this.type) {
-             case 'dirt':
-                 ctx.fillStyle = '#735545';
-                  break;
-             case 'stone':
-               ctx.fillStyle = '#808080';
-               break;
-             case 'grass':
-                ctx.fillStyle = '#32cd32';
-               break;
-            case 'air':
-              return;
-           default:
-             ctx.fillStyle = 'black'
-        }
-        ctx.fillRect(this.x - cameraX, this.y - cameraY, this.size, this.size);
-      }
-  }
-  class Enemy {
-    constructor(x, y, type) {
-      this.x = x;
-      this.y = y;
-       this.type = type;
-        this.size = TILE_SIZE;
-       this.speed = 80;
-       this.vx = 0;
-       this.vy = 0;
-       this.health = 50;
-    }
-    update(deltaTime, player, cameraX, cameraY){
-       const dx = player.x - this.x;
-       const dy = player.y - this.y;
-       const angle = Math.atan2(dy, dx);
-        this.vx = Math.cos(angle) * this.speed;
-       this.vy = Math.sin(angle) * this.speed;
-      this.x += this.vx * deltaTime;
-      this.y += this.vy * deltaTime;
-
-      if (this.x < 0) this.x = 0
-       if (this.x > canvas.width - this.size) this.x = canvas.width - this.size
-      if(this.y < 0) this.y = 0;
-    if (this.y > canvas.height - this.size) this.y = canvas.height - this.size;
-    }
-    draw(ctx, cameraX, cameraY){
-        ctx.fillStyle = 'red';
-       ctx.fillRect(this.x - cameraX, this.y-cameraY, this.size, this.size);
-    }
-     takeDamage(damage){
-        this.health -= damage;
-         if(this.health <=0){
-             return true;
-         }
-         return false;
-     }
- }
-  class Bullet {
-    constructor(x, y, angle, speed, damage) {
-     this.x = x;
-     this.y = y;
-     this.angle = angle;
-      this.speed = speed;
-      this.size = 5;
-      this.damage = damage;
-    }
-      update(deltaTime){
-          this.x += Math.cos(this.angle) * this.speed * deltaTime;
-          this.y += Math.sin(this.angle) * this.speed * deltaTime;
-     }
-     draw(ctx, cameraX, cameraY){
-          ctx.fillStyle = 'white';
-          ctx.beginPath();
-        ctx.arc(this.x - cameraX, this.y - cameraY, this.size, 0, Math.PI * 2)
-        ctx.fill();
-         ctx.closePath();
-       }
-  }
-  class SoundManager {
-     constructor() {
-        this.backgroundMusic = new Audio('./assets/bgm.mp3');
-         this.crashSound = new Audio('./assets/crash.mp3');
-         this.portalSound = new Audio('./assets/portal.mp3');
-          this.levelUpSound = new Audio('./assets/level-up.mp3');
-         this.gunshotSound = new Audio('./assets/gunshot.mp3');
-        this.backgroundMusic.loop = true;
-        this.backgroundMusic.volume = 0.5;
-    }
-   playBackgroundMusic() {
-       this.backgroundMusic.play();
-   }
-   stopBackgroundMusic(){
-      this.backgroundMusic.pause();
-       this.backgroundMusic.currentTime = 0;
-   }
-   playCrash() {
-      this.crashSound.play();
-    }
-     playPortal() {
-       this.portalSound.play();
-    }
-   playLevelUp(){
-       this.levelUpSound.play();
-    }
-    playGunShot(){
-       this.gunshotSound.play();
-     }
-    }
-  class StorageManager {
-    constructor() {
-       this.storageKey = 'cosmicShiftSave';
-       }
-    saveGame(data) {
-         try {
-            const json = JSON.stringify(data);
-         localStorage.setItem(this.storageKey, json);
-          }
-          catch(e) {
-              console.error('Error saving game to local storage', e);
-          }
-       }
-      loadGame() {
-       try{
-        const json = localStorage.getItem(this.storageKey);
-          return json ? JSON.parse(json) : null;
-     }catch (e) {
-      console.error('Error loading game from local storage', e);
-       }
-         return null;
-    }
-    }
- class CombatSystem {
-      constructor(){
-
-      }
-       calculateDamage(attacker, defender){
-         return 10;
-       }
- }
- class Game {
-        constructor(canvas, ctx) {
-           this.canvas = canvas;
-          this.ctx = ctx;
-          this.player = new Player(this.canvas.width / 2, this.canvas.height / 2);
-          this.enemies = [];
-          this.bullets = [];
-          this.world = this.generateWorld();
-          this.soundManager = new SoundManager();
-           this.storageManager = new StorageManager();
-          this.combatSystem = new CombatSystem();
-           this.score = 0;
-          this.lastTime = 0;
-          this.isGameOver = false;
-            this.level = 1;
-           this.spawnTimer = 0;
-            this.enemySpawnTimer = 0;
-           this.cameraX = 0;
-          this.cameraY = 0;
-            this.enemySpeed = 80;
-            this.init();
-          this.soundManager.playBackgroundMusic();
-          this.lastMousePos = {x: 0, y: 0}
-      }
-
-      init() {
-        const savedData = this.storageManager.loadGame();
-          if(savedData) {
-             this.score = savedData.score;
-              this.level = savedData.level;
-          }
-           this.canvas.addEventListener('mousedown', (e) => {
-               this.handleMouseClick(e);
-          });
-
-       }
-
-      start() {
-        this.isGameOver = false;
-         gameOverScreen.style.display = 'none';
-        this.player = new Player(this.canvas.width / 2, this.canvas.height / 2);
-        this.enemies = [];
-       this.bullets = [];
-          this.score = 0;
-        this.lastTime = 0;
-         this.level = 1;
-         this.spawnTimer = 0;
-        this.enemySpawnTimer = 0;
-       this.cameraX = 0;
-       this.cameraY = 0;
-         this.enemySpeed = 80;
-         this.gameLoop();
-     }
-
-      gameLoop(timestamp) {
-         if (this.isGameOver) {
-              this.drawGameOver();
-              this.soundManager.stopBackgroundMusic();
-            return;
-         }
-          const deltaTime = (timestamp - this.lastTime) / 1000;
-        this.lastTime = timestamp;
-          this.update(deltaTime);
-          this.render();
-           requestAnimationFrame(this.gameLoop.bind(this));
-       }
-        update(deltaTime) {
-          this.spawnTimer += deltaTime;
-          if (this.spawnTimer > 2 - this.level * 0.1) {
-              this.spawnItem(this.getRandomTilePos());
-           this.spawnTimer = 0;
-         }
-            this.enemySpawnTimer += deltaTime;
-         if(this.enemySpawnTimer > 3 - this.level * 0.1){
-              this.spawnEnemy(this.getRandomTilePos());
-            this.enemySpawnTimer = 0;
-         }
-           this.player.update(deltaTime, this.canvas);
-           this.enemies.forEach(enemy => enemy.update(deltaTime, this.player, this.cameraX, this.cameraY));
-            this.bullets.forEach(bullet => bullet.update(deltaTime));
-         this.checkCollisions();
-            this.checkBulletCollision();
-          this.updateCamera();
-
-           if (this.score > this.level * 50) {
-                this.level++;
-                this.enemySpeed += 10;
-                this.soundManager.playLevelUp();
-           }
-        }
-      render() {
-          this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-           this.drawBackground();
-          this.drawWorld();
-           this.enemies.forEach(enemy => enemy.draw(this.ctx, this.cameraX, this.cameraY));
-         this.player.draw(this.ctx, this.cameraX, this.cameraY);
-            this.bullets.forEach(bullet => bullet.draw(this.ctx, this.cameraX, this.cameraY));
-            this.drawHud();
-
-      }
-      drawBackground() {
-         this.ctx.fillStyle = '#0a0a0a';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-     }
-      drawWorld(){
-        for(const tile of this.world){
-             tile.draw(this.ctx, this.cameraX, this.cameraY);
-        }
-     }
-
-        drawHud() {
-           this.ctx.fillStyle = 'white';
-          this.ctx.font = '20px Arial';
-           this.ctx.fillText(`Score: ${this.score}`, 20, 30);
-           this.ctx.fillText(`Level: ${this.level}`, 20, 55);
-          this.ctx.fillText(`Health: ${this.player.health}`, 20, 80);
-        this.ctx.fillText(`Exp: ${this.player.exp} / ${this.player.expToNextLevel}`, 20, 105)
-        }
-      generateWorld() {
-         const world = [];
-        const worldWidth = 50;
-          const worldHeight = 20;
-
-           for (let y = 0; y < worldHeight; y++) {
-              for (let x = 0; x < worldWidth; x++) {
-                  let type = 'air';
-
-                if (y > worldHeight -4) {
-                 if(y === worldHeight -1){
-                        type = 'grass'
-                   }else{
-                         type = 'dirt';
-                     }
-               }else if (Math.random() < 0.2) {
-                     type = 'stone';
-                  }
-                world.push(new Tile(x * TILE_SIZE, y * TILE_SIZE, type));
-                }
-           }
-         return world;
-        }
-     getRandomTilePos(){
-           const validPositions = this.world.filter(tile => tile.type === 'air');
-            if(validPositions.length > 0){
-              const randomPos = validPositions[Math.floor(Math.random() * validPositions.length)];
-                 return {
-                     x: randomPos.x,
-                     y: randomPos.y
-                 }
-           }
-           return {x: this.canvas.width /2, y: this.canvas.height /2}
-       }
-      spawnEnemy(pos){
-            this.enemies.push(new Enemy(pos.x, pos.y));
-      }
-      spawnItem(pos){
-        const itemTypes = ['stone', 'wood'];
-        const randomItem = itemTypes[Math.floor(Math.random() * itemTypes.length)];
-        this.player.addItem(randomItem, 1);
-      }
-    checkCollisions() {
-        this.enemies.forEach((enemy, enemyIndex) => {
-          const dx = this.player.x - enemy.x;
-            const dy = this.player.y - enemy.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < this.player.size + enemy.size) {
-               const damage = this.combatSystem.calculateDamage(enemy, this.player);
-              this.player.takeDamage(damage);
-                console.log('player took damage')
-              if(this.isGameOver) {
-                    this.soundManager.playCrash();
-                 this.storageManager.saveGame({
-                       score: this.score,
-                      level: this.level
-                  });
-                return;
-                }
-              }
-        });
-    }
-
-    handleMouseClick(event) {
-        this.lastMousePos = {
-          x: event.clientX,
-          y: event.clientY
-       }
-
-        if(this.player.equippedWeapon) {
-          const weapon = this.player.equippedWeapon;
-          switch (weapon) {
-               case 'pistol':
-                 this.fireBullet(10, 800, 10);
-                  break;
-            case 'shotgun':
-                  this.fireBullet(15, 600, 10);
-                this.fireBullet(15, 600, 10, Math.PI/10);
-                  this.fireBullet(15, 600, 10, -Math.PI/10);
-                 break;
-             case 'flamethrower':
-               this.fireBullet(5, 100, 5, Math.PI/12);
-                  this.fireBullet(5, 100, 5, -Math.PI/12);
-                  this.fireBullet(5, 100, 5);
-                  break;
-
+         @media (max-width: 500px) {
+             .skill {
+                 width: calc(100% - 25px);
+             }
+              .project {
+                 width: calc(100% - 25px);
              }
          }
-      }
-        fireBullet(size = 10, speed = 10, damage = 10, angleOffset = 0){
-         const dx =  this.lastMousePos.x - (this.player.x + this.cameraX) ;
-            const dy =  this.lastMousePos.y - (this.player.y + this.cameraY);
-          const angle = Math.atan2(dy, dx) + angleOffset;
-        const bullet = new Bullet(this.player.x, this.player.y, angle, speed, damage);
-            this.bullets.push(bullet);
-         this.soundManager.playGunShot();
-      }
-   checkBulletCollision() {
-       this.bullets.forEach((bullet, bulletIndex) => {
-          this.enemies.forEach((enemy, enemyIndex) => {
-              const dx = bullet.x - enemy.x;
-           const dy = bullet.y - enemy.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-              if (distance < bullet.size + enemy.size) {
-                  if(enemy.takeDamage(bullet.damage)) {
-                      this.enemies.splice(enemyIndex, 1);
-                    this.score+= 10;
-                    this.player.addExp(20);
-                  }
-                   this.bullets.splice(bulletIndex, 1);
-                }
+    </style>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <header>
+        <nav>
+           <div class="logo">Tên Của Bạn</div>
+             <ul>
+                  <li><a href="#about">Giới Thiệu</a></li>
+                 <li><a href="#skills">Kỹ Năng</a></li>
+                 <li><a href="#projects">Dự Án</a></li>
+                  <li><a href="#contact">Liên Hệ</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="main-content">
+         <div class="profile-container">
+              <img src="placeholder-profile.jpg" alt="Ảnh chân dung" class="profile-image">
+             <h1 class="profile-name">Tên Của Bạn</h1>
+             <p class="profile-bio">Mô tả ngắn gọn về bản thân, chuyên môn, và những điều bạn đam mê.</p>
+         </div>
+
+         <div class="link-container">
+              <a href="https://www.facebook.com/your-facebook-profile" target="_blank" class="link-item">
+                  <i class="fab fa-facebook"></i> Facebook
+             </a>
+              <a href="https://www.instagram.com/your-instagram-profile" target="_blank" class="link-item">
+                  <i class="fab fa-instagram"></i> Instagram
+            </a>
+             <a href="https://www.linkedin.com/in/your-linkedin-profile" target="_blank" class="link-item">
+                  <i class="fab fa-linkedin"></i> LinkedIn
+             </a>
+             <a href="https://github.com/your-github-profile" target="_blank" class="link-item">
+                 <i class="fab fa-github"></i> Github
+             </a>
+             <a href="https://www.youtube.com/your-youtube-channel" target="_blank" class="link-item">
+                 <i class="fab fa-youtube"></i> Youtube
+             </a>
+             <a href="https://www.twitter.com/your-twitter-profile" target="_blank" class="link-item">
+                  <i class="fab fa-twitter"></i> Twitter
+             </a>
+             <a href="https://www.tiktok.com/your-tiktok-profile" target="_blank" class="link-item">
+                 <i class="fab fa-tiktok"></i> TikTok
+             </a>
+             <a href="https://www.behance.net/your-behance-profile" target="_blank" class="link-item">
+                 <i class="fab fa-behance"></i> Behance
+             </a>
+             <a href="https://www.dribbble.com/your-dribbble-profile" target="_blank" class="link-item">
+                 <i class="fab fa-dribbble"></i> Dribbble
+             </a>
+         </div>
+    </div>
+
+     <section id="about" class="section">
+        <h2>Giới Thiệu</h2>
+        <div class="content-container">
+            <div class="text-content">
+                <p>Chào mừng đến với trang web cá nhân của tôi! Tôi là [Tên của bạn], một [Nghề nghiệp/Mô tả bản thân]. Tôi có đam mê về [Lĩnh vực quan tâm].</p>
+                <p>Tôi luôn tìm kiếm cơ hội để phát triển và đóng góp cho cộng đồng. Ở đây, bạn sẽ tìm thấy thông tin chi tiết về kinh nghiệm, kỹ năng và các dự án mà tôi đã thực hiện.</p>
+                <p>Hãy cùng nhau khám phá và kết nối!</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="section">
+        <h2>Kỹ Năng</h2>
+        <div class="skill-container">
+            <div class="skill">
+                <h3>Lập Trình</h3>
+                <ul>
+                    <li>HTML</li>
+                    <li>CSS</li>
+                    <li>JavaScript</li>
+                    <li>Python</li>
+                    <li>Java</li>
+                    <li>C++</li>
+                    <li>SQL</li>
+                </ul>
+            </div>
+            <div class="skill">
+                <h3>Thiết Kế</h3>
+                <ul>
+                    <li>Photoshop</li>
+                    <li>Illustrator</li>
+                    <li>Figma</li>
+                    <li>UI/UX Design</li>
+                     <li>Adobe XD</li>
+                    <li>Canva</li>
+                </ul>
+            </div>
+            <div class="skill">
+                <h3>Khác</h3>
+                <ul>
+                    <li>Quản Lý Dự Án</li>
+                    <li>Phân Tích Dữ Liệu</li>
+                    <li>SEO</li>
+                    <li>Marketing</li>
+                    <li>Content Writing</li>
+                    <li>Video Editing</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="section">
+        <h2>Dự Án</h2>
+        <div class="project-container">
+          <div class="project">
+              <img src="project-placeholder-1.jpg" alt="Dự án 1" class="project-image">
+              <div class="project-description">
+                  <h3>Dự Án 1</h3>
+                  <p>Mô tả ngắn gọn về dự án 1. Các công nghệ đã sử dụng: [Liệt kê các công nghệ].</p>
+                  <a href="#" class="project-link">Xem Chi Tiết</a>
+              </div>
+          </div>
+
+          <div class="project">
+              <img src="project-placeholder-2.jpg" alt="Dự án 2" class="project-image">
+              <div class="project-description">
+                  <h3>Dự Án 2</h3>
+                  <p>Mô tả ngắn gọn về dự án 2. Các công nghệ đã sử dụng: [Liệt kê các công nghệ].</p>
+                  <a href="#" class="project-link">Xem Chi Tiết</a>
+              </div>
+          </div>
+          <div class="project">
+              <img src="project-placeholder-3.jpg" alt="Dự án 3" class="project-image">
+              <div class="project-description">
+                  <h3>Dự Án 3</h3>
+                  <p>Mô tả ngắn gọn về dự án 3. Các công nghệ đã sử dụng: [Liệt kê các công nghệ].</p>
+                  <a href="#" class="project-link">Xem Chi Tiết</a>
+              </div>
+          </div>
+            <div class="project">
+              <img src="project-placeholder-4.jpg" alt="Dự án 4" class="project-image">
+              <div class="project-description">
+                  <h3>Dự Án 4</h3>
+                   <p>Mô tả ngắn gọn về dự án 4. Các công nghệ đã sử dụng: [Liệt kê các công nghệ].</p>
+                  <a href="#" class="project-link">Xem Chi Tiết</a>
+              </div>
+          </div>
+             <div class="project">
+              <img src="project-placeholder-5.jpg" alt="Dự án 5" class="project-image">
+              <div class="project-description">
+                  <h3>Dự Án 5</h3>
+                  <p>Mô tả ngắn gọn về dự án 5. Các công nghệ đã sử dụng: [Liệt kê các công nghệ].</p>
+                  <a href="#" class="project-link">Xem Chi Tiết</a>
+              </div>
+          </div>
+             <div class="project">
+              <img src="project-placeholder-6.jpg" alt="Dự án 6" class="project-image">
+              <div class="project-description">
+                  <h3>Dự Án 6</h3>
+                   <p>Mô tả ngắn gọn về dự án 6. Các công nghệ đã sử dụng: [Liệt kê các công nghệ].</p>
+                  <a href="#" class="project-link">Xem Chi Tiết</a>
+              </div>
+          </div>
+        </div>
+    </section>
+
+   <section id="contact" class="section">
+        <h2>Liên Hệ</h2>
+        <div class="contact-container">
+          <div class="contact-form">
+            <h3>Gửi Tin Nhắn</h3>
+            <form action="#" method="post">
+              <input type="text" placeholder="Họ và tên">
+              <input type="email" placeholder="Email của bạn">
+              <textarea placeholder="Nội dung tin nhắn"></textarea>
+              <button type="submit">Gửi</button>
+            </form>
+          </div>
+          <div class="contact-details">
+            <h3>Thông tin liên hệ</h3>
+            <p><strong>Email:</strong> example@email.com</p>
+            <p><strong>Điện thoại:</strong> 123-456-7890</p>
+            <p><strong>Địa chỉ:</strong> 123 Đường ABC, Thành phố XYZ</p>
+            <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/your-linkedin-profile" target="_blank">Your LinkedIn Profile</a></p>
+            <p><strong>Github:</strong> <a href="https://github.com/your-github-profile" target="_blank">Your Github Profile</a></p>
+          </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Tên Của Bạn. Đã đăng ký bản quyền.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const navLinks = document.querySelectorAll('nav a');
+          navLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+              event.preventDefault();
+              const targetId = this.getAttribute('href');
+              const targetSection = document.querySelector(targetId);
+
+              if (targetSection) {
+                targetSection.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'start'
+                });
+              }
+            });
+          });
+           const sections = document.querySelectorAll('.section');
+          const options = {
+            threshold: 0.3
+           };
+           const observer = new IntersectionObserver((entries, observer) => {
+                 entries.forEach(entry => {
+                   if (entry.isIntersecting) {
+                     entry.target.classList.add('active');
+                     observer.unobserve(entry.target);
+                   }
+                  });
+            }, options);
+
+           sections.forEach(section => {
+              observer.observe(section);
            });
-        if(bullet.x < -100 || bullet.x > this.canvas.width + 100 || bullet.y < -100 || bullet.y > this.canvas.height + 100){
-                this.bullets.splice(bulletIndex, 1);
-          }
+        });
+    </script>
 
-        })
-
-    }
-
-  updateCamera() {
-        this.cameraX = this.player.x - this.canvas.width / 2;
-        this.cameraY = this.player.y - this.canvas.height / 2;
-     }
-
-      drawGameOver() {
-         gameOverScreen.style.display = 'flex';
-          gameOverText.textContent = 'Game Over';
-           finalScoreText.textContent = `Final Score: ${this.score}`;
-        }
-    }
-    //Setup sự kiện
-    playButton.addEventListener('click', () => {
-       menu.style.display = 'none';
-         if(!game){
-            game = new Game(canvas, ctx);
-          }
-        game.start();
-  });
-  restartButton.addEventListener('click', () => {
-    if(game){
-       game.start();
-       }
-  });
-  // Tải âm thanh khi trang web được load
- window.addEventListener('load', () => {
-    const soundManager = new SoundManager();
-     soundManager.playBackgroundMusic(); // phát nhạc nền khi trang được load
-    soundManager.stopBackgroundMusic(); // đảm bảo nhạc nền chưa chạy khi game chưa start
-    });
-</script>
 </body>
 </html>
