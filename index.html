@@ -33,6 +33,10 @@
             const scene = new BABYLON.Scene(engine);
             const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 5, new BABYLON.Vector3(0, 0, 0), scene);
             camera.attachControl(canvas, true);
+            
+            // Ensure that the camera is not inside the box
+            camera.setPosition(new BABYLON.Vector3(0, 0, 5));
+
 
             const shaderMaterial = new BABYLON.ShaderMaterial("shader", scene, {
                 vertexSource: `
@@ -46,7 +50,7 @@
                   gl_Position = worldViewProjection * vec4(position, 1.0);
                 }
               `,
-              fragmentSource: `
+                fragmentSource: `
                 precision highp float;
                 varying vec3 vPosition;
                 uniform float time;
@@ -129,7 +133,7 @@
             });
 
 
-            const box = BABYLON.MeshBuilder.CreateBox("box", {size: 3}, scene);
+            const box = BABYLON.MeshBuilder.CreateBox("box", { size: 3 }, scene);
             box.material = shaderMaterial;
             const noiseTex =  new BABYLON.Texture("https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/PerlinNoise.png/300px-PerlinNoise.png", scene);
             shaderMaterial.setTexture("noiseTex", noiseTex);
