@@ -5,22 +5,23 @@
 <head>
     <title>AI Chatbot - Gemini API</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/vsc-dark-plus.min.css" integrity="sha512-wK08rvoY+eesi45s+kCXgKq4+4yE6k0wDbgx/0USm12Lq33b3u8sU8L/Z5tQZ9eK8L5qKzV2MztZ7r3L+LZA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         /* CSS Dark Mode hiện đại và Responsive - ChatGPT Interface Style - UPDATED Buttons & Layout */
         :root {
-            --bg-color: #121212;
-            --text-color: #f0f0f0;
-            --primary-color: #64ffda;
-            --secondary-bg: #1e1e1e;
+            --bg-color: #1e1e1e;
+            --text-color: #d4d4d4;
+            --primary-color: #b39ddb;
+            --secondary-bg: #252526;
             --border-color: #333;
             --message-user-bg: #3498db;
             --message-ai-bg: #4a5568;
-            --button-bg: #3498db;
-            --button-hover-bg: #2980b9;
-            --menu-bg: #252525;
+            --button-bg: #673ab7;
+            --button-hover-bg: #512da8;
+            --menu-bg: #303031;
             --loading-color: #ffc107;
-            --history-list-bg: #252525;
-            --history-list-item-hover: #333;
+            --history-list-bg: #373738;
+            --history-list-item-hover: #424243;
             --auth-input-bg: #333;
         }
 
@@ -34,7 +35,7 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden; /* Disable zoom */
+            overflow: hidden;
         }
 
         h1 {
@@ -58,7 +59,7 @@
             flex-direction: column;
         }
 
-         /* Custom Button Style */
+        /* Custom Button Style */
         .custom-button {
             padding: 10px 15px;
             border: none;
@@ -74,7 +75,7 @@
             justify-content: center;
             align-items: center;
             gap: 5px;
-            user-select: none; /* Ngăn chọn văn bản khi nhấp */
+            user-select: none;
         }
 
         .custom-button:hover {
@@ -97,7 +98,7 @@
             z-index: 1000;
         }
 
-       .menu-dropdown {
+        .menu-dropdown {
             position: absolute;
             top: 100%;
             right: 0;
@@ -200,7 +201,7 @@
         }
 
         .history-modal-close {
-             padding: 10px 15px;
+            padding: 10px 15px;
             border: none;
             border-radius: 8px;
             background-color: var(--button-bg);
@@ -218,14 +219,14 @@
         }
 
         .history-modal-close:hover {
-           background-color: var(--button-hover-bg);
-            transform: translateY(-2px); /* Nút nhô lên khi hover */
+            background-color: var(--button-hover-bg);
+            transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         }
 
         .history-modal-close:active {
-             background-color: var(--button-hover-bg);
-            transform: translateY(0); /* Nút lún xuống khi active */
+            background-color: var(--button-hover-bg);
+            transform: translateY(0);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         }
 
@@ -303,7 +304,7 @@
         }
 
         /* Code Block */
-        .code-block {
+       .code-block {
             background-color: #282c34;
             color: #abb2bf;
             padding: 15px;
@@ -317,7 +318,13 @@
             white-space: pre-wrap;
         }
 
-        .code-block .custom-button {
+        .code-block code { /* Áp dụng cho các thẻ `code` bên trong .code-block */
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            display: block; /* Đảm bảo hiển thị dưới dạng block */
+        }
+         .code-block .custom-button {
             position: absolute;
             bottom: 10px;
             right: 10px; /* Changed to right for better visibility */
@@ -326,6 +333,37 @@
             border-radius: 5px;
             font-size: 14px;
         }
+
+         /* PrismJS styles */
+        .prism-container {
+            position: relative;
+            margin-bottom: 1em;
+            border-radius: 0.5em;
+            box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+
+        .prism-copy-toolbar {
+            position: absolute;
+            top: 0.5em;
+            right: 0.5em;
+            display: flex;
+        }
+
+         .prism-copy-toolbar button {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 0.3em 0.5em;
+            border-radius: 0.3em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+         .prism-copy-toolbar button:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
 
         /* Input Container */
         #input-container {
@@ -421,8 +459,19 @@
                 margin-bottom: 8px;
             }
         }
+
+         .toolbar-item>button {
+                background-color: rgba(0, 0, 0, 0.5);
+                border: 0;
+                border-radius: .5em;
+                color: white;
+                cursor: pointer;
+                font-size: 1em;
+                line-height: 1.2;
+                margin: 0;
+                padding: .5em .75em;
+            }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-dark.min.css" integrity="sha512-Njdz7WCrJJabglQQg8oK6Vw0WlhxuES4oDw/fgxyWu6wAZKs+S474LoonBtrD8EjgGgm+1gGgNjWNj+KFXxwjQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
 
@@ -492,8 +541,10 @@
             </div>
         </div>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-QDv7+QvE3mQeT5C+2y6k4LgB5tM/tK6Vc1F9s0J4Uj+F4jI7E7XQ8W5X3j6M4Lg7V0a6F9+p0J4Uj+F4jI7E7XQ8W5X3j6M4Lg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js" integrity="sha512-ugROW6gYqS8mI0j7G0oI7iU0hGg5Gg0+4U1g1w6gJnlG/4v4y1b1oI6lOq7gW4l1iT2s2WqK0w741Jm1uE2w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js" integrity="sha512-fTLgXCm7mRwgzMmU7gYJw6bHSuE2S3SK6xJ+5w08b8Z3q16w4V+E1F5g1PPOWJw/RJDoe/E32x7426m6Jpb0w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js" integrity="sha512-jSnm1jEzo6kFUAVsn4PrywCGP5J7+L6i70fP/nWmQ8K69u69N+0vcLHzpvR94cgvM/2HQtqZgm+N9JdI4dMw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js" integrity="sha512-Tfxz76/6wW9+9hJ1SgjzH89iNq2RzL9X20S589G307Hq658rD2E/yZtS0Z2f7x+I++d+LqRkFj5qXF/B+9dw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
     // Disable zoom
     document.addEventListener('gesturestart', function (e) {
@@ -514,6 +565,16 @@
         }
         lastTouchEnd = now;
     }, false);
+
+    Prism.plugins.toolbar.registerButton('copy-code', function (prism, callback) {
+        var button = document.createElement('button');
+        button.textContent = 'Sao chép';
+        button.addEventListener('click', function () {
+            Prism.plugins.copyToClipboard.copyText(prism.element.textContent);
+                alert('Đã sao chép code!');
+        });
+        return button;
+    });
 
         // Globals
         const chatContainer = document.getElementById('chat-container');
@@ -542,65 +603,47 @@
         let currentApiKey = GEMINI_API_KEY_DEFAULT;
         const FIXED_PROMPT = "Bạn là một trợ lý AI hữu ích, thông minh và luôn trả lời một cách chi tiết và chính xác. Hãy giúp người dùng giải quyết mọi vấn đề và cung cấp thông tin tốt nhất có thể.";
         const MODEL_NAME = "gemini-2.0-flash-exp";
-          let menuActive = false;
+
         // Helper Functions
         const writeFile = (filepath, data) => localStorage.setItem(filepath, JSON.stringify(data));
         const readFile = (filepath) => {
             const data = localStorage.getItem(filepath);
             return data ? JSON.parse(data) : null;
         };
-          function escapeHtml(unsafe) {
-            return unsafe
-                 .replace(/&/g, "&")
-                 .replace(/</g, "<")
-                 .replace(/>/g, ">")
-                 .replace(/"/g, """)
-                 .replace(/'/g, "'");
-        }
-          // Clipboard copy function
-        function copyCode(button) {
-            const pre = button.parentNode.querySelector('pre');
-            navigator.clipboard.writeText(pre.textContent)
-                .then(() => {
-                    alert('Đã sao chép code!');
-                })
-                .catch(err => {
-                    console.error('Không thể sao chép: ', err);
-                });
-        }
-
         function triggerFileUpload() {
             fileUpload.click();
         }
 
         // Menu Functions
-
-
+        let menuActive = false;
         function toggleMenu() {
             menuActive = !menuActive;
             menuDropdown.classList.toggle('active', menuActive);
         }
 
-        // Close menu when clicking outside
+         // Close menu when clicking outside
         document.addEventListener('click', function(event) {
             if (!event.target.closest('.menu-container')) {
                 menuActive = false;
                 menuDropdown.classList.remove('active');
             }
-        });
+         });
+
 
         // History Modal Functions
         function showHistoryModal() {
             historyModal.classList.add('active');
             loadHistoryList();
-             menuActive = false;
-              menuDropdown.classList.remove('active');
-
+           menuDropdown.classList.remove('active');
         }
 
         function hideHistoryModal() {
             historyModal.classList.remove('active');
             currentHistoryKey = null;
+          menuActive = false;
+          menuDropdown.classList.remove('active');
+
+
         }
 
         // Auth Functions
@@ -658,7 +701,8 @@
             authFormsContainer.style.display = 'block';
             usernameDisplay.textContent = '';
             menuActive = false;
-              menuDropdown.classList.remove('active');
+            menuDropdown.classList.remove('active');
+
             hideHistoryModal();
             saveChatHistory();
         }
@@ -718,12 +762,11 @@
                 chatContainer.innerHTML = '';
                 conversationHistory = [];
             }
-             menuActive = false;
-             menuDropdown.classList.remove('active');
+           menuDropdown.classList.remove('active');
             hideHistoryModal();
         }
 
-        function loadHistoryList() {
+         function loadHistoryList() {
             if (!currentUsername) return;
 
             historyList.innerHTML = '';
@@ -751,7 +794,7 @@
                 };
                 historyItem.appendChild(deleteButton);
 
-                historyList.appendChild(historyItem);
+                 historyList.appendChild(historyItem);
             });
         }
 
@@ -765,8 +808,8 @@
             }
         }
 
-       function loadSpecificHistory(historyKey, historyName) {
-             try {
+        function loadSpecificHistory(historyKey, historyName) {
+            try {
                 const history = readFile(historyKey);
                 if (history) {
                     currentHistoryKey = historyKey; // set current History key
@@ -785,8 +828,8 @@
                         }
                     });
                     chatContainer.scrollTop = chatContainer.scrollHeight;
-                      menuActive = false;
-                     menuDropdown.classList.remove('active');
+                     menuActive = false;
+                      menuDropdown.classList.remove('active');
                     hideHistoryModal();
                 } else {
                     console.warn(`Không tìm thấy lịch sử chat với key: ${historyKey}`);
@@ -796,7 +839,8 @@
                 alert("Lỗi khi tải lịch sử chat. Vui lòng thử lại sau.");
             }
         }
-         function saveChatHistory() {
+
+      function saveChatHistory() {
              if (!currentUsername) return;
 
              let historyName = prompt("Vui lòng nhập tên cho cuộc trò chuyện này:", "Cuộc trò chuyện mới");
@@ -815,9 +859,8 @@
                  localStorage.setItem(newHistoryKey, JSON.stringify(conversationHistory));
                  console.log("lưu thành công")
              }
-
-
         }
+
 
         function clearChatHistory() {
             if (currentUsername) {
@@ -836,8 +879,8 @@
 
         function startNewChat() {
             clearChatHistory();
-          menuActive = false;
-             menuDropdown.classList.remove('active');
+            menuActive = false;
+            menuDropdown.classList.remove('active');
             hideHistoryModal();
             currentHistoryKey = null;
 
@@ -859,8 +902,8 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-             menuActive = false;
-              menuDropdown.classList.remove('active');
+           menuActive = false;
+             menuDropdown.classList.remove('active');
             hideHistoryModal();
         }
 
@@ -876,26 +919,22 @@
         }
 
         // Send/Receive Functions
-        function sendMessage(userMessageFromFile = null) {
-             if (!currentUsername) {
+         function sendMessage(userMessageFromFile = null) {
+            if (!currentUsername) {
                 alert("Bạn cần đăng nhập để sử dụng chatbot.");
                 return;
             }
 
-             let userMessage = userMessageFromFile || promptInput.value;
-             promptInput.value = '';
+            let userMessage = userMessageFromFile || promptInput.value;
+            promptInput.value = '';
 
-             if (!userMessage && !userMessageFromFile) {
-                 return;
-             }
+            if (!userMessage) return;
 
-              const apiKey = currentApiKey;
-
-             addUserMessage(userMessage);
-             showLoadingIndicator();
+            addUserMessage(userMessage);
+            showLoadingIndicator();
 
             const combinedPrompt = `${FIXED_PROMPT}\n\n${userMessage}`;
-            sendToGeminiAPI(apiKey, combinedPrompt);
+            sendToGeminiAPI(currentApiKey, combinedPrompt);
         }
 
          function addUserMessage(message) {
@@ -907,7 +946,7 @@
             }
         }
 
-       function addUserMessageToUI(message, className) {
+          function addUserMessageToUI(message, className) {
             const messageDiv = document.createElement('div');
             messageDiv.className = className;
             messageDiv.textContent = message;
@@ -915,33 +954,35 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
 
-          function addAiMessage(message) {
-    hideLoadingIndicator();
+       function addAiMessage(message) {
+           hideLoadingIndicator();
+            let content;
+            if (message.startsWith("```") && message.endsWith("```")) {
+                 const code = message.slice(3, -3);
 
-    const messageDiv = document.createElement('div');
-    messageDiv.className = 'ai-message';    messageDiv.style.textAlign = 'left';
+                content = `<div class="code-block">
+                            <pre class="language-javascript">
+                             <code class="language-javascript">${code}</code>
+                            </pre>
+                            </div>`;
 
-    let content = message;
-    if (message.startsWith("```") && message.endsWith("```")) {
-        // Extract language and code
-        const language = message.substring(3, message.indexOf('\n', 3));
-        const code = message.substring(message.indexOf('\n', 3) + 1, message.length - 3);
-        content = `<div class="code-block">
-                         <pre class="language-${language}"><code class="language-${language}">${escapeHtml(code)}</code></pre>
-                         <button class="custom-button copy-button" onclick="copyCode(this)">Sao chép</button>
-                     </div>`;
-    }
-     messageDiv.innerHTML = content;
-    chatContainer.appendChild(messageDiv);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+            } else {
+                content = message;
+            }
 
-    conversationHistory.push({ role: "model", parts: [{ text: message }] });
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'ai-message';
+            messageDiv.innerHTML = content;
+            chatContainer.appendChild(messageDiv);
+            Prism.highlightAllUnder(chatContainer); // Highlight new code
+            chatContainer.scrollTop = chatContainer.scrollHeight;
 
-    if (currentHistoryKey) {
-        localStorage.setItem(currentHistoryKey, JSON.stringify(conversationHistory));
-    }
-     Prism.highlightAll();
-}
+            conversationHistory.push({ role: "model", parts: [{ text: message }] });
+
+            if (currentHistoryKey) {
+                localStorage.setItem(currentHistoryKey, JSON.stringify(conversationHistory));
+            }
+        }
 
        function copyCode(button) {
             const pre = button.parentNode.querySelector('pre');
@@ -1025,12 +1066,12 @@
         // Initial Check
         checkLoginStatus();
 
-          // Prevent zoom on double tap
+        // Prevent zoom on double tap
         document.addEventListener('dblclick', function(event) {
             event.preventDefault();
         });
 
-      fileUpload.addEventListener('change', function(event) {
+         fileUpload.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (!file) return;
 
