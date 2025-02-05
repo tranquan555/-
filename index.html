@@ -34,6 +34,8 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            /* Chặn zoom trên web */
+            overflow: hidden;
         }
 
         h1 {
@@ -361,7 +363,13 @@
             border-radius: 10px;
             overflow-x: auto;
             position: relative;
+            margin-bottom: 10px;
         }
+
+        .code-block pre {
+            white-space: pre-wrap; /* Chuyển dòng khi vượt quá kích thước */
+        }
+
 
         /* Copy button style */
         .copy-button {
@@ -590,6 +598,23 @@
     </div>
 
     <script>
+    // Chặn zoom trên iOS khi chạm 2 lần
+    document.addEventListener('touchstart', function(event) {
+        if (event.touches.length > 1) {
+            event.preventDefault();
+        }
+    }, { passive: false });
+
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function(event) {
+        const now = (new Date()).getTime();
+        if (now - lastTouchEnd <= 300) {
+            event.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, false);
+
+
         // ... (JavaScript code - no changes needed from previous version) ...
         const chatContainer = document.getElementById('chat-container');
         const promptInput = document.getElementById('prompt-input');
@@ -616,7 +641,7 @@
         let isLoading = false;
         let historySessions = [];
         let historyDropdownActive = false;
-
+         let currentHistoryKey = null; // key of loaded history
         // API Key Gemini của bạn (CỐ ĐỊNH TRONG CODE)
         const GEMINI_API_KEY_DEFAULT = 'AIzaSyCl21Ku_prQnyMHFs_dJRL8-pgjg9hrc2w';
         let currentApiKey = GEMINI_API_KEY_DEFAULT;
@@ -662,6 +687,7 @@
 
             function hideHistoryModal() {
                 historyModal.classList.remove('active');
+                currentHistoryKey = null; // Clear loaded history
             }
 
 
@@ -787,18 +813,22 @@
             historyList.innerHTML = '';
             const historyKeys = getHistorySessionKeys();
 
-            historyKeys.forEach((key, index) => {
+             historyKeys.forEach((key) => {
                 const historyItem = document.createElement('li');
                 historyItem.className = 'history-item';
 
+                 const historyName = key.split('/').pop().replace(/_/g, ' ').replace(/\.json$/, '');
+
                 const historyItemContent = document.createElement('span');
                 historyItemContent.className = 'history-item-content';
-                historyItemContent.textContent = `Lịch sử ${index + 1}`;
+                historyItemContent.textContent = historyName;
+
                 historyItemContent.onclick = function() {
-                    loadSpecificHistory(key);
+                    loadSpecificHistory(key, historyName);
                      hideHistoryModal();
                 };
-                 historyItem.appendChild(historyItemContent);
+
+                historyItem.appendChild(historyItemContent);
 
 
 
@@ -826,17 +856,23 @@
             }
         }
 
-       function loadSpecificHistory(historyKey) {
-           try {
+       function loadSpecificHistory(historyKey, historyName) {
+            try {
                 const history = readFile(historyKey);
                 if (history) {
+                     currentHistoryKey = historyKey; // set current History key
+
                     conversationHistory = history;
                     chatContainer.innerHTML = '';
+
+                    // Add history name as a user message
+                    addUserMessageToUI(`Bạn đang xem lịch sử: ${historyName}`, 'ai-message');
+
                     conversationHistory.forEach(message => {
                         if (message.role === 'user') {
                             addUserMessageToUI(message.parts[0].text, 'user-message');
                         } else if (message.role === 'model') {
-                            addAiMessageToUI(message.parts[0].text, 'ai-message');
+                            addAiMessage(message.parts[0].text); // Use addAiMessage to handle code blocks correctly
                         }
                     });
                     chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -851,21 +887,25 @@
 
 
        function saveChatHistory() {
-            if (!currentUsername) return;
+             if (!currentUsername) return;
 
-            const historyKeys = getHistorySessionKeys();
-            let sessionIndex = historyKeys.length;
-            let newHistoryKey = `user/${currentUsername}/history_${sessionIndex + 1}.json`;
-            let existingKey = localStorage.getItem(newHistoryKey);
+             let historyName = prompt("Vui lòng nhập tên cho cuộc trò chuyện này:", "Cuộc trò chuyện mới");
+             if (!historyName) {
+                 historyName = "Cuộc trò chuyện mới";
+             }
 
-            if (existingKey) {
+             const historyKeys = getHistorySessionKeys();
+             let sessionIndex = historyKeys.length;
+             let newHistoryKey = `user/${currentUsername}/history_${historyName}.json`;
+             let existingKey = localStorage.getItem(newHistoryKey);
 
-            } else {
-                localStorage.setItem(newHistoryKey, JSON.stringify(conversationHistory));
+             if (existingKey) {
                 console.log("lưu thành công")
-            }
+             } else {
+                 localStorage.setItem(newHistoryKey, JSON.stringify(conversationHistory));
+                 console.log("lưu thành công")
+             }
 
-            console.log(historyKeys)
 
         }
 
@@ -891,6 +931,8 @@
             clearChatHistory(); // Chỉ clear UI và history array, KHÔNG xóa file history
             menuDropdown.classList.remove('active');
             hideHistoryModal();
+            currentHistoryKey = null;
+
         }
 
 
@@ -911,7 +953,8 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             menuDropdown.classList.remove('active'); // Đóng menu sau khi tải
-            hideHistoryModal();}
+            hideHistoryModal();
+        }
 
 
         function getHistorySessionKeys() {
@@ -943,29 +986,27 @@
 
         // --- Gửi và nhận tin nhắn (giữ nguyên) ---
         function sendMessage(userMessageFromFile = null) {
-            if (!currentUsername) {
+             if (!currentUsername) {
                 alert("Bạn cần đăng nhập để sử dụng chatbot.");
                 return;
             }
 
-            let userMessage;
-            if (userMessageFromFile) {
-                userMessage = userMessageFromFile;
-            } else {
-                userMessage = promptInput.value;
-                promptInput.value = '';
-            }
+             let userMessage;
+             if (userMessageFromFile) {
+                 userMessage = userMessageFromFile;
+             } else {
+                 userMessage = promptInput.value;
+                 promptInput.value = '';
+             }
 
+             if (!userMessage && !userMessageFromFile) {
+                 return;
+             }
 
-            if (!userMessage && !userMessageFromFile) {
-                return;
-            }
+              const apiKey = currentApiKey;
 
-            const apiKey = currentApiKey;
-
-
-            addUserMessage(userMessage);
-            showLoadingIndicator();
+             addUserMessage(userMessage);
+             showLoadingIndicator();
 
             const combinedPrompt = `${FIXED_PROMPT}\n\n${userMessage}`;
 
@@ -975,7 +1016,13 @@
         function addUserMessage(message) {
             addUserMessageToUI(message, 'user-message');
             conversationHistory.push({ role: "user", parts: [{ text: message }] });
-            // saveChatHistory(); // Lưu lịch sử CHỈ khi bắt đầu chat mới hoặc đăng xuất
+
+            if (currentHistoryKey) {
+                 localStorage.setItem(currentHistoryKey, JSON.stringify(conversationHistory));
+
+            }
+
+            console.log(currentHistoryKey)
         }
 
         function addUserMessageToUI(message, className) {
@@ -989,53 +1036,44 @@
 
         function addAiMessage(message) {
             hideLoadingIndicator();
-            const isCode = message.startsWith("```") && message.endsWith("```");
-            if (isCode) {
-                addCodeMessageToUI(message);
-            } else {
-                addAiMessageToUI(message, 'ai-message');
-            }
 
-            conversationHistory.push({ role: "model", parts: [{ text: message }] });
-            // saveChatHistory(); // Lưu lịch sử CHỈ khi bắt đầu chat mới hoặc đăng xuất
-        }
-
-         function addCodeMessageToUI(message) {
-            const codeBlockDiv = document.createElement('div');
-            codeBlockDiv.className = 'ai-message';
-            codeBlockDiv.style.textAlign = 'left';
-
-            // Tạo khung code
-            const codeDiv = document.createElement('div');
-            codeDiv.className = 'code-block';
-            codeDiv.innerHTML = `<pre>${message.slice(3, -3)}</pre>`; // Loại bỏ ``` và hiển thị code
-
-
-            // Tạo nút copy
-            const copyButton = document.createElement('button');
-            copyButton.className = 'copy-button';
-            copyButton.textContent = 'Sao chép';
-            copyButton.onclick = () => {
-                navigator.clipboard.writeText(message.slice(3, -3)).then(() => {
-                    alert('Đã sao chép code vào clipboard!');
-                }).catch(err => {
-                    console.error('Không thể sao chép code: ', err);
-                });
-            };
-
-            codeDiv.appendChild(copyButton);
-            codeBlockDiv.appendChild(codeDiv);
-            chatContainer.appendChild(codeBlockDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-
-        function addAiMessageToUI(message, className) {
             const messageDiv = document.createElement('div');
-            messageDiv.className = className;
-            messageDiv.textContent = message;
-            chatContainer.appendChild(messageDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+            messageDiv.className = 'ai-message';
+            messageDiv.style.textAlign = 'left';
+
+            let content;
+            if (message.startsWith("```") && message.endsWith("```")) {
+                 content = `<div class="code-block">
+                         <pre>${message.slice(3, -3)}</pre>
+                         <button class="copy-button" onclick="copyCode(this)">Sao chép</button>
+                     </div>`;
+             } else {
+                 content = message;
+             }
+
+              messageDiv.innerHTML = content;
+             chatContainer.appendChild(messageDiv);
+             chatContainer.scrollTop = chatContainer.scrollHeight;
+
+              conversationHistory.push({ role: "model", parts: [{ text: message }] });
+
+            if (currentHistoryKey) {
+                  localStorage.setItem(currentHistoryKey, JSON.stringify(conversationHistory));
+
+            }
         }
+
+        function copyCode(button) {
+            const pre = button.parentNode.querySelector('pre');
+            navigator.clipboard.writeText(pre.textContent)
+                .then(() => {
+                    alert('Đã sao chép code!');
+                })
+                .catch(err => {
+                    console.error('Không thể sao chép: ', err);
+                });
+        }
+
 
         // --- Hiển thị/Ẩn "Đang tải..." (giữ nguyên) ---
         function showLoadingIndicator() {
