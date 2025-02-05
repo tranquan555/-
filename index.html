@@ -6,7 +6,7 @@
     <title>AI Hiện Đại với Gemini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        /* Dark Mode ChatGPT-like Styles with Sidebar - Refined */
+        /* Dark Mode ChatGPT-like Styles with Sidebar and Custom Modals */
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
@@ -16,12 +16,12 @@
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
-            -webkit-touch-callout: none; /* Disable callout on long press iOS */
-            -webkit-user-select: none;   /* Disable text selection Safari */
-            -khtml-user-select: none;    /* Disable text selection Konqueror HTML */
-            -moz-user-select: none;     /* Disable text selection Firefox */
-            -ms-user-select: none;      /* Disable text selection IE/Edge */
-            user-select: none;          /* Disable text selection Non-prefixed version, currently not widely supported */
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         .container {
@@ -61,7 +61,7 @@
             flex-direction: column;
             scrollbar-width: thin;
             scrollbar-color: #555 #252525;
-            padding-bottom: 70px; /* Fixed input area */
+            padding-bottom: 70px;
         }
 
         #messages-container::-webkit-scrollbar {
@@ -78,13 +78,13 @@
         }
 
         .message {
-            margin-bottom: 12px; /* Reduced margin for tighter chat */
-            padding: 10px 14px; /* Slightly reduced padding */
-            border-radius: 15px; /* More rounded bubbles */
+            margin-bottom: 12px;
+            padding: 10px 14px;
+            border-radius: 15px;
             clear: both;
             word-wrap: break-word;
-            max-width: 80%; /* Limit bubble width */
-            display: inline-block; /* For alignment */
+            max-width: 80%;
+            display: inline-block;
         }
 
         .user-message {
@@ -92,7 +92,7 @@
             color: #fff;
             align-self: flex-end;
             float: right;
-            border-top-right-radius: 3px; /* Slightly less rounded on the corner touching other user messages */
+            border-top-right-radius: 3px;
         }
 
         .ai-message {
@@ -100,11 +100,11 @@
             color: #d1d5db;
             align-self: flex-start;
             float: left;
-            border-top-left-radius: 3px; /* Slightly less rounded on the corner touching other AI messages */
+            border-top-left-radius: 3px;
         }
 
         .input-area {
-            padding: 15px 20px; /* Reduced padding top/bottom */
+            padding: 15px 20px;
             background-color: #343541;
             border-top: 1px solid #555;
             display: flex;
@@ -169,7 +169,7 @@
             padding-top: 60px;
             box-shadow: 2px 0 5px rgba(0,0,0,0.2);
             overflow-y: auto;
-            touch-action: manipulation; /* Prevent double-tap zoom in sidebar */
+            touch-action: manipulation;
         }
 
         .sidebar.sidebar--open {
@@ -192,33 +192,33 @@
             padding: 15px 20px;
             cursor: pointer;
             transition: background-color 0.2s ease;
-            display: flex; /* Use flex for items in main menu */
-            justify-content: space-between; /* Space between text and submenu indicator */
-            align-items: center; /* Vertically center items */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .sidebar-menu-item:hover {
             background-color: #343541;
         }
 
-        .sidebar-menu-item.has-submenu > .menu-link::after { /* Keep submenu arrow */
+        .sidebar-menu-item.has-submenu > .menu-link::after {
             content: '>';
-            float: right; /* Adjust if necessary with flexbox */
+            float: right;
             margin-left: 10px;
             font-size: 0.8em;
-            display: inline-block; /* Important for flexbox layout */
+            display: inline-block;
         }
 
         .submenu {
             list-style: none;
-            padding-left: 0; /* Reset padding for dropdown style */
-            margin: 0; /* Reset margin for dropdown */
-            border-radius: 8px; /* Rounded corners for dropdown */
-            overflow: hidden; /* Clip rounded corners properly */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* Shadow for dropdown effect */
-            background-color: #2c2c2c; /* Slightly darker background for dropdown */
-            display: none; /* Initially hidden */
-            margin-top: 5px; /* Spacing between main menu and dropdown */
+            padding-left: 0;
+            margin: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            background-color: #2c2c2c;
+            display: none;
+            margin-top: 5px;
         }
 
         .submenu.open {
@@ -226,11 +226,11 @@
         }
 
         .submenu-item {
-            padding: 12px 20px; /* Adjust padding in dropdown */
+            padding: 12px 20px;
             cursor: pointer;
             transition: background-color 0.2s ease;
-            display: flex; /* Flex for submenu items */
-            justify-content: space-between; /* Space between history name and delete button */
+            display: flex;
+            justify-content: space-between;
             align-items: center;
         }
 
@@ -238,26 +238,25 @@
             background-color: #343541;
         }
 
-        .history-name { /* Style for history name text in submenu */
-            flex-grow: 1; /* Allow name to take up space */
+        .history-name {
+            flex-grow: 1;
         }
 
-        .delete-history-btn { /* Style for delete history button ("...") */
+        .delete-history-btn {
             background: transparent;
             border: none;
-            color: #aaa; /* Light grey color */
+            color: #aaa;
             cursor: pointer;
-            font-size: 1em; /* Adjust size */
-            padding: 0 8px; /* Padding around "..." */
+            font-size: 1em;
+            padding: 0 8px;
             opacity: 0.7;
             transition: opacity 0.2s ease, color 0.2s ease;
         }
 
         .delete-history-btn:hover {
             opacity: 1;
-            color: #fff; /* White on hover */
+            color: #fff;
         }
-
 
         .sidebar-toggle-button {
             position: fixed;
@@ -313,6 +312,85 @@
             background-color: #0097a7;
         }
 
+        /* Custom Modals Styles */
+        .custom-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent overlay */
+            z-index: 400; /* Above sidebar overlay */
+            justify-content: center;
+            align-items: center;
+            pointer-events: none; /* Allow clicks to pass through initially */
+        }
+
+        .custom-modal-overlay.show-modal {
+            display: flex; /* Show modal overlay */
+            pointer-events: auto; /* Re-enable pointer events when modal is shown */
+        }
+
+
+        .custom-modal {
+            background-color: #343541; /* Modal background color */
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .modal-message {
+            margin-bottom: 15px;
+        }
+
+        .modal-input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #555;
+            background-color: #40414f;
+            color: #fff;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .modal-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-button.confirm {
+            background-color: #00bcd4;
+            color: white;
+        }
+
+        .modal-button.confirm:hover {
+            background-color: #0097a7;
+        }
+
+        .modal-button.cancel {
+            background-color: #555;
+            color: white;
+        }
+
+        .modal-button.cancel:hover {
+            background-color: #666;
+        }
+
 
         /* Prism.js Dark Theme Adjustments */
         code[class*="language-"],
@@ -347,7 +425,7 @@
             <h3>Lịch sử Chat</h3>
         </div>
         <ul class="sidebar-menu">
-            <li class="sidebar-menu-item" onclick="saveCurrentHistory()">
+            <li class="sidebar-menu-item" onclick="openSaveHistoryModal()">
                 <span class="menu-link">Lưu lịch sử này</span>
             </li>
             <li class="sidebar-menu-item has-submenu" onclick="toggleHistoryMenu()">
@@ -359,6 +437,30 @@
             <!-- Saved histories will be listed here -->
             <button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>
         </ul>
+
+        <!-- Save History Modal -->
+        <div class="custom-modal-overlay" id="saveHistoryModalOverlay">
+            <div class="custom-modal">
+                <p class="modal-message">Nhập tên cho lịch sử chat này:</p>
+                <input type="text" id="historyNameInput" class="modal-input" placeholder="Tên lịch sử">
+                <div class="modal-buttons">
+                    <button class="modal-button confirm" onclick="saveHistoryWithInputName()">Lưu</button>
+                    <button class="modal-button cancel" onclick="closeSaveHistoryModal()">Huỷ</button>
+                </div>
+            </div>
+        </div>
+
+         <!-- Delete History Confirm Modal -->
+        <div class="custom-modal-overlay" id="deleteHistoryModalOverlay">
+            <div class="custom-modal">
+                <p class="modal-message" id="deleteConfirmationMessage">Bạn có chắc chắn muốn xóa lịch sử chat "<span id="historyNameToDelete"></span>" không?</p>
+                <div class="modal-buttons">
+                    <button class="modal-button confirm" onclick="confirmDeleteHistory()">Xóa</button>
+                    <button class="modal-button cancel" onclick="closeDeleteHistoryModal()">Huỷ</button>
+                </div>
+            </div>
+        </div>
+
     </aside>
 
     <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
@@ -390,6 +492,7 @@
 
         let conversationHistory = [];
         let savedHistories = {};
+        let historyNameToDelete = null; // Track history name to delete
 
         // Sidebar toggle function - same as before
         function toggleSidebar() {
@@ -435,16 +538,57 @@
         }
 
 
-        // Function to save the current chat history with a name - same as before
-        function saveCurrentHistory() {
-            const historyName = prompt("Nhập tên cho lịch sử chat này:");
+        // --- Custom Modal Functions ---
+        function openSaveHistoryModal() {
+            document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
+            document.getElementById('historyNameInput').value = ''; // Clear previous input
+        }
+
+        function closeSaveHistoryModal() {
+            document.getElementById('saveHistoryModalOverlay').classList.remove('show-modal');
+        }
+
+        function saveHistoryWithInputName() {
+            const historyName = document.getElementById('historyNameInput').value.trim();
             if (historyName) {
                 savedHistories[historyName] = [...conversationHistory];
                 localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
                 alert(`Lịch sử chat đã được lưu với tên: ${historyName}`);
                 loadSavedHistoriesList();
+                closeSaveHistoryModal(); // Close modal after saving
+            } else {
+                alert("Vui lòng nhập tên cho lịch sử chat.");
             }
         }
+
+        function openDeleteHistoryModal(name) {
+            historyNameToDelete = name; // Set the history name to delete
+            document.getElementById('historyNameToDelete').textContent = name; // Display name in modal
+            document.getElementById('deleteHistoryModalOverlay').classList.add('show-modal');
+        }
+
+        function closeDeleteHistoryModal() {
+            document.getElementById('deleteHistoryModalOverlay').classList.remove('show-modal');
+            historyNameToDelete = null; // Clear history name to delete
+        }
+
+        function confirmDeleteHistory() {
+            if (historyNameToDelete) {
+                deleteSavedHistory(historyNameToDelete); // Proceed with deletion
+            }
+            closeDeleteHistoryModal(); // Close modal after deletion or cancel
+        }
+
+
+        // Function to delete a saved history - Modified to no longer use confirm()
+        function deleteSavedHistory(historyName) {
+            delete savedHistories[historyName];
+            localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
+            loadSavedHistoriesList(); // Refresh the list after deletion
+            alert(`Lịch sử chat "${historyName}" đã bị xóa.`);
+
+        }
+
 
         // Function to load a specific saved history by name - same as before
         function loadChatHistoryByName(historyName) {
@@ -456,17 +600,6 @@
                 toggleSidebar();
             } else {
                 alert("Không tìm thấy lịch sử chat đã lưu.");
-            }
-        }
-
-        // Function to delete a saved history
-        function deleteSavedHistory(historyName) {
-            const confirmation = confirm(`Bạn có chắc chắn muốn xóa lịch sử chat "${historyName}" không?`);
-            if (confirmation) {
-                delete savedHistories[historyName];
-                localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-                loadSavedHistoriesList(); // Refresh the list after deletion
-                alert(`Lịch sử chat "${historyName}" đã bị xóa.`);
             }
         }
 
@@ -486,7 +619,7 @@
         }
 
 
-        // Function to load and display saved history names in the sidebar menu - modified for delete button
+        // Function to load and display saved history names in the sidebar menu - modified for delete button & modal
         function loadSavedHistoriesList() {
             const historiesMenu = document.getElementById('saved-histories-menu');
             historiesMenu.innerHTML = '<button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>';
@@ -520,7 +653,7 @@
                 deleteButton.textContent = '...'; // Or use an icon
                 deleteButton.onclick = (event) => {
                     event.stopPropagation(); // Prevent history load when delete is clicked
-                    deleteSavedHistory(historyName);
+                    openDeleteHistoryModal(historyName); // Open delete confirm modal
                 };
 
                 historyItem.appendChild(nameSpan);
