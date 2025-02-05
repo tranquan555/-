@@ -759,11 +759,14 @@
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     const aiResponseText = data.candidates[0].content.parts[0].text;
 
-                    // Add AI message to history and save - No changes
+                    // Add AI message to history and save - No changes, **removed file download logic**
                     const aiMessageObject = { role: 'model', parts: [{ text: aiResponseText }] };
                     conversationHistory.push(aiMessageObject);
                     saveChatHistory();
                     renderMessages();
+                     aiMessageDiv.innerHTML = aiResponseText; // Display full response
+                    Prism.highlightAllUnder(aiMessageDiv); // Highlight code blocks
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
                 } else {
                     aiMessageDiv.textContent = "Không nhận được phản hồi hợp lệ từ AI.";
