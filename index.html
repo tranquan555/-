@@ -1,3 +1,4 @@
+--- START OF FILE vip1.html ---
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -6,31 +7,51 @@
     <title>AI Hiện Đại với Gemini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        /* Updated Copy Button Style to ChatGPT-like */
+        /* Reverted Code Block and Copy Button Styles (ChatGPT-like) */
+        code[class*="language-"],
+        pre[class*="language-"] {
+            color: #f8f8f2;
+            background: #272822;
+            position: relative;
+        }
+
+        .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #6c6767; }
+        .token.punctuation { color: #f8f8f2; }
+        .token.namespace { opacity: .7; }
+        .token.property, .token.tag, .token.constant, .token.symbol, .token.deleted { color: #f92672; }
+        .token.boolean, .token.number { color: #ae81ff; }
+        .token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted { color: #a6e22e; }
+        .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string { color: #f8f8f2; background: none; }
+        .token.atrule, .token.attr-value, .token.keyword { color: #00bcd4; }
+        .token.function, .token.class-name { color: #e6db74; }
+        .token.regex, .token.important, .token.variable { color: #fd971f; }
+        .token.important, .token.bold { font-weight: bold; }
+        .token.italic { font-style: italic; }
+        .token.entity { cursor: help; }
+
         .copy-code-button {
             position: absolute;
-            top: 8px; /* Adjust top position */
-            right: 8px; /* Adjust right position */
-            background-color: rgba(255, 255, 255, 0.05); /* Slightly transparent background */
-            color: #fff;
-            border: 1px solid #ccc; /* Light gray border */
+            bottom: 5px;
+            left: 5px;
+            background-color: #444;
+            color: white;
+            border: none;
             border-radius: 5px;
-            padding: 4px 8px;
-            font-size: 0.9em;
+            padding: 5px 8px;
+            font-size: 0.8em;
             cursor: pointer;
-            opacity: 0.6; /* Lower opacity initially */
-            transition: opacity 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+            opacity: 0.7;
+            transition: opacity 0.3s ease, background-color 0.3s ease;
         }
 
         .copy-code-button:hover {
-            opacity: 1; /* Full opacity on hover */
-            background-color: rgba(255, 255, 255, 0.15); /* Slightly darker hover background */
-            border-color: #eee; /* Lighter border on hover */
+            opacity: 1;
+            background-color: #00bcd4;
         }
 
 
-        /* Keep the rest of the CSS styles from the most recent "modern UI" version, without code block styles modification  */
-        body {
+        /* Keep Modern UI CSS (excluding code block/copy button styles which are reverted above) */
+         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
@@ -55,6 +76,11 @@
             -moz-osx-font-smoothing: grayscale;
             transition: background-color 0.3s ease;
         }
+
+        body.sidebar--open { /* Disable body scroll when sidebar open */
+            overflow: hidden;
+        }
+
 
         body::-webkit-scrollbar {
             width: 9px;
@@ -189,20 +215,6 @@
             font-size: 16px;
             text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
         }
-
-        .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #6c6767; }
-        .token.punctuation { color: #f8f8f2; }
-        .token.namespace { opacity: .7; }
-        .token.property, .token.tag, .token.constant, .token.symbol, .token.deleted { color: #f92672; }
-        .token.boolean, .token.number { color: #ae81ff; }
-        .token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted { color: #a6e22e; }
-        .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string { color: #f8f8f2; background: none; }
-        .token.atrule, .token.attr-value, .token.keyword { color: #00bcd4; }
-        .token.function, .token.class-name { color: #e6db74; }
-        .token.regex, .token.important, .token.variable { color: #fd971f; }
-        .token.important, .token.bold { font-weight: bold; }
-        .token.italic { font-style: italic; }
-        .token.entity { cursor: help; }
 
 
         .markdown-bold-uppercase {
@@ -399,7 +411,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid #444;
              font-size: 16px;
         }
 
@@ -592,7 +604,7 @@
         }
 
 
-</style>
+    </style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
@@ -600,7 +612,7 @@
 </head>
 <body>
 
-    <aside class="sidebar" id="sidebar" ontouchmove="event.stopPropagation();">  <!-- Prevent body scroll when touching sidebar -->
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h3>Lịch sử Chat</h3>
         </div>
@@ -693,6 +705,7 @@
         let historyNameToDelete = null;
         let isAutoSaveEnabled = localStorage.getItem('autoSaveEnabled') === 'true';
 
+
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('autoSaveToggle').checked = isAutoSaveEnabled;
         });
@@ -702,7 +715,7 @@
             isAutoSaveEnabled = !isAutoSaveEnabled;
             localStorage.setItem('autoSaveEnabled', isAutoSaveEnabled);
              if (isAutoSaveEnabled) {
-                alert("Tự động lưu đoạn chat đã được bật. Lịch sử chat sẽ tự động được lưu khi bạn tạo đoạn chat mới.");
+                alert("Tự động lưu đoạn chat đã được bật. Lịch sử chat sẽ tự động được lưu khi bạn bắt đầu đoạn chat mới.");
             } else {
                 alert("Tự động lưu đoạn chat đã được tắt.");
             }
@@ -712,14 +725,19 @@
 
         function autoSaveConversation() {
             if (conversationHistory.length > 0) {
-                // Use first user message for history name
-                let historyName = `autosave-${Date.now()}-${Math.floor(Math.random() * 1000)}`; // Default random name
+                let historyName = "Đoạn chat mới"; // Default name if no user messages
 
-                const firstUserMessage = conversationHistory.find(message => message.role === 'user');
-                if (firstUserMessage && firstUserMessage.parts && firstUserMessage.parts[0].text) {
-                    const firstMessageText = firstUserMessage.parts[0].text.substring(0, 30) + "..."; // Use first 30 chars of message
-                    historyName = `autosave-start: "${firstMessageText}"`; // Create name from first message
+                // Find the first user message to use as history name
+                const firstUserMessage = conversationHistory.find(msg => msg.role === 'user');
+                if (firstUserMessage) {
+                    const firstMessageText = firstUserMessage.parts[0].text;
+                    // Take first 20 characters or whole message if shorter
+                    historyName = firstMessageText.length > 20 ? firstMessageText.substring(0, 20) + "..." : firstMessageText;
+                } else {
+                     historyName = `autosave-${Date.now()}-${Math.floor(Math.random() * 1000)}`; // Fallback if no user message yet - should not happen normally
                 }
+
+
                 savedHistories[historyName] = [...conversationHistory];
                 localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
                 loadSavedHistoriesList();
@@ -733,6 +751,8 @@
             const container = document.getElementById('container');
             const overlay = document.getElementById('sidebar-overlay');
             sidebar.classList.toggle('sidebar--open');
+            body = document.querySelector('body');
+            body.classList.toggle('sidebar--open'); // Toggle class on body for overflow hidden
             container.classList.toggle('container.sidebar-open');
             overlay.classList.toggle('sidebar--open');
             if (sidebar.classList.contains('sidebar--open')) {
