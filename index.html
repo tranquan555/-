@@ -64,12 +64,12 @@
         }
 
         .menu-button {
-            padding: 10px 15px;
+            padding: 12px 18px;
             border: none;
             border-radius: 8px;
             background-color: var(--button-bg);
             color: var(--text-color);
-            font-size: 16px;
+            font-size: 18px;
             cursor: pointer;
             transition: background-color 0.3s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease-in-out;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -106,7 +106,7 @@
         .menu-dropdown button {
             display: block;
             width: 100%;
-            padding: 10px 20px;
+            padding: 12px 22px;
             border: none;
             background-color: transparent;
             color: var(--text-color);
@@ -203,6 +203,30 @@
             text-align: left;
             font-style: italic;
             animation: blinkLoading 1.5s infinite;
+        }
+
+        /* Code block style */
+        .code-block {
+            background-color: #282c34;
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 10px;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        /* Copy button style */
+        .copy-button {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: var(--button-bg);
+            color: var(--text-color);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
         }
 
 
@@ -304,13 +328,13 @@
             }
 
             .menu-button {
-                font-size: 14px;
-                padding: 8px 12px;
+                font-size: 16px;
+                padding: 10px 15px;
                 border-radius: 8px;
             }
             .menu-dropdown button {
                 padding: 10px 15px;
-                font-size: 14px;
+                font-size: 16px;
             }
 
             #prompt-input, #send-button, #upload-button {
@@ -396,7 +420,7 @@
             <button class="menu-button" onclick="toggleMenu()">Danh mục</button>
             <div class="menu-dropdown" id="menuDropdown">
                 <button onclick="startNewChatConfirmation()">Bắt đầu cuộc trò chuyện mới</button>
-                <button onclick="loadChatHistoryDropdown()">Tải lại lịch sử</button>
+                <button id="loadHistoryButton" onclick="toggleHistoryDropdown()">Tải lại lịch sử</button>
                 <button onclick="downloadChatHistory()">Tải xuống lịch sử chat</button>
                 <button onclick="logoutUser()">Đăng xuất</button>
             </div>
@@ -438,10 +462,12 @@
 
             <div id="chat-container">
                 <!-- Tin nhắn chat sẽ hiển thị ở đây -->
-                <div id="history-list-container">
+
+            </div>
+
+             <div id="history-list-container">
                     <!-- Danh sách lịch sử chat sẽ được tạo ở đây -->
                 </div>
-            </div>
 
 
             <div id="input-container">
@@ -471,12 +497,14 @@
         const fileUploadInput = document.getElementById('file-upload');
         const menuDropdown = document.getElementById('menuDropdown');
         const historyListContainer = document.getElementById('history-list-container');
+        const loadHistoryButton = document.getElementById('loadHistoryButton');
 
 
         let conversationHistory = [];
         let currentUsername = '';
         let isLoading = false;
         let historySessions = [];
+        let historyDropdownActive = false;
 
         // API Key Gemini của bạn (CỐ ĐỊNH TRONG CODE)
         const GEMINI_API_KEY_DEFAULT = 'AIzaSyCl21Ku_prQnyMHFs_dJRL8-pgjg9hrc2w';
@@ -508,6 +536,9 @@
                     menuDropdown.classList.remove('active');
                 }
             }
+             if (event.target !== loadHistoryButton && !historyListContainer.contains(event.target) && historyDropdownActive) {
+                hideHistoryDropdown();
+             }
         });
 
 
@@ -621,7 +652,22 @@
                 chatContainer.innerHTML = '';
                 conversationHistory = [];
             }
-            historyListContainer.classList.remove('active');
+            hideHistoryDropdown();
+            menuDropdown.classList.remove('active');
+        }
+
+
+         function toggleHistoryDropdown() {
+            if (historyDropdownActive) {
+                hideHistoryDropdown();
+            } else {
+                loadChatHistoryDropdown();
+            }
+        }
+
+        function hideHistoryDropdown() {
+            historyListContainer.style.display = 'none';
+            historyDropdownActive = false;
             menuDropdown.classList.remove('active');
         }
 
@@ -645,7 +691,7 @@
                     historyButton.textContent = `Lịch sử ${index + 1}`;
                     historyButton.onclick = function() {
                         loadSpecificHistory(key);
-                        historyListContainer.classList.remove('active');
+                         hideHistoryDropdown();
                     };
 
                     const deleteButton = document.createElement('button'); // Nút xóa lịch sử
@@ -668,7 +714,8 @@
                 });
             }
 
-            historyListContainer.classList.toggle('active');
+            historyListContainer.style.display = 'block';
+            historyDropdownActive = true;
             menuDropdown.classList.remove('active');
         }
 
@@ -728,7 +775,7 @@
         function startNewChat() { // Hàm bắt đầu chat mới (clear chat UI và history array) - Omega Update
             clearChatHistory(); // Chỉ clear UI và history array, KHÔNG xóa file history
             menuDropdown.classList.remove('active');
-            historyListContainer.classList.remove('active');
+            hideHistoryDropdown();
         }
 
 
@@ -749,6 +796,7 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             menuDropdown.classList.remove('active'); // Đóng menu sau khi tải
+             hideHistoryDropdown();
         }
 
 
@@ -827,9 +875,44 @@
 
         function addAiMessage(message) {
             hideLoadingIndicator();
-            addAiMessageToUI(message, 'ai-message');
+            const isCode = message.startsWith("```") && message.endsWith("```");
+            if (isCode) {
+                addCodeMessageToUI(message);
+            } else {
+                addAiMessageToUI(message, 'ai-message');
+            }
+
             conversationHistory.push({ role: "model", parts: [{ text: message }] });
             // saveChatHistory(); // Lưu lịch sử CHỈ khi bắt đầu chat mới hoặc đăng xuất
+        }
+
+         function addCodeMessageToUI(message) {
+            const codeBlockDiv = document.createElement('div');
+            codeBlockDiv.className = 'ai-message';
+            codeBlockDiv.style.textAlign = 'left';
+
+            // Tạo khung code
+            const codeDiv = document.createElement('div');
+            codeDiv.className = 'code-block';
+            codeDiv.innerHTML = `<pre>${message.slice(3, -3)}</pre>`; // Loại bỏ ``` và hiển thị code
+
+
+            // Tạo nút copy
+            const copyButton = document.createElement('button');
+            copyButton.className = 'copy-button';
+            copyButton.textContent = 'Sao chép';
+            copyButton.onclick = () => {
+                navigator.clipboard.writeText(message.slice(3, -3)).then(() => {
+                    alert('Đã sao chép code vào clipboard!');
+                }).catch(err => {
+                    console.error('Không thể sao chép code: ', err);
+                });
+            };
+
+            codeDiv.appendChild(copyButton);
+            codeBlockDiv.appendChild(codeDiv);
+            chatContainer.appendChild(codeBlockDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
         }
 
         function addAiMessageToUI(message, className) {
