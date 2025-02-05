@@ -6,7 +6,8 @@
     <title>AI Hiện Đại với Gemini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        body {
+        /* ... (your existing styles from previous versions, no changes needed in CSS for this feature primarily) ... */
+         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
@@ -24,12 +25,11 @@
             touch-action: manipulation;
             -webkit-text-size-adjust: 100%;
             font-size: 16px;
-            overflow-y: scroll; /* Ensure scrollbar for very long content */
-            scrollbar-width: thin; /* For Firefox */
-            scrollbar-color: #444 #252525; /* For Firefox */
+            overflow-y: scroll;
+            scrollbar-width: thin;
+            scrollbar-color: #444 #252525;
         }
 
-        /* Chrome, Safari and Opera scrollbar styling */
         body::-webkit-scrollbar {
             width: 8px;
         }
@@ -48,13 +48,13 @@
             width: 95%;
             max-width: 1200px;
             margin: 20px auto;
-            padding: 30px; /* Increased padding */
+            padding: 30px;
             background-color: #25272b;
-            border-radius: 16px; /* More rounded corners */
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* Deeper shadow */
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 40px); /* Adjusted height with margin */
+            height: calc(100vh - 40px);
             flex-grow: 1;
             margin-left: auto;
             transition: margin-left 0.3s ease;
@@ -68,26 +68,26 @@
         h1 {
             text-align: center;
             color: #fff;
-            margin-bottom: 25px; /* Increased margin bottom */
-            font-size: 2.5em; /* Slightly larger title */
+            margin-bottom: 25px;
+            font-size: 2.5em;
             letter-spacing: 0.5px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #444; /* Thicker border */
+            border-bottom: 2px solid #444;
         }
 
         #messages-container {
             flex-grow: 1;
-            padding: 25px; /* Increased padding */
+            padding: 25px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             scrollbar-width: thin;
             scrollbar-color: #555 #252525;
             padding-bottom: 80px;
-            border: none; /* Removed border */
+            border: none;
             border-radius: 12px;
             background-color: #1e2124;
-             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3); /* Inner shadow for depth */
+             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         #messages-container::-webkit-scrollbar {
@@ -104,14 +104,16 @@
         }
 
         .message {
-            margin-bottom: 15px; /* Increased margin */
-            padding: 12px 18px; /* Adjusted padding */
-            border-radius: 20px; /* More rounded message bubbles */
+            margin-bottom: 15px;
+            padding: 12px 18px;
+            border-radius: 20px;
             clear: both;
             word-wrap: break-word;
             max-width: 80%;
             display: inline-block;
-             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Subtle message shadow */
+            border: 1px solid #444;
+            position: relative;
+             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
 
         .user-message {
@@ -133,7 +135,7 @@
         .ai-message .ai-message-text {
             font-family: 'Arial', sans-serif;
             font-weight: normal;
-            line-height: 1.7; /* Further improved line height */
+            line-height: 1.7;
             white-space: pre-line;
             font-size: 16px;
         }
@@ -141,14 +143,14 @@
         .markdown-bold-uppercase {
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 0.6px; /* Adjusted letter spacing */
-            color: #f0f0f0; /* Slightly lighter color for emphasis */
+            letter-spacing: 0.6px;
+            color: #f0f0f0;
         }
 
         .input-area {
-            padding: 12px 20px; /* Adjusted input area padding */
+            padding: 12px 20px;
             background-color: #343541;
-            border-top: 2px solid #555; /* Thicker border */
+            border-top: 2px solid #555;
             display: flex;
             align-items: center;
             position: fixed;
@@ -159,7 +161,7 @@
             padding-left: 20px;
             padding-right: 20px;
             z-index: 100;
-            border-bottom-left-radius: 16px; /* More rounded input area */
+            border-bottom-left-radius: 16px;
             border-bottom-right-radius: 16px;
              border-top: 1px solid #444;
         }
@@ -168,45 +170,45 @@
             flex-grow: 1;
             padding: 10px;
             border: 1px solid #555;
-            border-radius: 12px; /* More rounded textarea */
+            border-radius: 12px;
             font-size: 16px;
             background-color: #40414f;
             color: #fff;
             resize: none;
-            min-height: 38px; /* Slightly increased min-height */
+            min-height: 38px;
             overflow-y: auto;
             border: 1px solid #444;
-             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3); /* Inner shadow for textarea */
+             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
         }
 
         .input-area textarea:focus {
             border-color: #00bcd4;
             outline: none;
-            box-shadow: 0 0 6px rgba(0, 188, 212, 0.6); /* More pronounced focus shadow */
+            box-shadow: 0 0 6px rgba(0, 188, 212, 0.6);
         }
 
         .input-area button {
-            padding: 12px 22px; /* Adjusted button padding */
+            padding: 12px 22px;
             background-color: #00bcd4;
             color: white;
             border: none;
-            border-radius: 12px; /* Rounded button */
+            border-radius: 12px;
             cursor: pointer;
             font-size: 16px;
             margin-left: 12px;
-            transition: background-color 0.3s ease, transform 0.2s ease; /* Added transform transition */
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .input-area button:hover {
             background-color: #0097a7;
-            transform: scale(1.03); /* Subtle scale up on hover */
+            transform: scale(1.03);
         }
 
         .file-upload-button {
             background-color: #555;
             color: white;
             border: none;
-            border-radius: 12px; /* Rounded file button */
+            border-radius: 12px;
             cursor: pointer;
             font-size: 1em;
             width: 40px;
@@ -215,14 +217,14 @@
             justify-content: center;
             align-items: center;
             margin-right: 12px;
-            opacity: 0.9; /* Increased opacity */
+            opacity: 0.9;
             transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
         }
 
         .file-upload-button:hover {
             opacity: 1;
             background-color: #666;
-             transform: scale(1.03); /* Subtle scale up on hover */
+             transform: scale(1.03);
         }
 
 
@@ -237,12 +239,12 @@
             transform: translateX(-100%);
             transition: transform 0.3s ease;
             z-index: 200;
-            padding-top: 70px; /* Increased sidebar top padding */
-            box-shadow: 4px 0 8px rgba(0,0,0,0.3); /* More pronounced sidebar shadow */
+            padding-top: 70px;
+            box-shadow: 4px 0 8px rgba(0,0,0,0.3);
             overflow-y: auto;
             touch-action: manipulation;
             border-right: 1px solid #444;
-             backdrop-filter: blur(10px); /* Frosted glass effect (may impact performance on low-end devices) */
+             backdrop-filter: blur(10px);
         }
 
         .sidebar.sidebar--open {
@@ -250,9 +252,9 @@
         }
 
         .sidebar-header {
-            padding: 25px 20px; /* Adjusted header padding */
+            padding: 25px 20px;
             text-align: center;
-            border-bottom: 2px solid #555; /* Thicker header border */
+            border-bottom: 2px solid #555;
             margin-bottom: 25px;
             border-bottom: 1px solid #444;
         }
@@ -263,13 +265,13 @@
         }
 
         .sidebar-menu-item {
-            padding: 16px 20px; /* Adjusted menu item padding */
+            padding: 16px 20px;
             cursor: pointer;
             transition: background-color 0.2s ease, border-bottom-color 0.3s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid transparent; /* Thicker bottom border on hover */
+            border-bottom: 2px solid transparent;
         }
 
         .sidebar-menu-item:hover {
@@ -283,21 +285,21 @@
             margin-left: 12px;
             font-size: 0.9em;
             display: inline-block;
-            color: #aaa; /* Lighter submenu indicator */
+            color: #aaa;
         }
 
         .submenu {
             list-style: none;
             padding-left: 0;
             margin: 0;
-            border-radius: 12px; /* Rounded submenu */
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.4); /* Deeper submenu shadow */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
             background-color: #2c2c2c;
             margin-top: 8px;
             max-height: 0;
             opacity: 0;
-            transition: max-height 0.4s ease-out, opacity 0.3s ease-out; /* Slightly smoother transitions */
+            transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
             overflow-y: hidden;
             padding-top: 0;
             padding-bottom: 0;
@@ -305,7 +307,7 @@
 
         .submenu.open {
             display: block;
-            max-height: 600px; /* Increased max-height for submenu */
+            max-height: 600px;
             opacity: 1;
             overflow-y: auto;
             padding-top: 8px;
@@ -314,7 +316,7 @@
 
 
         .submenu-item {
-            padding: 14px 20px; /* Adjusted submenu item padding */
+            padding: 14px 20px;
             cursor: pointer;
             transition: background-color 0.2s ease;
             display: flex;
@@ -342,8 +344,8 @@
             color: #aaa;
             cursor: pointer;
             font-size: 1em;
-            padding: 0 10px; /* Adjusted delete button padding */
-            opacity: 0.8; /* Increased opacity */
+            padding: 0 10px;
+            opacity: 0.8;
             transition: opacity 0.2s ease, color 0.2s ease;
         }
 
@@ -354,26 +356,26 @@
 
         .sidebar-toggle-button {
             position: fixed;
-            top: 25px; /* Adjusted toggle button position */
+            top: 25px;
             left: 25px;
             background: #00bcd4;
             color: white;
             border: none;
             border-radius: 50%;
-            width: 45px; /* Slightly larger toggle button */
+            width: 45px;
             height: 45px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             z-index: 300;
-             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Added shadow to toggle button */
+             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
              transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .sidebar-toggle-button:hover {
             background-color: #0097a7;
-             transform: scale(1.05); /* Subtle scale up on hover */
+             transform: scale(1.05);
         }
 
         .sidebar-overlay {
@@ -382,7 +384,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); /* Slightly darker overlay */
+            background-color: rgba(0, 0, 0, 0.6);
             z-index: 150;
             display: none;
         }
@@ -395,8 +397,8 @@
             background-color: #00bcd4;
             color: white;
             border: none;
-            border-radius: 12px; /* Rounded close button */
-            padding: 12px 20px; /* Adjusted close button padding */
+            border-radius: 12px;
+            padding: 12px 20px;
             cursor: pointer;
             margin-top: 15px;
             display: block;
@@ -407,7 +409,7 @@
 
         .close-history-menu-btn:hover {
             background-color: #0097a7;
-             transform: scale(1.03); /* Subtle scale up on hover */
+             transform: scale(1.03);
         }
 
         .custom-modal-overlay {
@@ -417,7 +419,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7); /* Darker modal overlay */
+            background-color: rgba(0, 0, 0, 0.7);
             z-index: 400;
             justify-content: center;
             align-items: center;
@@ -433,39 +435,39 @@
         .custom-modal {
             background-color: #343541;
             color: #fff;
-            padding: 30px; /* Increased modal padding */
+            padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6); /* Deeper modal shadow */
-            width: 85%; /* Slightly wider modal */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+            width: 85%;
             max-width: 450px;
             text-align: center;
             border: 1px solid #444;
         }
 
         .modal-message {
-            margin-bottom: 20px; /* Increased modal message margin */
-            font-size: 1.1em; /* Slightly larger modal message font */
+            margin-bottom: 20px;
+            font-size: 1.1em;
         }
 
         .modal-input {
             width: calc(100% - 24px);
-            padding: 12px; /* Adjusted modal input padding */
+            padding: 12px;
             margin-bottom: 20px;
             border-radius: 10px;
             border: 1px solid #555;
             background-color: #40414f;
             color: #fff;
-             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3); /* Inner shadow for modal input */
+             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
         }
 
         .modal-buttons {
             display: flex;
             justify-content: center;
-            gap: 20px; /* Increased gap between modal buttons */
+            gap: 20px;
         }
 
         .modal-button {
-            padding: 12px 25px; /* Adjusted modal button padding */
+            padding: 12px 25px;
             border: none;
             border-radius: 10px;
             cursor: pointer;
@@ -481,7 +483,7 @@
 
         .modal-button.confirm:hover {
             background-color: #0097a7;
-             transform: scale(1.03); /* Subtle scale up on hover */
+             transform: scale(1.03);
         }
 
         .modal-button.cancel {
@@ -491,7 +493,7 @@
 
         .modal-button.cancel:hover {
             background-color: #666;
-             transform: scale(1.03); /* Subtle scale up on hover */
+             transform: scale(1.03);
         }
 
         code[class*="language-"],
@@ -499,31 +501,31 @@
             color: #f8f8f2;
             background: #272822;
             position: relative;
-            border-radius: 10px; /* Rounded code blocks */
-            padding: 15px; /* Increased code block padding */
+            border-radius: 10px;
+            padding: 15px;
             margin-bottom: 15px;
-            overflow-x: auto; /* Horizontal scroll if code is wide */
+            overflow-x: auto;
         }
 
         .copy-code-button {
             position: absolute;
-            top: 10px; /* Adjusted copy button position */
+            top: 10px;
             right: 10px;
             background-color: #444;
             color: white;
             border: none;
             border-radius: 8px;
-            padding: 6px 10px; /* Adjusted copy button padding */
+            padding: 6px 10px;
             font-size: 0.9em;
             cursor: pointer;
             opacity: 0.7;
-            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease; /* Added transform transition */
+            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
         }
 
         .copy-code-button:hover {
             opacity: 1;
             background-color: #00bcd4;
-             transform: scale(1.05); /* Subtle scale up on hover */
+             transform: scale(1.05);
         }
 
 
@@ -548,11 +550,25 @@
             </li>
             <li class="sidebar-menu-item has-submenu" onclick="toggleHistoryMenu()">
                 <span class="menu-link">Lịch sử đã lưu</span>
-                </li>
+            </li>
+             <li class="sidebar-menu-item has-submenu" onclick="toggleSettingsMenu()">
+                <span class="menu-link">Cài đặt</span>
+            </li>
         </ul>
 
         <ul class="submenu" id="saved-histories-menu">
             <button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>
+        </ul>
+
+         <ul class="submenu" id="settings-menu">
+            <li class="submenu-item">
+                <span class="menu-link">Tự động lưu đoạn chat</span>
+                <label class="switch">
+                    <input type="checkbox" id="autoSaveToggle" onchange="toggleAutoSave()" >
+                    <span class="slider round"></span>
+                </label>
+            </li>
+            <button class="close-history-menu-btn" onclick="toggleSettingsMenu()">Đóng</button>
         </ul>
 
         <div class="custom-modal-overlay" id="saveHistoryModalOverlay">
@@ -612,6 +628,47 @@
         let conversationHistory = [];
         let savedHistories = {};
         let historyNameToDelete = null;
+        let isAutoSaveEnabled = localStorage.getItem('autoSaveEnabled') === 'true';
+        let autoSaveInterval;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('autoSaveToggle').checked = isAutoSaveEnabled;
+            setAutoSaveInterval();
+        });
+
+
+        function toggleAutoSave() {
+            isAutoSaveEnabled = !isAutoSaveEnabled;
+            localStorage.setItem('autoSaveEnabled', isAutoSaveEnabled);
+            setAutoSaveInterval();
+             if (isAutoSaveEnabled) {
+                alert("Tự động lưu đoạn chat đã được bật. Lịch sử chat sẽ tự động được lưu định kỳ.");
+            } else {
+                alert("Tự động lưu đoạn chat đã được tắt.");
+            }
+        }
+
+        function setAutoSaveInterval() {
+            if (autoSaveInterval) {
+                clearInterval(autoSaveInterval); // Clear existing interval
+                autoSaveInterval = null;
+            }
+            if (isAutoSaveEnabled) {
+                autoSaveInterval = setInterval(autoSaveConversation, 60000); // Auto-save every 1 minute (60000 ms)
+            }
+        }
+
+
+        function autoSaveConversation() {
+            if (conversationHistory.length > 0) {
+                const historyName = `autosave-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+                savedHistories[historyName] = [...conversationHistory];
+                localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
+                loadSavedHistoriesList(); // Refresh history list to include auto-saved chat
+                console.log(`Đoạn chat đã được tự động lưu: ${historyName}`);
+            }
+        }
+
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -624,6 +681,7 @@
                  loadSavedHistoriesList();
             } else {
                 hideHistoryMenu();
+                hideSettingsMenu(); // Hide settings menu when sidebar closes
             }
         }
 
@@ -734,10 +792,22 @@
         function toggleHistoryMenu() {
             const submenu = document.getElementById('saved-histories-menu');
             submenu.classList.toggle('open');
+            hideSettingsMenu(); // Also close settings if history menu opens
         }
 
         function hideHistoryMenu() {
             const submenu = document.getElementById('saved-histories-menu');
+            submenu.classList.remove('open');
+        }
+
+        function toggleSettingsMenu() {
+            const submenu = document.getElementById('settings-menu');
+            submenu.classList.toggle('open');
+            hideHistoryMenu(); // Also close history if settings menu opens
+        }
+
+         function hideSettingsMenu() {
+            const submenu = document.getElementById('settings-menu');
             submenu.classList.remove('open');
         }
 
@@ -976,5 +1046,69 @@
             }
         }
     </script>
+
+<style>
+    /* ... (your existing styles) ... */
+
+    /* Switch styles (inspired by iOS) */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+    }
+
+    input:checked + .slider {
+      background-color: #00bcd4;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 2px #00bcd4;
+    }
+
+    input:checked + .slider:before {
+      -webkit-transform: translateX(20px);
+      -ms-transform: translateX(20px);
+      transform: translateX(20px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+      border-radius: 24px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+</style>
+
 </body>
 </html>
