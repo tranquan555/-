@@ -1,9 +1,10 @@
+--- START OF FILE vip1.html ---
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatBot TQ</title>
+    <title>AI Hiện Đại với Gemini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
         body {
@@ -115,7 +116,7 @@
             font-family: 'Arial', sans-serif;
             font-weight: normal;
             line-height: 1.6;
-            white-space: pre-line; /* Preserve line breaks */
+            white-space: pre-line;
         }
 
         .markdown-bold-uppercase {
@@ -124,19 +125,19 @@
             letter-spacing: 0.5px;
         }
 
-        /* New CSS for inline code */
-        .inline-code {
-            font-family: monospace, monospace;
-            background-color: #3a3b45; /* Slightly darker bg for inline code */
-            color: #dcdcaa; /* Yellowish color for inline code text */
+        /* New style for inline code using *`` */
+        .markdown-code-inline {
+            font-family: monospace;
+            background-color: #333;
+            color: #f8f8f2; /* light code text color */
             padding: 2px 4px;
-            border-radius: 4px;
-            font-size: 0.9em; /* Slightly smaller font */
+            border-radius: 3px;
+            font-size: 0.9em;
         }
 
 
         .input-area {
-            padding: 10px 20px; /* Reduced padding for vertical height */
+            padding: 10px 20px;
             background-color: #343541;
             border-top: 1px solid #555;
             display: flex;
@@ -156,14 +157,14 @@
 
         .input-area textarea {
             flex-grow: 1;
-            padding: 8px; /* Slightly reduced textarea padding */
+            padding: 8px;
             border: 1px solid #555;
             border-radius: 8px;
             font-size: 16px;
             background-color: #40414f;
             color: #fff;
             resize: none;
-            min-height: 35px; /* Reduced min-height of textarea */
+            min-height: 35px;
             overflow-y: auto;
             border: 1px solid #444;
         }
@@ -190,27 +191,26 @@
             background-color: #0097a7;
         }
 
-        /* File upload button styling */
         .file-upload-button {
-            background-color: #555; /* Darker background for file button */
+            background-color: #555;
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-size: 1em;
-            width: 40px; /* Square button size */
+            width: 40px;
             height: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-right: 10px; /* Spacing between file button and textarea */
+            margin-right: 10px;
             opacity: 0.8;
             transition: opacity 0.3s ease, background-color 0.3s ease;
         }
 
         .file-upload-button:hover {
             opacity: 1;
-            background-color: #666; /* Slightly lighter on hover */
+            background-color: #666;
         }
 
 
@@ -284,7 +284,7 @@
             margin-top: 5px;
             max-height: 0;
             opacity: 0;
-            transition: max-height 0.3s ease-out, opacity: 0.2s ease-out;
+            transition: max-height 0.3s ease-out, opacity 0.2s ease-out;
             overflow-y: hidden;
             padding-top: 0;
             padding-bottom: 0;
@@ -573,7 +573,7 @@
     </button>
 
     <div class="container" id="container">
-        <h1>ChatBot TQ</h1>
+        <h1>AI Hiện Đại với Gemini</h1>
 
         <div id="messages-container">
             <!-- Messages will be appended here -->
@@ -600,6 +600,17 @@
         let conversationHistory = [];
         let savedHistories = {};
         let historyNameToDelete = null;
+
+        // Utility function to escape HTML characters
+        function escapeHtml(unsafe) {
+            return unsafe
+                 .replace(/&/g, "&")
+                 .replace(/</g, "<")
+                 .replace(/>/g, ">")
+                 .replace(/"/g, """)
+                 .replace(/'/g, "'");
+         }
+
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -805,7 +816,7 @@
 
                 // Simulate AI acknowledging the file (for UI purposes - actual file upload to Gemini needs server-side)
                 setTimeout(() => {
-                    aiMessageDiv.remove(); // Remove "Đang tải tệp..." message
+                    aiMessageDiv.remove();
 
                     const aiResponseDiv = document.createElement('div');
                     aiResponseDiv.classList.add('message', 'ai-message');
@@ -818,17 +829,8 @@
                     saveChatHistory();
                     renderMessages();
 
-                }, 1500); // Simulate a delay for "file processing"
+                }, 1500);
             }
-        }
-
-        // Utility function to escape HTML characters
-        function escapeHtml(unsafe) {
-            return unsafe.replace(/&/g, "&")
-                .replace(/</g, "<")
-                .replace(/>/g, ">")
-                .replace(/"/g, """)
-                .replace(/'/g, "'");
         }
 
 
@@ -887,17 +889,21 @@
 
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
-                    aiMessageDiv.innerHTML = '';
+
+                    // 1. Escape HTML entities FIRST
+                    let processedText = escapeHtml(aiResponseText);
+
+
+                    // 2. Process *``inline code``* markdown
+                    processedText = processedText.replace(/\*`([^`]+)`\*/g, '<span class="markdown-code-inline">$1</span>');
+
+                    // 3. Process **bold uppercase** markdown
+                    processedText = processedText.replace(/\*\*([^*]+)\*\*/g, '<span class="markdown-bold-uppercase">$1</span>');
+
+
+                    aiMessageDiv.innerHTML = ''; // Clear "Đang suy nghĩ..."
                     const aiTextContentSpan = document.createElement('span');
                     aiTextContentSpan.classList.add('ai-message-text');
-
-                    let processedText = aiResponseText;
-
-                    // Process inline code using *``*` markdown
-                    processedText = processedText.replace(/\*`([^`]+)`\*/g, '<span class="inline-code">$1</span>');
-
-                    // Process **bold uppercase** markdown
-                    processedText = processedText.replace(/\*\*([^*]+)\*\*/g, '<span class="markdown-bold-uppercase">$1</span>');
 
 
                     let textContent = '';
@@ -911,8 +917,7 @@
                         textContent = processedText.substring(lastIndex, match.index);
                         if (textContent.trim()) {
                             const textPara = document.createElement('p');
-                            // Escape HTML in regular text content to prevent rendering
-                            textPara.innerHTML = escapeHtml(textContent.trim());
+                            textPara.innerHTML = textContent.trim();
                             aiTextContentSpan.appendChild(textPara);
                         }
 
@@ -923,15 +928,14 @@
                         codePre.classList.add('language-' + language);
                         const codeElement = document.createElement('code');
                         codeElement.classList.add('language-' + language);
-                        // Escape HTML in code content as well, then set textContent for code element
-                        codeElement.textContent = escapeHtml(codeContent);
+                        codeElement.textContent = codeContent;
                         codePre.appendChild(codeElement);
 
                         const copyButton = document.createElement('button');
                         copyButton.classList.add('copy-code-button');
                         copyButton.innerHTML = '<i class="fas fa-copy"></i>';
                         copyButton.onclick = () => {
-                            navigator.clipboard.writeText(codeContent).then(() => { // Use original codeContent (unescaped) for copy
+                            navigator.clipboard.writeText(codeContent).then(() => {
                                 alert('Đã sao chép code vào clipboard!');
                             }).catch(err => {
                                 console.error('Lỗi khi sao chép: ', err);
@@ -948,14 +952,13 @@
                     textContent = processedText.substring(lastIndex);
                     if (textContent.trim()) {
                          const textPara = document.createElement('p');
-                         // Escape HTML for any remaining text content
-                         textPara.innerHTML = escapeHtml(textContent.trim());
+                         textPara.innerHTML = textContent.trim();
                          aiTextContentSpan.appendChild(textPara);
                     }
 
 
                     if (!aiTextContentSpan.hasChildNodes() && processedText.trim()) {
-                         aiTextContentSpan.innerHTML = escapeHtml(processedText.trim()); // Escape for the entire response if no blocks
+                         aiTextContentSpan.innerHTML = processedText.trim();
                     } else if (!aiTextContentSpan.hasChildNodes()) {
                          aiTextContentSpan.textContent = "Không có phản hồi nội dung từ AI.";
                     }
