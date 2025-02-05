@@ -16,13 +16,13 @@
             min-height: 100vh;
             overflow-x: hidden;
             -webkit-touch-callout: none;
-            -webkit-user-select: text; /* Changed to 'text' to allow text selection */
-            -khtml-user-select: text;    /* Changed to 'text' to allow text selection */
-            -moz-user-select: text;     /* Changed to 'text' to allow text selection */
-            -ms-user-select: text;      /* Changed to 'text' to allow text selection */
-            user-select: text;          /* Changed to 'text' to allow text selection */
-            touch-action: manipulation; /* Prevent zoom on touch devices - added here */
-            -webkit-text-size-adjust: 100%; /* Prevent font scaling in iOS */
+            -webkit-user-select: text;
+            -khtml-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+            touch-action: manipulation;
+            -webkit-text-size-adjust: 100%;
         }
 
         .container {
@@ -78,7 +78,7 @@
             background: #252525;
         }
 
-        #messages-container::-webkit-scrollbar-thumb {
+        #messages-container::-webkit-scrollbar::-webkit-scrollbar-thumb {
             background-color: #555;
             border-radius: 4px;
         }
@@ -92,7 +92,7 @@
             max-width: 80%;
             display: inline-block;
             border: 1px solid #444;
-            position: relative; /* For positioning copy button */
+            position: relative;
         }
 
         .user-message {
@@ -112,10 +112,18 @@
         }
 
         .ai-message .ai-message-text {
-            font-family: 'Arial', sans-serif; /* Custom font for AI text */
-            font-weight: bold; /* Make AI text bold */
-            line-height: 1.6; /* Improve line spacing for readability */
+            font-family: 'Arial', sans-serif;
+            font-weight: normal; /* Reverted to normal bold as boldness will be controlled by markdown class */
+            line-height: 1.6;
         }
+
+        /* New CSS class for markdown bold and uppercase */
+        .markdown-bold-uppercase {
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px; /* Optional: adjust letter spacing if needed */
+        }
+
 
         .input-area {
             padding: 15px 20px;
@@ -435,7 +443,7 @@
         pre[class*="language-"] {
             color: #f8f8f2;
             background: #272822;
-            position: relative; /* for copy button positioning */
+            position: relative;
         }
 
         .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #6c6767; }
@@ -475,7 +483,7 @@
 
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet"> <!-- Added Arial font link -->
+    <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
@@ -549,7 +557,7 @@
     <script>
         const apiKey = 'AIzaSyCl21Ku_prQnyMHFs_dJRL8-pgjg9hrc2w';
         const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
-        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường. **Khi cần nhấn mạnh điều gì đó, HÃY SỬ DỤNG CHỮ IN HOA TOÀN BỘ.**"; // Updated system prompt
+        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường."; // System prompt remains unchanged
 
         let conversationHistory = [];
         let savedHistories = {};
@@ -587,7 +595,7 @@
             conversationHistory.forEach(message => {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
-                // Create a span for AI text content with the new class
+                // Create a span for AI text content
                 const messageTextSpan = document.createElement('span');
                 messageTextSpan.classList.add('ai-message-text');
                 messageTextSpan.innerHTML = message.parts[0].text;
@@ -750,7 +758,7 @@
 
             const aiMessageDiv = document.createElement('div');
             aiMessageDiv.classList.add('message', 'ai-message');
-            aiMessageDiv.innerHTML = '<span class="ai-message-text">Đang suy nghĩ...</span>'; // Added ai-message-text class here as well for initial message
+            aiMessageDiv.innerHTML = '<span class="ai-message-text">Đang suy nghĩ...</span>';
             messagesContainer.appendChild(aiMessageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
@@ -787,9 +795,12 @@
 
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
-                    aiMessageDiv.innerHTML = ''; // Clear "Đang suy nghĩ..."
-                    const aiTextContentSpan = document.createElement('span'); // Create the span here
-                    aiTextContentSpan.classList.add('ai-message-text'); // Add class to the span
+                    aiMessageDiv.innerHTML = '';
+                    const aiTextContentSpan = document.createElement('span');
+                    aiTextContentSpan.classList.add('ai-message-text');
+
+                    // Process **bold uppercase** markdown
+                    let processedText = aiResponseText.replace(/\*\*([^*]+)\*\*/g, '<span class="markdown-bold-uppercase">$1</span>');
 
 
                     let textContent = '';
@@ -799,12 +810,12 @@
                     let lastIndex = 0;
                     let match;
 
-                    while ((match = codeBlockRegex.exec(aiResponseText)) !== null) {
-                        textContent = aiResponseText.substring(lastIndex, match.index);
+                    while ((match = codeBlockRegex.exec(processedText)) !== null) {
+                        textContent = processedText.substring(lastIndex, match.index);
                         if (textContent.trim()) {
                             const textPara = document.createElement('p');
                             textPara.innerHTML = textContent.trim();
-                            aiTextContentSpan.appendChild(textPara); // Append to the span, not directly to messageDiv
+                            aiTextContentSpan.appendChild(textPara);
                         }
 
                         language = match[1] || 'text';
@@ -830,26 +841,26 @@
                         };
                         codePre.appendChild(copyButton);
 
-                        aiTextContentSpan.appendChild(codePre); // Append code blocks also to the span
+                        aiTextContentSpan.appendChild(codePre);
 
                         lastIndex = codeBlockRegex.lastIndex;
                     }
 
-                    textContent = aiResponseText.substring(lastIndex);
+                    textContent = processedText.substring(lastIndex);
                     if (textContent.trim()) {
                          const textPara = document.createElement('p');
                          textPara.innerHTML = textContent.trim();
-                         aiTextContentSpan.appendChild(textPara); // Append remaining text to span
+                         aiTextContentSpan.appendChild(textPara);
                     }
 
 
-                    if (!aiTextContentSpan.hasChildNodes() && aiResponseText.trim()) { // Check span's children
-                         aiTextContentSpan.innerHTML = aiResponseText.trim();
+                    if (!aiTextContentSpan.hasChildNodes() && processedText.trim()) {
+                         aiTextContentSpan.innerHTML = processedText.trim();
                     } else if (!aiTextContentSpan.hasChildNodes()) {
                          aiTextContentSpan.textContent = "Không có phản hồi nội dung từ AI.";
                     }
 
-                    aiMessageDiv.appendChild(aiTextContentSpan); // Finally, append the entire span to messageDiv
+                    aiMessageDiv.appendChild(aiTextContentSpan);
 
                     const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
                     conversationHistory.push(aiMessageObject);
