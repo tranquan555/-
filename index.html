@@ -115,7 +115,7 @@
             font-family: 'Arial', sans-serif;
             font-weight: normal;
             line-height: 1.6;
-            white-space: pre-line; /* Preserve line breaks */
+            white-space: pre-line;
         }
 
         .markdown-bold-uppercase {
@@ -124,19 +124,8 @@
             letter-spacing: 0.5px;
         }
 
-        /* New CSS for inline code */
-        .inline-code {
-            background-color: #3b3b3b; /* Slightly different bg for inline code */
-            color: #d1d5db;
-            padding: 2px 5px;
-            border-radius: 5px;
-            font-family: monospace; /* Use monospace font for inline code */
-            font-size: 0.9em;
-        }
-
-
         .input-area {
-            padding: 10px 20px; /* Reduced padding for vertical height */
+            padding: 10px 20px;
             background-color: #343541;
             border-top: 1px solid #555;
             display: flex;
@@ -156,14 +145,14 @@
 
         .input-area textarea {
             flex-grow: 1;
-            padding: 8px; /* Slightly reduced textarea padding */
+            padding: 8px;
             border: 1px solid #555;
             border-radius: 8px;
             font-size: 16px;
             background-color: #40414f;
             color: #fff;
             resize: none;
-            min-height: 35px; /* Reduced min-height of textarea */
+            min-height: 35px;
             overflow-y: auto;
             border: 1px solid #444;
         }
@@ -190,27 +179,26 @@
             background-color: #0097a7;
         }
 
-        /* File upload button styling */
         .file-upload-button {
-            background-color: #555; /* Darker background for file button */
+            background-color: #555;
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-size: 1em;
-            width: 40px; /* Square button size */
+            width: 40px;
             height: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-right: 10px; /* Spacing between file button and textarea */
+            margin-right: 10px;
             opacity: 0.8;
             transition: opacity 0.3s ease, background-color 0.3s ease;
         }
 
         .file-upload-button:hover {
             opacity: 1;
-            background-color: #666; /* Slightly lighter on hover */
+            background-color: #666;
         }
 
 
@@ -805,7 +793,7 @@
 
                 // Simulate AI acknowledging the file (for UI purposes - actual file upload to Gemini needs server-side)
                 setTimeout(() => {
-                    aiMessageDiv.remove(); // Remove "Đang tải tệp..." message
+                    aiMessageDiv.remove();
 
                     const aiResponseDiv = document.createElement('div');
                     aiResponseDiv.classList.add('message', 'ai-message');
@@ -818,7 +806,7 @@
                     saveChatHistory();
                     renderMessages();
 
-                }, 1500); // Simulate a delay for "file processing"
+                }, 1500);
             }
         }
 
@@ -882,80 +870,61 @@
                     const aiTextContentSpan = document.createElement('span');
                     aiTextContentSpan.classList.add('ai-message-text');
 
-                    // Check for HTML, CSS, JS code at the beginning to force code block
-                    const isCodeResponse = /^\s*<!DOCTYPE html>|^\s*<html|^\s*<style|^\s*body\s*\{|^\s*\.|\s*#|^\s*function|^\s*const|^\s*let|^\s*var|^\s*import|^\s*class/i.test(aiResponseText.trim());
-                    let processedText = aiResponseText;
-                    let forceCodeBlock = false;
+                    let processedText = aiResponseText; // Initialize processedText
+
+                    // Process **bold uppercase** markdown - do this *before* code block processing
+                    processedText = processedText.replace(/\*\*([^*]+)\*\*/g, '<span class="markdown-bold-uppercase">$1</span>');
 
 
-                    if (isCodeResponse) {
-                        forceCodeBlock = true;
-                         const codePre = document.createElement('pre');
-                         codePre.classList.add('language-html'); // Default to html, can adjust if needed
-                         const codeElement = document.createElement('code');
-                         codeElement.classList.add('language-html');
-                         codeElement.textContent = aiResponseText.trim(); // Use textContent to prevent rendering
-                         codePre.appendChild(codeElement);
-                         aiTextContentSpan.appendChild(codePre);
-                    } else {
-                        // Process **bold uppercase** markdown
-                        processedText = aiResponseText.replace(/\*\*([^*]+)\*\*/g, '<span class="markdown-bold-uppercase">$1</span>');
-                         // Process `*``inline code*``
-                        processedText = processedText.replace(/\*``([^*`]+)`\*/g, '<code class="inline-code">$1</code>');
+                    let textContent = '';
+                    let codeContent = null;
+                    let language = 'text';
+                    const codeBlockRegex = /```([\w]*)\n([\s\S]*?)```/gm;
+                    let lastIndex = 0;
+                    let match;
 
-
-                        let textContent = '';
-                        let codeContent = null;
-                        let language = 'text';
-                        const codeBlockRegex = /```([\w]*)\n([\s\S]*?)```/gm;
-                        let lastIndex = 0;
-                        let match;
-
-                        while (!forceCodeBlock && (match = codeBlockRegex.exec(processedText)) !== null) { // Only process code blocks if not already forced into one
-                            textContent = processedText.substring(lastIndex, match.index);
-                            if (textContent.trim()) {
-                                const textPara = document.createElement('p');
-                                textPara.innerHTML = textContent.trim();
-                                aiTextContentSpan.appendChild(textPara);
-                            }
-
-                            language = match[1] || 'text';
-                            codeContent = match[2].trim();
-
-                            const codePre = document.createElement('pre');
-                            codePre.classList.add('language-' + language);
-                            const codeElement = document.createElement('code');
-                            codeElement.classList.add('language-' + language);
-                            codeElement.textContent = codeContent;
-                            codePre.appendChild(codeElement);
-
-                            const copyButton = document.createElement('button');
-                            copyButton.classList.add('copy-code-button');
-                            copyButton.innerHTML = '<i class="fas fa-copy"></i>';
-                            copyButton.onclick = () => {
-                                navigator.clipboard.writeText(codeContent).then(() => {
-                                    alert('Đã sao chép code vào clipboard!');
-                                }).catch(err => {
-                                    console.error('Lỗi khi sao chép: ', err);
-                                    alert('Lỗi khi sao chép code.');
-                                });
-                            };
-                            codePre.appendChild(copyButton);
-
-                            aiTextContentSpan.appendChild(codePre);
-
-                            lastIndex = codeBlockRegex.lastIndex;
+                    while ((match = codeBlockRegex.exec(processedText)) !== null) {
+                        textContent = processedText.substring(lastIndex, match.index);
+                        if (textContent.trim()) {
+                            const textPara = document.createElement('p');
+                            textPara.innerHTML = textContent.trim();
+                            aiTextContentSpan.appendChild(textPara);
                         }
 
-                        if (!forceCodeBlock) { // Append remaining text if not forceCodeBlock scenario
-                            textContent = processedText.substring(lastIndex);
-                            if (textContent.trim()) {
-                                const textPara = document.createElement('p');
-                                textPara.innerHTML = textContent.trim();
-                                aiTextContentSpan.appendChild(textPara);
-                            }
-                        }
+                        language = match[1] || 'text'; // e.g., "html", "css", "javascript"
+                        codeContent = match[2].trim();
 
+                        const codePre = document.createElement('pre');
+                        codePre.classList.add('language-' + language); // Apply language class for Prism
+
+                        const codeElement = document.createElement('code');
+                        codeElement.classList.add('language-' + language);
+                        codeElement.textContent = codeContent; // Use textContent to prevent HTML interpretation!
+                        codePre.appendChild(codeElement);
+
+                        const copyButton = document.createElement('button');
+                        copyButton.classList.add('copy-code-button');
+                        copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+                        copyButton.onclick = () => {
+                            navigator.clipboard.writeText(codeContent).then(() => {
+                                alert('Đã sao chép code vào clipboard!');
+                            }).catch(err => {
+                                console.error('Lỗi khi sao chép: ', err);
+                                alert('Lỗi khi sao chép code.');
+                            });
+                        };
+                        codePre.appendChild(copyButton);
+
+                        aiTextContentSpan.appendChild(codePre);
+
+                        lastIndex = codeBlockRegex.lastIndex;
+                    }
+
+                    textContent = processedText.substring(lastIndex);
+                    if (textContent.trim()) {
+                         const textPara = document.createElement('p');
+                         textPara.innerHTML = textContent.trim();
+                         aiTextContentSpan.appendChild(textPara);
                     }
 
 
