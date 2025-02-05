@@ -22,7 +22,8 @@
             -ms-user-select: text;
             user-select: text;
             touch-action: manipulation;
-            -webkit-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%; /* Ensure text size adjust is 100% to prevent scaling */
+            font-size: 16px; /* Explicitly set a base font size on the body */
         }
 
         .container {
@@ -116,6 +117,7 @@
             font-weight: normal;
             line-height: 1.6;
             white-space: pre-line;
+            font-size: 16px; /* Explicitly set font-size for AI text too */
         }
 
         .markdown-bold-uppercase {
@@ -870,9 +872,8 @@
                     const aiTextContentSpan = document.createElement('span');
                     aiTextContentSpan.classList.add('ai-message-text');
 
-                    let processedText = aiResponseText; // Initialize processedText
+                    let processedText = aiResponseText;
 
-                    // Process **bold uppercase** markdown - do this *before* code block processing
                     processedText = processedText.replace(/\*\*([^*]+)\*\*/g, '<span class="markdown-bold-uppercase">$1</span>');
 
 
@@ -891,15 +892,15 @@
                             aiTextContentSpan.appendChild(textPara);
                         }
 
-                        language = match[1] || 'text'; // e.g., "html", "css", "javascript"
+                        language = match[1] || 'text';
                         codeContent = match[2].trim();
 
                         const codePre = document.createElement('pre');
-                        codePre.classList.add('language-' + language); // Apply language class for Prism
+                        codePre.classList.add('language-' + language);
 
                         const codeElement = document.createElement('code');
                         codeElement.classList.add('language-' + language);
-                        codeElement.textContent = codeContent; // Use textContent to prevent HTML interpretation!
+                        codeElement.textContent = codeContent;
                         codePre.appendChild(codeElement);
 
                         const copyButton = document.createElement('button');
