@@ -455,6 +455,9 @@
             <h3>Lịch sử Chat</h3>
         </div>
         <ul class="sidebar-menu">
+            <li class="sidebar-menu-item" onclick="startNewChat()">
+                <span class="menu-link">Đoạn chat mới</span>
+            </li>
             <li class="sidebar-menu-item" onclick="openSaveHistoryModal()">
                 <span class="menu-link">Lưu lịch sử này</span>
             </li>
@@ -558,6 +561,13 @@
                 Prism.highlightAllUnder(messageDiv);
             });
              messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function startNewChat() {
+            conversationHistory = [];
+            saveChatHistory();
+            renderMessages();
+            toggleSidebar(); // Optionally close sidebar after starting new chat
         }
 
 
@@ -737,37 +747,63 @@
 
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
+                    aiMessageDiv.innerHTML = ''; // Clear "Đang suy nghĩ..."
+
+                    let textContent = '';
                     let codeContent = null;
                     let language = 'text';
                     const codeBlockRegex = /```([\w]*)\n([\s\S]*?)```/gm;
-                    const matches = [...aiResponseText.matchAll(codeBlockRegex)];
+                    let lastIndex = 0;
+                    let match;
 
-                    if (matches.length > 0) {
-                        let textContent = aiResponseText.split(codeBlockRegex)[0];
+                    while ((match = codeBlockRegex.exec(aiResponseText)) !== null) {
+                        // Add text before the code block
+                        textContent = aiResponseText.substring(lastIndex, match.index);
                         if (textContent.trim()) {
-                             aiMessageDiv.innerHTML = textContent.trim();
-                        } else {
-                             aiMessageDiv.textContent = "Đoạn code được tạo:";
+                            const textPara = document.createElement('p');
+                            textPara.innerHTML = textContent.trim();
+                            aiMessageDiv.appendChild(textPara);
                         }
 
+                        language = match[1] || 'text';
+                        codeContent = match[2].trim();
 
-                        matches.forEach(match => {
-                            language = match[1] || 'text';
-                            codeContent = match[2].trim();
+                        const codePre = document.createElement('pre');
+                        codePre.classList.add('language-' + language);
+                        const codeElement = document.createElement('code');
+                        codeElement.classList.add('language-' + language);
+                        codeElement.textContent = codeContent;
+                        codePre.appendChild(codeElement);
+                        aiMessageDiv.appendChild(codePre);
 
-                            const blob = new Blob([codeContent], { type: 'text/plain' });
-                            const url = URL.createObjectURL(blob);
-                            const downloadLink = document.createElement('a');
-                            downloadLink.href = url;
-                            downloadLink.download = `code.${language}`;
-                            downloadLink.textContent = `Tải xuống code ${language}`;
-                            downloadLink.style.display = 'block';
-                            downloadLink.style.marginTop = '10px';
-                            aiMessageDiv.appendChild(downloadLink);
-                        });
 
-                    } else {
-                        aiMessageDiv.innerHTML = aiResponseText;
+                        const blob = new Blob([codeContent], { type: 'text/plain' });
+                        const url = URL.createObjectURL(blob);
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = url;
+                        downloadLink.download = `code.${language}`;
+                        downloadLink.textContent = `Tải xuống code ${language}`;
+                        downloadLink.style.display = 'block';
+                        downloadLink.style.marginTop = '5px';
+                        aiMessageDiv.appendChild(downloadLink);
+
+
+                        lastIndex = codeBlockRegex.lastIndex;
+                    }
+
+                    // Add any remaining text after the last code block
+                    textContent = aiResponseText.substring(lastIndex);
+                    if (textContent.trim()) {
+                         const textPara = document.createElement('p');
+                         textPara.innerHTML = textContent.trim();
+                         aiMessageDiv.appendChild(textPara);
+                    }
+
+
+                    if (!aiMessageDiv.hasChildNodes() && aiResponseText.trim()) { // Handle cases with no code block but still text
+                         aiMessageDiv.innerHTML = aiResponseText.trim();
+                    } else if (!aiMessageDiv.hasChildNodes()) { // Handle empty response gracefully, though unlikely
+                         aiMessageDiv.textContent = "Không có phản hồi nội dung từ AI.";
                     }
 
 
