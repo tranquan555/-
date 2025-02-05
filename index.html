@@ -1,4 +1,3 @@
---- START OF FILE new_page 3.html ---
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -7,7 +6,7 @@
     <title>AI Hiện Đại với Gemini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        /* Dark Mode ChatGPT-like Styles with Sidebar */
+        /* Dark Mode ChatGPT-like Styles with Sidebar - Refined */
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
@@ -16,7 +15,13 @@
             color: #d1d5db;
             display: flex;
             min-height: 100vh;
-            overflow-x: hidden; /* Prevent horizontal scrollbar from sidebar animation */
+            overflow-x: hidden;
+            -webkit-touch-callout: none; /* Disable callout on long press iOS */
+            -webkit-user-select: none;   /* Disable text selection Safari */
+            -khtml-user-select: none;    /* Disable text selection Konqueror HTML */
+            -moz-user-select: none;     /* Disable text selection Firefox */
+            -ms-user-select: none;      /* Disable text selection IE/Edge */
+            user-select: none;          /* Disable text selection Non-prefixed version, currently not widely supported */
         }
 
         .container {
@@ -30,15 +35,14 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
-            flex-grow: 1; /* Allow container to take available space */
-            margin-left: auto; /* Push container to right when sidebar is open */
-            transition: margin-left 0.3s ease; /* Transition for container margin when sidebar opens */
+            flex-grow: 1;
+            margin-left: auto;
+            transition: margin-left 0.3s ease;
         }
 
         .container.sidebar-open {
-            margin-left: 250px; /* Width of sidebar when open */
+            margin-left: 250px;
         }
-
 
         h1 {
             text-align: center;
@@ -74,11 +78,13 @@
         }
 
         .message {
-            margin-bottom: 15px;
-            padding: 10px 15px;
-            border-radius: 10px;
+            margin-bottom: 12px; /* Reduced margin for tighter chat */
+            padding: 10px 14px; /* Slightly reduced padding */
+            border-radius: 15px; /* More rounded bubbles */
             clear: both;
             word-wrap: break-word;
+            max-width: 80%; /* Limit bubble width */
+            display: inline-block; /* For alignment */
         }
 
         .user-message {
@@ -86,6 +92,7 @@
             color: #fff;
             align-self: flex-end;
             float: right;
+            border-top-right-radius: 3px; /* Slightly less rounded on the corner touching other user messages */
         }
 
         .ai-message {
@@ -93,10 +100,11 @@
             color: #d1d5db;
             align-self: flex-start;
             float: left;
+            border-top-left-radius: 3px; /* Slightly less rounded on the corner touching other AI messages */
         }
 
         .input-area {
-            padding: 20px;
+            padding: 15px 20px; /* Reduced padding top/bottom */
             background-color: #343541;
             border-top: 1px solid #555;
             display: flex;
@@ -153,18 +161,19 @@
             left: 0;
             width: 250px;
             height: 100%;
-            background-color: #252525; /* Sidebar background darker */
+            background-color: #252525;
             color: #fff;
-            transform: translateX(-100%); /* Initially hidden off-screen */
+            transform: translateX(-100%);
             transition: transform 0.3s ease;
-            z-index: 200; /* Above container and input area */
-            padding-top: 60px; /* Spacing for logo/title if needed at the top */
+            z-index: 200;
+            padding-top: 60px;
             box-shadow: 2px 0 5px rgba(0,0,0,0.2);
-            overflow-y: auto; /* Scroll for long menus */
+            overflow-y: auto;
+            touch-action: manipulation; /* Prevent double-tap zoom in sidebar */
         }
 
         .sidebar.sidebar--open {
-            transform: translateX(0); /* Slide in when open */
+            transform: translateX(0);
         }
 
         .sidebar-header {
@@ -183,23 +192,33 @@
             padding: 15px 20px;
             cursor: pointer;
             transition: background-color 0.2s ease;
+            display: flex; /* Use flex for items in main menu */
+            justify-content: space-between; /* Space between text and submenu indicator */
+            align-items: center; /* Vertically center items */
         }
 
         .sidebar-menu-item:hover {
             background-color: #343541;
         }
 
-        .sidebar-menu-item.has-submenu > .menu-link::after {
+        .sidebar-menu-item.has-submenu > .menu-link::after { /* Keep submenu arrow */
             content: '>';
-            float: right;
+            float: right; /* Adjust if necessary with flexbox */
             margin-left: 10px;
             font-size: 0.8em;
+            display: inline-block; /* Important for flexbox layout */
         }
 
         .submenu {
             list-style: none;
-            padding-left: 20px;
+            padding-left: 0; /* Reset padding for dropdown style */
+            margin: 0; /* Reset margin for dropdown */
+            border-radius: 8px; /* Rounded corners for dropdown */
+            overflow: hidden; /* Clip rounded corners properly */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* Shadow for dropdown effect */
+            background-color: #2c2c2c; /* Slightly darker background for dropdown */
             display: none; /* Initially hidden */
+            margin-top: 5px; /* Spacing between main menu and dropdown */
         }
 
         .submenu.open {
@@ -207,14 +226,38 @@
         }
 
         .submenu-item {
-            padding: 10px 0;
+            padding: 12px 20px; /* Adjust padding in dropdown */
             cursor: pointer;
             transition: background-color 0.2s ease;
+            display: flex; /* Flex for submenu items */
+            justify-content: space-between; /* Space between history name and delete button */
+            align-items: center;
         }
 
         .submenu-item:hover {
             background-color: #343541;
         }
+
+        .history-name { /* Style for history name text in submenu */
+            flex-grow: 1; /* Allow name to take up space */
+        }
+
+        .delete-history-btn { /* Style for delete history button ("...") */
+            background: transparent;
+            border: none;
+            color: #aaa; /* Light grey color */
+            cursor: pointer;
+            font-size: 1em; /* Adjust size */
+            padding: 0 8px; /* Padding around "..." */
+            opacity: 0.7;
+            transition: opacity 0.2s ease, color 0.2s ease;
+        }
+
+        .delete-history-btn:hover {
+            opacity: 1;
+            color: #fff; /* White on hover */
+        }
+
 
         .sidebar-toggle-button {
             position: fixed;
@@ -230,7 +273,7 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            z-index: 300; /* Above sidebar */
+            z-index: 300;
         }
 
         .sidebar-toggle-button:hover {
@@ -243,13 +286,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
-            z-index: 150; /* Below sidebar but above everything else */
-            display: none; /* Hidden initially */
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 150;
+            display: none;
         }
 
         .sidebar-overlay.sidebar--open {
-            display: block; /* Show overlay when sidebar is open */
+            display: block;
         }
 
         .close-history-menu-btn {
@@ -309,7 +352,7 @@
             </li>
             <li class="sidebar-menu-item has-submenu" onclick="toggleHistoryMenu()">
                 <span class="menu-link">Lịch sử đã lưu</span>
-            </li>
+                </li>
         </ul>
 
         <ul class="submenu" id="saved-histories-menu">
@@ -345,10 +388,10 @@
         const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
         const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
 
-        let conversationHistory = []; // In-memory history
-        let savedHistories = {}; // Object to store saved histories, key: historyName, value: history
+        let conversationHistory = [];
+        let savedHistories = {};
 
-        // Sidebar toggle function
+        // Sidebar toggle function - same as before
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const container = document.getElementById('container');
@@ -357,13 +400,13 @@
             container.classList.toggle('container.sidebar-open');
             overlay.classList.toggle('sidebar--open');
             if (sidebar.classList.contains('sidebar--open')) {
-                 loadSavedHistoriesList(); // Load list when opening sidebar
+                 loadSavedHistoriesList();
             } else {
-                hideHistoryMenu(); // Ensure history menu is closed when closing sidebar
+                hideHistoryMenu();
             }
         }
 
-        // Function to load chat history from local storage
+        // Function to load chat history from local storage - same as before
         function loadChatHistory() {
             const storedHistory = localStorage.getItem('chatHistory');
             if (storedHistory) {
@@ -372,57 +415,68 @@
             }
         }
 
-        // Function to save chat history to local storage (current session)
+        // Function to save chat history to local storage (current session) - same as before
         function saveChatHistory() {
             localStorage.setItem('chatHistory', JSON.stringify(conversationHistory));
         }
 
-        // Render messages from conversationHistory to UI
+        // Render messages from conversationHistory to UI - same as before
         function renderMessages() {
             const messagesContainer = document.getElementById('messages-container');
-            messagesContainer.innerHTML = ''; // Clear existing messages
+            messagesContainer.innerHTML = '';
             conversationHistory.forEach(message => {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
-                messageDiv.innerHTML = message.parts[0].text; // Use innerHTML for markdown
+                messageDiv.innerHTML = message.parts[0].text;
                 messagesContainer.appendChild(messageDiv);
-                Prism.highlightAllUnder(messageDiv); // Highlight code blocks if any
+                Prism.highlightAllUnder(messageDiv);
             });
-             messagesContainer.scrollTop = messagesContainer.scrollHeight; // Scroll to bottom
+             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
 
 
-        // Function to save the current chat history with a name
+        // Function to save the current chat history with a name - same as before
         function saveCurrentHistory() {
             const historyName = prompt("Nhập tên cho lịch sử chat này:");
             if (historyName) {
-                savedHistories[historyName] = [...conversationHistory]; // Save a copy
+                savedHistories[historyName] = [...conversationHistory];
                 localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
                 alert(`Lịch sử chat đã được lưu với tên: ${historyName}`);
-                loadSavedHistoriesList(); // Update history list in sidebar
+                loadSavedHistoriesList();
             }
         }
 
-        // Function to load a specific saved history by name
+        // Function to load a specific saved history by name - same as before
         function loadChatHistoryByName(historyName) {
             if (savedHistories[historyName]) {
-                conversationHistory = [...savedHistories[historyName]]; // Load saved history
-                saveChatHistory(); // Update current session history too, for continuity if needed after loading saved history
+                conversationHistory = [...savedHistories[historyName]];
+                saveChatHistory();
                 renderMessages();
-                toggleHistoryMenu(); // Close the history menu after loading
-                toggleSidebar(); // Optionally close sidebar too
+                toggleHistoryMenu();
+                toggleSidebar();
             } else {
                 alert("Không tìm thấy lịch sử chat đã lưu.");
             }
         }
 
+        // Function to delete a saved history
+        function deleteSavedHistory(historyName) {
+            const confirmation = confirm(`Bạn có chắc chắn muốn xóa lịch sử chat "${historyName}" không?`);
+            if (confirmation) {
+                delete savedHistories[historyName];
+                localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
+                loadSavedHistoriesList(); // Refresh the list after deletion
+                alert(`Lịch sử chat "${historyName}" đã bị xóa.`);
+            }
+        }
 
-        // Function to toggle visibility of saved histories menu
+
+        // Function to toggle visibility of saved histories menu - same as before
         function toggleHistoryMenu() {
             const submenu = document.getElementById('saved-histories-menu');
             submenu.classList.toggle('open');
             if (submenu.classList.contains('open')) {
-                 loadSavedHistoriesList(); // Ensure list is loaded every time menu opens
+                 loadSavedHistoriesList();
             }
         }
 
@@ -432,16 +486,16 @@
         }
 
 
-        // Function to load and display saved history names in the sidebar menu
+        // Function to load and display saved history names in the sidebar menu - modified for delete button
         function loadSavedHistoriesList() {
             const historiesMenu = document.getElementById('saved-histories-menu');
-            historiesMenu.innerHTML = '<button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>'; // Keep close button
+            historiesMenu.innerHTML = '<button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>';
 
             const storedSavedHistories = localStorage.getItem('savedHistories');
             if (storedSavedHistories) {
                 savedHistories = JSON.parse(storedSavedHistories);
             } else {
-                savedHistories = {}; // Initialize if nothing in local storage
+                savedHistories = {};
             }
 
             if (Object.keys(savedHistories).length === 0) {
@@ -452,20 +506,33 @@
                 return;
             }
 
-
             for (const historyName in savedHistories) {
                 const historyItem = document.createElement('li');
                 historyItem.classList.add('submenu-item');
-                historyItem.textContent = historyName;
-                historyItem.onclick = () => loadChatHistoryByName(historyName);
+
+                const nameSpan = document.createElement('span');
+                nameSpan.classList.add('history-name');
+                nameSpan.textContent = historyName;
+                nameSpan.onclick = () => loadChatHistoryByName(historyName); // Load history on name click
+
+                const deleteButton = document.createElement('button');
+                deleteButton.classList.add('delete-history-btn');
+                deleteButton.textContent = '...'; // Or use an icon
+                deleteButton.onclick = (event) => {
+                    event.stopPropagation(); // Prevent history load when delete is clicked
+                    deleteSavedHistory(historyName);
+                };
+
+                historyItem.appendChild(nameSpan);
+                historyItem.appendChild(deleteButton);
                 historiesMenu.appendChild(historyItem);
             }
         }
 
 
-        // Load history when page loads
+        // Load history when page loads - same as before
         loadChatHistory();
-        loadSavedHistoriesList(); // Load initially for pre-populated list if available
+        loadSavedHistoriesList();
 
 
         async function getGeminiResponse() {
@@ -477,21 +544,21 @@
                 return;
             }
 
-            // Add user message to history and display
+            // Add user message to history and display - same as before
             const userMessageObject = { role: 'user', parts: [{ text: userPrompt }] };
             conversationHistory.push(userMessageObject);
-            saveChatHistory(); // Save after user message too
-            renderMessages(); // Re-render all messages including the user's new message
-            document.getElementById('user-prompt').value = ''; // Clear input after sending
+            saveChatHistory();
+            renderMessages();
+            document.getElementById('user-prompt').value = '';
 
 
             const aiMessageDiv = document.createElement('div');
             aiMessageDiv.classList.add('message', 'ai-message');
             aiMessageDiv.textContent = "Đang suy nghĩ...";
             messagesContainer.appendChild(aiMessageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight; // Scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-            // Prepare payload with conversation history and system prompt
+            // Prepare payload with conversation history and system prompt - same as before
             let promptContents = conversationHistory.map(message => ({
                 role: message.role,
                 parts: message.parts
@@ -526,11 +593,11 @@
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     const aiResponseText = data.candidates[0].content.parts[0].text;
 
-                    // Add AI message to history and save
+                    // Add AI message to history and save - same as before
                     const aiMessageObject = { role: 'model', parts: [{ text: aiResponseText }] };
                     conversationHistory.push(aiMessageObject);
                     saveChatHistory();
-                    renderMessages(); // Re-render messages to include AI response and highlight code
+                    renderMessages();
 
                 } else {
                     aiMessageDiv.textContent = "Không nhận được phản hồi hợp lệ từ AI.";
@@ -544,4 +611,3 @@
     </script>
 </body>
 </html>
---- END OF FILE new_page 3.html ---
