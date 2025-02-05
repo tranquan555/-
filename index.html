@@ -1,3 +1,5 @@
+--- START OF FILE new_page.html ---
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,6 +21,7 @@
             --loading-color: #ffc107;
             --history-list-bg: #252525;
             --history-list-item-hover: #333;
+            --auth-input-bg: #333;
         }
 
         body {
@@ -65,23 +68,18 @@
         }
 
         .menu-button {
-            padding: 8px;
+            padding: 12px 18px;
             border: none;
             border-radius: 8px;
             background-color: var(--button-bg);
             color: var(--text-color);
-            font-size: 1.2em;
+            font-size: 18px;
             cursor: pointer;
             transition: background-color 0.3s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease-in-out;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             outline: none;
-            width: 35px;
-            height: 35px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            line-height: 0;
-
+            width: auto;
+            height: auto;
         }
 
         .menu-button:hover {
@@ -129,18 +127,159 @@
         }
 
 
-        /* Form đăng nhập/đăng ký (giữ nguyên) */
-        .auth-container button {
-            padding: 10px 18px;
-            border: none;
+         /* New History Modal Styles */
+        .history-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--secondary-bg);
+            padding: 20px;
             border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+            z-index: 1001;
+            width: 80%;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .history-modal.active {
+            display: block;
+        }
+
+        .history-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .history-item {
+            background-color: var(--history-list-bg);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            position: relative;
+        }
+
+        .history-item:hover {
+            background-color: var(--history-list-item-hover);
+        }
+
+        .history-item-content {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 40px;
+        }
+
+        .history-item-delete {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #aaa;
+            font-size: 1.2em;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .history-item-delete:hover {
+            opacity: 1;
+            color: #eee;
+        }
+
+        .history-modal-close {
             background-color: var(--button-bg);
             color: var(--text-color);
-            font-size: 16px;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease-in-out;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s;
+            margin-top: 15px;
+            font-size: 16px;
+        }
+
+        .history-modal-close:hover {
+            background-color: var(--button-hover-bg);
+        }
+
+
+
+        /* Form đăng nhập/đăng ký (giữ nguyên) */
+        .auth-container {
+            width: 90%;
+            max-width: 400px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: var(--secondary-bg);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+
+        .auth-container h2 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .auth-container label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        .auth-container input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: none;
+            background-color: var(--auth-input-bg);
+            color: var(--text-color);
+            font-size: 16px;
+            box-sizing: border-box;
             outline: none;
+        }
+
+
+        .auth-container button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--button-bg);
+            color: var(--text-color);
+            font-size: 17px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            outline: none;
+        }
+
+        .auth-container button:hover {
+            background-color: var(--button-hover-bg);
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .auth-switch a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .auth-switch a:hover {
+            color: var(--button-hover-bg);
         }
 
 
@@ -371,65 +510,6 @@
         }
 
 
-        /* Danh sách lịch sử chat (giữ nguyên) */
-        #history-list-container {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background-color: var(--history-list-bg);
-            border-radius: 10px;
-            overflow: hidden;
-            display: none;
-            max-height: 250px;
-            overflow-y: scroll;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-            z-index: 9;
-        }
-
-        #history-list-container.active {
-            display: block;
-        }
-
-        #history-list-container button {
-            display: block;
-            width: 100%;
-            padding: 12px 22px;
-            border: none;
-            background-color: transparent;
-            color: var(--text-color);
-            text-align: left;
-            cursor: pointer;
-            transition: background-color 0.2s ease-in-out;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            position: relative; /* Cần thiết cho nút xóa */
-        }
-
-        #history-list-container button:hover {
-            background-color: var(--history-list-item-hover);
-        }
-
-        .history-delete-button { /* Nút Xóa Lịch Sử - Ba chấm */
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            padding: 5px 10px;
-            border: none;
-            background-color: transparent;
-            color: #aaa;
-            cursor: pointer;
-            font-size: 1em;
-            opacity: 0.6;
-            transition: opacity 0.2s ease-in-out, color 0.2s ease-in-out;
-        }
-
-        .history-list-container button:hover .history-delete-button,
-        .history-delete-button:hover {
-            opacity: 1;
-            color: #eee;
-        }
     </style>
 </head>
 <body>
@@ -438,18 +518,24 @@
         <h1>AI Chatbot - Gemini API</h1>
 
         <div class="menu-container">
-            <button class="menu-button" onclick="toggleMenu()">☰</button>
+            <button class="menu-button" onclick="toggleMenu()">Danh mục</button>
             <div class="menu-dropdown" id="menuDropdown">
                 <button onclick="startNewChatConfirmation()">Bắt đầu cuộc trò chuyện mới</button>
-                <button id="loadHistoryButton" onclick="toggleHistoryDropdown()">Tải lại lịch sử</button>
+                <button id="loadHistoryButton" onclick="showHistoryModal()">Tải lại lịch sử</button>
                 <button onclick="downloadChatHistory()">Tải xuống lịch sử chat</button>
                 <button onclick="logoutUser()">Đăng xuất</button>
-
-                <div id="history-list-container">
-                    <!-- Danh sách lịch sử chat sẽ được tạo ở đây -->
-                </div>
             </div>
         </div>
+
+          <!-- Lịch sử Chat Modal -->
+        <div class="history-modal" id="historyModal">
+            <h2>Lịch Sử Chat</h2>
+            <ul class="history-list" id="historyList">
+                <!-- Danh sách lịch sử chat sẽ được tạo ở đây -->
+            </ul>
+            <button class="history-modal-close" onclick="hideHistoryModal()">Đóng</button>
+        </div>
+
 
         <!-- Container đăng nhập/đăng ký (giữ nguyên) -->
         <div id="auth-forms-container">
@@ -518,8 +604,11 @@
         const registerPasswordInput = document.getElementById('register-password');
         const fileUploadInput = document.getElementById('file-upload');
         const menuDropdown = document.getElementById('menuDropdown');
-        const historyListContainer = document.getElementById('history-list-container');
         const loadHistoryButton = document.getElementById('loadHistoryButton');
+
+        // Get the modal and list elements
+        const historyModal = document.getElementById('historyModal');
+        const historyList = document.getElementById('historyList');
 
 
         let conversationHistory = [];
@@ -548,29 +637,33 @@
 
 
         // --- Menu Danh mục (giữ nguyên) ---
-       let isMenuOpen = false; // Thêm biến trạng thái cho menu
-
         function toggleMenu() {
-            isMenuOpen = !isMenuOpen; // Đảo ngược trạng thái
-            if (isMenuOpen) {
-                menuDropdown.classList.add('active');
-            } else {
-                menuDropdown.classList.remove('active');
-                hideHistoryDropdown(); // Ẩn danh sách lịch sử khi đóng menu
-            }
+            menuDropdown.classList.toggle('active');
         }
 
-
-
         window.addEventListener('click', function(event) {
-            if (!event.target.closest('.menu-container')) {
+            if (!event.target.matches('.menu-button')) {
                 if (menuDropdown.classList.contains('active')) {
                     menuDropdown.classList.remove('active');
-                    isMenuOpen = false; // Cập nhật trạng thái khi đóng menu
-                    hideHistoryDropdown(); // Ẩn danh sách lịch sử khi đóng menu
                 }
             }
+
+              if (event.target !== loadHistoryButton && !historyModal.contains(event.target)) {
+                hideHistoryModal();
+            }
         });
+
+
+
+         function showHistoryModal() {
+                historyModal.classList.add('active');
+                loadHistoryList();
+            }
+
+            function hideHistoryModal() {
+                historyModal.classList.remove('active');
+            }
+
 
 
         // --- Quản lý người dùng và đăng nhập/đăng ký (CẬP NHẬT LƯU FILE) ---
@@ -631,8 +724,7 @@
             authFormsContainer.style.display = 'block';
             usernameDisplay.textContent = '';
             menuDropdown.classList.remove('active');
-            isMenuOpen = false;
-            hideHistoryDropdown();
+            hideHistoryModal();
             saveChatHistory(); // LƯU LỊCH SỬ KHI ĐĂNG XUẤT (Omega Update change)
         }
 
@@ -684,85 +776,57 @@
                 chatContainer.innerHTML = '';
                 conversationHistory = [];
             }
-            hideHistoryDropdown();
+             hideHistoryModal();
             menuDropdown.classList.remove('active');
-             isMenuOpen = false;
-        }
-
-        function toggleHistoryDropdown() {
-            if (!menuDropdown.classList.contains('active')) {
-                menuDropdown.classList.add('active'); // Mở menu nếu chưa mở
-            }
-            loadChatHistoryDropdown(); // Tải hoặc ẩn danh sách lịch sử
         }
 
 
-        function hideHistoryDropdown() {
-            historyListContainer.style.display = 'none';
-            historyDropdownActive = false;
-        }
-
-
-        function loadChatHistoryDropdown() {
+       function loadHistoryList() {
             if (!currentUsername) return;
 
-            historyListContainer.innerHTML = '';
-            historySessions = [];
-
+            historyList.innerHTML = '';
             const historyKeys = getHistorySessionKeys();
 
-            if (historyKeys.length === 0) {
-                const noHistoryMessage = document.createElement('button');
-                noHistoryMessage.textContent = "Không có lịch sử đã lưu";
-                noHistoryMessage.disabled = true;
-                historyListContainer.appendChild(noHistoryMessage);
-            } else {
-                historyKeys.forEach((key, index) => {
-                    const historyButton = document.createElement('button');
-                    historyButton.textContent = `Lịch sử ${index + 1}`;
-                    historyButton.onclick = function() {
-                        loadSpecificHistory(key);
-                        hideHistoryDropdown();
-                         menuDropdown.classList.remove('active');
-                          isMenuOpen = false;
-                    };
+            historyKeys.forEach((key, index) => {
+                const historyItem = document.createElement('li');
+                historyItem.className = 'history-item';
 
-                    const deleteButton = document.createElement('button'); // Nút xóa lịch sử
-                    deleteButton.className = 'history-delete-button';
-                    deleteButton.innerHTML = '⋯'; // Icon ba chấm dọc (Vertical ellipsis)
-                    deleteButton.onclick = function(event) {
-                        event.stopPropagation(); // Ngăn button lịch sử bị click
-                        deleteChatHistory(key); // Gọi hàm xóa lịch sử
-                    };
+                const historyItemContent = document.createElement('span');
+                historyItemContent.className = 'history-item-content';
+                historyItemContent.textContent = `Lịch sử ${index + 1}`;
+                historyItemContent.onclick = function() {
+                    loadSpecificHistory(key);
+                     hideHistoryModal();
+                };
+                 historyItem.appendChild(historyItemContent);
 
 
-                    const historyItemContainer = document.createElement('div'); // Container cho item lịch sử và nút xóa
-                    historyItemContainer.style.position = 'relative'; // Để định vị nút xóa tuyệt đối
-                    historyItemContainer.appendChild(historyButton);
-                    historyItemContainer.appendChild(deleteButton);
 
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'history-item-delete';
+                deleteButton.innerHTML = '✕'; // X icon
+                deleteButton.onclick = function(event) {
+                    event.stopPropagation();
+                    deleteChatHistory(key);
+                    loadHistoryList();
+                };
+                historyItem.appendChild(deleteButton);
 
-                    historyListContainer.appendChild(historyItemContainer); // Thêm container vào danh sách
-                    historySessions.push({ key: key, label: `Lịch sử ${index + 1}` });
-                });
-            }
-
-            historyListContainer.style.display = 'block';
-            historyDropdownActive = true;
+                 historyList.appendChild(historyItem);
+            });
         }
 
-        function deleteChatHistory(historyKey) { // Hàm xóa lịch sử chat
+         function deleteChatHistory(historyKey) { // Hàm xóa lịch sử chat
             const confirmDelete = confirm("Bạn có chắc chắn muốn xóa lịch sử chat này?");
             if (confirmDelete) {
                 localStorage.removeItem(historyKey); // Xóa lịch sử từ localStorage
-                loadChatHistoryDropdown(); // Tải lại danh sách lịch sử
+                loadHistoryList(); // Tải lại danh sách lịch sử
                 chatContainer.innerHTML = ''; // Xóa nội dung chat hiện tại nếu có
                 conversationHistory = [];   // Xóa lịch sử conversation hiện tại
             }
         }
 
-
-        function loadSpecificHistory(historyKey) {
+       function loadSpecificHistory(historyKey) {
            try {
                 const history = readFile(historyKey);
                 if (history) {
@@ -826,8 +890,7 @@
         function startNewChat() { // Hàm bắt đầu chat mới (clear chat UI và history array) - Omega Update
             clearChatHistory(); // Chỉ clear UI và history array, KHÔNG xóa file history
             menuDropdown.classList.remove('active');
-               isMenuOpen = false;
-            hideHistoryDropdown();
+            hideHistoryModal();
         }
 
 
@@ -847,10 +910,8 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            menuDropdown.classList.remove('active');
-               isMenuOpen = false; // Đóng menu khi tải xuống
-            hideHistoryDropdown();
-        }
+            menuDropdown.classList.remove('active'); // Đóng menu sau khi tải
+            hideHistoryModal();}
 
 
         function getHistorySessionKeys() {
