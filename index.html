@@ -1,3 +1,4 @@
+--- START OF FILE new_page 3.html ---
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -6,7 +7,6 @@
     <title>AI Hiện Đại với Gemini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        /* Dark Mode ChatGPT-like Styles with Sidebar, Custom Modals, and Animations - Styles remain same as last version */
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
@@ -164,7 +164,6 @@
             background-color: #0097a7;
         }
 
-        /* Sidebar Styles - remain same */
         .sidebar {
             position: fixed;
             top: 0;
@@ -344,7 +343,6 @@
             background-color: #0097a7;
         }
 
-        /* Custom Modals Styles - remain same */
         .custom-modal-overlay {
             display: none;
             position: fixed;
@@ -426,7 +424,6 @@
         }
 
 
-        /* Prism.js Dark Theme Adjustments - remain same */
         code[class*="language-"],
         pre[class*="language-"] {
             color: #f8f8f2;
@@ -468,11 +465,9 @@
         </ul>
 
         <ul class="submenu" id="saved-histories-menu">
-            <!-- Saved histories will be listed here -->
             <button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>
         </ul>
 
-        <!-- Save History Modal - remain same -->
         <div class="custom-modal-overlay" id="saveHistoryModalOverlay">
             <div class="custom-modal">
                 <p class="modal-message">Nhập tên cho lịch sử chat này:</p>
@@ -484,8 +479,7 @@
             </div>
         </div>
 
-         <!-- Delete History Confirm Modal - remain same -->
-        <div class="custom-modal-overlay" id="deleteHistoryModalOverlay">
+         <div class="custom-modal-overlay" id="deleteHistoryModalOverlay">
             <div class="custom-modal">
                 <p class="modal-message" id="deleteConfirmationMessage">Bạn có chắc chắn muốn xóa lịch sử chat "<span id="historyNameToDelete"></span>" không?</p>
                 <div class="modal-buttons">
@@ -528,7 +522,6 @@
         let savedHistories = {};
         let historyNameToDelete = null;
 
-        // Sidebar toggle function - remain same
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const container = document.getElementById('container');
@@ -543,7 +536,6 @@
             }
         }
 
-        // Function to load chat history from local storage - remain same
         function loadChatHistory() {
             const storedHistory = localStorage.getItem('chatHistory');
             if (storedHistory) {
@@ -552,12 +544,10 @@
             }
         }
 
-        // Function to save chat history to local storage (current session) - remain same
         function saveChatHistory() {
             localStorage.setItem('chatHistory', JSON.stringify(conversationHistory));
         }
 
-        // Render messages from conversationHistory to UI - remain same
         function renderMessages() {
             const messagesContainer = document.getElementById('messages-container');
             messagesContainer.innerHTML = '';
@@ -572,7 +562,6 @@
         }
 
 
-        // --- Custom Modal Functions --- - remain same
         function openSaveHistoryModal() {
             document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
             document.getElementById('historyNameInput').value = '';
@@ -614,7 +603,6 @@
         }
 
 
-        // Function to delete a saved history - remain same
         function deleteSavedHistory(historyName) {
             delete savedHistories[historyName];
             localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
@@ -624,7 +612,6 @@
         }
 
 
-        // Function to load a specific saved history by name - remain same
         function loadChatHistoryByName(historyName) {
             if (savedHistories[historyName]) {
                 conversationHistory = [...savedHistories[historyName]];
@@ -638,7 +625,6 @@
         }
 
 
-        // Function to toggle visibility of saved histories menu -  modified for dropdown animation
         function toggleHistoryMenu() {
             const submenu = document.getElementById('saved-histories-menu');
             submenu.classList.toggle('open');
@@ -650,7 +636,6 @@
         }
 
 
-        // Function to load and display saved history names in the sidebar menu - Modified for file download offer
         function loadSavedHistoriesList() {
             const historiesMenu = document.getElementById('saved-histories-menu');
             historiesMenu.innerHTML = '<button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>';
@@ -694,7 +679,6 @@
         }
 
 
-        // Load history when page loads - remain same
         loadChatHistory();
         loadSavedHistoriesList();
 
@@ -708,7 +692,6 @@
                 return;
             }
 
-            // Add user message to history and display - remain same
             const userMessageObject = { role: 'user', parts: [{ text: userPrompt }] };
             conversationHistory.push(userMessageObject);
             saveChatHistory();
@@ -722,7 +705,6 @@
             messagesContainer.appendChild(aiMessageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-            // Prepare payload with conversation history and system prompt - remain same
             let promptContents = conversationHistory.map(message => ({
                 role: message.role,
                 parts: message.parts
@@ -756,42 +738,45 @@
 
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
-
-                    // Regex to find code blocks (```language ... ``` or ``` ... ```) - same as before
-                    const codeBlockRegex = /```([\w]*)\n([\s\S]*?)```/gm;
-                    let match;
                     let codeContent = null;
-                    let language = 'text'; // Default language for file
-                    let nonCodeText = aiResponseText; // Assume all is non-code initially
+                    let language = 'text';
+                    const codeBlockRegex = /```([\w]*)\n([\s\S]*?)```/gm;
+                    const matches = [...aiResponseText.matchAll(codeBlockRegex)];
 
-                    while ((match = codeBlockRegex.exec(aiResponseText))) {
-                        language = match[1] || 'text'; // Get language or default to text
-                        codeContent = match[2].trim(); // Extract code and trim whitespace
+                    if (matches.length > 0) {
+                        let textContent = aiResponseText.split(codeBlockRegex)[0];
+                        if (textContent.trim()) {
+                             aiMessageDiv.innerHTML = textContent.trim();
+                        } else {
+                             aiMessageDiv.textContent = "Đoạn code được tạo:";
+                        }
 
-                        if (codeContent) {
-                            // Create download link for code - same as before
-                            const blob = new Blob([codeContent], { type: 'text/plain' }); // Adjust mime type if needed
+
+                        matches.forEach(match => {
+                            language = match[1] || 'text';
+                            codeContent = match[2].trim();
+
+                            const blob = new Blob([codeContent], { type: 'text/plain' });
                             const url = URL.createObjectURL(blob);
                             const downloadLink = document.createElement('a');
                             downloadLink.href = url;
-                            downloadLink.download = `code.${language}`; // Suggest file name
-                            downloadLink.textContent = 'Tải xuống code';
-                            downloadLink.style.display = 'block'; // Make it a block element for better visibility
-                            downloadLink.style.marginTop = '10px'; // Add some space
+                            downloadLink.download = `code.${language}`;
+                            downloadLink.textContent = `Tải xuống code ${language}`;
+                            downloadLink.style.display = 'block';
+                            downloadLink.style.marginTop = '10px';
                             aiMessageDiv.appendChild(downloadLink);
+                        });
 
-                            // Remove the code block from the displayed message
-                            nonCodeText = nonCodeText.replace(match[0], '').trim(); // Remove the matched codeblock from the displayed text
-                        }
+                    } else {
+                        aiMessageDiv.innerHTML = aiResponseText;
                     }
-                    aiMessageDiv.innerHTML = nonCodeText; // Display the text (without code block) in chat
-                    Prism.highlightAllUnder(aiMessageDiv); // Still highlight any remaining code in the text if any
 
-                    // Add AI message to history and save - remain same
-                    const aiMessageObject = { role: 'model', parts: [{ text: aiResponseText }] }; // Save original response including code for history
+
+                    const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
                     conversationHistory.push(aiMessageObject);
                     saveChatHistory();
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight; // Keep scrolling to bottom after response
+                    Prism.highlightAllUnder(aiMessageDiv);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
 
                 } else {
