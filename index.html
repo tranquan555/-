@@ -675,6 +675,7 @@
 
               if (event.target !== loadHistoryButton && !historyModal.contains(event.target)) {
                 hideHistoryModal();
+                toggleMenu();
             }
         });
 
@@ -683,11 +684,16 @@
          function showHistoryModal() {
                 historyModal.classList.add('active');
                 loadHistoryList();
+                 toggleMenu();
             }
 
             function hideHistoryModal() {
                 historyModal.classList.remove('active');
-                currentHistoryKey = null; // Clear loaded history
+                currentHistoryKey = null;
+                 if (menuDropdown.classList.contains('active')) {
+                    menuDropdown.classList.remove('active');
+                }
+
             }
 
 
@@ -817,7 +823,7 @@
                 const historyItem = document.createElement('li');
                 historyItem.className = 'history-item';
 
-                 const historyName = key.split('/').pop().replace(/_/g, ' ').replace(/\.json$/, '');
+                const historyName = key.split('/').pop().replace(/_/g, ' ').replace(/\.json$/, '');
 
                 const historyItemContent = document.createElement('span');
                 historyItemContent.className = 'history-item-content';
@@ -856,11 +862,11 @@
             }
         }
 
-       function loadSpecificHistory(historyKey, historyName) {
+         function loadSpecificHistory(historyKey, historyName) {
             try {
                 const history = readFile(historyKey);
                 if (history) {
-                     currentHistoryKey = historyKey; // set current History key
+                    currentHistoryKey = historyKey; // set current History key
 
                     conversationHistory = history;
                     chatContainer.innerHTML = '';
@@ -876,6 +882,7 @@
                         }
                     });
                     chatContainer.scrollTop = chatContainer.scrollHeight;
+                    hideHistoryModal();
                 } else {
                     console.warn(`Không tìm thấy lịch sử chat với key: ${historyKey}`);
                 }
@@ -928,7 +935,7 @@
         }
 
         function startNewChat() { // Hàm bắt đầu chat mới (clear chat UI và history array) - Omega Update
-            clearChatHistory(); // Chỉ clear UI và history array, KHÔNG xóa file history
+            clearChatHistory(); // Chỉ clear UI và history array
             menuDropdown.classList.remove('active');
             hideHistoryModal();
             currentHistoryKey = null;
