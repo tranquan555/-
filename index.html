@@ -1,113 +1,630 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Lag Machine</title>
-<style>
-body { font-family: sans-serif; }
-#fps { position: fixed; top: 10px; right: 10px; background: white; padding: 5px; border: 1px solid black; }
-</style>
+    <title>AI Chatbot - Gemini API</title>
+    <style>
+        /* CSS hiện đại và đẹp mắt */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 800px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        /* Form đăng nhập/đăng ký */
+        .auth-container {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            margin-bottom: 20px;
+        }
+
+        .auth-container h2 {
+            text-align: center;
+            color: #3498db;
+            margin-bottom: 20px;
+        }
+
+        .auth-container label {
+            margin-bottom: 8px;
+            color: #777;
+        }
+
+        .auth-container input {
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .auth-container input:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        .auth-container button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .auth-container button:hover {
+            background-color: #2980b9;
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 10px;
+            color: #777;
+        }
+
+        .auth-switch a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        /* Hiển thị tên người dùng */
+        #username-display {
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Chat container */
+        #chat-container {
+            border: 1px solid #e0e0e0;
+            padding: 20px;
+            height: 400px; /* Giảm chiều cao chat container */
+            overflow-y: scroll;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-message, .ai-message {
+            padding: 10px 15px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            max-width: 80%;
+            clear: both;
+        }
+
+        .user-message {
+            background-color: #d0e8ff;
+            color: #2c3e50;
+            align-self: flex-end;
+            text-align: right;
+        }
+
+        .ai-message {
+            background-color: #e0f7fa;
+            color: #2c3e50;
+            align-self: flex-start;
+            text-align: left;
+        }
+
+        /* Input container */
+        #input-container {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        #prompt-input {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+            font-size: 16px;
+            border-right: none;
+            transition: border-color 0.3s;
+        }
+
+        #prompt-input:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        #send-button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            background-color: #3498db;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #send-button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Custom prompts */
+        #custom-prompts-container {
+            margin-top: 20px;
+        }
+
+        #custom-prompts-container h2 {
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+
+        #custom-prompts-textarea {
+            width: 100%;
+            height: 80px; /* Giảm chiều cao textarea */
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        #custom-prompts-textarea:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        .prompt-button {
+            padding: 8px 15px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            background-color: #e6e6e6;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .prompt-button:hover {
+            background-color: #d4d4d4;
+        }
+
+        #prompt-buttons {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        /* API Key container */
+        #api-key-container {
+            margin-bottom: 20px;
+        }
+
+        #api-key-input {
+            padding: 12px;
+            width: calc(100% - 26px); /* Đảm bảo input không tràn ra ngoài */
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        #api-key-input:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        /* Nút chat mới */
+        #new-chat-button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #27ae60;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 20px;
+        }
+
+        #new-chat-button:hover {
+            background-color: #219653;
+        }
+
+        /* Ẩn container chat và prompt khi chưa đăng nhập */
+        #chat-interface-container {
+            display: none; /* Ẩn ban đầu */
+        }
+    </style>
 </head>
 <body>
 
-<h1>Lag Test</h1>
-<div id="fps">FPS: 0</div>
+    <div class="container">
+        <h1>AI Chatbot - Gemini API</h1>
 
-<script>
-const fpsDisplay = document.getElementById('fps');
-let frameCount = 0;
-let lastFrameTime = performance.now();
+        <!-- Container đăng nhập/đăng ký -->
+        <div id="auth-forms-container">
+            <div id="login-form" class="auth-container">
+                <h2>Đăng nhập</h2>
+                <label for="login-username">Tên người dùng:</label>
+                <input type="text" id="login-username" placeholder="Nhập tên người dùng">
+                <label for="login-password">Mật khẩu:</label>
+                <input type="password" id="login-password" placeholder="Nhập mật khẩu">
+                <button onclick="loginUser()">Đăng nhập</button>
+                <div class="auth-switch">
+                    <a href="#" onclick="showRegisterForm(); return false;">Chưa có tài khoản? Đăng ký ngay</a>
+                </div>
+            </div>
 
-function updateFPS() {
-    const now = performance.now();
-    const elapsed = now - lastFrameTime;
-    const fps = Math.round(1000 / elapsed);
+            <div id="register-form" class="auth-container" style="display: none;">
+                <h2>Đăng ký</h2>
+                <label for="register-username">Tên người dùng:</label>
+                <input type="text" id="register-username" placeholder="Chọn tên người dùng">
+                <label for="register-password">Mật khẩu:</label>
+                <input type="password" id="register-password" placeholder="Chọn mật khẩu">
+                <button onclick="registerUser()">Đăng ký</button>
+                <div class="auth-switch">
+                    <a href="#" onclick="showLoginForm(); return false;">Đã có tài khoản? Đăng nhập</a>
+                </div>
+            </div>
+        </div>
 
-    fpsDisplay.textContent = `FPS: ${fps}`;
-    lastFrameTime = now;
-}
+        <!-- Hiển thị tên người dùng sau đăng nhập -->
+        <div id="username-display"></div>
 
-function runLag() {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    document.body.appendChild(canvas);
+        <!-- Container giao diện chat (ẩn khi chưa đăng nhập) -->
+        <div id="chat-interface-container" style="display: none;">
+            <div id="api-key-container">
+                <label for="api-key-input"><b>Nhập API Key Gemini của bạn:</b></label>
+                <input type="text" id="api-key-input" placeholder="Nhập API Key Gemini của bạn vào đây">
+            </div>
 
-    function drawFrame() {
-        for (let i = 0; i < 1000; i++) {
-            ctx.beginPath();
-            ctx.fillStyle = `rgb(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255})`;
-            ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 10 + Math.random() * 30, 0, 2 * Math.PI);
-            ctx.fill();
+            <button id="new-chat-button" onclick="startNewChat()">Bắt đầu cuộc trò chuyện mới</button>
+
+            <div id="chat-container">
+                <!-- Tin nhắn chat sẽ hiển thị ở đây -->
+            </div>
+
+            <div id="custom-prompts-container">
+                <h2>Custom Prompts</h2>
+                <textarea id="custom-prompts-textarea" placeholder="Nhập custom prompts của bạn, mỗi prompt trên một dòng"></textarea>
+                <div id="prompt-buttons">
+                    <!-- Custom prompt buttons sẽ được tạo ở đây -->
+                </div>
+            </div>
+
+            <div id="input-container">
+                <input type="text" id="prompt-input" placeholder="Nhập prompt của bạn và nhấn Enter hoặc nút Gửi" onkeydown="if (event.keyCode == 13) { sendMessage(); return false; }">
+                <button id="send-button" onclick="sendMessage()">Gửi</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+        const promptInput = document.getElementById('prompt-input');
+        const apiKeyInput = document.getElementById('api-key-input');
+        const customPromptsTextarea = document.getElementById('custom-prompts-textarea');
+        const promptButtonsContainer = document.getElementById('prompt-buttons');
+        const usernameDisplay = document.getElementById('username-display');
+        const chatInterfaceContainer = document.getElementById('chat-interface-container');
+        const authFormsContainer = document.getElementById('auth-forms-container');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const loginUsernameInput = document.getElementById('login-username');
+        const loginPasswordInput = document.getElementById('login-password');
+        const registerUsernameInput = document.getElementById('register-username');
+        const registerPasswordInput = document.getElementById('register-password');
+
+
+        let conversationHistory = []; // Lưu trữ lịch sử hội thoại
+        let customPrompts = []; // Lưu trữ custom prompts
+        let currentUsername = ''; // Lưu trữ tên người dùng hiện tại
+
+        // --- Chuyển đổi giữa form đăng nhập và đăng ký ---
+        function showRegisterForm() {
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block';
         }
-        updateFPS();
-        requestAnimationFrame(drawFrame);
-    }
 
-    drawFrame();
-}
+        function showLoginForm() {
+            registerForm.style.display = 'none';
+            loginForm.style.display = 'block';
+        }
 
-runLag();
 
-// Exploit vulnerabilities in the rendering system with nested loops and multiple canvases
+        // --- Quản lý người dùng và đăng nhập/đăng ký ---
+        function registerUser() {
+            const username = registerUsernameInput.value.trim();
+            const password = registerPasswordInput.value.trim();
 
-function createLagLoop() {
-    const canvasContainer = document.createElement('div');
-    canvasContainer.style.position = 'absolute';
-    canvasContainer.style.top = 0;
-    canvasContainer.style.left = 0;
-    canvasContainer.style.pointerEvents = 'none';
-
-    document.body.appendChild(canvasContainer);
-
-    const canvasCount = 20;
-    for(let i = 0; i < canvasCount; i++) {
-        const canvas = document.createElement('canvas');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        canvas.style.position = 'absolute';
-        canvas.style.top = 0;
-        canvas.style.left = 0;
-        canvas.style.opacity = 0.1;
-        const ctx = canvas.getContext('2d');
-        canvasContainer.appendChild(canvas);
-
-        const numCircles = 200;
-        function drawCircles() {
-            for (let j = 0; j < numCircles; j++) {
-                ctx.fillStyle = `hsl(${j * 15 + 100}, 100%, 50%)`;
-                ctx.beginPath();
-                ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 10, 0, 2 * Math.PI);
-                ctx.fill();
-
+            if (!username || !password) {
+                alert("Vui lòng nhập tên người dùng và mật khẩu.");
+                return;
             }
-            requestAnimationFrame(drawCircles)
+
+            if (localStorage.getItem(`user_${username}`)) {
+                alert("Tên người dùng đã tồn tại. Vui lòng chọn tên người dùng khác.");
+                return;
+            }
+
+            // Lưu thông tin người dùng (không an toàn, chỉ cho demo)
+            localStorage.setItem(`user_${username}`, password);
+            alert("Đăng ký thành công. Vui lòng đăng nhập.");
+            showLoginForm(); // Chuyển về form đăng nhập sau đăng ký
         }
-        drawCircles()
-    }
-}
 
-createLagLoop();
 
-// Memory Leak
-setInterval(() => {
-    let bigString = '';
-    for (let i = 0; i < 10000; i++) {
-        bigString += 'Long String';
-    }
+        function loginUser() {
+            const username = loginUsernameInput.value.trim();
+            const password = loginPasswordInput.value.trim();
 
-}, 100);
+            if (!username || !password) {
+                alert("Vui lòng nhập tên người dùng và mật khẩu.");
+                return;
+            }
 
-// Web worker for additional load on all cores
-for (let i = 0; i < navigator.hardwareConcurrency; i++) {
-    const worker = new Worker(URL.createObjectURL(new Blob([`
-        while(true) {
-            Math.sqrt(Math.random() * 100000);
+            const storedPassword = localStorage.getItem(`user_${username}`);
+            if (storedPassword === password) {
+                currentUsername = username;
+                saveUsername(username);
+                displayUsername();
+                authFormsContainer.style.display = 'none'; // Ẩn form đăng nhập/đăng ký
+                chatInterfaceContainer.style.display = 'block'; // Hiển thị giao diện chat
+                loadChatHistory();
+                loadCustomPrompts();
+            } else {
+                alert("Đăng nhập thất bại. Tên người dùng hoặc mật khẩu không đúng.");
+            }
         }
-    `], {type: 'text/javascript'})));
-}
 
-</script>
+
+        function saveUsername(username) {
+            localStorage.setItem('geminiChatCurrentUsername', username);
+        }
+
+        function getUsername() {
+            return localStorage.getItem('geminiChatCurrentUsername') || '';
+        }
+
+        function displayUsername() {
+            currentUsername = getUsername();
+            if (currentUsername) {
+                usernameDisplay.textContent = `Chào mừng, ${currentUsername}!`;
+            } else {
+                usernameDisplay.textContent = '';
+            }
+        }
+
+        // Kiểm tra đăng nhập khi tải trang
+        function checkLoginStatus() {
+            if (getUsername()) {
+                currentUsername = getUsername();
+                displayUsername();
+                authFormsContainer.style.display = 'none';
+                chatInterfaceContainer.style.display = 'block';
+                loadChatHistory();
+                loadCustomPrompts();
+            } else {
+                authFormsContainer.style.display = 'block'; // Hiển thị form đăng nhập nếu chưa đăng nhập
+                chatInterfaceContainer.style.display = 'none'; // Ẩn giao diện chat
+            }
+        }
+        checkLoginStatus(); // Gọi khi trang tải
+
+
+
+        // --- Quản lý lịch sử chat (user-specific) ---
+        function loadChatHistory() {
+            if (!currentUsername) return; // Không tải nếu chưa đăng nhập
+            const history = localStorage.getItem(`chatHistory_${currentUsername}`);
+            if (history) {
+                conversationHistory = JSON.parse(history);
+                chatContainer.innerHTML = ''; // Xóa tin nhắn cũ trước khi tải lại
+                conversationHistory.forEach(message => {
+                    if (message.role === 'user') {
+                        addUserMessageToUI(message.parts[0].text, 'user-message');
+                    } else if (message.role === 'model') {
+                        addAiMessageToUI(message.parts[0].text, 'ai-message');
+                    }
+                });
+            } else {
+                chatContainer.innerHTML = ''; // Đảm bảo chat container trống nếu không có lịch sử
+                conversationHistory = []; // Reset lịch sử nếu không có
+            }
+        }
+
+
+        function saveChatHistory() {
+            if (currentUsername) {
+                localStorage.setItem(`chatHistory_${currentUsername}`, JSON.stringify(conversationHistory));
+            }
+        }
+
+        function clearChatHistory() {
+            if (currentUsername) {
+                conversationHistory = [];
+                localStorage.removeItem(`chatHistory_${currentUsername}`);
+                chatContainer.innerHTML = ''; // Xóa tin nhắn trên giao diện
+            }
+        }
+
+        function startNewChat() {
+            clearChatHistory();
+        }
+
+        // --- Quản lý Custom Prompts (user-specific) ---
+        function loadCustomPrompts() {
+            if (!currentUsername) return; // Không tải nếu chưa đăng nhập
+            const prompts = localStorage.getItem(`customPrompts_${currentUsername}`);
+            if (prompts) {
+                customPromptsTextarea.value = prompts;
+                customPrompts = prompts.split('\n').filter(prompt => prompt.trim() !== '');
+            } else {
+                customPromptsTextarea.value = ''; // Đảm bảo textarea trống nếu không có prompts
+                customPrompts = []; // Reset prompts nếu không có
+            }
+            renderPromptButtons();
+        }
+
+
+        function saveCustomPrompts() {
+            if (currentUsername) {
+                localStorage.setItem(`customPrompts_${currentUsername}`, customPromptsTextarea.value);
+            }
+        }
+
+
+        function renderPromptButtons() {
+            promptButtonsContainer.innerHTML = '';
+            customPrompts.forEach(promptText => {
+                const button = document.createElement('button');
+                button.textContent = promptText.trim();
+                button.className = 'prompt-button';
+                button.onclick = function() {
+                    promptInput.value = promptText.trim();
+                };
+                promptButtonsContainer.appendChild(button);
+            });
+        }
+
+        loadCustomPrompts(); // Tải prompts khi trang tải (nếu đã đăng nhập)
+
+
+        customPromptsTextarea.addEventListener('input', function() {
+            customPrompts = customPromptsTextarea.value.split('\n').filter(prompt => prompt.trim() !== '');
+            renderPromptButtons();
+            saveCustomPrompts(); // Lưu custom prompts khi textarea thay đổi
+        });
+
+
+        // --- Gửi và nhận tin nhắn ---
+        function sendMessage() {
+            if (!currentUsername) {
+                alert("Bạn cần đăng nhập để sử dụng chatbot."); // Kiểm tra đăng nhập trước khi gửi tin nhắn
+                return;
+            }
+
+            const userMessage = promptInput.value;
+            if (!userMessage.trim()) return;
+
+            const apiKey = apiKeyInput.value;
+            if (!apiKey.trim()) {
+                alert("Vui lòng nhập API Key Gemini của bạn!");
+                return;
+            }
+
+            const fullUserMessage = `${currentUsername}: ${userMessage}`; // Thêm tên người dùng vào tin nhắn
+            addUserMessage(fullUserMessage);
+            promptInput.value = '';
+
+            let combinedPrompt = fullUserMessage;
+            if (customPrompts.length > 0) {
+                combinedPrompt += "\n\nCustom Prompts:\n" + customPrompts.join("\n");
+            }
+
+            sendToGeminiAPI(apiKey, combinedPrompt);
+        }
+
+        function addUserMessage(message) {
+            addUserMessageToUI(message, 'user-message');
+            conversationHistory.push({ role: "user", parts: [{ text: message }] });
+            saveChatHistory(); // Lưu lịch sử sau mỗi tin nhắn
+        }
+
+        function addUserMessageToUI(message, className) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = className;
+            messageDiv.textContent = message;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+
+        function addAiMessage(message) {
+            addAiMessageToUI(message, 'ai-message');
+            conversationHistory.push({ role: "model", parts: [{ text: message }] });
+            saveChatHistory(); // Lưu lịch sử sau mỗi tin nhắn
+        }
+
+        function addAiMessageToUI(message, className) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = className;
+            messageDiv.textContent = message;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+
+        async function sendToGeminiAPI(apiKey, prompt) {
+            const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+
+            const requestBody = {
+                contents: conversationHistory.concat([{ role: "user", parts: [{ text: prompt }] }]) // Gửi toàn bộ lịch sử hội thoại
+            };
+
+            try {
+                const response = await fetch(`${apiUrl}?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error("API Error:", errorData);
+                    addAiMessage(`Lỗi API: ${response.status} - ${errorData.error && errorData.error.message ? errorData.error.message : 'Không rõ lỗi'}`);
+                    return;
+                }
+
+                const data = await response.json();
+                if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
+                    const aiResponse = data.candidates[0].content.parts[0].text;
+                    addAiMessage(aiResponse);
+                } else {
+                    addAiMessage("Không nhận được phản hồi hợp lệ từ AI.");
+                }
+
+            } catch (error) {
+                console.error("Fetch error:", error);
+                addAiMessage("Lỗi khi kết nối đến API.");
+            }
+        }
+    </script>
 
 </body>
 </html>
