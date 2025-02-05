@@ -440,7 +440,7 @@
 
         <!-- Container giao diện chat (ẩn khi chưa đăng nhập) -->
         <div id="chat-interface-container" style="display: none;">
-            <!-- API Key container - ĐÃ XÓA HOÀN TOÀN KHỎI HTML -->
+
 
             <div id="chat-container">
                 <!-- Tin nhắn chat sẽ hiển thị ở đây -->
@@ -457,8 +457,8 @@
 
     <script>
         const chatContainer = document.getElementById('chat-container');
-        const promptInput = document.getElementById('prompt-input'); // Vẫn giữ lại để tránh lỗi tham chiếu cũ
-        const apiKeyInput = document.getElementById('api-key-input'); // Vẫn giữ lại để tránh lỗi tham chiếu cũ (mặc dù HTML đã xóa)
+        const promptInput = document.getElementById('prompt-input');
+        const apiKeyInput = document.getElementById('api-key-input'); // Vẫn giữ lại để tránh lỗi tham chiếu cũ
         const usernameDisplay = document.getElementById('username-display');
         const chatInterfaceContainer = document.getElementById('chat-interface-container');
         const authFormsContainer = document.getElementById('auth-forms-container');
@@ -476,11 +476,22 @@
         let currentUsername = '';
         let isLoading = false;
 
-        // API Key Gemini của bạn (CỐ ĐỊNH TRONG CODE - HOÀN TOÀN KHÔNG CÓ INPUT TRÊN WEB)
-        const GEMINI_API_KEY_DEFAULT = 'AIzaSyCl21Ku_prQnyMHFs_dJRL8-pgjg9hrc2w'; // API Key CỦA BẠN ĐÂY!
-        let currentApiKey = GEMINI_API_KEY_DEFAULT; // Luôn sử dụng API Key cố định này
-        // PROMPT CỐ ĐỊNH (mô tả AI - có thể chỉnh sửa) (giữ nguyên)
+        // API Key Gemini của bạn (CỐ ĐỊNH TRONG CODE)
+        const GEMINI_API_KEY_DEFAULT = 'AIzaSyCl21Ku_prQnyMHFs_dJRL8-pgjg9hrc2w';
+        let currentApiKey = GEMINI_API_KEY_DEFAULT;
         const FIXED_PROMPT = "Bạn là một trợ lý AI hữu ích, thông minh và luôn trả lời một cách chi tiết và chính xác. Hãy giúp người dùng giải quyết mọi vấn đề và cung cấp thông tin tốt nhất có thể.";
+
+
+        // --- Hàm hỗ trợ writeFile (mô phỏng lưu file) ---
+        function writeFile(filepath, data) {
+            localStorage.setItem(filepath, JSON.stringify(data));
+        }
+
+        // --- Hàm hỗ trợ readFile (mô phỏng đọc file) ---
+        function readFile(filepath) {
+            const data = localStorage.getItem(filepath);
+            return data ? JSON.parse(data) : null;
+        }
 
 
         // --- Menu Danh mục (giữ nguyên) ---
@@ -488,7 +499,6 @@
             menuDropdown.classList.toggle('active');
         }
 
-        // Đóng menu khi click ra ngoài (giữ nguyên)
         window.addEventListener('click', function(event) {
             if (!event.target.matches('.menu-button')) {
                 if (menuDropdown.classList.contains('active')) {
@@ -512,7 +522,7 @@
         }
 
 
-        // --- Quản lý người dùng và đăng nhập/đăng ký (giữ nguyên) ---
+        // --- Quản lý người dùng và đăng nhập/đăng ký (CẬP NHẬT LƯU FILE) ---
         function registerUser() {
             const username = registerUsernameInput.value.trim();
             const password = registerPasswordInput.value.trim();
@@ -522,12 +532,16 @@
                 return;
             }
 
-            if (localStorage.getItem(`user_${username}`)) {
+            // Mô phỏng đường dẫn file thông tin người dùng
+            const userFilePath = `user/${username}/info.json`;
+
+            if (readFile(userFilePath)) { // Kiểm tra "file" tồn tại
                 alert("Tên người dùng đã tồn tại. Vui lòng chọn tên người dùng khác.");
                 return;
             }
 
-            localStorage.setItem(`user_${username}`, password);
+            // Lưu thông tin người dùng vào "file" info.json
+            writeFile(userFilePath, { username: username, password: password });
             alert("Đăng ký thành công. Vui lòng đăng nhập.");
             showLoginForm();
         }
@@ -542,8 +556,11 @@
                 return;
             }
 
-            const storedPassword = localStorage.getItem(`user_${username}`);
-            if (storedPassword === password) {
+            // Mô phỏng đường dẫn file thông tin người dùng
+            const userFilePath = `user/${username}/info.json`;
+            const userInfo = readFile(userFilePath); // Đọc thông tin từ "file"
+
+            if (userInfo && userInfo.password === password) {
                 currentUsername = username;
                 saveUsername(username);
                 displayUsername();
@@ -587,7 +604,6 @@
             }
         }
 
-        // Kiểm tra đăng nhập khi tải trang (giữ nguyên)
         function checkLoginStatus() {
             if (getUsername()) {
                 currentUsername = getUsername();
@@ -604,12 +620,16 @@
         checkLoginStatus();
 
 
-        // --- Quản lý lịch sử chat (giữ nguyên) ---
+        // --- Quản lý lịch sử chat (CẬP NHẬT LƯU FILE) ---
         function loadChatHistory() {
             if (!currentUsername) return;
-            const history = localStorage.getItem(`chatHistory_${currentUsername}`);
+
+            // Mô phỏng đường dẫn file lịch sử chat
+            const historyFilePath = `user/${currentUsername}/history.json`;
+            const history = readFile(historyFilePath); // Đọc lịch sử từ "file"
+
             if (history) {
-                conversationHistory = JSON.parse(history);
+                conversationHistory = history;
                 chatContainer.innerHTML = '';
                 conversationHistory.forEach(message => {
                     if (message.role === 'user') {
@@ -629,7 +649,9 @@
 
         function saveChatHistory() {
             if (currentUsername) {
-                localStorage.setItem(`chatHistory_${currentUsername}`, JSON.stringify(conversationHistory));
+                // Mô phỏng đường dẫn file lịch sử chat
+                const historyFilePath = `user/${currentUsername}/history.json`;
+                writeFile(historyFilePath, conversationHistory); // Lưu lịch sử vào "file"
             }
         }
 
@@ -637,7 +659,9 @@
             if (currentUsername) {
                 saveChatHistory();
                 conversationHistory = [];
-                localStorage.removeItem(`chatHistory_${currentUsername}`);
+                // Mô phỏng đường dẫn file lịch sử chat (không xóa "file", chỉ làm trống lịch sử)
+                // const historyFilePath = `user/${currentUsername}/history.json`;
+                // localStorage.removeItem(historyFilePath); // Không xóa file, chỉ làm trống nội dung
                 chatContainer.innerHTML = '';
             }
         }
@@ -662,7 +686,7 @@
         });
 
 
-        // --- Gửi và nhận tin nhắn ---
+        // --- Gửi và nhận tin nhắn (giữ nguyên) ---
         function sendMessage(userMessageFromFile = null) {
             if (!currentUsername) {
                 alert("Bạn cần đăng nhập để sử dụng chatbot.");
@@ -673,7 +697,7 @@
             if (userMessageFromFile) {
                 userMessage = userMessageFromFile;
             } else {
-                userMessage = promptInput.value; // Vẫn giữ lại để tránh lỗi tham chiếu cũ
+                userMessage = promptInput.value;
                 promptInput.value = '';
             }
 
@@ -682,7 +706,7 @@
                 return;
             }
 
-            const apiKey = currentApiKey; // LUÔN SỬ DỤNG API KEY CỐ ĐỊNH TRONG CODE
+            const apiKey = currentApiKey;
 
 
             addUserMessage(userMessage);
