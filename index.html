@@ -65,18 +65,23 @@
         }
 
         .menu-button {
-            padding: 12px 18px;
+            padding: 8px;
             border: none;
             border-radius: 8px;
             background-color: var(--button-bg);
             color: var(--text-color);
-            font-size: 18px;
+            font-size: 1.2em;
             cursor: pointer;
             transition: background-color 0.3s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease-in-out;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             outline: none;
-            width: auto;
-            height: auto;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 0;
+
         }
 
         .menu-button:hover {
@@ -433,7 +438,7 @@
         <h1>AI Chatbot - Gemini API</h1>
 
         <div class="menu-container">
-            <button class="menu-button" onclick="toggleMenu()">Danh mục</button>
+            <button class="menu-button" onclick="toggleMenu()">☰</button>
             <div class="menu-dropdown" id="menuDropdown">
                 <button onclick="startNewChatConfirmation()">Bắt đầu cuộc trò chuyện mới</button>
                 <button id="loadHistoryButton" onclick="toggleHistoryDropdown()">Tải lại lịch sử</button>
@@ -543,27 +548,29 @@
 
 
         // --- Menu Danh mục (giữ nguyên) ---
+       let isMenuOpen = false; // Thêm biến trạng thái cho menu
+
         function toggleMenu() {
-            menuDropdown.classList.toggle('active');
-            if (!menuDropdown.classList.contains('active')) {
-              hideHistoryDropdown(); // Đóng lịch sử khi đóng menu
+            isMenuOpen = !isMenuOpen; // Đảo ngược trạng thái
+            if (isMenuOpen) {
+                menuDropdown.classList.add('active');
+            } else {
+                menuDropdown.classList.remove('active');
+                hideHistoryDropdown(); // Ẩn danh sách lịch sử khi đóng menu
             }
         }
 
+
+
         window.addEventListener('click', function(event) {
-            if (!event.target.matches('.menu-button')) {
+            if (!event.target.closest('.menu-container')) {
                 if (menuDropdown.classList.contains('active')) {
-                  //  menuDropdown.classList.remove('active');
+                    menuDropdown.classList.remove('active');
+                    isMenuOpen = false; // Cập nhật trạng thái khi đóng menu
+                    hideHistoryDropdown(); // Ẩn danh sách lịch sử khi đóng menu
                 }
             }
-
-
-            if (event.target !== loadHistoryButton && !historyListContainer.contains(event.target) && historyDropdownActive) {
-                hideHistoryDropdown();
-                menuDropdown.classList.remove('active'); // Đóng menu nếu click ra ngoài lịch sử
-            }
         });
-
 
 
         // --- Quản lý người dùng và đăng nhập/đăng ký (CẬP NHẬT LƯU FILE) ---
@@ -624,6 +631,7 @@
             authFormsContainer.style.display = 'block';
             usernameDisplay.textContent = '';
             menuDropdown.classList.remove('active');
+            isMenuOpen = false;
             hideHistoryDropdown();
             saveChatHistory(); // LƯU LỊCH SỬ KHI ĐĂNG XUẤT (Omega Update change)
         }
@@ -678,12 +686,16 @@
             }
             hideHistoryDropdown();
             menuDropdown.classList.remove('active');
+             isMenuOpen = false;
         }
-
 
         function toggleHistoryDropdown() {
-            loadChatHistoryDropdown();
+            if (!menuDropdown.classList.contains('active')) {
+                menuDropdown.classList.add('active'); // Mở menu nếu chưa mở
+            }
+            loadChatHistoryDropdown(); // Tải hoặc ẩn danh sách lịch sử
         }
+
 
         function hideHistoryDropdown() {
             historyListContainer.style.display = 'none';
@@ -711,7 +723,8 @@
                     historyButton.onclick = function() {
                         loadSpecificHistory(key);
                         hideHistoryDropdown();
-                        menuDropdown.classList.remove('active');
+                         menuDropdown.classList.remove('active');
+                          isMenuOpen = false;
                     };
 
                     const deleteButton = document.createElement('button'); // Nút xóa lịch sử
@@ -736,7 +749,6 @@
 
             historyListContainer.style.display = 'block';
             historyDropdownActive = true;
-             menuDropdown.classList.add('active');
         }
 
         function deleteChatHistory(historyKey) { // Hàm xóa lịch sử chat
@@ -814,6 +826,7 @@
         function startNewChat() { // Hàm bắt đầu chat mới (clear chat UI và history array) - Omega Update
             clearChatHistory(); // Chỉ clear UI và history array, KHÔNG xóa file history
             menuDropdown.classList.remove('active');
+               isMenuOpen = false;
             hideHistoryDropdown();
         }
 
@@ -834,7 +847,8 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            menuDropdown.classList.remove('active'); // Đóng menu sau khi tải
+            menuDropdown.classList.remove('active');
+               isMenuOpen = false; // Đóng menu khi tải xuống
             hideHistoryDropdown();
         }
 
