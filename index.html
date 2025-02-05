@@ -58,7 +58,7 @@
             flex-direction: column;
         }
 
-        /* Custom Button Style */
+         /* Custom Button Style */
         .custom-button {
             padding: 10px 15px;
             border: none;
@@ -67,23 +67,25 @@
             color: var(--text-color);
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease-in-out;
+            transition: background-color 0.3s, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             outline: none;
             display: inline-flex;
             justify-content: center;
             align-items: center;
             gap: 5px;
+            user-select: none; /* Ngăn chọn văn bản khi nhấp */
         }
 
         .custom-button:hover {
             background-color: var(--button-hover-bg);
-            transform: scale(1.05);
+            transform: translateY(-2px); /* Nút nhô lên khi hover */
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         }
 
         .custom-button:active {
-            transform: scale(0.95);
+            background-color: var(--button-hover-bg);
+            transform: translateY(0); /* Nút lún xuống khi active */
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         }
 
@@ -95,7 +97,7 @@
             z-index: 1000;
         }
 
-        .menu-dropdown {
+       .menu-dropdown {
             position: absolute;
             top: 100%;
             right: 0;
@@ -198,19 +200,33 @@
         }
 
         .history-modal-close {
+             padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
             background-color: var(--button-bg);
             color: var(--text-color);
-            border: none;
-            padding: 10px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-top: 15px;
             font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            outline: none;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            user-select: none;
         }
 
         .history-modal-close:hover {
-            background-color: var(--button-hover-bg);
+           background-color: var(--button-hover-bg);
+            transform: translateY(-2px); /* Nút nhô lên khi hover */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .history-modal-close:active {
+             background-color: var(--button-hover-bg);
+            transform: translateY(0); /* Nút lún xuống khi active */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         }
 
         /* Auth Forms */
@@ -301,7 +317,7 @@
             white-space: pre-wrap;
         }
 
-        .code-block .copy-button {
+        .code-block .custom-button {
             position: absolute;
             bottom: 10px;
             right: 10px; /* Changed to right for better visibility */
@@ -406,6 +422,7 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-dark.min.css" integrity="sha512-Njdz7WCrJJabglQQg8oK6Vw0WlhxuES4oDw/fgxyWu6wAZKs+S474LoonBtrD8EjgGgm+1gGgNjWNj+KFXxwjQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
 
@@ -413,7 +430,7 @@
         <h1>AI Chatbot - Gemini API</h1>
 
         <div class="menu-container">
-            <button class="custom-button" onclick="toggleMenu()">Danh mục</button>
+            <button id="menuButton" class="custom-button" onclick="toggleMenu()">Danh mục</button>
             <div class="menu-dropdown" id="menuDropdown">
                 <button class="custom-button" onclick="startNewChatConfirmation()">Bắt đầu cuộc trò chuyện mới</button>
                 <button class="custom-button" id="loadHistoryButton" onclick="showHistoryModal()">Tải lại lịch sử</button>
@@ -468,16 +485,15 @@
             </div>
 
             <div id="input-container">
-                <button id="upload-button" class="custom-button" onclick="document.getElementById('file-upload').click();">
-                    
-                </button>
+                <button id="uploadButton" class="custom-button" onclick="triggerFileUpload()"></button>
                 <input type="text" id="prompt-input" placeholder="Nhập tin nhắn..." onkeydown="if (event.keyCode == 13) { sendMessage(); return false; }">
-                <button id="send-button" class="custom-button" onclick="sendMessage()">➡</button>
+                <button id="sendButton" class="custom-button" onclick="sendMessage()">➡</button>
                 <input type="file" id="file-upload" style="display: none;" accept=".txt">
             </div>
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-QDv7+QvE3mQeT5C+2y6k4LgB5tM/tK6Vc1F9s0J4Uj+F4jI7E7XQ8W5X3j6M4Lg7V0a6F9+p0J4Uj+F4jI7E7XQ8W5X3j6M4Lg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
     // Disable zoom
     document.addEventListener('gesturestart', function (e) {
@@ -499,8 +515,6 @@
         lastTouchEnd = now;
     }, false);
 
-
-
         // Globals
         const chatContainer = document.getElementById('chat-container');
         const promptInput = document.getElementById('prompt-input');
@@ -513,10 +527,14 @@
         const loginPasswordInput = document.getElementById('login-password');
         const registerUsernameInput = document.getElementById('register-username');
         const registerPasswordInput = document.getElementById('register-password');
-        const fileUploadInput = document.getElementById('file-upload');
+        const fileUpload = document.getElementById('file-upload');
         const menuDropdown = document.getElementById('menuDropdown');
         const historyModal = document.getElementById('historyModal');
         const historyList = document.getElementById('historyList');
+        const menuButton = document.getElementById('menuButton');
+        const uploadButton = document.getElementById('uploadButton');
+        const sendButton = document.getElementById('sendButton');
+
         let currentUsername = '';
         let isLoading = false;
         let currentHistoryKey = null;
@@ -524,32 +542,65 @@
         let currentApiKey = GEMINI_API_KEY_DEFAULT;
         const FIXED_PROMPT = "Bạn là một trợ lý AI hữu ích, thông minh và luôn trả lời một cách chi tiết và chính xác. Hãy giúp người dùng giải quyết mọi vấn đề và cung cấp thông tin tốt nhất có thể.";
         const MODEL_NAME = "gemini-2.0-flash-exp";
-
+          let menuActive = false;
         // Helper Functions
         const writeFile = (filepath, data) => localStorage.setItem(filepath, JSON.stringify(data));
         const readFile = (filepath) => {
             const data = localStorage.getItem(filepath);
             return data ? JSON.parse(data) : null;
         };
+          function escapeHtml(unsafe) {
+            return unsafe
+                 .replace(/&/g, "&")
+                 .replace(/</g, "<")
+                 .replace(/>/g, ">")
+                 .replace(/"/g, """)
+                 .replace(/'/g, "'");
+        }
+          // Clipboard copy function
+        function copyCode(button) {
+            const pre = button.parentNode.querySelector('pre');
+            navigator.clipboard.writeText(pre.textContent)
+                .then(() => {
+                    alert('Đã sao chép code!');
+                })
+                .catch(err => {
+                    console.error('Không thể sao chép: ', err);
+                });
+        }
+
+        function triggerFileUpload() {
+            fileUpload.click();
+        }
 
         // Menu Functions
-        let menuActive = false;
+
+
         function toggleMenu() {
             menuActive = !menuActive;
             menuDropdown.classList.toggle('active', menuActive);
         }
 
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.menu-container')) {
+                menuActive = false;
+                menuDropdown.classList.remove('active');
+            }
+        });
+
         // History Modal Functions
         function showHistoryModal() {
             historyModal.classList.add('active');
             loadHistoryList();
+             menuActive = false;
+              menuDropdown.classList.remove('active');
+
         }
 
         function hideHistoryModal() {
             historyModal.classList.remove('active');
-             menuDropdown.classList.remove('active'); // Đóng menu khi tắt modal lịch sử
             currentHistoryKey = null;
-
         }
 
         // Auth Functions
@@ -606,7 +657,8 @@
             chatInterfaceContainer.style.display = 'none';
             authFormsContainer.style.display = 'block';
             usernameDisplay.textContent = '';
-           menuDropdown.classList.remove('active');
+            menuActive = false;
+              menuDropdown.classList.remove('active');
             hideHistoryModal();
             saveChatHistory();
         }
@@ -666,7 +718,8 @@
                 chatContainer.innerHTML = '';
                 conversationHistory = [];
             }
-           menuDropdown.classList.remove('active');
+             menuActive = false;
+             menuDropdown.classList.remove('active');
             hideHistoryModal();
         }
 
@@ -713,7 +766,7 @@
         }
 
        function loadSpecificHistory(historyKey, historyName) {
-            try {
+             try {
                 const history = readFile(historyKey);
                 if (history) {
                     currentHistoryKey = historyKey; // set current History key
@@ -732,6 +785,7 @@
                         }
                     });
                     chatContainer.scrollTop = chatContainer.scrollHeight;
+                      menuActive = false;
                      menuDropdown.classList.remove('active');
                     hideHistoryModal();
                 } else {
@@ -782,10 +836,11 @@
 
         function startNewChat() {
             clearChatHistory();
-            menuDropdown.classList.remove('active');
+          menuActive = false;
+             menuDropdown.classList.remove('active');
             hideHistoryModal();
             currentHistoryKey = null;
-            showLoginForm();
+
         }
 
         function downloadChatHistory() {
@@ -804,7 +859,8 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-             menuDropdown.classList.remove('active');
+             menuActive = false;
+              menuDropdown.classList.remove('active');
             hideHistoryModal();
         }
 
@@ -821,24 +877,28 @@
 
         // Send/Receive Functions
         function sendMessage(userMessageFromFile = null) {
-            if (!currentUsername) {
+             if (!currentUsername) {
                 alert("Bạn cần đăng nhập để sử dụng chatbot.");
                 return;
             }
 
-            let userMessage = userMessageFromFile || promptInput.value;
-            promptInput.value = '';
+             let userMessage = userMessageFromFile || promptInput.value;
+             promptInput.value = '';
 
-            if (!userMessage) return;
+             if (!userMessage && !userMessageFromFile) {
+                 return;
+             }
 
-            addUserMessage(userMessage);
-            showLoadingIndicator();
+              const apiKey = currentApiKey;
+
+             addUserMessage(userMessage);
+             showLoadingIndicator();
 
             const combinedPrompt = `${FIXED_PROMPT}\n\n${userMessage}`;
-            sendToGeminiAPI(currentApiKey, combinedPrompt);
+            sendToGeminiAPI(apiKey, combinedPrompt);
         }
 
-        function addUserMessage(message) {
+         function addUserMessage(message) {
             addUserMessageToUI(message, 'user-message');
             conversationHistory.push({ role: "user", parts: [{ text: message }] });
 
@@ -856,32 +916,32 @@
         }
 
           function addAiMessage(message) {
-            hideLoadingIndicator();
+    hideLoadingIndicator();
 
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'ai-message';
-            messageDiv.style.textAlign = 'left';
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'ai-message';    messageDiv.style.textAlign = 'left';
 
-            let content;
-            if (message.startsWith("```") && message.endsWith("```")) {
-                content = `<div class="code-block">
-                             <pre>${message.slice(3, -3)}</pre>
-                             <button class="custom-button copy-button" onclick="copyCode(this)">Sao chép</button>
-                         </div>`;
-            } else {
-                content = message;
-            }
+    let content = message;
+    if (message.startsWith("```") && message.endsWith("```")) {
+        // Extract language and code
+        const language = message.substring(3, message.indexOf('\n', 3));
+        const code = message.substring(message.indexOf('\n', 3) + 1, message.length - 3);
+        content = `<div class="code-block">
+                         <pre class="language-${language}"><code class="language-${language}">${escapeHtml(code)}</code></pre>
+                         <button class="custom-button copy-button" onclick="copyCode(this)">Sao chép</button>
+                     </div>`;
+    }
+     messageDiv.innerHTML = content;
+    chatContainer.appendChild(messageDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
 
-            messageDiv.innerHTML = content;
-            chatContainer.appendChild(messageDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+    conversationHistory.push({ role: "model", parts: [{ text: message }] });
 
-            conversationHistory.push({ role: "model", parts: [{ text: message }] });
-
-            if (currentHistoryKey) {
-                localStorage.setItem(currentHistoryKey, JSON.stringify(conversationHistory));
-            }
-        }
+    if (currentHistoryKey) {
+        localStorage.setItem(currentHistoryKey, JSON.stringify(conversationHistory));
+    }
+     Prism.highlightAll();
+}
 
        function copyCode(button) {
             const pre = button.parentNode.querySelector('pre');
@@ -893,8 +953,6 @@
                     console.error('Không thể sao chép: ', err);
                 });
         }
-
-
 
         // API Call
         async function sendToGeminiAPI(apiKey, prompt) {
@@ -972,23 +1030,17 @@
             event.preventDefault();
         });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const uploadButton = document.getElementById('upload-button');
-            const fileUpload = document.getElementById('file-upload');
-            uploadButton.addEventListener('click', () => fileUpload.click());
+      fileUpload.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
 
-            fileUpload.addEventListener('change', function(event) {
-                const file = event.target.files[0];
-                if (!file) return;
-
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    let fileContent = event.target.result;
-                    sendMessage(fileContent);
-                    alert(`Tệp "${file.name}" đã tải lên thành công.`);
-                };
-                reader.readAsText(file);
-            });
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                let fileContent = event.target.result;
+                sendMessage(fileContent);
+                alert(`Tệp "${file.name}" đã tải lên thành công.`);
+            };
+            reader.readAsText(file);
         });
     </script>
 
