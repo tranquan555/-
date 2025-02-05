@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Hiện Đại với Gemini</title>
+    <title>TRANQUAN MBC AI</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
         body {
@@ -21,6 +21,7 @@
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
+            touch-action: manipulation; /* Prevent zoom on touch devices - added here */
         }
 
         .container {
@@ -90,6 +91,7 @@
             max-width: 80%;
             display: inline-block;
             border: 1px solid #444;
+            position: relative; /* For positioning copy button */
         }
 
         .user-message {
@@ -422,12 +424,13 @@
             background-color: #666;
         }
 
-
         code[class*="language-"],
         pre[class*="language-"] {
             color: #f8f8f2;
             background: #272822;
+            position: relative; /* for copy button positioning */
         }
+
         .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #6c6767; }
         .token.punctuation { color: #f8f8f2; }
         .token.namespace { opacity: .7; }
@@ -441,6 +444,26 @@
         .token.important, .token.bold { font-weight: bold; }
         .token.italic { font-style: italic; }
         .token.entity { cursor: help; }
+
+        .copy-code-button {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            background-color: #444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 8px;
+            font-size: 0.8em;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s ease, background-color 0.3s ease;
+        }
+
+        .copy-code-button:hover {
+            opacity: 1;
+            background-color: #00bcd4;
+        }
 
 
     </style>
@@ -500,7 +523,7 @@
     </button>
 
     <div class="container" id="container">
-        <h1>AI Hiện Đại với Gemini</h1>
+        <h1>AI Trần Quân MBC</h1>
 
         <div id="messages-container">
             <!-- Messages will be appended here -->
@@ -567,7 +590,7 @@
             conversationHistory = [];
             saveChatHistory();
             renderMessages();
-            toggleSidebar(); // Optionally close sidebar after starting new chat
+            toggleSidebar();
         }
 
 
@@ -747,7 +770,7 @@
 
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
-                    aiMessageDiv.innerHTML = ''; // Clear "Đang suy nghĩ..."
+                    aiMessageDiv.innerHTML = '';
 
                     let textContent = '';
                     let codeContent = null;
@@ -757,7 +780,6 @@
                     let match;
 
                     while ((match = codeBlockRegex.exec(aiResponseText)) !== null) {
-                        // Add text before the code block
                         textContent = aiResponseText.substring(lastIndex, match.index);
                         if (textContent.trim()) {
                             const textPara = document.createElement('p');
@@ -774,24 +796,27 @@
                         codeElement.classList.add('language-' + language);
                         codeElement.textContent = codeContent;
                         codePre.appendChild(codeElement);
+
+                        // Create copy button for each code block
+                        const copyButton = document.createElement('button');
+                        copyButton.classList.add('copy-code-button');
+                        copyButton.innerHTML = '<i class="fas fa-copy"></i>'; // Using Font Awesome icon
+                        copyButton.onclick = () => {
+                            navigator.clipboard.writeText(codeContent).then(() => {
+                                alert('Đã sao chép code vào clipboard!');
+                            }).catch(err => {
+                                console.error('Lỗi khi sao chép: ', err);
+                                alert('Lỗi khi sao chép code.');
+                            });
+                        };
+                        codePre.appendChild(copyButton);
+
+
                         aiMessageDiv.appendChild(codePre);
-
-
-                        const blob = new Blob([codeContent], { type: 'text/plain' });
-                        const url = URL.createObjectURL(blob);
-                        const downloadLink = document.createElement('a');
-                        downloadLink.href = url;
-                        downloadLink.download = `code.${language}`;
-                        downloadLink.textContent = `Tải xuống code ${language}`;
-                        downloadLink.style.display = 'block';
-                        downloadLink.style.marginTop = '5px';
-                        aiMessageDiv.appendChild(downloadLink);
-
 
                         lastIndex = codeBlockRegex.lastIndex;
                     }
 
-                    // Add any remaining text after the last code block
                     textContent = aiResponseText.substring(lastIndex);
                     if (textContent.trim()) {
                          const textPara = document.createElement('p');
@@ -800,9 +825,9 @@
                     }
 
 
-                    if (!aiMessageDiv.hasChildNodes() && aiResponseText.trim()) { // Handle cases with no code block but still text
+                    if (!aiMessageDiv.hasChildNodes() && aiResponseText.trim()) {
                          aiMessageDiv.innerHTML = aiResponseText.trim();
-                    } else if (!aiMessageDiv.hasChildNodes()) { // Handle empty response gracefully, though unlikely
+                    } else if (!aiMessageDiv.hasChildNodes()) {
                          aiMessageDiv.textContent = "Không có phản hồi nội dung từ AI.";
                     }
 
