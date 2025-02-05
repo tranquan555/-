@@ -2,8 +2,9 @@
 <html>
 <head>
     <title>AI Chatbot - Gemini API</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        /* CSS hiện đại và đẹp mắt (giữ nguyên từ phiên bản trước) */
+        /* CSS hiện đại và đẹp mắt (giữ nguyên từ phiên bản trước, có thể tùy chỉnh thêm) */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -20,7 +21,7 @@
             color: #2c3e50;
             text-align: center;
             margin-top: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 20px; /* Giảm margin bottom */
         }
 
         .container {
@@ -33,7 +34,7 @@
             margin-bottom: 30px;
         }
 
-        /* Form đăng nhập/đăng ký (giữ nguyên) */
+        /* Form đăng nhập/đăng ký */
         .auth-container {
             display: flex;
             flex-direction: column;
@@ -97,15 +98,62 @@
             text-decoration: underline;
         }
 
-        /* Hiển thị tên người dùng (giữ nguyên) */
+        /* Menu button */
+        .menu-button {
+            position: relative;
+            display: inline-block;
+        }
+
+        .menu-button button {
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .menu-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            right: 0; /* Menu bên phải */
+            border-radius: 5px;
+        }
+
+        .menu-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid #eee; /* Đường kẻ phân cách menu items */
+        }
+
+        .menu-content a:last-child {
+            border-bottom: none; /* Loại bỏ border ở menu item cuối */
+            border-bottom-left-radius: 5px; /* Thêm border-radius ở dưới cùng bên trái */
+            border-bottom-right-radius: 5px; /* Thêm border-radius ở dưới cùng bên phải */
+        }
+
+
+        .menu-content a:hover {background-color: #ddd;}
+
+        .show {display:block;}
+
+
+        /* Hiển thị tên người dùng */
         #username-display {
             font-weight: bold;
             color: #27ae60;
-            margin-bottom: 20px;
+            margin-bottom: 10px; /* Giảm margin bottom */
             text-align: center;
         }
 
-        /* Chat container (giữ nguyên) */
+        /* Chat container */
         #chat-container {
             border: 1px solid #e0e0e0;
             padding: 20px;
@@ -124,6 +172,7 @@
             margin-bottom: 10px;
             max-width: 80%;
             clear: both;
+            word-wrap: break-word; /* Ngăn chặn tràn chữ */
         }
 
         .user-message {
@@ -140,7 +189,7 @@
             text-align: left;
         }
 
-        /* Input container (chỉnh sửa để thêm nút upload file) */
+        /* Input container */
         #input-container {
             display: flex;
             margin-bottom: 20px;
@@ -154,6 +203,9 @@
             font-size: 16px;
             border-right: none;
             transition: border-color 0.3s;
+            resize: none; /* Ngăn chặn resize textarea */
+            min-height: 40px; /* Đặt chiều cao tối thiểu */
+            overflow-y: auto; /* Cho phép scroll nếu nội dung vượt quá */
         }
 
         #prompt-input:focus {
@@ -177,64 +229,16 @@
             background-color: #2980b9;
         }
 
-        /* Custom prompts (giữ nguyên) */
-        #custom-prompts-container {
-            margin-top: 20px;
-        }
 
-        #custom-prompts-container h2 {
-            color: #3498db;
-            margin-bottom: 15px;
-        }
-
-        #custom-prompts-textarea {
-            width: 100%;
-            height: 80px; /* Giảm chiều cao textarea */
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            resize: vertical;
-            transition: border-color 0.3s;
-        }
-
-        #custom-prompts-textarea:focus {
-            border-color: #3498db;
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-        }
-
-        .prompt-button {
-            padding: 8px 15px;
-            margin-right: 8px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            background-color: #e6e6e6;
-            border: none;
-            border-radius: 5px;
-            font-size: 14px;
-            transition: background-color 0.3s;
-        }
-
-        .prompt-button:hover {
-            background-color: #d4d4d4;
-        }
-
-        #prompt-buttons {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        /* API Key container (ẩn đi vì API Key được hardcode) */
+        /* API Key container (đã ẩn) */
         #api-key-container {
-            display: none; /* Ẩn container API Key */
+            display: none; /* Ẩn API key container */
             margin-bottom: 20px;
         }
 
-        #api-key-input { /* Ẩn input API Key (không cần thiết nữa) */
+        #api-key-input {
             padding: 12px;
-            width: calc(100% - 26px);
+            width: calc(100% - 26px); /* Đảm bảo input không tràn ra ngoài */
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 16px;
@@ -247,8 +251,15 @@
             box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
         }
 
-        /* Nút chat mới (giữ nguyên) */
-        #new-chat-button {
+        /* Nút chat mới và nút lịch sử */
+        #action-buttons-container {
+            display: flex;
+            justify-content: space-between; /* Chia đều không gian giữa các nút */
+            margin-bottom: 20px;
+        }
+
+
+        .chat-action-button {
             padding: 12px 20px;
             border: none;
             border-radius: 5px;
@@ -257,38 +268,34 @@
             font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s;
-            margin-bottom: 20px;
+            margin-right: 10px; /* Thêm margin giữa các nút */
         }
 
-        #new-chat-button:hover {
+        .chat-action-button:last-child {
+            margin-right: 0; /* Loại bỏ margin phải ở nút cuối cùng */
+        }
+
+
+        .chat-action-button:hover {
             background-color: #219653;
         }
 
-        /* Ẩn container chat và prompt khi chưa đăng nhập (giữ nguyên) */
+
+        /* Ẩn container chat và prompt khi chưa đăng nhập */
         #chat-interface-container {
             display: none; /* Ẩn ban đầu */
         }
 
-        /* Thêm style cho nút upload file */
-        #file-upload-button {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #f39c12; /* Màu cam */
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-left: 10px; /* Khoảng cách với input prompt */
+        /* Thông báo chưa đăng nhập */
+        #not-logged-in-message {
+            text-align: center;
+            color: #e74c3c;
+            margin-bottom: 20px;
+            font-size: 18px;
+            display: none; /* Ẩn ban đầu */
         }
 
-        #file-upload-button:hover {
-            background-color: #e67e22; /* Màu cam đậm hơn */
-        }
 
-        #file-input {
-            display: none; /* Ẩn input file mặc định */
-        }
     </style>
 </head>
 <body>
@@ -296,7 +303,17 @@
     <div class="container">
         <h1>AI Chatbot - Gemini API</h1>
 
-        <!-- Container đăng nhập/đăng ký (giữ nguyên) -->
+        <!-- Menu button -->
+        <div class="menu-button" style="text-align: right; margin-bottom: 10px;">
+            <button onclick="toggleMenu()" class="menu-dropbtn">Menu</button>
+            <div id="myDropdown" class="menu-content">
+                <a href="#" onclick="logoutUser()">Đăng xuất</a>
+                <a href="#" onclick="loadChatHistory()">Lịch sử cũ</a>
+            </div>
+        </div>
+
+
+        <!-- Container đăng nhập/đăng ký -->
         <div id="auth-forms-container">
             <div id="login-form" class="auth-container">
                 <h2>Đăng nhập</h2>
@@ -323,34 +340,37 @@
             </div>
         </div>
 
-        <!-- Hiển thị tên người dùng sau đăng nhập (giữ nguyên) -->
+        <!-- Hiển thị tên người dùng sau đăng nhập -->
         <div id="username-display"></div>
+
+        <!-- Thông báo chưa đăng nhập -->
+        <div id="not-logged-in-message">Bạn cần đăng nhập hoặc đăng ký để sử dụng AI Chatbot.</div>
+
 
         <!-- Container giao diện chat (ẩn khi chưa đăng nhập) -->
         <div id="chat-interface-container" style="display: none;">
+
+            <!-- API Key container (ẩn) -->
             <div id="api-key-container">
-                <!-- API Key input đã bị ẩn -->
+                <label for="api-key-input"><b>Nhập API Key Gemini của bạn:</b></label>
+                <input type="text" id="api-key-input" placeholder="Nhập API Key Gemini của bạn vào đây" value="YOUR_API_KEY_HERE" style="display:none;"> <!-- Ẩn và thêm giá trị mặc định -->
             </div>
 
-            <button id="new-chat-button" onclick="startNewChat()">Bắt đầu cuộc trò chuyện mới</button>
+            <!-- Action buttons: New chat và History -->
+            <div id="action-buttons-container">
+                <button id="new-chat-button" class="chat-action-button" onclick="startNewChat()">Bắt đầu cuộc trò chuyện mới</button>
+                <button id="history-button" class="chat-action-button" onclick="loadChatHistory()">Xem lịch sử cũ</button>
+            </div>
+
 
             <div id="chat-container">
                 <!-- Tin nhắn chat sẽ hiển thị ở đây -->
             </div>
 
-            <div id="custom-prompts-container">
-                <h2>Custom Prompts</h2>
-                <textarea id="custom-prompts-textarea" placeholder="Nhập custom prompts của bạn, mỗi prompt trên một dòng"></textarea>
-                <div id="prompt-buttons">
-                    <!-- Custom prompt buttons sẽ được tạo ở đây -->
-                </div>
-            </div>
 
             <div id="input-container">
-                <input type="text" id="prompt-input" placeholder="Nhập prompt của bạn và nhấn Enter hoặc nút Gửi" onkeydown="if (event.keyCode == 13) { sendMessage(); return false; }">
+                <textarea id="prompt-input" placeholder="Nhập prompt của bạn và nhấn Enter hoặc nút Gửi" onkeydown="if (event.keyCode == 13 && !event.shiftKey) { sendMessage(); return false; }" rows="1"></textarea>
                 <button id="send-button" onclick="sendMessage()">Gửi</button>
-                <button id="file-upload-button" onclick="document.getElementById('file-input').click()">Tải file lên</button>
-                <input type="file" id="file-input" accept=".txt" onchange="handleFileUpload(this.files)">
             </div>
         </div>
     </div>
@@ -358,9 +378,7 @@
     <script>
         const chatContainer = document.getElementById('chat-container');
         const promptInput = document.getElementById('prompt-input');
-        const apiKeyInput = document.getElementById('api-key-input'); // Vẫn giữ lại để code không bị lỗi, nhưng sẽ không dùng
-        const customPromptsTextarea = document.getElementById('custom-prompts-textarea');
-        const promptButtonsContainer = document.getElementById('prompt-buttons');
+        const apiKeyInput = document.getElementById('api-key-input');
         const usernameDisplay = document.getElementById('username-display');
         const chatInterfaceContainer = document.getElementById('chat-interface-container');
         const authFormsContainer = document.getElementById('auth-forms-container');
@@ -370,29 +388,48 @@
         const loginPasswordInput = document.getElementById('login-password');
         const registerUsernameInput = document.getElementById('register-username');
         const registerPasswordInput = document.getElementById('register-password');
+        const notLoggedInMessage = document.getElementById('not-logged-in-message');
 
-        // **QUAN TRỌNG: API KEY GEMINI ĐƯỢC HARDCODE Ở ĐÂY.  ĐÂY LÀ KHÔNG AN TOÀN!**
-        const GEMINI_API_KEY = 'AIzaSyCl21Ku_prQnyMHFs_dJRL8-pgjg9hrc2w'; // **THAY THẾ BẰNG API KEY CỦA BẠN!**
 
-        let conversationHistory = [];
-        let customPrompts = [];
-        let currentUsername = '';
-        let uploadedFileContent = ''; // Biến lưu nội dung file đã tải lên
+        let conversationHistory = []; // Lưu trữ lịch sử hội thoại
+        let currentUsername = ''; // Lưu trữ tên người dùng hiện tại
 
-        // --- Chuyển đổi giữa form đăng nhập và đăng ký (giữ nguyên) ---
+        // --- Menu dropdown ---
+        function toggleMenu() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        // Đóng dropdown nếu người dùng click bên ngoài
+        window.onclick = function(event) {
+            if (!event.target.matches('.menu-dropbtn')) {
+                var dropdowns = document.getElementsByClassName("menu-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+
+        // --- Chuyển đổi giữa form đăng nhập và đăng ký ---
         function showRegisterForm() {
             loginForm.style.display = 'none';
             registerForm.style.display = 'block';
+            notLoggedInMessage.style.display = 'none'; // Ẩn thông báo khi chuyển form
         }
 
         function showLoginForm() {
             registerForm.style.display = 'none';
             loginForm.style.display = 'block';
+            notLoggedInMessage.style.display = 'none'; // Ẩn thông báo khi chuyển form
         }
 
-        // --- Quản lý người dùng và đăng nhập/đăng ký (giữ nguyên) ---
+
+        // --- Quản lý người dùng và đăng nhập/đăng ký ---
         function registerUser() {
-            // ... (giữ nguyên code đăng ký từ phiên bản trước) ...
             const username = registerUsernameInput.value.trim();
             const password = registerPasswordInput.value.trim();
 
@@ -412,8 +449,8 @@
             showLoginForm(); // Chuyển về form đăng nhập sau đăng ký
         }
 
+
         function loginUser() {
-            // ... (giữ nguyên code đăng nhập từ phiên bản trước) ...
             const username = loginUsernameInput.value.trim();
             const password = loginPasswordInput.value.trim();
 
@@ -427,14 +464,25 @@
                 currentUsername = username;
                 saveUsername(username);
                 displayUsername();
-                authFormsContainer.style.display = 'none';
-                chatInterfaceContainer.style.display = 'block';
+                authFormsContainer.style.display = 'none'; // Ẩn form đăng nhập/đăng ký
+                notLoggedInMessage.style.display = 'none'; // Ẩn thông báo
+                chatInterfaceContainer.style.display = 'block'; // Hiển thị giao diện chat
                 loadChatHistory();
-                loadCustomPrompts();
             } else {
                 alert("Đăng nhập thất bại. Tên người dùng hoặc mật khẩu không đúng.");
             }
         }
+
+        function logoutUser() {
+            clearUsername();
+            displayUsername();
+            chatInterfaceContainer.style.display = 'none'; // Ẩn giao diện chat
+            authFormsContainer.style.display = 'block'; // Hiển thị form đăng nhập/đăng ký
+            notLoggedInMessage.style.display = 'block'; // Hiển thị thông báo
+            clearChatHistory(); // Xóa lịch sử chat khi đăng xuất
+            alert("Đăng xuất thành công.");
+        }
+
 
         function saveUsername(username) {
             localStorage.setItem('geminiChatCurrentUsername', username);
@@ -444,35 +492,47 @@
             return localStorage.getItem('geminiChatCurrentUsername') || '';
         }
 
+        function clearUsername() {
+            localStorage.removeItem('geminiChatCurrentUsername');
+            currentUsername = ''; // Cập nhật biến currentUsername
+        }
+
+
         function displayUsername() {
             currentUsername = getUsername();
             if (currentUsername) {
                 usernameDisplay.textContent = `Chào mừng, ${currentUsername}!`;
             } else {
                 usernameDisplay.textContent = '';
+                usernameDisplay.textContent = '';
             }
         }
 
-        // Kiểm tra đăng nhập khi tải trang (giữ nguyên)
+        // Kiểm tra đăng nhập khi tải trang
         function checkLoginStatus() {
             if (getUsername()) {
                 currentUsername = getUsername();
                 displayUsername();
                 authFormsContainer.style.display = 'none';
+                notLoggedInMessage.style.display = 'none';
                 chatInterfaceContainer.style.display = 'block';
                 loadChatHistory();
-                loadCustomPrompts();
             } else {
-                authFormsContainer.style.display = 'block';
-                chatInterfaceContainer.style.display = 'none';
+                authFormsContainer.style.display = 'block'; // Hiển thị form đăng nhập nếu chưa đăng nhập
+                notLoggedInMessage.style.display = 'block'; // Hiển thị thông báo
+                chatInterfaceContainer.style.display = 'none'; // Ẩn giao diện chat
             }
         }
-        checkLoginStatus();
+        checkLoginStatus(); // Gọi khi trang tải
 
-        // --- Quản lý lịch sử chat (user-specific) (giữ nguyên) ---
+
+
+        // --- Quản lý lịch sử chat (user-specific) ---
         function loadChatHistory() {
-            // ... (giữ nguyên code loadChatHistory từ phiên bản trước) ...
-            if (!currentUsername) return; // Không tải nếu chưa đăng nhập
+            if (!currentUsername) {
+                alert("Bạn cần đăng nhập để xem lịch sử chat.");
+                return;
+            }
             const history = localStorage.getItem(`chatHistory_${currentUsername}`);
             if (history) {
                 conversationHistory = JSON.parse(history);
@@ -484,21 +544,22 @@
                         addAiMessageToUI(message.parts[0].text, 'ai-message');
                     }
                 });
+                alert("Đã tải lịch sử trò chuyện cũ.");
             } else {
                 chatContainer.innerHTML = ''; // Đảm bảo chat container trống nếu không có lịch sử
                 conversationHistory = []; // Reset lịch sử nếu không có
+                alert("Không có lịch sử trò chuyện cũ.");
             }
         }
 
+
         function saveChatHistory() {
-            // ... (giữ nguyên code saveChatHistory từ phiên bản trước) ...
             if (currentUsername) {
                 localStorage.setItem(`chatHistory_${currentUsername}`, JSON.stringify(conversationHistory));
             }
         }
 
         function clearChatHistory() {
-            // ... (giữ nguyên code clearChatHistory từ phiên bản trước) ...
             if (currentUsername) {
                 conversationHistory = [];
                 localStorage.removeItem(`chatHistory_${currentUsername}`);
@@ -508,109 +569,49 @@
 
         function startNewChat() {
             clearChatHistory();
-        }
-
-        // --- Quản lý Custom Prompts (user-specific) (giữ nguyên) ---
-        function loadCustomPrompts() {
-            // ... (giữ nguyên code loadCustomPrompts từ phiên bản trước) ...
-            if (!currentUsername) return; // Không tải nếu chưa đăng nhập
-            const prompts = localStorage.getItem(`customPrompts_${currentUsername}`);
-            if (prompts) {
-                customPromptsTextarea.value = prompts;
-                customPrompts = prompts.split('\n').filter(prompt => prompt.trim() !== '');
-            } else {
-                customPromptsTextarea.value = ''; // Đảm bảo textarea trống nếu không có prompts
-                customPrompts = []; // Reset prompts nếu không có
-            }
-            renderPromptButtons();
-        }
-
-        function saveCustomPrompts() {
-            // ... (giữ nguyên code saveCustomPrompts từ phiên bản trước) ...
-            if (currentUsername) {
-                localStorage.setItem(`customPrompts_${currentUsername}`, customPromptsTextarea.value);
-            }
-        }
-
-        function renderPromptButtons() {
-            // ... (giữ nguyên code renderPromptButtons từ phiên bản trước) ...
-            promptButtonsContainer.innerHTML = '';
-            customPrompts.forEach(promptText => {
-                const button = document.createElement('button');
-                button.textContent = promptText.trim();
-                button.className = 'prompt-button';
-                button.onclick = function() {
-                    promptInput.value = promptText.trim();
-                };
-                promptButtonsContainer.appendChild(button);
-            });
-        }
-
-        loadCustomPrompts(); // Tải prompts khi trang tải (nếu đã đăng nhập)
-
-        customPromptsTextarea.addEventListener('input', function() {
-            // ... (giữ nguyên code event listener cho customPromptsTextarea từ phiên bản trước) ...
-            customPrompts = customPromptsTextarea.value.split('\n').filter(prompt => prompt.trim() !== '');
-            renderPromptButtons();
-            saveCustomPrompts(); // Lưu custom prompts khi textarea thay đổi
-        });
-
-        // --- Xử lý File Upload ---
-        function handleFileUpload(files) {
-            const file = files[0];
-            if (file && file.type === 'text/plain') { // Chỉ xử lý file .txt
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    uploadedFileContent = event.target.result;
-                    alert(`File "${file.name}" đã được tải lên.`); // Thông báo file đã tải
-                };
-                reader.readAsText(file);
-            } else {
-                alert('Vui lòng chọn một file văn bản (.txt).');
-                document.getElementById('file-input').value = ''; // Reset input file
-                uploadedFileContent = ''; // Xóa nội dung file cũ
-            }
+            alert("Cuộc trò chuyện mới đã bắt đầu.");
         }
 
 
-        // --- Gửi và nhận tin nhắn (chỉnh sửa để gửi cả nội dung file) ---
+        // --- Gửi và nhận tin nhắn ---
         function sendMessage() {
             if (!currentUsername) {
-                alert("Bạn cần đăng nhập để sử dụng chatbot.");
+                alert("Bạn cần đăng nhập để sử dụng chatbot."); // Kiểm tra đăng nhập trước khi gửi tin nhắn
                 return;
             }
 
             const userMessage = promptInput.value;
-            if (!userMessage.trim() && !uploadedFileContent) return; // Không gửi nếu cả prompt và file đều rỗng
+            if (!userMessage.trim()) return;
 
-            let combinedPrompt = userMessage;
-            if (uploadedFileContent) {
-                combinedPrompt += `\n\n--- Nội dung file đã tải lên: ---\n${uploadedFileContent}\n--- Kết thúc nội dung file ---`;
+            const apiKey = apiKeyInput.value; // API Key được cố định trong input ẩn
+            if (!apiKey.trim()) {
+                alert("API Key Gemini không hợp lệ hoặc bị thiếu trong code!");
+                return;
             }
 
-            addUserMessage(userMessage + (uploadedFileContent ? ` (Đã gửi file)` : '')); // Hiển thị thông báo đã gửi file trong tin nhắn người dùng
+            const fullUserMessage = `${currentUsername}: ${userMessage}`; // Thêm tên người dùng vào tin nhắn
+            addUserMessage(fullUserMessage);
             promptInput.value = '';
-            uploadedFileContent = ''; // Reset nội dung file sau khi gửi
-            document.getElementById('file-input').value = ''; // Reset input file
+            promptInput.rows = 1; // Reset số hàng của textarea
 
-            let finalPromptForAPI = combinedPrompt;
-            if (customPrompts.length > 0) {
-                finalPromptForAPI += "\n\nCustom Prompts:\n" + customPrompts.join("\n");
-            }
 
-            sendToGeminiAPI(GEMINI_API_KEY, finalPromptForAPI); // Sử dụng API Key cố định
+            sendToGeminiAPI(apiKey, fullUserMessage); // Gửi tin nhắn gốc, không cần custom prompts nữa
         }
+
+        function adjustTextareaRows() {
+            promptInput.rows = Math.min(promptInput.value.split('\n').length, 5); // Tối đa 5 hàng
+        }
+
+        promptInput.addEventListener('input', adjustTextareaRows);
 
 
         function addUserMessage(message) {
-            // ... (giữ nguyên code addUserMessage và addUserMessageToUI từ phiên bản trước) ...
             addUserMessageToUI(message, 'user-message');
             conversationHistory.push({ role: "user", parts: [{ text: message }] });
-            saveChatHistory();
+            saveChatHistory(); // Lưu lịch sử sau mỗi tin nhắn
         }
 
         function addUserMessageToUI(message, className) {
-            // ... (giữ nguyên code addUserMessageToUI từ phiên bản trước) ...
             const messageDiv = document.createElement('div');
             messageDiv.className = className;
             messageDiv.textContent = message;
@@ -618,15 +619,14 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
 
+
         function addAiMessage(message) {
-            // ... (giữ nguyên code addAiMessage và addAiMessageToUI từ phiên bản trước) ...
             addAiMessageToUI(message, 'ai-message');
             conversationHistory.push({ role: "model", parts: [{ text: message }] });
-            saveChatHistory();
+            saveChatHistory(); // Lưu lịch sử sau mỗi tin nhắn
         }
 
         function addAiMessageToUI(message, className) {
-            // ... (giữ nguyên code addAiMessageToUI từ phiên bản trước) ...
             const messageDiv = document.createElement('div');
             messageDiv.className = className;
             messageDiv.textContent = message;
@@ -634,15 +634,17 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
 
+
         async function sendToGeminiAPI(apiKey, prompt) {
             const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+            const geminiApiKey = apiKeyInput.value; // Lấy API key từ input ẩn
 
             const requestBody = {
-                contents: conversationHistory.concat([{ role: "user", parts: [{ text: prompt }] }])
+                contents: conversationHistory.concat([{ role: "user", parts: [{ text: prompt }] }]) // Gửi toàn bộ lịch sử hội thoại
             };
 
             try {
-                const response = await fetch(`${apiUrl}?key=${apiKey}`, {
+                const response = await fetch(`${apiUrl}?key=${geminiApiKey}`, { // Sử dụng geminiApiKey
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
