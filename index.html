@@ -1,3 +1,4 @@
+--- START OF FILE vip1.html ---
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -6,13 +7,13 @@
     <title>AI Hiện Đại với Gemini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        /* ... (your existing styles from previous versions, no changes needed in CSS for this feature primarily) ... */
-         body {
+        /* Enhanced Base Styles and Animations */
+        body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
             background-color: #1e2124;
-            color: #d1d5db;
+            color: #e0e0e0; /* Lighter text color */
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
@@ -27,130 +28,157 @@
             font-size: 16px;
             overflow-y: scroll;
             scrollbar-width: thin;
-            scrollbar-color: #444 #252525;
+            scrollbar-color: #555 #2a2a2a;
+            -webkit-font-smoothing: antialiased; /* Improve font rendering */
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.3s ease; /* Smooth background color transition */
         }
 
         body::-webkit-scrollbar {
-            width: 8px;
+            width: 9px; /* Slightly wider scrollbar */
         }
 
         body::-webkit-scrollbar-track {
-            background: #252525;
+            background: #2a2a2a; /* Darker scrollbar track */
         }
 
         body::-webkit-scrollbar::-webkit-scrollbar-thumb {
-            background-color: #444;
-            border-radius: 4px;
+            background-color: #555;
+            border-radius: 5px;
+             border: 2px solid #2a2a2a; /* Added border to scrollbar thumb */
         }
 
 
         .container {
-            width: 95%;
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 30px;
-            background-color: #25272b;
-            border-radius: 16px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+            width: 96%; /* Slightly wider container */
+            max-width: 1250px; /* Increased max-width */
+            margin: 25px auto;
+            padding: 35px; /* Further increased padding */
+            background-color: #2a2d31; /* Darker container background */
+            border-radius: 20px; /* Even more rounded corners */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6); /* Enhanced shadow */
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 40px);
+            height: calc(100vh - 50px);
             flex-grow: 1;
             margin-left: auto;
-            transition: margin-left 0.3s ease;
-            border: 1px solid #333;
+            transition: margin-left 0.3s ease, background-color 0.3s ease;
+            border: none; /* Removed container border */
         }
 
         .container.sidebar-open {
-            margin-left: 250px;
+            margin-left: 270px; /* Increased sidebar margin */
         }
 
         h1 {
             text-align: center;
             color: #fff;
-            margin-bottom: 25px;
-            font-size: 2.5em;
-            letter-spacing: 0.5px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #444;
+            margin-bottom: 30px;
+            font-size: 2.7em; /* Further title size increase */
+            letter-spacing: 0.7px;
+            padding-bottom: 22px;
+            border-bottom: 3px solid #4a4a4a; /* More prominent heading border */
+            font-weight: 500; /* Slightly lighter font-weight for title */
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5); /* Added text shadow to title */
         }
 
         #messages-container {
             flex-grow: 1;
-            padding: 25px;
+            padding: 30px; /* Increased padding */
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             scrollbar-width: thin;
-            scrollbar-color: #555 #252525;
-            padding-bottom: 80px;
+            scrollbar-color: #555 #2a2a2a;
+            padding-bottom: 90px;
             border: none;
-            border-radius: 12px;
-            background-color: #1e2124;
-             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            border-radius: 16px; /* More rounded message area */
+            background-color: #232529; /* Darker message container */
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.4); /* Deeper inner shadow */
+            opacity: 0; /* Initially hidden */
+            animation: fadeIn 0.5s ease-out 0.1s forwards; /* Fade-in animation on load */
         }
 
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+
         #messages-container::-webkit-scrollbar {
-            width: 8px;
+            width: 9px;
         }
 
         #messages-container::-webkit-scrollbar-track {
-            background: #252525;
+            background: #2a2a2a;
         }
 
         #messages-container::-webkit-scrollbar::-webkit-scrollbar-thumb {
             background-color: #555;
-            border-radius: 4px;
+            border-radius: 5px;
+            border: 2px solid #2a2a2a;
         }
 
         .message {
-            margin-bottom: 15px;
-            padding: 12px 18px;
-            border-radius: 20px;
+            margin-bottom: 18px; /* Increased message margin */
+            padding: 14px 22px; /* Further padding adjustments */
+            border-radius: 25px; /* Even more rounded message bubbles */
             clear: both;
             word-wrap: break-word;
             max-width: 80%;
             display: inline-block;
-            border: 1px solid #444;
-            position: relative;
-             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            border: none; /* Removed message border */
+             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Slightly stronger message shadow */
+            transform: translateY(15px); /* Initial position for message animation */
+            opacity: 0;
+            animation: slideUpFadeIn 0.4s ease-out forwards; /* Slide up and fade in animation */
+             margin-top: 5px; /* Added margin top to message bubble*/
         }
 
+        @keyframes slideUpFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
         .user-message {
-            background-color: #343541;
+            background-color: #3a3c43; /* Darker user message background */
             color: #fff;
             align-self: flex-end;
             float: right;
-            border-top-right-radius: 5px;
+            border-top-right-radius: 8px; /* More rounded user message corners */
         }
 
         .ai-message {
-            background-color: #444654;
-            color: #d1d5db;
+            background-color: #4e515a; /* Darker AI message background */
+            color: #d8d8d8; /* Slightly lighter AI text */
             align-self: flex-start;
             float: left;
-            border-top-left-radius: 5px;
+            border-top-left-radius: 8px; /* More rounded AI message corners */
         }
 
         .ai-message .ai-message-text {
             font-family: 'Arial', sans-serif;
             font-weight: normal;
-            line-height: 1.7;
+            line-height: 1.8; /* Further improved line height */
             white-space: pre-line;
-            font-size: 16px;
+            font-size: 17px; /* Slightly larger AI text */
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3); /* Subtle text shadow for AI text */
         }
 
         .markdown-bold-uppercase {
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 0.6px;
-            color: #f0f0f0;
+            letter-spacing: 0.8px; /* Adjusted letter spacing */
+            color: #f5f5f5; /* Even lighter emphasis color */
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4); /* Added shadow to bold uppercase text */
         }
 
         .input-area {
-            padding: 12px 20px;
-            background-color: #343541;
-            border-top: 2px solid #555;
+            padding: 14px 22px; /* Further input area padding adjust */
+            background-color: #3a3c43; /* Darker input area background */
+            border-top: 2px solid #5a5a5a; /* Thicker border and darker color */
             display: flex;
             align-items: center;
             position: fixed;
@@ -161,70 +189,76 @@
             padding-left: 20px;
             padding-right: 20px;
             z-index: 100;
-            border-bottom-left-radius: 16px;
-            border-bottom-right-radius: 16px;
+            border-bottom-left-radius: 20px; /* More rounded input area corners */
+            border-bottom-right-radius: 20px;
              border-top: 1px solid #444;
         }
 
         .input-area textarea {
             flex-grow: 1;
-            padding: 10px;
-            border: 1px solid #555;
-            border-radius: 12px;
-            font-size: 16px;
-            background-color: #40414f;
+            padding: 11px; /* More textarea padding adjust */
+            border: none; /* Removed textarea border */
+            border-radius: 15px; /* More rounded textarea corners */
+            font-size: 17px; /* Slightly larger input text */
+            background-color: #4a4d54; /* Darker textarea background */
             color: #fff;
             resize: none;
-            min-height: 38px;
+            min-height: 42px; /* Further min-height adjust */
             overflow-y: auto;
-            border: 1px solid #444;
-             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4); /* Deeper textarea inner shadow */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Added background and shadow transition */
         }
 
         .input-area textarea:focus {
-            border-color: #00bcd4;
+            border-color: transparent;
             outline: none;
-            box-shadow: 0 0 6px rgba(0, 188, 212, 0.6);
+            background-color: #555860; /* Slightly lighter on focus */
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5), 0 0 7px rgba(0, 188, 212, 0.7); /* Enhanced focus shadow */
         }
 
         .input-area button {
-            padding: 12px 22px;
-            background-color: #00bcd4;
-            color: white;
+            padding: 13px 24px; /* Further button padding adjustment */
+            background-color: #00c7e0; /* Slightly brighter button color */
+            color: #fff;
             border: none;
-            border-radius: 12px;
+            border-radius: 15px; /* More rounded button */
             cursor: pointer;
-            font-size: 16px;
-            margin-left: 12px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 17px;
+            margin-left: 14px;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
+             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* Added shadow to button */
+             font-weight: 500; /* Slightly bolder button text */
         }
 
         .input-area button:hover {
-            background-color: #0097a7;
-            transform: scale(1.03);
+            background-color: #00a9bf; /* Darker on hover */
+            transform: scale(1.04);
+             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5); /* Enhanced hover shadow */
         }
 
         .file-upload-button {
-            background-color: #555;
-            color: white;
+            background-color: #5a5a5a; /* Darker file button background */
+            color: #fff;
             border: none;
-            border-radius: 12px;
+            border-radius: 15px; /* More rounded file button */
             cursor: pointer;
-            font-size: 1em;
-            width: 40px;
-            height: 40px;
+            font-size: 1.1em; /* Slightly larger file button icon */
+            width: 44px;
+            height: 44px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-right: 12px;
-            opacity: 0.9;
-            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
+            margin-right: 14px;
+            opacity: 0.95; /* Further opacity adjust */
+            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Added shadow transition */
+             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* Added shadow to file button */
         }
 
         .file-upload-button:hover {
             opacity: 1;
-            background-color: #666;
-             transform: scale(1.03);
+            background-color: #666666; /* Lighter on hover */
+             transform: scale(1.04);
+             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5); /* Enhanced hover shadow */
         }
 
 
@@ -232,30 +266,31 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 250px;
+            width: 270px; /* Wider sidebar */
             height: 100%;
-            background-color: #252525;
+            background-color: #2a2a2a; /* Darker sidebar background */
             color: #fff;
             transform: translateX(-100%);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Added shadow transition */
             z-index: 200;
-            padding-top: 70px;
-            box-shadow: 4px 0 8px rgba(0,0,0,0.3);
+            padding-top: 80px;
+            box-shadow: 5px 0 10px rgba(0,0,0,0.4); /* Enhanced sidebar shadow */
             overflow-y: auto;
             touch-action: manipulation;
-            border-right: 1px solid #444;
-             backdrop-filter: blur(10px);
+            border-right: none; /* Removed sidebar border */
+             backdrop-filter: blur(12px); /* Increased blur */
         }
 
         .sidebar.sidebar--open {
             transform: translateX(0);
+             box-shadow: 8px 0 15px rgba(0,0,0,0.5); /* Even more pronounced open sidebar shadow */
         }
 
         .sidebar-header {
-            padding: 25px 20px;
+            padding: 28px 22px; /* Further header padding adjust */
             text-align: center;
-            border-bottom: 2px solid #555;
-            margin-bottom: 25px;
+            border-bottom: 2px solid #5a5a5a; /* Darker and thicker */
+            margin-bottom: 28px;
             border-bottom: 1px solid #444;
         }
 
@@ -265,38 +300,41 @@
         }
 
         .sidebar-menu-item {
-            padding: 16px 20px;
+            padding: 18px 22px; /* Further menu item padding adjust */
             cursor: pointer;
-            transition: background-color 0.2s ease, border-bottom-color 0.3s ease;
+            transition: background-color 0.2s ease, border-bottom-color 0.3s ease, padding-left 0.2s ease; /* Added padding-left transition */
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid transparent;
+            border-bottom: 3px solid transparent; /* Even thicker bottom border on hover */
+             font-size: 17px; /* Slightly larger menu text */
+            font-weight: 400; /* Lighter menu font weight */
         }
 
         .sidebar-menu-item:hover {
-            background-color: #343541;
+            background-color: #3a3a3a; /* Darker hover background */
              border-bottom-color: #00bcd4;
+             padding-left: 28px; /* Indent on hover */
         }
 
         .sidebar-menu-item.has-submenu > .menu-link::after {
             content: '>';
             float: right;
-            margin-left: 12px;
-            font-size: 0.9em;
+            margin-left: 14px;
+            font-size: 0.95em;
             display: inline-block;
-            color: #aaa;
+            color: #888; /* Darker submenu indicator */
         }
 
         .submenu {
             list-style: none;
             padding-left: 0;
             margin: 0;
-            border-radius: 12px;
+            border-radius: 16px; /* More rounded submenu corners */
             overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-            background-color: #2c2c2c;
-            margin-top: 8px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.5); /* Deeper submenu shadow */
+            background-color: #333333; /* Slightly darker submenu background */
+            margin-top: 10px;
             max-height: 0;
             opacity: 0;
             transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
@@ -307,22 +345,23 @@
 
         .submenu.open {
             display: block;
-            max-height: 600px;
+            max-height: 700px; /* Further max-height increase for submenu */
             opacity: 1;
             overflow-y: auto;
-            padding-top: 8px;
-            padding-bottom: 12px;
+            padding-top: 10px;
+            padding-bottom: 15px;
         }
 
 
         .submenu-item {
-            padding: 14px 20px;
+            padding: 16px 22px; /* Further submenu item padding adjust */
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.2s ease, padding-left 0.2s ease; /* Added padding-left transition */
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid #444;
+             font-size: 16px; /* Slightly smaller submenu text */
         }
 
         .submenu-item:last-child {
@@ -331,7 +370,8 @@
 
 
         .submenu-item:hover {
-            background-color: #343541;
+            background-color: #3a3a3a;
+             padding-left: 28px; /* Indent submenu items on hover too */
         }
 
         .history-name {
@@ -341,41 +381,43 @@
         .delete-history-btn {
             background: transparent;
             border: none;
-            color: #aaa;
+            color: #999; /* Darker delete button color */
             cursor: pointer;
-            font-size: 1em;
-            padding: 0 10px;
-            opacity: 0.8;
-            transition: opacity 0.2s ease, color 0.2s ease;
+            font-size: 1.1em;
+            padding: 0 12px;
+            opacity: 0.9;
+            transition: opacity 0.2s ease, color 0.2s ease, transform 0.2s ease; /* Added transform transition */
         }
 
         .delete-history-btn:hover {
             opacity: 1;
             color: #fff;
+             transform: scale(1.1); /* Subtle scale up on hover */
         }
 
         .sidebar-toggle-button {
             position: fixed;
-            top: 25px;
-            left: 25px;
-            background: #00bcd4;
+            top: 30px; /* Adjusted toggle button position */
+            left: 30px;
+            background: #00c7e0; /* Brighter toggle button */
             color: white;
             border: none;
             border-radius: 50%;
-            width: 45px;
-            height: 45px;
+            width: 50px; /* Slightly larger toggle button */
+            height: 50px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             z-index: 300;
-             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-             transition: background-color 0.3s ease, transform 0.2s ease;
+             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); /* Enhanced toggle button shadow */
+             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
         }
 
         .sidebar-toggle-button:hover {
-            background-color: #0097a7;
-             transform: scale(1.05);
+            background-color: #00a9bf;
+             transform: scale(1.07); /* More scale up on hover */
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Even more pronounced hover shadow */
         }
 
         .sidebar-overlay {
@@ -384,33 +426,44 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgba(0, 0, 0, 0.7); /* Even darker overlay */
             z-index: 150;
             display: none;
+            animation: fadeInOverlay 0.2s ease-out forwards; /* Overlay fade-in animation */
         }
+
+        @keyframes fadeInOverlay {
+            to { background-color: rgba(0, 0, 0, 0.7); } /* Animated background color */
+        }
+
 
         .sidebar-overlay.sidebar--open {
             display: block;
         }
 
-        .close-history-menu-btn {
-            background-color: #00bcd4;
+        .close-history-menu-btn, .close-settings-menu-btn, .modal-button { /* Grouped close buttons and modal buttons for consistent style */
+            padding: 13px 24px; /* Consistent button padding */
+            background-color: #00c7e0;
             color: white;
             border: none;
-            border-radius: 12px;
-            padding: 12px 20px;
+            border-radius: 15px;
             cursor: pointer;
-            margin-top: 15px;
+            font-size: 17px;
+            margin-top: 18px;
             display: block;
             margin-left: auto;
             margin-right: auto;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
+             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+             font-weight: 500;
         }
 
-        .close-history-menu-btn:hover {
-            background-color: #0097a7;
-             transform: scale(1.03);
+        .close-history-menu-btn:hover, .close-settings-menu-btn:hover, .modal-button.confirm:hover, .modal-button.cancel:hover {
+            background-color: #00a9bf;
+             transform: scale(1.04);
+              box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
         }
+
 
         .custom-modal-overlay {
             display: none;
@@ -419,12 +472,18 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.75); /* Even darker modal overlay */
             z-index: 400;
             justify-content: center;
             align-items: center;
             pointer-events: none;
+             animation: fadeInModalOverlay 0.3s ease-out forwards; /* Modal overlay fade-in animation */
         }
+
+         @keyframes fadeInModalOverlay {
+            to { background-color: rgba(0, 0, 0, 0.75); } /* Animated modal overlay bg color */
+        }
+
 
         .custom-modal-overlay.show-modal {
             display: flex;
@@ -433,103 +492,163 @@
 
 
         .custom-modal {
-            background-color: #343541;
+            background-color: #3a3c43; /* Darker modal background */
             color: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
-            width: 85%;
-            max-width: 450px;
+            padding: 35px; /* Further increased modal padding */
+            border-radius: 16px; /* More rounded modal */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7); /* Enhanced modal shadow */
+            width: 90%; /* Slightly wider modal */
+            max-width: 500px; /* Increased modal max-width */
             text-align: center;
-            border: 1px solid #444;
+            border: none; /* Removed modal border */
+            transform: translateY(-30px); /* Initial modal position for animation */
+            opacity: 0;
+            animation: slideInModal 0.4s ease-out 0.15s forwards; /* Modal slide-in and fade-in animation */
         }
 
+        @keyframes slideInModal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
         .modal-message {
-            margin-bottom: 20px;
-            font-size: 1.1em;
+            margin-bottom: 25px;
+            font-size: 1.2em; /* Larger modal message font */
+            font-weight: 400; /* Lighter modal message weight */
         }
 
         .modal-input {
-            width: calc(100% - 24px);
-            padding: 12px;
-            margin-bottom: 20px;
-            border-radius: 10px;
+            width: calc(100% - 28px);
+            padding: 14px; /* Adjusted modal input padding */
+            margin-bottom: 25px;
+            border: none; /* Removed modal input border */
+            border-radius: 12px; /* More rounded modal input */
             border: 1px solid #555;
-            background-color: #40414f;
+            background-color: #4a4d54; /* Darker modal input background */
             color: #fff;
-             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+            font-size: 17px; /* Slightly larger modal input font */
         }
 
         .modal-buttons {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 25px; /* Increased modal button gap */
         }
 
-        .modal-button {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            border: 1px solid #444;
+        .modal-button { /* Using grouped style from .close-history-menu-btn etc. */
+            /* Styles are already defined above */
         }
 
         .modal-button.confirm {
-            background-color: #00bcd4;
+            background-color: #00c7e0;
             color: white;
-        }
-
-        .modal-button.confirm:hover {
-            background-color: #0097a7;
-             transform: scale(1.03);
         }
 
         .modal-button.cancel {
-            background-color: #555;
+            background-color: #5a5a5a; /* Darker cancel button background */
             color: white;
         }
 
-        .modal-button.cancel:hover {
-            background-color: #666;
-             transform: scale(1.03);
-        }
 
         code[class*="language-"],
         pre[class*="language-"] {
             color: #f8f8f2;
-            background: #272822;
+            background: #33353b; /* Darker code block background */
             position: relative;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
+            border-radius: 12px; /* More rounded code blocks */
+            padding: 20px; /* Further increased code block padding */
+            margin-bottom: 20px;
             overflow-x: auto;
+             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); /* Enhanced code block shadow */
+            font-size: 15px; /* Slightly smaller code font */
         }
 
         .copy-code-button {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #444;
+            top: 12px; /* Adjusted copy button position */
+            right: 12px;
+            background-color: #555;
             color: white;
             border: none;
-            border-radius: 8px;
-            padding: 6px 10px;
-            font-size: 0.9em;
+            border-radius: 10px;
+            padding: 7px 12px; /* Further copy button padding adjust */
+            font-size: 0.95em;
             cursor: pointer;
-            opacity: 0.7;
-            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
+            opacity: 0.8;
+            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Added shadow transition */
+             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Added shadow to copy button */
         }
 
         .copy-code-button:hover {
             opacity: 1;
-            background-color: #00bcd4;
-             transform: scale(1.05);
+            background-color: #00c7e0; /* Brighter on hover */
+             transform: scale(1.06);
+             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); /* Enhanced hover shadow */
         }
 
+         /* Switch styles (inspired by iOS) - No changes needed here as it's from previous version */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
 
-    </style>
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+    }
+
+    input:checked + .slider {
+      background-color: #00bcd4;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 2px #00bcd4;
+    }
+
+    input:checked + .slider:before {
+      -webkit-transform: translateX(20px);
+      -ms-transform: translateX(20px);
+      transform: translateX(20px);
+    }
+
+    .slider.round {
+      border-radius: 24px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+
+</style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
@@ -568,7 +687,7 @@
                     <span class="slider round"></span>
                 </label>
             </li>
-            <button class="close-history-menu-btn" onclick="toggleSettingsMenu()">Đóng</button>
+            <button class="close-settings-menu-btn" onclick="toggleSettingsMenu()">Đóng</button>
         </ul>
 
         <div class="custom-modal-overlay" id="saveHistoryModalOverlay">
@@ -650,11 +769,11 @@
 
         function setAutoSaveInterval() {
             if (autoSaveInterval) {
-                clearInterval(autoSaveInterval); // Clear existing interval
+                clearInterval(autoSaveInterval);
                 autoSaveInterval = null;
             }
             if (isAutoSaveEnabled) {
-                autoSaveInterval = setInterval(autoSaveConversation, 60000); // Auto-save every 1 minute (60000 ms)
+                autoSaveInterval = setInterval(autoSaveConversation, 60000);
             }
         }
 
@@ -664,7 +783,7 @@
                 const historyName = `autosave-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
                 savedHistories[historyName] = [...conversationHistory];
                 localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-                loadSavedHistoriesList(); // Refresh history list to include auto-saved chat
+                loadSavedHistoriesList();
                 console.log(`Đoạn chat đã được tự động lưu: ${historyName}`);
             }
         }
@@ -681,7 +800,7 @@
                  loadSavedHistoriesList();
             } else {
                 hideHistoryMenu();
-                hideSettingsMenu(); // Hide settings menu when sidebar closes
+                hideSettingsMenu();
             }
         }
 
@@ -719,6 +838,9 @@
 
 
         function startNewChat() {
+            if (conversationHistory.length > 0 && isAutoSaveEnabled) {
+                autoSaveConversation(); // Auto-save existing chat before starting new
+            }
             conversationHistory = [];
             saveChatHistory();
             renderMessages();
@@ -792,7 +914,7 @@
         function toggleHistoryMenu() {
             const submenu = document.getElementById('saved-histories-menu');
             submenu.classList.toggle('open');
-            hideSettingsMenu(); // Also close settings if history menu opens
+            hideSettingsMenu();
         }
 
         function hideHistoryMenu() {
@@ -803,7 +925,7 @@
         function toggleSettingsMenu() {
             const submenu = document.getElementById('settings-menu');
             submenu.classList.toggle('open');
-            hideHistoryMenu(); // Also close history if settings menu opens
+            hideHistoryMenu();
         }
 
          function hideSettingsMenu() {
@@ -1047,68 +1169,6 @@
         }
     </script>
 
-<style>
-    /* ... (your existing styles) ... */
-
-    /* Switch styles (inspired by iOS) */
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 44px;
-      height: 24px;
-    }
-
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      transition: .4s;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: .4s;
-    }
-
-    input:checked + .slider {
-      background-color: #00bcd4;
-    }
-
-    input:focus + .slider {
-      box-shadow: 0 0 2px #00bcd4;
-    }
-
-    input:checked + .slider:before {
-      -webkit-transform: translateX(20px);
-      -ms-transform: translateX(20px);
-      transform: translateX(20px);
-    }
-
-    /* Rounded sliders */
-    .slider.round {
-      border-radius: 24px;
-    }
-
-    .slider.round:before {
-      border-radius: 50%;
-    }
-</style>
 
 </body>
 </html>
