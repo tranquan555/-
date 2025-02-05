@@ -221,7 +221,7 @@
         }
 
         .history-modal-close:hover {
-             background-color: var(--button-hover-bg);
+            background-color: var(--button-hover-bg);
             transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         }
@@ -306,18 +306,20 @@
 
         /* Code Block */
         .code-block {
-          position: relative;
-          margin-bottom: 1em;
-           border-radius: 0.5em;
-           box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.4);
-           overflow: hidden;
-          background-color: #282c34;
+            position: relative;
+            margin-bottom: 1em;
+            border-radius: 0.5em;
+            box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            background-color: #282c34;
         }
 
         .code-block pre {
             white-space: pre-wrap;
-           max-height: 300px;  /* Giới hạn chiều cao tối đa */
-           overflow-y: auto;  /* Thêm thanh cuộn nếu nội dung quá dài */
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 1em;
+            margin: 0;
         }
 
         .code-block code {
@@ -328,25 +330,25 @@
         }
 
         .prism-container {
-                position: relative;
-                margin-bottom: 1em;
-                border-radius: 0.5em;
-                box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.4);
-                 overflow: hidden;
+            position: relative;
+            margin-bottom: 1em;
+            border-radius: 0.5em;
+            box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.4);
+            overflow: hidden;
         }
 
         .prism-copy-toolbar {
-              position: absolute;
-              top: 0.5em;
-               right: 0.5em;
-                display: flex;
+            position: absolute;
+            top: 0.5em;
+            right: 0.5em;
+            display: flex;
         }
 
         .prism-copy-toolbar button {
             background-color: rgba(0, 0, 0, 0.5);
-              color: white;
-              border: 0;
-             border-radius: .5em;
+            color: white;
+            border: 0;
+            border-radius: .5em;
             cursor: pointer;
             font-size: 1em;
             line-height: 1.2;
@@ -355,7 +357,7 @@
          }
 
         .prism-copy-toolbar button:hover {
-                background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.8);
         }
 
          /* Input Container */
@@ -380,8 +382,6 @@
             font-size: 1.2em;
             user-select: none;
             -webkit-tap-highlight-color: transparent; /* Loại bỏ highlight khi tap trên mobile */
-            background-color: var(--button-bg);
-             color: var(--text-color);
         }
 
         #prompt-input {
@@ -400,10 +400,8 @@
         #send-button {
             width: 35px;
             height: 35px;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent; /* Loại bỏ highlight khi tap trên mobile */
-            background-color: var(--button-bg);
-             color: var(--text-color);
+             user-select: none;
+             -webkit-tap-highlight-color: transparent; /* Loại bỏ highlight khi tap trên mobile */
         }
 
         .user-message, .ai-message, .loading-message {
@@ -558,7 +556,7 @@
         lastTouchEnd = now;
     }, false);
     // Configuration PrismJS
-        Prism.plugins.toolbar.registerButton('copy-code', function (prism) {
+       Prism.plugins.toolbar.registerButton('copy-code', function (prism) {
             var button = document.createElement('button');
             button.textContent = 'Sao chép';
             button.classList.add('custom-button');
@@ -610,25 +608,20 @@
             menuActive = !menuActive;
             menuDropdown.classList.toggle('active', menuActive);
         }
+    // Close menu when clicking outside
 
-       // Close menu when clicking outside
         document.addEventListener('click', function(event) {
-            if (!event.target.closest('.menu-container') && menuActive) {
-                 toggleMenu();
-            }
-          if (!event.target.closest('.history-modal') && historyModal.classList.contains('active')) {
-          hideHistoryModal(); // Close the history modal if it's open
-           menuActive = false;
-
+             if (!event.target.closest('.menu-container') ) {
+                menuActive = false;
+                menuDropdown.classList.remove('active');
             }
         });
-
 
         // History Modal Functions
         function showHistoryModal() {
             historyModal.classList.add('active');
             loadHistoryList();
-            if (menuActive) {
+               if (menuActive) {
                 toggleMenu();
             }
         }
@@ -636,8 +629,8 @@
         function hideHistoryModal() {
             historyModal.classList.remove('active');
              menuActive = false;
-        }
 
+        }
         // Auth Functions
         function registerUser() {
             const username = registerUsernameInput.value.trim();
@@ -739,7 +732,6 @@
             loginForm.style.display = 'none';
             registerForm.style.display = 'block';
         }
-
         // Chat Functions
         function loadChatHistory() {
             if (!currentUsername) return;
@@ -752,71 +744,63 @@
                 chatContainer.innerHTML = '';
                 conversationHistory = [];
             }
-            menuActive = false;
+          menuActive = false;
             hideHistoryModal();
         }
-
-          function loadHistoryList() {
+      function loadHistoryList() {
             if (!currentUsername) return;
-
             historyList.innerHTML = '';
             const historyKeys = getHistorySessionKeys();
-
-            historyKeys.forEach(key => {
+              historyKeys.forEach(key => {
                 const historyName = key.split('/').pop().replace(/_/g, ' ').replace(/\.json$/, '');
                 const historyItem = document.createElement('li');
                 historyItem.className = 'history-item';
 
-                const historyItemContent = document.createElement('span');
+                 const historyItemContent = document.createElement('span');
                 historyItemContent.className = 'history-item-content';
                 historyItemContent.textContent = historyName;
                 historyItemContent.onclick = () => loadSpecificHistory(key, historyName);
                 historyItem.appendChild(historyItemContent);
 
-                 const deleteButton = document.createElement('button');
-                deleteButton.className = 'history-item-delete';
-                deleteButton.innerHTML = '✕';
+             const deleteButton = document.createElement('button');
+                deleteButton.className = 'history-item-delete custom-button';
+                 deleteButton.textContent = "Xóa";
                 deleteButton.onclick = (event) => {
                     event.stopPropagation();
                     deleteChatHistory(key);
-                    loadHistoryList();
+                   loadHistoryList();
                 };
                 historyItem.appendChild(deleteButton);
-
-                historyList.appendChild(historyItem);
-            });
+               historyList.appendChild(historyItem);
+          });
         }
          function deleteChatHistory(historyKey) {
             const confirmDelete = confirm("Bạn có chắc chắn muốn xóa lịch sử chat này?");
             if (confirmDelete) {
                 localStorage.removeItem(historyKey);
-                loadHistoryList();
+               loadHistoryList();
                 chatContainer.innerHTML = '';
                 conversationHistory = [];
             }
         }
-
-        function loadSpecificHistory(historyKey, historyName) {
+         function loadSpecificHistory(historyKey, historyName) {
             try {
                 const history = readFile(historyKey);
                 if (history) {
-                    currentHistoryKey = historyKey; // set current History key
+                    currentHistoryKey = historyKey;
                     conversationHistory = history;
                     chatContainer.innerHTML = '';
 
-                    // Add history name as a user message
                     addUserMessageToUI(`Bạn đang xem lịch sử: ${historyName}`, 'ai-message');
-
                     conversationHistory.forEach(message => {
                         if (message.role === 'user') {
                             addUserMessageToUI(message.parts[0].text, 'user-message');
                         } else if (message.role === 'model') {
-                            addAiMessage(message.parts[0].text); // Use addAiMessage to handle code blocks correctly
+                            addAiMessage(message.parts[0].text);
                         }
                     });
                     chatContainer.scrollTop = chatContainer.scrollHeight;
                     menuActive = false;
-                      menuDropdown.classList.remove('active');
                     hideHistoryModal();
                 } else {
                     console.warn(`Không tìm thấy lịch sử chat với key: ${historyKey}`);
@@ -826,7 +810,7 @@
                 alert("Lỗi khi tải lịch sử chat. Vui lòng thử lại sau.");
             }
         }
- function saveChatHistory() {
+        function saveChatHistory() {
              if (!currentUsername) return;
 
              let historyName = prompt("Vui lòng nhập tên cho cuộc trò chuyện này:", "Cuộc trò chuyện mới");
@@ -845,18 +829,13 @@
                  localStorage.setItem(newHistoryKey, JSON.stringify(conversationHistory));
                  console.log("lưu thành công")
              }
-
-
         }
-
-
         function clearChatHistory() {
             if (currentUsername) {
                 conversationHistory = [];
                 chatContainer.innerHTML = '';
             }
         }
-
         function startNewChatConfirmation() {
             const confirmNewChat = confirm("Bạn có chắc chắn muốn bắt đầu cuộc trò chuyện mới? Lịch sử chat hiện tại sẽ được lưu lại.");
             if (confirmNewChat) {
@@ -867,13 +846,11 @@
 
         function startNewChat() {
             clearChatHistory();
-              menuActive = false;
-               menuDropdown.classList.remove('active');
+            menuActive = false;
             hideHistoryModal();
             currentHistoryKey = null;
             showLoginForm();
         }
-
         function downloadChatHistory() {
             if (conversationHistory.length === 0) {
                 alert("Không có lịch sử chat để tải xuống.");
@@ -890,8 +867,7 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-              menuActive = false;
-               menuDropdown.classList.remove('active');
+            menuActive = false;
             hideHistoryModal();
         }
 
@@ -916,16 +892,20 @@
              let userMessage = userMessageFromFile || promptInput.value;
              promptInput.value = '';
 
-             if (!userMessage) return;
+             if (!userMessage && !userMessageFromFile) {
+                 return;
+             }
+
+              const apiKey = currentApiKey;
 
             addUserMessage(userMessage);
              showLoadingIndicator();
 
             const combinedPrompt = `${FIXED_PROMPT}\n\n${userMessage}`;
-            sendToGeminiAPI(currentApiKey, combinedPrompt);
+            sendToGeminiAPI(apiKey, combinedPrompt);
         }
 
-        function addUserMessage(message) {
+         function addUserMessage(message) {
             addUserMessageToUI(message, 'user-message');
             conversationHistory.push({ role: "user", parts: [{ text: message }] });
 
@@ -942,10 +922,9 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
 
-          function addAiMessage(message) {
+        function addAiMessage(message) {
             hideLoadingIndicator();
-
-             let messageDiv = document.createElement('div');
+           let messageDiv = document.createElement('div');
             messageDiv.className = 'ai-message';
             messageDiv.style.textAlign = 'left';
 
@@ -953,20 +932,17 @@
             if (message.startsWith("```") && message.endsWith("```")) {
                  const code = message.slice(3, -3);
 
-              content = `<div class="code-block">
-                        <pre class="language-javascript">
-                         <code class="language-javascript">${code}</code>
-                         </pre>
-
-                         </div>`;
+                 content = `<div class="code-block">
+                         <pre class="language-javascript"><code class="language-javascript">${code}</code></pre>
+                     </div>`;
             } else {
                 content = message;
             }
 
-           messageDiv.innerHTML = content;
-           chatContainer.appendChild(messageDiv);
-           Prism.highlightAllUnder(chatContainer); // Highlight new code
-           chatContainer.scrollTop = chatContainer.scrollHeight;
+            messageDiv.innerHTML = content;
+            chatContainer.appendChild(messageDiv);
+            Prism.highlightAllUnder(chatContainer);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
 
             conversationHistory.push({ role: "model", parts: [{ text: message }] });
 
@@ -975,7 +951,7 @@
             }
         }
 
-        function copyCode(button) {
+       function copyCode(button) {
             const pre = button.parentNode.querySelector('pre');
             navigator.clipboard.writeText(pre.textContent)
                 .then(() => {
@@ -1053,11 +1029,7 @@
                 isLoading = false;
             }
         }
-      // Function highlight code
-         function highlightCode() {
-             Prism.highlightAll();
 
-        }
         // Initial Check
         checkLoginStatus();
 
@@ -1066,7 +1038,7 @@
             event.preventDefault();
         });
 
-          fileUpload.addEventListener('change', function(event) {
+         fileUpload.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (!file) return;
 
