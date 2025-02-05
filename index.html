@@ -1,3 +1,4 @@
+--- START OF FILE new_page 3.html ---
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -6,7 +7,7 @@
     <title>AI Hiện Đại với Gemini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        /* Dark Mode ChatGPT-like Styles with Sidebar and Custom Modals */
+        /* Dark Mode ChatGPT-like Styles with Sidebar, Custom Modals & Animations */
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
@@ -29,28 +30,33 @@
             max-width: 1200px;
             margin: 20px auto;
             padding: 0;
-            background-color: transparent;
-            border-radius: 0;
-            box-shadow: none;
+            background-color: #252525; /* Slightly darker container background with border */
+            border-radius: 12px; /* Container border radius */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             display: flex;
             flex-direction: column;
             height: 100vh;
             flex-grow: 1;
             margin-left: auto;
-            transition: margin-left 0.3s ease;
+            transition: margin-left 0.3s ease, background-color 0.3s ease, border-radius 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions for container */
         }
 
         .container.sidebar-open {
             margin-left: 250px;
+            border-radius: 12px 0 0 12px; /* Adjust border radius when sidebar is open */
+            box-shadow: 4px 0 8px rgba(0,0,0,0.3); /* Enhanced shadow when sidebar is open */
         }
 
         h1 {
             text-align: center;
             color: #fff;
-            margin-bottom: 10px;
-            font-size: 1.8em;
+            margin-bottom: 15px; /* Increased bottom margin */
+            font-size: 2em; /* Slightly larger title */
             letter-spacing: 0.3px;
             padding: 20px 0;
+            border-bottom: 1px solid #333; /* Border under title */
+            margin-left: 20px; /* Add horizontal margin */
+            margin-right: 20px;
         }
 
         #messages-container {
@@ -61,7 +67,6 @@
             flex-direction: column;
             scrollbar-width: thin;
             scrollbar-color: #555 #252525;
-            padding-bottom: 70px;
         }
 
         #messages-container::-webkit-scrollbar {
@@ -69,7 +74,7 @@
         }
 
         #messages-container::-webkit-scrollbar-track {
-            background: #252525;
+            background: #2c2c2c; /* Slightly darker scrollbar track */
         }
 
         #messages-container::-webkit-scrollbar-thumb {
@@ -79,12 +84,14 @@
 
         .message {
             margin-bottom: 12px;
-            padding: 10px 14px;
-            border-radius: 15px;
+            padding: 12px 16px; /* Adjusted padding */
+            border-radius: 20px; /* More rounded messages */
             clear: both;
             word-wrap: break-word;
-            max-width: 80%;
+            max-width: 85%; /* Slightly wider message bubbles */
             display: inline-block;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.15); /* Subtle shadow on messages */
+            transition: background-color 0.2s ease, box-shadow 0.2s ease; /* Transition for message bubbles */
         }
 
         .user-message {
@@ -92,7 +99,7 @@
             color: #fff;
             align-self: flex-end;
             float: right;
-            border-top-right-radius: 3px;
+            border-top-right-radius: 5px; /* Less rounded on the top-right */
         }
 
         .ai-message {
@@ -100,13 +107,13 @@
             color: #d1d5db;
             align-self: flex-start;
             float: left;
-            border-top-left-radius: 3px;
+            border-top-left-radius: 5px; /* Less rounded on the top-left */
         }
 
         .input-area {
             padding: 15px 20px;
             background-color: #343541;
-            border-top: 1px solid #555;
+            border-top: 1px solid #444; /* More subtle border for input area */
             display: flex;
             align-items: center;
             position: fixed;
@@ -117,11 +124,29 @@
             padding-left: 20px;
             padding-right: 20px;
             z-index: 100;
+            border-radius: 0 0 12px 12px; /* Match container bottom corners */
+        }
+
+        .file-upload-button {
+            background-color: transparent;
+            color: #bbb; /* Lighter color for file upload button */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em; /* Slightly larger icon */
+            margin-right: 10px; /* Space between button and textarea */
+            padding: 8px 10px;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .file-upload-button:hover {
+            color: #fff; /* White on hover */
+            background-color: #444; /* Slightly darker background on hover */
         }
 
         .input-area textarea {
             flex-grow: 1;
-            padding: 10px;
+            padding: 12px; /* Adjusted padding for textarea */
             border: 1px solid #555;
             border-radius: 8px;
             font-size: 16px;
@@ -130,28 +155,37 @@
             resize: none;
             min-height: 40px;
             overflow-y: auto;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions for textarea */
         }
 
         .input-area textarea:focus {
             border-color: #00bcd4;
             outline: none;
-            box-shadow: 0 0 5px rgba(0, 188, 212, 0.5);
+            box-shadow: 0 0 6px rgba(0, 188, 212, 0.5); /* More prominent focus shadow */
         }
 
         .input-area button {
-            padding: 10px 20px;
+            padding: 12px 22px; /* Adjusted padding for button */
             background-color: #00bcd4;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px; /* More rounded button */
             cursor: pointer;
             font-size: 16px;
             margin-left: 10px;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease; /* Transitions for button */
+            box-shadow: 0 2px 3px rgba(0,0,0,0.2); /* Subtle shadow on button */
         }
 
         .input-area button:hover {
             background-color: #0097a7;
+            transform: translateY(-1px); /* Slight lift on hover */
+            box-shadow: 0 3px 4px rgba(0,0,0,0.25); /* Enhanced shadow on hover */
+        }
+
+        .input-area button:active {
+            transform: translateY(0); /* No lift when active */
+            box-shadow: 0 2px 3px rgba(0,0,0,0.2); /* Shadow back to normal when active */
         }
 
         /* Sidebar Styles */
@@ -170,6 +204,7 @@
             box-shadow: 2px 0 5px rgba(0,0,0,0.2);
             overflow-y: auto;
             touch-action: manipulation;
+            border-right: 1px solid #333; /* Subtle right border for sidebar */
         }
 
         .sidebar.sidebar--open {
@@ -179,7 +214,7 @@
         .sidebar-header {
             padding: 20px;
             text-align: center;
-            border-bottom: 1px solid #555;
+            border-bottom: 1px solid #333;
             margin-bottom: 20px;
         }
 
@@ -195,7 +230,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid #333; /* Separator lines in sidebar menu */
         }
+
+        .sidebar-menu-item:last-child {
+            border-bottom: none; /* No border for last menu item */
+        }
+
 
         .sidebar-menu-item:hover {
             background-color: #343541;
@@ -215,15 +256,21 @@
             margin: 0;
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            box-shadow: 0 3px 7px rgba(0,0,0,0.4); /* More pronounced shadow for dropdown */
             background-color: #2c2c2c;
             display: none;
             margin-top: 5px;
+            opacity: 0;
+            max-height: 0;
+            transition: opacity 0.3s ease, max-height 0.4s ease; /* Opacity and max-height transition */
         }
 
         .submenu.open {
             display: block;
+            opacity: 1;
+            max-height: 500px; /* Adjust max-height as needed, or use 'initial' if content is truly dynamic and you want auto height but still animated transition*/
         }
+
 
         .submenu-item {
             padding: 12px 20px;
@@ -232,7 +279,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid #333; /* Separator lines in submenu */
         }
+
+        .submenu-item:last-child {
+            border-bottom: none; /* No border for last submenu item */
+        }
+
 
         .submenu-item:hover {
             background-color: #343541;
@@ -273,11 +326,16 @@
             align-items: center;
             cursor: pointer;
             z-index: 300;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Shadow for toggle button */
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease; /* Transitions for toggle button */
         }
 
         .sidebar-toggle-button:hover {
             background-color: #0097a7;
+            transform: scale(1.05); /* Slight scale up on hover */
+            box-shadow: 0 3px 5px rgba(0,0,0,0.25); /* Enhanced shadow on hover */
         }
+
 
         .sidebar-overlay {
             position: fixed;
@@ -305,14 +363,23 @@
             display: block;
             margin-left: auto;
             margin-right: auto;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease; /* Transitions for close button */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.15); /* Subtle shadow for close button */
         }
 
         .close-history-menu-btn:hover {
             background-color: #0097a7;
+            transform: translateY(-1px); /* Slight lift on hover */
+            box-shadow: 0 2px 3px rgba(0,0,0,0.2); /* Enhanced shadow on hover */
         }
 
-        /* Custom Modals Styles */
+        .close-history-menu-btn:active {
+            transform: translateY(0); /* No lift when active */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.15); /* Shadow back to normal when active */
+        }
+
+
+        /* Custom Modals Styles - unchanged */
         .custom-modal-overlay {
             display: none;
             position: fixed;
@@ -320,21 +387,21 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent overlay */
-            z-index: 400; /* Above sidebar overlay */
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 400;
             justify-content: center;
             align-items: center;
-            pointer-events: none; /* Allow clicks to pass through initially */
+            pointer-events: none;
         }
 
         .custom-modal-overlay.show-modal {
-            display: flex; /* Show modal overlay */
-            pointer-events: auto; /* Re-enable pointer events when modal is shown */
+            display: flex;
+            pointer-events: auto;
         }
 
 
         .custom-modal {
-            background-color: #343541; /* Modal background color */
+            background-color: #343541;
             color: #fff;
             padding: 20px;
             border-radius: 10px;
@@ -392,7 +459,7 @@
         }
 
 
-        /* Prism.js Dark Theme Adjustments */
+        /* Prism.js Dark Theme Adjustments - unchanged */
         code[class*="language-"],
         pre[class*="language-"] {
             color: #f8f8f2;
@@ -477,6 +544,9 @@
         </div>
 
         <div class="input-area">
+            <button class="file-upload-button" onclick="uploadFilePlaceholder()">
+                <i class="fas fa-paperclip"></i>
+            </button>
             <textarea id="user-prompt" placeholder="Nhập tin nhắn"></textarea>
             <button onclick="getGeminiResponse()">Gửi</button>
         </div>
@@ -492,7 +562,7 @@
 
         let conversationHistory = [];
         let savedHistories = {};
-        let historyNameToDelete = null; // Track history name to delete
+        let historyNameToDelete = null;
 
         // Sidebar toggle function - same as before
         function toggleSidebar() {
@@ -538,7 +608,7 @@
         }
 
 
-        // --- Custom Modal Functions ---
+        // --- Custom Modal Functions - unchanged ---
         function openSaveHistoryModal() {
             document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
             document.getElementById('historyNameInput').value = ''; // Clear previous input
@@ -555,42 +625,41 @@
                 localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
                 alert(`Lịch sử chat đã được lưu với tên: ${historyName}`);
                 loadSavedHistoriesList();
-                closeSaveHistoryModal(); // Close modal after saving
+                closeSaveHistoryModal();
             } else {
                 alert("Vui lòng nhập tên cho lịch sử chat.");
             }
         }
 
         function openDeleteHistoryModal(name) {
-            historyNameToDelete = name; // Set the history name to delete
-            document.getElementById('historyNameToDelete').textContent = name; // Display name in modal
+            historyNameToDelete = name;
+            document.getElementById('historyNameToDelete').textContent = name;
             document.getElementById('deleteHistoryModalOverlay').classList.add('show-modal');
         }
 
         function closeDeleteHistoryModal() {
             document.getElementById('deleteHistoryModalOverlay').classList.remove('show-modal');
-            historyNameToDelete = null; // Clear history name to delete
+            historyNameToDelete = null;
         }
 
         function confirmDeleteHistory() {
             if (historyNameToDelete) {
-                deleteSavedHistory(historyNameToDelete); // Proceed with deletion
+                deleteSavedHistory(historyNameToDelete);
             }
-            closeDeleteHistoryModal(); // Close modal after deletion or cancel
+            closeDeleteHistoryModal();
         }
 
 
-        // Function to delete a saved history - Modified to no longer use confirm()
+        // Function to delete a saved history - unchanged
         function deleteSavedHistory(historyName) {
             delete savedHistories[historyName];
             localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-            loadSavedHistoriesList(); // Refresh the list after deletion
+            loadSavedHistoriesList();
             alert(`Lịch sử chat "${historyName}" đã bị xóa.`);
-
         }
 
 
-        // Function to load a specific saved history by name - same as before
+        // Function to load a specific saved history by name - unchanged
         function loadChatHistoryByName(historyName) {
             if (savedHistories[historyName]) {
                 conversationHistory = [...savedHistories[historyName]];
@@ -604,13 +673,10 @@
         }
 
 
-        // Function to toggle visibility of saved histories menu - same as before
+        // Function to toggle visibility of saved histories menu - unchanged, but triggers dropdown animation
         function toggleHistoryMenu() {
             const submenu = document.getElementById('saved-histories-menu');
             submenu.classList.toggle('open');
-            if (submenu.classList.contains('open')) {
-                 loadSavedHistoriesList();
-            }
         }
 
         function hideHistoryMenu() {
@@ -619,7 +685,7 @@
         }
 
 
-        // Function to load and display saved history names in the sidebar menu - modified for delete button & modal
+        // Function to load and display saved history names in the sidebar menu - unchanged
         function loadSavedHistoriesList() {
             const historiesMenu = document.getElementById('saved-histories-menu');
             historiesMenu.innerHTML = '<button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>';
@@ -646,14 +712,14 @@
                 const nameSpan = document.createElement('span');
                 nameSpan.classList.add('history-name');
                 nameSpan.textContent = historyName;
-                nameSpan.onclick = () => loadChatHistoryByName(historyName); // Load history on name click
+                nameSpan.onclick = () => loadChatHistoryByName(historyName);
 
                 const deleteButton = document.createElement('button');
                 deleteButton.classList.add('delete-history-btn');
-                deleteButton.textContent = '...'; // Or use an icon
+                deleteButton.textContent = '...';
                 deleteButton.onclick = (event) => {
-                    event.stopPropagation(); // Prevent history load when delete is clicked
-                    openDeleteHistoryModal(historyName); // Open delete confirm modal
+                    event.stopPropagation();
+                    openDeleteHistoryModal(historyName);
                 };
 
                 historyItem.appendChild(nameSpan);
@@ -662,8 +728,15 @@
             }
         }
 
+        // Placeholder for file upload functionality
+        function uploadFilePlaceholder() {
+            alert("Chức năng tải file sẽ được cập nhật trong tương lai.");
+            // Future implementation would go here - likely involve <input type="file">,
+            // reading file content, and handling API upload if Gemini API supports it.
+        }
 
-        // Load history when page loads - same as before
+
+        // Load history when page loads - unchanged
         loadChatHistory();
         loadSavedHistoriesList();
 
@@ -677,7 +750,7 @@
                 return;
             }
 
-            // Add user message to history and display - same as before
+            // Add user message to history and display - unchanged
             const userMessageObject = { role: 'user', parts: [{ text: userPrompt }] };
             conversationHistory.push(userMessageObject);
             saveChatHistory();
@@ -691,7 +764,7 @@
             messagesContainer.appendChild(aiMessageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-            // Prepare payload with conversation history and system prompt - same as before
+            // Prepare payload with conversation history and system prompt - unchanged
             let promptContents = conversationHistory.map(message => ({
                 role: message.role,
                 parts: message.parts
@@ -726,7 +799,7 @@
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     const aiResponseText = data.candidates[0].content.parts[0].text;
 
-                    // Add AI message to history and save - same as before
+                    // Add AI message to history and save - unchanged
                     const aiMessageObject = { role: 'model', parts: [{ text: aiResponseText }] };
                     conversationHistory.push(aiMessageObject);
                     saveChatHistory();
@@ -744,3 +817,4 @@
     </script>
 </body>
 </html>
+--- END OF FILE new_page 3.html ---
