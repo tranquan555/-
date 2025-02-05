@@ -7,53 +7,59 @@
     <title>AI Hiện Đại với Gemini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        /* Dark Mode ChatGPT-like Styles */
+        /* Dark Mode ChatGPT-like Styles with Sidebar */
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #1e2124; /* Dark background - ChatGPT dark grey */
-            color: #d1d5db; /* Light grey text color */
+            background-color: #1e2124;
+            color: #d1d5db;
             display: flex;
-            flex-direction: column;
-            align-items: center; /* Center container horizontally */
             min-height: 100vh;
+            overflow-x: hidden; /* Prevent horizontal scrollbar from sidebar animation */
         }
 
         .container {
             width: 95%;
-            max-width: 1200px; /* Wider container for chat layout */
-            margin: 20px auto; /* Reduced top margin */
-            padding: 0; /* No padding for container */
-            background-color: transparent; /* Container is transparent */
-            border-radius: 0; /* No rounded corners */
-            box-shadow: none; /* No shadow */
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0;
+            background-color: transparent;
+            border-radius: 0;
+            box-shadow: none;
             display: flex;
             flex-direction: column;
-            height: 100vh; /* Full viewport height */
+            height: 100vh;
+            flex-grow: 1; /* Allow container to take available space */
+            margin-left: auto; /* Push container to right when sidebar is open */
+            transition: margin-left 0.3s ease; /* Transition for container margin when sidebar opens */
         }
+
+        .container.sidebar-open {
+            margin-left: 250px; /* Width of sidebar when open */
+        }
+
 
         h1 {
             text-align: center;
-            color: #fff; /* White title - Optional, maybe remove in ChatGPT layout */
-            margin-bottom: 10px; /* Reduced margin */
-            font-size: 1.8em; /* Smaller title */
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 1.8em;
             letter-spacing: 0.3px;
             padding: 20px 0;
         }
 
         #messages-container {
-            flex-grow: 1; /* Messages take up most space */
+            flex-grow: 1;
             padding: 20px;
-            overflow-y: auto; /* Scrollable messages */
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
-            scrollbar-width: thin; /* For Firefox */
-            scrollbar-color: #555 #252525; /* For Firefox */
-            padding-bottom: 70px; /* Add padding to bottom to avoid input area overlap */
+            scrollbar-width: thin;
+            scrollbar-color: #555 #252525;
+            padding-bottom: 70px; /* Fixed input area */
         }
 
-        /* Scrollbar styling for Chrome, Safari, and Opera */
         #messages-container::-webkit-scrollbar {
             width: 8px;
         }
@@ -71,83 +77,206 @@
             margin-bottom: 15px;
             padding: 10px 15px;
             border-radius: 10px;
-            clear: both; /* Prevent float issues */
+            clear: both;
             word-wrap: break-word;
         }
 
         .user-message {
-            background-color: #343541; /* User message background - ChatGPT grey bubble */
+            background-color: #343541;
             color: #fff;
-            align-self: flex-end; /* Right align user messages */
+            align-self: flex-end;
             float: right;
         }
 
         .ai-message {
-            background-color: #444654; /* AI message background - slightly darker */
+            background-color: #444654;
             color: #d1d5db;
-            align-self: flex-start; /* Left align AI messages */
+            align-self: flex-start;
             float: left;
         }
 
         .input-area {
             padding: 20px;
-            background-color: #343541; /* Input area background - same as user message */
-            border-top: 1px solid #555; /* Input area border top */
+            background-color: #343541;
+            border-top: 1px solid #555;
             display: flex;
-            align-items: center; /* Vertically center items in input area */
-            position: fixed; /* Fixed position at the bottom */
+            align-items: center;
+            position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            box-sizing: border-box; /* Include padding and border in width and height */
-            padding-left: 20px; /* Keep left padding */
-            padding-right: 20px; /* Keep right padding */
-            z-index: 100; /* Ensure it's above other content */
+            box-sizing: border-box;
+            padding-left: 20px;
+            padding-right: 20px;
+            z-index: 100;
         }
 
         .input-area textarea {
-            flex-grow: 1; /* Textarea takes available space */
+            flex-grow: 1;
             padding: 10px;
             border: 1px solid #555;
             border-radius: 8px;
             font-size: 16px;
-            background-color: #40414f; /* Slightly darker input bg */
+            background-color: #40414f;
             color: #fff;
-            resize: none; /* No resize handle */
-            min-height: 40px; /* Minimum height for textarea */
-            overflow-y: auto; /* Add vertical scroll if needed */
+            resize: none;
+            min-height: 40px;
+            overflow-y: auto;
         }
 
         .input-area textarea:focus {
-            border-color: #00bcd4; /* Focus border color */
+            border-color: #00bcd4;
             outline: none;
             box-shadow: 0 0 5px rgba(0, 188, 212, 0.5);
         }
 
         .input-area button {
             padding: 10px 20px;
-            background-color: #00bcd4; /* Teal button */
+            background-color: #00bcd4;
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
-            margin-left: 10px; /* Space between textarea and button */
+            margin-left: 10px;
             transition: background-color 0.3s ease;
         }
 
         .input-area button:hover {
-            background-color: #0097a7; /* Darker teal on hover */
+            background-color: #0097a7;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #252525; /* Sidebar background darker */
+            color: #fff;
+            transform: translateX(-100%); /* Initially hidden off-screen */
+            transition: transform 0.3s ease;
+            z-index: 200; /* Above container and input area */
+            padding-top: 60px; /* Spacing for logo/title if needed at the top */
+            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+            overflow-y: auto; /* Scroll for long menus */
+        }
+
+        .sidebar.sidebar--open {
+            transform: translateX(0); /* Slide in when open */
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #555;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-menu {
+            padding: 0;
+            list-style: none;
+        }
+
+        .sidebar-menu-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .sidebar-menu-item:hover {
+            background-color: #343541;
+        }
+
+        .sidebar-menu-item.has-submenu > .menu-link::after {
+            content: '>';
+            float: right;
+            margin-left: 10px;
+            font-size: 0.8em;
+        }
+
+        .submenu {
+            list-style: none;
+            padding-left: 20px;
+            display: none; /* Initially hidden */
+        }
+
+        .submenu.open {
+            display: block;
+        }
+
+        .submenu-item {
+            padding: 10px 0;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .submenu-item:hover {
+            background-color: #343541;
+        }
+
+        .sidebar-toggle-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #00bcd4;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 300; /* Above sidebar */
+        }
+
+        .sidebar-toggle-button:hover {
+            background-color: #0097a7;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+            z-index: 150; /* Below sidebar but above everything else */
+            display: none; /* Hidden initially */
+        }
+
+        .sidebar-overlay.sidebar--open {
+            display: block; /* Show overlay when sidebar is open */
+        }
+
+        .close-history-menu-btn {
+            background-color: #00bcd4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            transition: background-color 0.3s ease;
+        }
+
+        .close-history-menu-btn:hover {
+            background-color: #0097a7;
         }
 
 
-        /* Prism.js Dark Theme Adjustments - Reusing from previous, but double check contrast*/
+        /* Prism.js Dark Theme Adjustments */
         code[class*="language-"],
         pre[class*="language-"] {
             color: #f8f8f2;
             background: #272822;
         }
-        /* ... (Prism.js theme styles - as before) ... */
         .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #6c6767; }
         .token.punctuation { color: #f8f8f2; }
         .token.namespace { opacity: .7; }
@@ -166,10 +295,37 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <div class="container">
-        <h1>AI Hiện Đại với Gemini</h1>  <!-- Optional: Keep title or remove for cleaner ChatGPT feel -->
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Lịch sử Chat</h3>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-menu-item" onclick="saveCurrentHistory()">
+                <span class="menu-link">Lưu lịch sử này</span>
+            </li>
+            <li class="sidebar-menu-item has-submenu" onclick="toggleHistoryMenu()">
+                <span class="menu-link">Lịch sử đã lưu</span>
+            </li>
+        </ul>
+
+        <ul class="submenu" id="saved-histories-menu">
+            <!-- Saved histories will be listed here -->
+            <button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>
+        </ul>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <button class="sidebar-toggle-button" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="container" id="container">
+        <h1>AI Hiện Đại với Gemini</h1>
 
         <div id="messages-container">
             <!-- Messages will be appended here -->
@@ -190,32 +346,126 @@
         const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
 
         let conversationHistory = []; // In-memory history
+        let savedHistories = {}; // Object to store saved histories, key: historyName, value: history
+
+        // Sidebar toggle function
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const container = document.getElementById('container');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('sidebar--open');
+            container.classList.toggle('container.sidebar-open');
+            overlay.classList.toggle('sidebar--open');
+            if (sidebar.classList.contains('sidebar--open')) {
+                 loadSavedHistoriesList(); // Load list when opening sidebar
+            } else {
+                hideHistoryMenu(); // Ensure history menu is closed when closing sidebar
+            }
+        }
 
         // Function to load chat history from local storage
         function loadChatHistory() {
             const storedHistory = localStorage.getItem('chatHistory');
             if (storedHistory) {
                 conversationHistory = JSON.parse(storedHistory);
-                const messagesContainer = document.getElementById('messages-container');
-                messagesContainer.innerHTML = ''; // Clear existing messages
-                conversationHistory.forEach(message => {
-                    const messageDiv = document.createElement('div');
-                    messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
-                    messageDiv.innerHTML = message.parts[0].text; // Use innerHTML for markdown
-                    messagesContainer.appendChild(messageDiv);
-                    Prism.highlightAllUnder(messageDiv); // Highlight code blocks if any
-                });
-                 messagesContainer.scrollTop = messagesContainer.scrollHeight; // Scroll to bottom
+                renderMessages();
             }
         }
 
-        // Function to save chat history to local storage
+        // Function to save chat history to local storage (current session)
         function saveChatHistory() {
             localStorage.setItem('chatHistory', JSON.stringify(conversationHistory));
         }
 
+        // Render messages from conversationHistory to UI
+        function renderMessages() {
+            const messagesContainer = document.getElementById('messages-container');
+            messagesContainer.innerHTML = ''; // Clear existing messages
+            conversationHistory.forEach(message => {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
+                messageDiv.innerHTML = message.parts[0].text; // Use innerHTML for markdown
+                messagesContainer.appendChild(messageDiv);
+                Prism.highlightAllUnder(messageDiv); // Highlight code blocks if any
+            });
+             messagesContainer.scrollTop = messagesContainer.scrollHeight; // Scroll to bottom
+        }
+
+
+        // Function to save the current chat history with a name
+        function saveCurrentHistory() {
+            const historyName = prompt("Nhập tên cho lịch sử chat này:");
+            if (historyName) {
+                savedHistories[historyName] = [...conversationHistory]; // Save a copy
+                localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
+                alert(`Lịch sử chat đã được lưu với tên: ${historyName}`);
+                loadSavedHistoriesList(); // Update history list in sidebar
+            }
+        }
+
+        // Function to load a specific saved history by name
+        function loadChatHistoryByName(historyName) {
+            if (savedHistories[historyName]) {
+                conversationHistory = [...savedHistories[historyName]]; // Load saved history
+                saveChatHistory(); // Update current session history too, for continuity if needed after loading saved history
+                renderMessages();
+                toggleHistoryMenu(); // Close the history menu after loading
+                toggleSidebar(); // Optionally close sidebar too
+            } else {
+                alert("Không tìm thấy lịch sử chat đã lưu.");
+            }
+        }
+
+
+        // Function to toggle visibility of saved histories menu
+        function toggleHistoryMenu() {
+            const submenu = document.getElementById('saved-histories-menu');
+            submenu.classList.toggle('open');
+            if (submenu.classList.contains('open')) {
+                 loadSavedHistoriesList(); // Ensure list is loaded every time menu opens
+            }
+        }
+
+        function hideHistoryMenu() {
+            const submenu = document.getElementById('saved-histories-menu');
+            submenu.classList.remove('open');
+        }
+
+
+        // Function to load and display saved history names in the sidebar menu
+        function loadSavedHistoriesList() {
+            const historiesMenu = document.getElementById('saved-histories-menu');
+            historiesMenu.innerHTML = '<button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>'; // Keep close button
+
+            const storedSavedHistories = localStorage.getItem('savedHistories');
+            if (storedSavedHistories) {
+                savedHistories = JSON.parse(storedSavedHistories);
+            } else {
+                savedHistories = {}; // Initialize if nothing in local storage
+            }
+
+            if (Object.keys(savedHistories).length === 0) {
+                const noHistoryItem = document.createElement('li');
+                noHistoryItem.classList.add('submenu-item');
+                noHistoryItem.textContent = "Chưa có lịch sử nào được lưu.";
+                historiesMenu.appendChild(noHistoryItem);
+                return;
+            }
+
+
+            for (const historyName in savedHistories) {
+                const historyItem = document.createElement('li');
+                historyItem.classList.add('submenu-item');
+                historyItem.textContent = historyName;
+                historyItem.onclick = () => loadChatHistoryByName(historyName);
+                historiesMenu.appendChild(historyItem);
+            }
+        }
+
+
         // Load history when page loads
         loadChatHistory();
+        loadSavedHistoriesList(); // Load initially for pre-populated list if available
 
 
         async function getGeminiResponse() {
@@ -231,10 +481,7 @@
             const userMessageObject = { role: 'user', parts: [{ text: userPrompt }] };
             conversationHistory.push(userMessageObject);
             saveChatHistory(); // Save after user message too
-            const userMessageDiv = document.createElement('div');
-            userMessageDiv.classList.add('message', 'user-message');
-            userMessageDiv.textContent = userPrompt;
-            messagesContainer.appendChild(userMessageDiv);
+            renderMessages(); // Re-render all messages including the user's new message
             document.getElementById('user-prompt').value = ''; // Clear input after sending
 
 
@@ -244,13 +491,11 @@
             messagesContainer.appendChild(aiMessageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight; // Scroll to bottom
 
-            // Prepare payload with conversation history and current user prompt
+            // Prepare payload with conversation history and system prompt
             let promptContents = conversationHistory.map(message => ({
                 role: message.role,
                 parts: message.parts
             }));
-
-            // Add system prompt as the first message in conversation history
             promptContents.unshift({ role: 'user', parts: [{ text: systemPrompt }] });
 
 
@@ -280,41 +525,13 @@
 
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     const aiResponseText = data.candidates[0].content.parts[0].text;
-                    aiMessageDiv.innerHTML = aiResponseText; // Set response HTML
 
                     // Add AI message to history and save
                     const aiMessageObject = { role: 'model', parts: [{ text: aiResponseText }] };
                     conversationHistory.push(aiMessageObject);
                     saveChatHistory();
+                    renderMessages(); // Re-render messages to include AI response and highlight code
 
-
-                    // Regex to find code blocks (```language ... ``` or ``` ... ```) - same as before
-                    const codeBlockRegex = /```([\w]*)\n([\s\S]*?)```/gm;
-                    let match;
-                    let codeContent = null;
-                    let language = 'text'; // Default language for file
-
-                    while ((match = codeBlockRegex.exec(aiResponseText)) !== null) {
-                        language = match[1] || 'text'; // Get language or default to text
-                        codeContent = match[2].trim(); // Extract code and trim whitespace
-                        break; // Assuming only one code block for now - can adjust if needed
-                    }
-
-                    if (codeContent) {
-                        // Create download link for code - same as before
-                        const blob = new Blob([codeContent], { type: 'text/plain' }); // Adjust mime type if needed
-                        const url = URL.createObjectURL(blob);
-                        const downloadLink = document.createElement('a');
-                        downloadLink.href = url;
-                        downloadLink.download = `code.${language}`; // Suggest file name
-                        downloadLink.textContent = 'Tải xuống code';
-                        downloadLink.style.display = 'block'; // Make it a block element for better visibility
-                        downloadLink.style.marginTop = '10px'; // Add some space
-                        aiMessageDiv.appendChild(downloadLink);
-
-                    }
-                    Prism.highlightAllUnder(aiMessageDiv); // Highlight code blocks in AI message
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight; // Keep scrolling to bottom after response
                 } else {
                     aiMessageDiv.textContent = "Không nhận được phản hồi hợp lệ từ AI.";
                 }
