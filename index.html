@@ -6,13 +6,13 @@
     <title>AI Hiện Đại với Gemini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        /* Reverted Code Block and Copy Button Styles, Maintained Dark Theme */
+        /* Enhanced Base Styles (No Animation for Code Blocks) */
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #1e2124; /* Dark Background - Kept from modern theme */
-            color: #d1d5db; /* Kept from dark theme */
+            background-color: #1e2124;
+            color: #e0e0e0;
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
@@ -27,127 +27,153 @@
             font-size: 16px;
             overflow-y: scroll;
             scrollbar-width: thin;
-            scrollbar-color: #555 #252525;
+            scrollbar-color: #555 #2a2a2a;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.3s ease;
         }
 
         body::-webkit-scrollbar {
-            width: 8px;
+            width: 9px;
         }
 
         body::-webkit-scrollbar-track {
-            background: #252525;
+            background: #2a2a2a;
         }
 
         body::-webkit-scrollbar::-webkit-scrollbar-thumb {
             background-color: #555;
-            border-radius: 4px;
+            border-radius: 5px;
+             border: 2px solid #2a2a2a;
         }
 
 
         .container {
-            width: 95%;
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 25px; /* Padding - Kept from modern theme value */
-            background-color: #25272b; /* Dark container - Kept from modern theme */
-            border-radius: 12px; /* Rounded container - Kept from modern theme value */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Shadow - Kept from modern theme value */
+            width: 96%;
+            max-width: 1250px;
+            margin: 25px auto;
+            padding: 30px;
+            background-color: #2a2d31;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            height: calc(100vh - 50px);
             flex-grow: 1;
             margin-left: auto;
-            transition: margin-left 0.3s ease;
-            border: 1px solid #333;
+            transition: margin-left 0.3s ease, background-color 0.3s ease;
+            border: none;
         }
 
         .container.sidebar-open {
-            margin-left: 250px;
+            margin-left: 270px;
         }
 
         h1 {
             text-align: center;
             color: #fff;
-            margin-bottom: 20px;
-            font-size: 2.2em;
-            letter-spacing: 0.3px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #444;
+            margin-bottom: 25px;
+            font-size: 2.7em;
+            letter-spacing: 0.7px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #4a4a4a;
+            font-weight: 500;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
         }
 
         #messages-container {
             flex-grow: 1;
-            padding: 20px;
+            padding: 25px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             scrollbar-width: thin;
-            scrollbar-color: #555 #252525;
-            padding-bottom: 70px;
-            border: 1px solid #333;
-            border-radius: 8px; /* Rounded messages container - Kept from modern theme value */
-            background-color: #1e2124; /* Dark message container - Kept from modern theme */
+            scrollbar-color: #555 #2a2a2a;
+            padding-bottom: 80px;
+            border: none;
+            border-radius: 12px;
+            background-color: #232529;
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.4);
+            opacity: 1; /* Removed opacity animation and fade-in animation trigger */
         }
 
+
+
         #messages-container::-webkit-scrollbar {
-            width: 8px;
+            width: 9px;
         }
 
         #messages-container::-webkit-scrollbar-track {
-            background: #252525;
+            background: #2a2a2a;
         }
 
         #messages-container::-webkit-scrollbar::-webkit-scrollbar-thumb {
             background-color: #555;
-            border-radius: 4px;
+            border-radius: 5px;
+            border: 2px solid #2a2a2a;
         }
 
         .message {
-            margin-bottom: 12px;
-            padding: 10px 14px;
-            border-radius: 15px;
+            margin-bottom: 15px;
+            padding: 12px 18px;
+            border-radius: 20px;
             clear: both;
             word-wrap: break-word;
             max-width: 80%;
             display: inline-block;
-            border: 1px solid #444;
-            position: relative;
+            border: none;
+             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            opacity: 1; /* Removed opacity animation and initial position transform */
+            transform: none;
+            margin-top: 5px;
+             animation: slideUpFadeIn 0.4s ease-out forwards; /* Kept slide-up animation for other message types, can remove entirely from .message if no animations at all are wanted for messages */
         }
 
+        @keyframes slideUpFadeIn { /* Kept for general messages if animation is still wanted for regular text */
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
         .user-message {
-            background-color: #343541;
+            background-color: #3a3c43;
             color: #fff;
             align-self: flex-end;
             float: right;
-            border-top-right-radius: 3px;
+            border-top-right-radius: 8px;
         }
 
         .ai-message {
-            background-color: #444654;
-            color: #d1d5db;
+            background-color: #4e515a;
+            color: #d8d8d8;
             align-self: flex-start;
             float: left;
-            border-top-left-radius: 3px;
+            border-top-left-radius: 8px;
         }
 
         .ai-message .ai-message-text {
-            font-family: 'Arial', sans-serif; /* Font - Kept from modern theme */
+            font-family: 'Arial', sans-serif;
             font-weight: normal;
-            line-height: 1.6; /* Line Height - Kept from modern theme value */
+            line-height: 1.7;
             white-space: pre-line;
-            font-size: 16px; /* Font size - Kept from modern theme value */
+            font-size: 17px;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
         }
 
         .markdown-bold-uppercase {
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.6px;
+            color: #f5f5f5;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
         }
 
         .input-area {
-            padding: 15px 20px; /* Padding - Kept from original value, can adjust if needed */
-            background-color: #343541; /* Dark Input area - Kept from modern theme */
-            border-top: 1px solid #555;
+            padding: 12px 20px;
+            background-color: #3a3c43;
+            border-top: 2px solid #5a5a5a;
             display: flex;
             align-items: center;
             position: fixed;
@@ -158,67 +184,76 @@
             padding-left: 20px;
             padding-right: 20px;
             z-index: 100;
-            border-bottom-left-radius: 12px; /* Rounded input area corners - Kept from modern theme value */
-            border-bottom-right-radius: 12px;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
              border-top: 1px solid #444;
         }
 
         .input-area textarea {
             flex-grow: 1;
             padding: 10px;
-            border: 1px solid #555;
-            border-radius: 8px;
-            font-size: 16px;
-            background-color: #40414f; /* Dark textarea - Kept from modern theme */
+            border: none;
+            border-radius: 15px;
+            font-size: 17px;
+            background-color: #4a4d54;
             color: #fff;
             resize: none;
-            min-height: 40px;
+            min-height: 38px;
             overflow-y: auto;
-            border: 1px solid #444;
+             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .input-area textarea:focus {
-            border-color: #00bcd4;
+            border-color: transparent;
             outline: none;
-            box-shadow: 0 0 5px rgba(0, 188, 212, 0.5);
+            background-color: #555860;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5), 0 0 7px rgba(0, 188, 212, 0.7);
         }
 
         .input-area button {
-            padding: 10px 20px;
-            background-color: #00bcd4;
+            padding: 12px 22px;
+            background-color: #00c7e0;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 15px;
             cursor: pointer;
-            font-size: 16px;
-            margin-left: 10px;
-            transition: background-color 0.3s ease;
+            font-size: 17px;
+            margin-left: 12px;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+            font-weight: 500;
         }
 
         .input-area button:hover {
-            background-color: #0097a7;
+            background-color: #00a9bf;
+            transform: scale(1.04);
+             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
         }
 
         .file-upload-button {
-            background-color: #555; /* Dark file upload button - Kept from modern theme */
+            background-color: #5a5a5a;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 15px;
             cursor: pointer;
-            font-size: 1em;
-            width: 40px;
-            height: 40px;
+            font-size: 1.1em;
+            width: 44px;
+            height: 44px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-right: 10px;
-            opacity: 0.8;
-            transition: opacity 0.3s ease, background-color 0.3s ease;
+            margin-right: 12px;
+            opacity: 0.95;
+            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
         }
 
         .file-upload-button:hover {
             opacity: 1;
-            background-color: #666;
+            background-color: #666666;
+             transform: scale(1.04);
+             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
         }
 
 
@@ -226,29 +261,31 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 250px;
+            width: 270px;
             height: 100%;
-            background-color: #252525; /* Dark Sidebar - Kept from modern theme */
+            background-color: #2a2a2a;
             color: #fff;
             transform: translateX(-100%);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             z-index: 200;
-            padding-top: 60px;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+            padding-top: 80px;
+            box-shadow: 5px 0 10px rgba(0,0,0,0.4);
             overflow-y: auto;
             touch-action: manipulation;
-            border-right: 1px solid #444;
+            border-right: none;
+             backdrop-filter: blur(12px);
         }
 
         .sidebar.sidebar--open {
             transform: translateX(0);
+             box-shadow: 8px 0 15px rgba(0,0,0,0.5);
         }
 
         .sidebar-header {
-            padding: 20px;
+            padding: 28px 22px;
             text-align: center;
-            border-bottom: 1px solid #555;
-            margin-bottom: 20px;
+            border-bottom: 2px solid #5a5a5a;
+            margin-bottom: 28px;
             border-bottom: 1px solid #444;
         }
 
@@ -258,42 +295,44 @@
         }
 
         .sidebar-menu-item {
-            padding: 15px 20px;
+            padding: 18px 22px;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.2s ease, border-bottom-color 0.3s ease, padding-left 0.2s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid transparent;
-            transition: border-bottom-color 0.3s ease;
+            border-bottom: 3px solid transparent;
+             font-size: 17px;
+            font-weight: 400;
         }
 
         .sidebar-menu-item:hover {
-            background-color: #343541;
+            background-color: #3a3a3a;
              border-bottom-color: #00bcd4;
+             padding-left: 28px;
         }
 
         .sidebar-menu-item.has-submenu > .menu-link::after {
             content: '>';
             float: right;
-            margin-left: 10px;
-            font-size: 0.8em;
+            margin-left: 14px;
+            font-size: 0.95em;
             display: inline-block;
-            color: #aaa;
+            color: #888;
         }
 
         .submenu {
             list-style: none;
             padding-left: 0;
             margin: 0;
-            border-radius: 8px;
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            background-color: #2c2c2c; /* Dark Submenu - Kept from modern theme */
-            margin-top: 5px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+            background-color: #333333;
+            margin-top: 10px;
             max-height: 0;
             opacity: 0;
-            transition: max-height 0.3s ease-out, opacity 0.2s ease-out;
+            transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
             overflow-y: hidden;
             padding-top: 0;
             padding-bottom: 0;
@@ -301,22 +340,23 @@
 
         .submenu.open {
             display: block;
-            max-height: 500px;
+            max-height: 700px;
             opacity: 1;
             overflow-y: auto;
-            padding-top: 5px;
-            padding-bottom: 10px;
+            padding-top: 10px;
+            padding-bottom: 15px;
         }
 
 
         .submenu-item {
-            padding: 12px 20px;
+            padding: 16px 22px;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.2s ease, padding-left 0.2s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid #444;
+             font-size: 16px;
         }
 
         .submenu-item:last-child {
@@ -325,7 +365,8 @@
 
 
         .submenu-item:hover {
-            background-color: #343541;
+            background-color: #3a3a3a;
+             padding-left: 28px;
         }
 
         .history-name {
@@ -335,38 +376,43 @@
         .delete-history-btn {
             background: transparent;
             border: none;
-            color: #aaa;
+            color: #999;
             cursor: pointer;
-            font-size: 1em;
-            padding: 0 8px;
-            opacity: 0.7;
-            transition: opacity 0.2s ease, color 0.2s ease;
+            font-size: 1.1em;
+            padding: 0 12px;
+            opacity: 0.9;
+            transition: opacity 0.2s ease, color 0.2s ease, transform 0.2s ease;
         }
 
         .delete-history-btn:hover {
             opacity: 1;
             color: #fff;
+             transform: scale(1.1);
         }
 
         .sidebar-toggle-button {
             position: fixed;
-            top: 20px;
-            left: 20px;
-            background: #00bcd4;
+            top: 30px;
+            left: 30px;
+            background: #00c7e0;
             color: white;
             border: none;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             z-index: 300;
+             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
         }
 
         .sidebar-toggle-button:hover {
-            background-color: #0097a7;
+            background-color: #00a9bf;
+             transform: scale(1.07);
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
         }
 
         .sidebar-overlay {
@@ -375,32 +421,44 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.7);
             z-index: 150;
             display: none;
+            animation: fadeInOverlay 0.2s ease-out forwards;
         }
+
+        @keyframes fadeInOverlay {
+            to { background-color: rgba(0, 0, 0, 0.7); }
+        }
+
 
         .sidebar-overlay.sidebar--open {
             display: block;
         }
 
-        .close-history-menu-btn {
-            background-color: #00bcd4;
+        .close-history-menu-btn, .close-settings-menu-btn, .modal-button {
+            padding: 13px 24px;
+            background-color: #00c7e0;
             color: white;
             border: none;
-            border-radius: 8px;
-            padding: 10px 15px;
+            border-radius: 15px;
             cursor: pointer;
-            margin-top: 10px;
+            font-size: 17px;
+            margin-top: 18px;
             display: block;
             margin-left: auto;
             margin-right: auto;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+            font-weight: 500;
         }
 
-        .close-history-menu-btn:hover {
-            background-color: #0097a7;
+        .close-history-menu-btn:hover, .close-settings-menu-btn:hover, .modal-button.confirm:hover, .modal-button.cancel:hover {
+            background-color: #00a9bf;
+             transform: scale(1.04);
+              box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
         }
+
 
         .custom-modal-overlay {
             display: none;
@@ -409,12 +467,18 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgba(0, 0, 0, 0.75);
             z-index: 400;
             justify-content: center;
             align-items: center;
             pointer-events: none;
+             animation: fadeInModalOverlay 0.3s ease-out forwards;
         }
+
+         @keyframes fadeInModalOverlay {
+            to { background-color: rgba(0, 0, 0, 0.75); }
+        }
+
 
         .custom-modal-overlay.show-modal {
             display: flex;
@@ -423,108 +487,166 @@
 
 
         .custom-modal {
-            background-color: #343541; /* Dark Modal - Kept from modern theme */
+            background-color: #3a3c43;
             color: #fff;
-            padding: 20px;
-            border-radius: 10px; /* Rounded Modal - Kept from modern theme value */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-            width: 80%;
-            max-width: 400px;
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+            width: 90%;
+            max-width: 500px;
             text-align: center;
-            border: 1px solid #444;
+            border: none;
+            transform: translateY(-30px);
+            opacity: 0;
+            animation: slideInModal 0.4s ease-out 0.15s forwards;
         }
 
+        @keyframes slideInModal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
         .modal-message {
-            margin-bottom: 15px;
+            margin-bottom: 25px;
+            font-size: 1.2em;
+            font-weight: 400;
         }
 
         .modal-input {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 8px;
+            width: calc(100% - 28px);
+            padding: 14px;
+            margin-bottom: 25px;
+            border: none;
+            border-radius: 12px;
             border: 1px solid #555;
-            background-color: #40414f; /* Dark Modal Input - Kept from modern theme */
+            background-color: #4a4d54;
             color: #fff;
+             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+            font-size: 17px;
         }
 
         .modal-buttons {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 25px;
         }
 
         .modal-button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-            border: 1px solid #444;
+            /* Styles are already defined in .close-history-menu-btn, .close-settings-menu-btn, .modal-button group */
         }
 
         .modal-button.confirm {
-            background-color: #00bcd4;
+            background-color: #00c7e0;
             color: white;
-        }
-
-        .modal-button.confirm:hover {
-            background-color: #0097a7;
         }
 
         .modal-button.cancel {
-            background-color: #555;
+            background-color: #5a5a5a;
             color: white;
-        }
-
-        .modal-button.cancel:hover {
-            background-color: #666;
         }
 
         code[class*="language-"],
         pre[class*="language-"] {
             color: #f8f8f2;
-            background: #272822;
+            background: #33353b;
             position: relative;
-        }
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+            font-size: 15px;
+            opacity: 1; /* Reverted opacity to 1 and removed animation properties from here */
+            transform: none;
+            animation: none !important; /* Explicitly remove any animations that might still be cascading */
 
-        .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #6c6767; }
-        .token.punctuation { color: #f8f8f2; }
-        .token.namespace { opacity: .7; }
-        .token.property, .token.tag, .token.constant, .token.symbol, .token.deleted { color: #f92672; }
-        .token.boolean, .token.number { color: #ae81ff; }
-        .token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted { color: #a6e22e; }
-        .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string { color: #f8f8f2; background: none; }
-        .token.atrule, .token.attr-value, .token.keyword { color: #00bcd4; }
-        .token.function, .token.class-name { color: #e6db74; }
-        .token.regex, .token.important, .token.variable { color: #fd971f; }
-        .token.important, .token.bold { font-weight: bold; }
-        .token.italic { font-style: italic; }
-        .token.entity { cursor: help; }
+        }
 
         .copy-code-button {
             position: absolute;
-            bottom: 5px;
-            left: 5px;
+            top: 10px; /* Copy button position remains unchanged */
+            right: 10px;
             background-color: #444;
             color: white;
             border: none;
-            border-radius: 5px;
-            padding: 5px 8px;
-            font-size: 0.8em;
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 0.95em;
             cursor: pointer;
             opacity: 0.7;
-            transition: opacity 0.3s ease, background-color 0.3s ease;
+            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .copy-code-button:hover {
             opacity: 1;
-            background-color: #00bcd4;
+            background-color: #00c7e0;
+             transform: scale(1.06);
+             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
         }
 
+         /* Switch styles (inspired by iOS) - No changes needed here */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
 
-    </style>
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+    }
+
+    input:checked + .slider {
+      background-color: #00bcd4;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 2px #00bcd4;
+    }
+
+    input:checked + .slider:before {
+      -webkit-transform: translateX(20px);
+      -ms-transform: translateX(20px);
+      transform: translateX(20px);
+    }
+
+    .slider.round {
+      border-radius: 24px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+
+</style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
@@ -865,12 +987,12 @@
                 const messagesContainer = document.getElementById('messages-container');
                 const aiMessageDiv = document.createElement('div');
                 aiMessageDiv.classList.add('message', 'ai-message');
-                aiMessageDiv.innerHTML = `<span class="ai-message-text">Đang tải tệp... ${files[0].name}</span>`;
+                aiMessageDiv.innerHTML = `<span class="ai-message-text">Đang tải tệp...</span>`;
                 messagesContainer.appendChild(aiMessageDiv);
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
                 let fileNames = Array.from(files).map(file => file.name).join(', ');
-                const userMessage = `Tệp đã tải lên: ${fileNames}. Vui lòng đợi AI xử lý.`;
+                const userMessage = `Tệp đã tải lên: ${fileNames}. Đang chờ AI xử lý...`;
 
                 const userMessageDiv = document.createElement('div');
                 userMessageDiv.classList.add('message', 'user-message');
@@ -889,7 +1011,7 @@
 
                     const aiResponseDiv = document.createElement('div');
                     aiResponseDiv.classList.add('message', 'ai-message');
-                    aiResponseDiv.innerHTML = `<span class="ai-message-text">Đã nhận được tệp: ${fileNames}.<br>Bạn muốn AI làm gì với chúng?</span>`;
+                    aiResponseDiv.innerHTML = `<span class="ai-message-text">Đã nhận được tệp: ${fileNames}. Vui lòng cho biết bạn muốn AI làm gì với tệp này.</span>`;
                     messagesContainer.appendChild(aiResponseDiv);
                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
@@ -1045,66 +1167,6 @@
         }
     </script>
 
-<style>
-    /* Switch styles (inspired by iOS) - Kept as is */
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 44px;
-      height: 24px;
-    }
-
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      transition: .4s;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: .4s;
-    }
-
-    input:checked + .slider {
-      background-color: #00bcd4;
-    }
-
-    input:focus + .slider {
-      box-shadow: 0 0 2px #00bcd4;
-    }
-
-    input:checked + .slider:before {
-      -webkit-transform: translateX(20px);
-      -ms-transform: translateX(20px);
-      transform: translateX(20px);
-    }
-
-    /* Rounded sliders */
-    .slider.round {
-      border-radius: 24px;
-    }
-
-    .slider.round:before {
-      border-radius: 50%;
-    }
-</style>
 
 </body>
 </html>
