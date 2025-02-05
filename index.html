@@ -58,7 +58,7 @@
 
         /* Menu danh mục (giữ nguyên) */
         .menu-container {
-            position: absolute;
+            position: fixed;
             top: 10px;
             right: 10px;
         }
@@ -74,6 +74,8 @@
             transition: background-color 0.3s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease-in-out;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             outline: none;
+            width: auto;
+            height: auto;
         }
 
         .menu-button:hover {
@@ -96,6 +98,7 @@
             transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             box-shadow: 0 8px 20px rgba(0,0,0,0.6);
             z-index: 10;
+            width: 250px;
         }
 
         .menu-dropdown.active {
@@ -139,7 +142,7 @@
         #chat-container {
             border: none;
             padding: 0;
-            height: calc(100vh - 250px);
+            height: calc(100vh - 300px); /* Adjust for fixed input */
             overflow-y: scroll;
             margin-bottom: 15px;
             border-radius: 0;
@@ -233,10 +236,16 @@
         /* Input container (FULL WIDTH, ChatGPT-like, FLEX LAYOUT UPDATED) */
         #input-container {
             display: flex;
-            margin-bottom: 0;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--secondary-bg);
             border-top: 1px solid var(--border-color);
-            padding-top: 10px;
+            padding: 10px;
             align-items: center; /* Center items vertically */
+            box-sizing: border-box; /* Ensure padding is included in the width */
+            max-width: 1000px; /* Match container's max-width */
         }
 
         #upload-button { /* Nút Upload - Vuông, Bên trái, Nhỏ gọn */
@@ -261,7 +270,7 @@
             flex-grow: 1;
             padding: 10px;
             border: none;
-            border-radius: 0;
+            border-radius: 8px;
             font-size: 16px;
             background-color: transparent;
             color: var(--text-color);
@@ -272,16 +281,22 @@
 
 
         #send-button { /* Nút Gửi - Bên phải, ChatGPT-like */
-            padding: 10px 15px;
+            padding: 8px;
             border: none;
             background-color: var(--button-bg);
             color: var(--text-color);
-            font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease-in-out;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             border-radius: 8px; /* Bo tròn nút send */
             margin-left: 0; /* Loại bỏ margin trái nút send */
+            width: 35px;
+            height: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2em;
+            line-height: 0;
         }
 
 
@@ -294,7 +309,7 @@
 
 
             #chat-container {
-                height: calc(100vh - 200px);
+                height: calc(100vh - 250px);
                 margin-bottom: 15px;
             }
 
@@ -423,6 +438,9 @@
                 <button id="loadHistoryButton" onclick="toggleHistoryDropdown()">Tải lại lịch sử</button>
                 <button onclick="downloadChatHistory()">Tải xuống lịch sử chat</button>
                 <button onclick="logoutUser()">Đăng xuất</button>
+                <div id="history-list-container">
+                    <!-- Danh sách lịch sử chat sẽ được tạo ở đây -->
+                </div>
             </div>
         </div>
 
@@ -465,9 +483,6 @@
 
             </div>
 
-             <div id="history-list-container">
-                    <!-- Danh sách lịch sử chat sẽ được tạo ở đây -->
-                </div>
 
 
             <div id="input-container">
@@ -475,7 +490,7 @@
                      <!-- Icon Upload - Inbox Tray -->
                 </button>
                 <input type="text" id="prompt-input" placeholder="Nhập tin nhắn..." onkeydown="if (event.keyCode == 13) { sendMessage(); return false; }">
-                <button id="send-button" onclick="sendMessage()">Gửi</button>
+                <button id="send-button" onclick="sendMessage()">➡</button>
                 <input type="file" id="file-upload" style="display: none;" accept=".txt">
             </div>
         </div>
@@ -527,19 +542,22 @@
 
         // --- Menu Danh mục (giữ nguyên) ---
         function toggleMenu() {
-            menuDropdown.classList.toggle('active');
+           menuDropdown.classList.toggle('active');
         }
 
         window.addEventListener('click', function(event) {
-            if (!event.target.matches('.menu-button')) {
+             if (!event.target.matches('.menu-button')) {
                 if (menuDropdown.classList.contains('active')) {
                     menuDropdown.classList.remove('active');
                 }
             }
-             if (event.target !== loadHistoryButton && !historyListContainer.contains(event.target) && historyDropdownActive) {
+
+
+            if (event.target !== loadHistoryButton && !historyListContainer.contains(event.target) && historyDropdownActive) {
                 hideHistoryDropdown();
-             }
+            }
         });
+
 
 
         // --- Quản lý người dùng và đăng nhập/đăng ký (CẬP NHẬT LƯU FILE) ---
@@ -600,7 +618,7 @@
             authFormsContainer.style.display = 'block';
             usernameDisplay.textContent = '';
             menuDropdown.classList.remove('active');
-            historyListContainer.classList.remove('active');
+            hideHistoryDropdown();
             saveChatHistory(); // LƯU LỊCH SỬ KHI ĐĂNG XUẤT (Omega Update change)
         }
 
@@ -657,8 +675,8 @@
         }
 
 
-         function toggleHistoryDropdown() {
-            if (historyDropdownActive) {
+        function toggleHistoryDropdown() {
+           if (historyDropdownActive) {
                 hideHistoryDropdown();
             } else {
                 loadChatHistoryDropdown();
@@ -668,7 +686,6 @@
         function hideHistoryDropdown() {
             historyListContainer.style.display = 'none';
             historyDropdownActive = false;
-            menuDropdown.classList.remove('active');
         }
 
 
@@ -691,7 +708,8 @@
                     historyButton.textContent = `Lịch sử ${index + 1}`;
                     historyButton.onclick = function() {
                         loadSpecificHistory(key);
-                         hideHistoryDropdown();
+                        hideHistoryDropdown();
+                         menuDropdown.classList.remove('active');
                     };
 
                     const deleteButton = document.createElement('button'); // Nút xóa lịch sử
@@ -716,7 +734,7 @@
 
             historyListContainer.style.display = 'block';
             historyDropdownActive = true;
-            menuDropdown.classList.remove('active');
+            menuDropdown.classList.add('active'); // giữ menu
         }
 
         function deleteChatHistory(historyKey) { // Hàm xóa lịch sử chat
@@ -796,7 +814,7 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             menuDropdown.classList.remove('active'); // Đóng menu sau khi tải
-             hideHistoryDropdown();
+            hideHistoryDropdown();
         }
 
 
@@ -861,7 +879,8 @@
         function addUserMessage(message) {
             addUserMessageToUI(message, 'user-message');
             conversationHistory.push({ role: "user", parts: [{ text: message }] });
-            // saveChatHistory(); // Lưu lịch sử CHỈ khi bắt đầu chat mới hoặc đăng xuất
+            // saveChatHistory();
+            // Lưu lịch sử CHỈ khi bắt đầu chat mới hoặc đăng xuất
         }
 
         function addUserMessageToUI(message, className) {
