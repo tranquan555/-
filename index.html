@@ -1,9 +1,10 @@
+--- START OF FILE vip1.html ---
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRANQUAN MBC AI</title>
+    <title>AI Hiện Đại với Gemini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
         body {
@@ -16,12 +17,12 @@
             min-height: 100vh;
             overflow-x: hidden;
             -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            touch-action: manipulation; /* Prevent zoom on touch devices - added here */
+            -webkit-user-select: text; /* Allow text selection */
+            -khtml-user-select: text;    /* Allow text selection */
+            -moz-user-select: text;     /* Allow text selection */
+            -ms-user-select: text;      /* Allow text selection */
+            user-select: text;          /* Allow text selection */
+            touch-action: manipulation; /* Prevent zoom on touch devices - stronger method */
         }
 
         .container {
@@ -108,6 +109,10 @@
             align-self: flex-start;
             float: left;
             border-top-left-radius: 3px;
+            font-size: 16px; /* Font customization for AI messages */
+            line-height: 1.6;
+            letter-spacing: 0.01em;
+            font-family: 'Roboto', sans-serif; /* Re-specify font-family to ensure consistency */
         }
 
         .input-area {
@@ -429,6 +434,9 @@
             color: #f8f8f2;
             background: #272822;
             position: relative; /* for copy button positioning */
+            overflow-x: auto; /* Add horizontal scroll for long code lines */
+            white-space: pre-wrap; /* Enable code wrapping */
+            word-break: break-all; /* Break long words */
         }
 
         .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #6c6767; }
@@ -463,6 +471,16 @@
         .copy-code-button:hover {
             opacity: 1;
             background-color: #00bcd4;
+        }
+
+        .ai-message strong {
+            font-weight: bold; /* Style for bold text within AI message */
+        }
+         .ai-message p {
+            margin-bottom: 10px; /* Add spacing between paragraphs in AI message */
+        }
+        .ai-message p:last-child {
+            margin-bottom: 0; /* Remove margin from the last paragraph */
         }
 
 
@@ -523,7 +541,7 @@
     </button>
 
     <div class="container" id="container">
-        <h1>AI Trần Quân MBC</h1>
+        <h1>AI Hiện Đại với Gemini</h1>
 
         <div id="messages-container">
             <!-- Messages will be appended here -->
@@ -546,6 +564,17 @@
         let conversationHistory = [];
         let savedHistories = {};
         let historyNameToDelete = null;
+        let lastTouchTime = 0; // For zoom blocking
+
+        document.addEventListener('touchstart', function(event) {
+            let currentTime = new Date().getTime();
+            let timeDiff = currentTime - lastTouchTime;
+            if (timeDiff < 300) { // Double tap detected (adjust time as needed)
+                event.preventDefault(); // Prevent zoom on double tap
+            }
+            lastTouchTime = currentTime;
+        }, false);
+
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -772,23 +801,54 @@
                     let aiResponseText = data.candidates[0].content.parts[0].text;
                     aiMessageDiv.innerHTML = '';
 
-                    let textContent = '';
-                    let codeContent = null;
-                    let language = 'text';
+                    // --- Text Formatting Logic ---
+                    const formattedTextParts = [];
+                    const noteKeywords = ["lưu ý:", "chú ý:", "quan trọng:", "lưu ý quan trọng:", "ghi chú:", "note:", "important:"];
+
+                    let paragraphs = aiResponseText.split('\n\n'); // Split into paragraphs
+
+                    paragraphs.forEach(paragraph => {
+                        let formattedParagraph = '';
+                        let lines = paragraph.split('\n'); // Split paragraph into lines, process line by line
+
+                        lines.forEach(line => {
+                             let isNote = false;
+                             for (const keyword of noteKeywords) {
+                                 if (line.toLowerCase().startsWith(keyword)) {
+                                     formattedParagraph += `<p><strong>${line.substring(0, keyword.length).toUpperCase()}</strong>${line.substring(keyword.length)}</p>`; // Uppercase keyword, bold
+                                     isNote = true;
+                                     break;
+                                 }
+                             }
+                             if (!isNote) {
+                                 formattedParagraph += `<p>${line}</p>`; // Basic paragraph for other lines
+                             }
+                        });
+                        formattedTextParts.push(formattedParagraph);
+                    });
+
+                    aiMessageDiv.innerHTML = formattedTextParts.join(''); // Join paragraphs
+
+
+                    let codeBlockContent = ''; // To accumulate code blocks separately
+                    let lastTextIndex = 0;
+
+
                     const codeBlockRegex = /```([\w]*)\n([\s\S]*?)```/gm;
-                    let lastIndex = 0;
                     let match;
+                    let finalTextContent = '';
 
-                    while ((match = codeBlockRegex.exec(aiResponseText)) !== null) {
-                        textContent = aiResponseText.substring(lastIndex, match.index);
-                        if (textContent.trim()) {
-                            const textPara = document.createElement('p');
-                            textPara.innerHTML = textContent.trim();
-                            aiMessageDiv.appendChild(textPara);
-                        }
+                     while ((match = codeBlockRegex.exec(aiResponseText)) !== null) {
+                        let textBeforeCode = aiResponseText.substring(lastTextIndex, match.index);
+                         if (textBeforeCode.trim()) {
+                             const textPara = document.createElement('p');
+                             textPara.innerHTML = textBeforeCode.trim().replace(/\n/g, '<br>'); // Basic line breaks for non-code text
+                             aiMessageDiv.appendChild(textPara);
+                         }
 
-                        language = match[1] || 'text';
-                        codeContent = match[2].trim();
+
+                        let language = match[1] || 'text';
+                        let codeContent = match[2].trim();
 
                         const codePre = document.createElement('pre');
                         codePre.classList.add('language-' + language);
@@ -797,10 +857,10 @@
                         codeElement.textContent = codeContent;
                         codePre.appendChild(codeElement);
 
-                        // Create copy button for each code block
+
                         const copyButton = document.createElement('button');
                         copyButton.classList.add('copy-code-button');
-                        copyButton.innerHTML = '<i class="fas fa-copy"></i>'; // Using Font Awesome icon
+                        copyButton.innerHTML = '<i class="fas fa-copy"></i>';
                         copyButton.onclick = () => {
                             navigator.clipboard.writeText(codeContent).then(() => {
                                 alert('Đã sao chép code vào clipboard!');
@@ -811,22 +871,20 @@
                         };
                         codePre.appendChild(copyButton);
 
-
                         aiMessageDiv.appendChild(codePre);
-
-                        lastIndex = codeBlockRegex.lastIndex;
+                        lastTextIndex = codeBlockRegex.lastIndex;
                     }
 
-                    textContent = aiResponseText.substring(lastIndex);
-                    if (textContent.trim()) {
+                    const textAfterCode = aiResponseText.substring(lastTextIndex);
+                     if (textAfterCode.trim()) {
                          const textPara = document.createElement('p');
-                         textPara.innerHTML = textContent.trim();
+                         textPara.innerHTML = textAfterCode.trim().replace(/\n/g, '<br>'); // Basic line breaks for trailing non-code text
                          aiMessageDiv.appendChild(textPara);
-                    }
+                     }
 
 
                     if (!aiMessageDiv.hasChildNodes() && aiResponseText.trim()) {
-                         aiMessageDiv.innerHTML = aiResponseText.trim();
+                         aiMessageDiv.innerHTML = aiResponseText.trim(); // Fallback for simple text response
                     } else if (!aiMessageDiv.hasChildNodes()) {
                          aiMessageDiv.textContent = "Không có phản hồi nội dung từ AI.";
                     }
