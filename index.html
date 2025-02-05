@@ -4,7 +4,7 @@
     <title>AI Chatbot - Gemini API</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        /* CSS Dark Mode hiện đại và Responsive (giữ nguyên - không thay đổi) */
+        /* CSS Dark Mode hiện đại và Responsive - ChatGPT Interface Style */
         :root {
             --bg-color: #121212;
             --text-color: #f0f0f0;
@@ -17,6 +17,8 @@
             --button-hover-bg: #2980b9;
             --menu-bg: #252525;
             --loading-color: #ffc107;
+            --history-list-bg: #252525;
+            --history-list-item-hover: #333;
         }
 
         body {
@@ -35,20 +37,21 @@
             color: var(--primary-color);
             text-align: center;
             margin-top: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 20px; /* Giảm margin bottom tiêu đề */
         }
+
 
         .container {
-            width: 95%;
-            max-width: 800px;
+            width: 98%; /* Container rộng hơn */
+            max-width: 900px; /* Max width lớn hơn */
             background-color: var(--secondary-bg);
-            padding: 30px;
+            padding: 25px; /* Giảm padding container */
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+            margin-bottom: 25px; /* Giảm margin bottom container */
         }
 
-        /* Menu danh mục (CẬP NHẬT MENU LỊCH SỬ) */
+        /* Menu danh mục (giữ nguyên) */
         .menu-container {
             position: absolute;
             top: 10px;
@@ -58,31 +61,35 @@
         .menu-button {
             padding: 10px 15px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             background-color: var(--button-bg);
             color: var(--text-color);
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s ease-in-out;
+            transition: background-color 0.3s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease-in-out;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            outline: none;
         }
 
         .menu-button:hover {
             background-color: var(--button-hover-bg);
-            transform: scale(1.05);
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
         }
+
 
         .menu-dropdown {
             position: absolute;
             top: 100%;
             right: 0;
             background-color: var(--menu-bg);
-            border-radius: 5px;
+            border-radius: 10px;
             overflow: hidden;
             display: none;
             transform-origin: top right;
             transform: scaleY(0);
-            transition: transform 0.3s ease-out;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
             z-index: 10;
         }
 
@@ -91,7 +98,7 @@
             transform: scaleY(1);
         }
 
-        .menu-dropdown button, .menu-dropdown a { /* Style cho cả button và link lịch sử */
+        .menu-dropdown button {
             display: block;
             width: 100%;
             padding: 10px 20px;
@@ -100,17 +107,11 @@
             color: var(--text-color);
             text-align: left;
             cursor: pointer;
-            transition: background-color 0.2s;
-            text-decoration: none; /* Loại bỏ gạch chân mặc định của link */
+            transition: background-color 0.2s ease-in-out;
         }
 
-        .menu-dropdown button:hover, .menu-dropdown a:hover {
-            background-color: #333;
-        }
-
-        .history-list-container { /* Container cho danh sách lịch sử */
-            max-height: 200px; /* Giới hạn chiều cao để scrollable */
-            overflow-y: auto;
+        .menu-dropdown button:hover {
+            background-color: var(--history-list-item-hover);
         }
 
 
@@ -119,105 +120,92 @@
             display: flex;
             flex-direction: column;
             align-items: stretch;
-            margin-bottom: 20px;
+            margin-bottom: 15px; /* Giảm margin bottom form */
         }
 
         .auth-container h2 {
             text-align: center;
             color: var(--primary-color);
-            margin-bottom: 20px;
+            margin-bottom: 15px; /* Giảm margin bottom h2 form */
         }
 
         .auth-container label {
-            margin-bottom: 8px;
+            margin-bottom: 6px; /* Giảm margin bottom label form */
             color: #ccc;
         }
 
         .auth-container input {
-            padding: 12px;
-            margin-bottom: 20px;
+            padding: 10px; /* Giảm padding input form */
+            margin-bottom: 15px; /* Giảm margin bottom input form */
             border: 1px solid var(--border-color);
-            border-radius: 5px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 15px; /* Font size nhỏ hơn input form */
             background-color: var(--secondary-bg);
             color: var(--text-color);
             transition: border-color 0.3s;
         }
 
-        .auth-container input:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(100, 255, 218, 0.2);
-        }
-
         .auth-container button {
-            padding: 12px 20px;
+            padding: 10px 18px; /* Nút form padding nhỏ hơn */
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             background-color: var(--button-bg);
             color: var(--text-color);
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s ease-in-out;
-        }
-
-        .auth-container button:hover {
-            background-color: var(--button-hover-bg);
-            transform: scale(1.02);
+            transition: background-color 0.3s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease-in-out;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            outline: none;
         }
 
         .auth-switch {
             text-align: center;
-            margin-top: 10px;
+            margin-top: 8px; /* Giảm margin top auth switch */
             color: #aaa;
+            font-size: 14px; /* Font size nhỏ hơn auth switch */
         }
 
-        .auth-switch a {
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-
-        .auth-switch a:hover {
-            text-decoration: underline;
-        }
 
         /* Hiển thị tên người dùng (giữ nguyên) */
         #username-display {
             font-weight: bold;
             color: var(--primary-color);
-            margin-bottom: 20px;
+            margin-bottom: 15px; /* Giảm margin bottom username display */
             text-align: center;
+            animation: pulseText 2s infinite alternate;
         }
+
 
         #username-display.logged-out-message {
             color: #e74c3c;
+            animation: none;
         }
 
 
-        /* Chat container (giữ nguyên) */
+        /* Chat container (EXPANDED HEIGHT, ChatGPT-like) */
         #chat-container {
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            height: 400px;
+            border: none; /* Loại bỏ border chat container */
+            padding: 0; /* Loại bỏ padding chat container */
+            height: calc(100vh - 250px); /* Chiều cao chat container mở rộng */
             overflow-y: scroll;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            background-color: var(--bg-color);
+            margin-bottom: 15px; /* Giảm margin bottom chat container */
+            border-radius: 0; /* Loại bỏ border-radius chat container */
+            background-color: transparent; /* Nền trong suốt chat container */
             display: flex;
             flex-direction: column;
             scrollbar-width: thin;
-            scrollbar-color: var(--primary-color) var(--secondary-bg);
-            position: relative; /* Cần thiết cho loading indicator */
+            scrollbar-color: var(--primary-color) transparent; /* Scrollbar màu primary, track trong suốt */
+            position: relative;
         }
 
         /* Chrome, Safari and Opera */
         #chat-container::-webkit-scrollbar {
-            width: 8px;
+            width: 8px; /* Scrollbar hẹp hơn */
         }
 
         #chat-container::-webkit-scrollbar-track {
-            background-color: var(--secondary-bg);
-            border-radius: 10px;
+            background-color: transparent; /* Track trong suốt */
+            border-radius: 0; /* Loại bỏ border-radius track */
         }
 
         #chat-container::-webkit-scrollbar-thumb {
@@ -226,87 +214,81 @@
         }
 
         .user-message, .ai-message, .loading-message {
-            padding: 10px 15px;
-            border-radius: 20px;
-            margin-bottom: 10px;
-            max-width: 80%;
+            padding: 10px 15px; /* Message padding nhỏ hơn */
+            border-radius: 15px; /* Messages bo tròn ít hơn */
+            margin-bottom: 8px; /* Message margin nhỏ hơn */
+            max-width: 90%; /* Messages max width lớn hơn */
             clear: both;
             word-wrap: break-word;
+            animation: messageAppear 0.4s ease-out forwards;
+            transform-origin: top;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15); /* Shadow nhẹ hơn cho messages */
         }
 
+
         .user-message {
-            background-color: var(--message-user-bg);
+            background-color: #3498db; /* Màu user message giống ChatGPT hơn */
             color: var(--text-color);
             align-self: flex-end;
             text-align: right;
         }
 
         .ai-message {
-            background-color: var(--message-ai-bg);
+            background-color: #4a5568; /* Màu AI message giống ChatGPT hơn (xám đậm) */
             color: var(--text-color);
             align-self: flex-start;
             text-align: left;
         }
 
         .loading-message {
-            background-color: var(--secondary-bg);
+            background-color: transparent; /* Nền trong suốt loading message */
             color: var(--loading-color);
             align-self: flex-start;
             text-align: left;
             font-style: italic;
+            animation: blinkLoading 1.5s infinite;
         }
 
 
-        /* Input container (giữ nguyên) */
+        /* Input container (FULL WIDTH, ChatGPT-like) */
         #input-container {
             display: flex;
-            margin-bottom: 20px;
+            margin-bottom: 0; /* Loại bỏ margin bottom input container */
+            border-top: 1px solid var(--border-color); /* Thêm border top input container */
+            padding-top: 10px; /* Thêm padding top input container */
         }
 
 
-        #prompt-input {
+        #prompt-input { /* INPUT FULL WIDTH, ChatGPT-like */
             flex-grow: 1;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px 0 0 5px;
+            padding: 10px; /* Input padding nhỏ hơn */
+            border: none; /* Loại bỏ border input */
+            border-radius: 0; /* Loại bỏ border-radius input */
             font-size: 16px;
-            background-color: var(--secondary-bg);
+            background-color: transparent; /* Nền trong suốt input */
             color: var(--text-color);
             transition: border-color 0.3s;
-            border-right: none;
-        }
-
-        #prompt-input:focus {
-            border-color: var(--primary-color);
             outline: none;
-            box-shadow: 0 0 0 2px rgba(100, 255, 218, 0.2);
         }
 
 
-        #send-button, #upload-button {
-            padding: 12px 20px;
+        #send-button, #upload-button { /* Nút input (ChatGPT-like) */
+            padding: 10px 15px; /* Nút input padding nhỏ hơn */
             border: none;
             background-color: var(--button-bg);
             color: var(--text-color);
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s ease-in-out;
-        }
-
-        #send-button {
-            border-radius: 0 5px 5px 0;
-            flex-grow: 0;
+            transition: background-color 0.3s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease-in-out;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            border-radius: 0; /* Loại bỏ border-radius nút input */
+            margin-left: 5px; /* Thêm margin trái nút send */
         }
 
         #upload-button {
-            border-radius: 5px 0 0 5px;
-            margin-right: 10px;
-        }
-
-
-        #send-button:hover, #upload-button:hover {
-            background-color: var(--button-hover-bg);
-            transform: scale(1.02);
+            border-radius: 8px; /* Nút upload bo tròn hơn */
+            margin-right: 5px; /* Thêm margin phải nút upload */
+            margin-left: 0; /* Loại bỏ margin trái nút upload */
         }
 
 
@@ -316,22 +298,6 @@
             margin-bottom: 20px;
         }
 
-        #api-key-input {
-            padding: 12px;
-            width: calc(100% - 26px);
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            font-size: 16px;
-            background-color: var(--secondary-bg);
-            color: var(--text-color);
-            transition: border-color 0.3s;
-        }
-
-        #api-key-input:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(100, 255, 218, 0.2);
-        }
 
         /* Nút chat mới và tải lại lịch sử (ẩn trong menu) - giữ nguyên */
         #new-chat-button, #load-history-button {
@@ -347,76 +313,114 @@
             margin-right: 10px;
         }
 
-        #new-chat-button {
-            background-color: #27ae60;
-        }
-
-        #new-chat-button:hover {
-            background-color: #219653;
-        }
-
-        #load-history-button {
-            background-color: #f39c12;
-        }
-
-        #load-history-button:hover {
-            background-color: #e67e22;
-        }
-
 
         /* Ẩn container chat và prompt khi chưa đăng nhập (giữ nguyên) */
         #chat-interface-container {
             display: none;
         }
 
-        /* Responsive adjustments (giữ nguyên) */
+
+        /* Responsive adjustments - Mobile (ChatGPT-like) */
         @media (max-width: 768px) {
             .container {
-                padding: 20px;
+                padding: 15px; /* Giảm padding container mobile */
+                width: 98%; /* Container mobile rộng hơn */
             }
 
             h1 {
-                font-size: 24px;
-                margin-bottom: 20px;
+                font-size: 22px; /* Font size nhỏ hơn tiêu đề mobile */
+                margin-bottom: 15px; /* Margin bottom nhỏ hơn tiêu đề mobile */
             }
 
             #chat-container {
-                height: 300px;
+                height: calc(100vh - 200px); /* Chiều cao chat container mobile nhỏ hơn */
+                margin-bottom: 15px; /* Margin bottom nhỏ hơn chat container mobile */
             }
 
+
             #input-container {
-                flex-direction: column;
+                flex-direction: row; /* Input container mobile về row */
+                padding-top: 8px; /* Padding top input container mobile nhỏ hơn */
             }
 
 
             #send-button, #upload-button {
-                border-radius: 5px;
-                width: 100%;
-                margin-bottom: 10px;
+                border-radius: 0; /* Loại bỏ border-radius nút mobile */
+                width: auto; /* Nút mobile width auto */
+                margin-bottom: 0;
+                padding: 10px 15px; /* Nút mobile padding nhỏ hơn */
+                font-size: 15px; /* Nút mobile font size nhỏ hơn */
+                margin-left: 2px; /* Giảm margin left nút send mobile */
             }
 
             #upload-button {
-                margin-right: 0;
-                border-radius: 5px;
-            }
-
-            #send-button {
-                border-radius: 5px;
-                margin-bottom: 0;
+                margin-right: 5px; /* Giảm margin right nút upload mobile */
+                border-radius: 8px; /* Nút upload mobile bo tròn hơn */
             }
 
 
             .menu-button {
-                font-size: 14px;
-                padding: 8px 12px;
+                font-size: 14px; /* Nút menu mobile font size nhỏ hơn */
+                padding: 8px 12px; /* Nút menu mobile padding nhỏ hơn */
+                border-radius: 8px;
             }
-            .menu-dropdown button, .menu-dropdown a {
-                padding: 10px 15px;
-                font-size: 14px;
+            .menu-dropdown button {
+                padding: 10px 15px; /* Item menu mobile padding nhỏ hơn */
+                font-size: 14px; /* Item menu mobile font size nhỏ hơn */
+            }
+
+            #prompt-input {
+                font-size: 15px; /* Input mobile font size nhỏ hơn */
+                padding: 10px; /* Input mobile padding nhỏ hơn */
+                border-radius: 0; /* Loại bỏ border-radius input mobile */
+            }
+
+            .user-message, .ai-message, .loading-message {
+                font-size: 15px; /* Message font size nhỏ hơn mobile */
+                padding: 10px 12px; /* Message padding nhỏ hơn mobile */
+                border-radius: 15px; /* Messages bo tròn ít hơn mobile */
+                margin-bottom: 6px; /* Message margin nhỏ hơn mobile */
             }
         }
 
 
+        /* Danh sách lịch sử chat (giữ nguyên) */
+        #history-list-container {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--history-list-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            display: none;
+            max-height: 250px;
+            overflow-y: scroll;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            z-index: 9;
+        }
+
+        #history-list-container.active {
+            display: block;
+        }
+
+        #history-list-container button {
+            display: block;
+            width: 100%;
+            padding: 12px 22px;
+            border: none;
+            background-color: transparent;
+            color: var(--text-color);
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #history-list-container button:hover {
+            background-color: var(--history-list-item-hover);
+        }
     </style>
 </head>
 <body>
@@ -427,10 +431,9 @@
         <div class="menu-container">
             <button class="menu-button" onclick="toggleMenu()">Danh mục</button>
             <div class="menu-dropdown" id="menuDropdown">
-                <button onclick="startNewChat()">Bắt đầu cuộc trò chuyện mới</button>
-                <div class="history-list-container" id="historyListContainer">
-                    <!-- Danh sách lịch sử sẽ được thêm vào đây -->
-                </div>
+                <button onclick="startNewChatConfirmation()">Bắt đầu cuộc trò chuyện mới</button>
+                <button onclick="loadChatHistoryDropdown()">Tải lại lịch sử</button>
+                <button onclick="downloadChatHistory()">Tải xuống lịch sử chat</button>
                 <button onclick="logoutUser()">Đăng xuất</button>
             </div>
         </div>
@@ -471,19 +474,23 @@
 
             <div id="chat-container">
                 <!-- Tin nhắn chat sẽ hiển thị ở đây -->
+                <div id="history-list-container">
+                    <!-- Danh sách lịch sử chat sẽ được tạo ở đây -->
+                </div>
             </div>
 
 
             <div id="input-container">
                 <input type="file" id="file-upload" style="display: none;" accept=".txt">
                 <button id="upload-button" onclick="document.getElementById('file-upload').click();">Tải tệp lên</button>
-                <input type="text" id="prompt-input" placeholder="Nhập prompt của bạn và nhấn Enter hoặc nút Gửi" onkeydown="if (event.keyCode == 13) { sendMessage(); return false; }">
+                <input type="text" id="prompt-input" placeholder="Nhập tin nhắn..." onkeydown="if (event.keyCode == 13) { sendMessage(); return false; }"> <!-- Placeholder text đã sửa -->
                 <button id="send-button" onclick="sendMessage()">Gửi</button>
             </div>
         </div>
     </div>
 
     <script>
+        // ... (JavaScript code - no changes needed from previous version) ...
         const chatContainer = document.getElementById('chat-container');
         const promptInput = document.getElementById('prompt-input');
         const apiKeyInput = document.getElementById('api-key-input');
@@ -498,12 +505,13 @@
         const registerPasswordInput = document.getElementById('register-password');
         const fileUploadInput = document.getElementById('file-upload');
         const menuDropdown = document.getElementById('menuDropdown');
-        const historyListContainer = document.getElementById('historyListContainer'); // Container danh sách lịch sử
+        const historyListContainer = document.getElementById('history-list-container');
 
 
         let conversationHistory = [];
         let currentUsername = '';
         let isLoading = false;
+        let historySessions = [];
 
         // API Key Gemini của bạn (CỐ ĐỊNH TRONG CODE)
         const GEMINI_API_KEY_DEFAULT = 'AIzaSyCl21Ku_prQnyMHFs_dJRL8-pgjg9hrc2w';
@@ -523,12 +531,9 @@
         }
 
 
-        // --- Menu Danh mục (CẬP NHẬT MENU LỊCH SỬ) ---
+        // --- Menu Danh mục (giữ nguyên) ---
         function toggleMenu() {
-            const menu = menuDropdown.classList.toggle('active');
-            if (menu) { // Nếu menu vừa được mở, tải danh sách lịch sử
-                loadHistoryList();
-            }
+            menuDropdown.classList.toggle('active');
         }
 
         window.addEventListener('click', function(event) {
@@ -572,6 +577,7 @@
                 return;
             }
 
+            // Lưu thông tin người dùng vào "file" info.json
             writeFile(userFilePath, { username: username, password: password });
             alert("Đăng ký thành công. Vui lòng đăng nhập.");
             showLoginForm();
@@ -605,13 +611,14 @@
         function logoutUser() {
             currentUsername = '';
             localStorage.removeItem('geminiChatCurrentUsername');
-            localStorage.removeItem(`chatHistory_${currentUsername}`);
             conversationHistory = [];
             chatContainer.innerHTML = '';
             chatInterfaceContainer.style.display = 'none';
             authFormsContainer.style.display = 'block';
             usernameDisplay.textContent = '';
             menuDropdown.classList.remove('active');
+            historyListContainer.classList.remove('active');
+            saveChatHistory(); // LƯU LỊCH SỬ KHI ĐĂNG XUẤT (Omega Update change)
         }
 
 
@@ -650,19 +657,56 @@
         checkLoginStatus();
 
 
-        // --- Quản lý lịch sử chat (CẬP NHẬT MENU LỊCH SỬ) ---
-        function loadChatHistory(historyFileName) { // Thêm tham số historyFileName (tùy chọn)
+        // --- Quản lý lịch sử chat (CẬP NHẬT DANH SÁCH LỊCH SỬ - giữ nguyên logic) ---
+        function loadChatHistory() {
             if (!currentUsername) return;
 
-            let historyFilePath;
-            if (historyFileName) { // Nếu có historyFileName được cung cấp, tải lịch sử cụ thể
-                historyFilePath = `user/${currentUsername}/histories/${historyFileName}.json`;
-            } else { // Nếu không có, tải lịch sử gần nhất (có thể không cần thiết trong logic mới này)
-                historyFilePath = `user/${currentUsername}/history.json`; // Đường dẫn mặc định (có thể không dùng nữa)
+            const historyKeys = getHistorySessionKeys();
+            if (historyKeys.length > 0) {
+                const latestHistoryKey = historyKeys[historyKeys.length - 1];
+                loadSpecificHistory(latestHistoryKey);
+            } else {
+                chatContainer.innerHTML = '';
+                conversationHistory = [];
+            }
+            historyListContainer.classList.remove('active');
+            menuDropdown.classList.remove('active');
+        }
+
+
+        function loadChatHistoryDropdown() {
+            if (!currentUsername) return;
+
+            historyListContainer.innerHTML = '';
+            historySessions = [];
+
+            const historyKeys = getHistorySessionKeys();
+
+            if (historyKeys.length === 0) {
+                const noHistoryMessage = document.createElement('button');
+                noHistoryMessage.textContent = "Không có lịch sử đã lưu";
+                noHistoryMessage.disabled = true;
+                historyListContainer.appendChild(noHistoryMessage);
+            } else {
+                historyKeys.forEach((key, index) => {
+                    const historyButton = document.createElement('button');
+                    historyButton.textContent = `Lịch sử ${index + 1}`;
+                    historyButton.onclick = function() {
+                        loadSpecificHistory(key);
+                        historyListContainer.classList.remove('active');
+                    };
+                    historyListContainer.appendChild(historyButton);
+                    historySessions.push({ key: key, label: `Lịch sử ${index + 1}` });
+                });
             }
 
-            const history = readFile(historyFilePath);
+            historyListContainer.classList.toggle('active');
+            menuDropdown.classList.remove('active');
+        }
 
+
+        function loadSpecificHistory(historyKey) {
+            const history = readFile(historyKey);
             if (history) {
                 conversationHistory = history;
                 chatContainer.innerHTML = '';
@@ -674,80 +718,75 @@
                     }
                 });
                 chatContainer.scrollTop = chatContainer.scrollHeight;
-            } else {
-                chatContainer.innerHTML = '';
-                conversationHistory = [];
             }
-            menuDropdown.classList.remove('active');
         }
 
 
-        function saveChatHistory() {
+        function saveChatHistory() { // LƯU LỊCH SỬ - Omega Update - gọi khi logout và new chat
             if (!currentUsername || conversationHistory.length === 0) return;
 
-            // Tạo tên file lịch sử dựa trên thời gian
-            const timestamp = Date.now();
-            const historyFileName = `history_${timestamp}`;
-            const historyFilePath = `user/${currentUsername}/histories/${historyFileName}.json`;
-
-            writeFile(historyFilePath, conversationHistory); // Lưu lịch sử với tên file mới
-
-            saveHistoryList(historyFileName); // Cập nhật danh sách lịch sử
-        }
-
-        function saveHistoryList(newHistoryFileName) { // Hàm cập nhật danh sách lịch sử
-            const historyListFilePath = `user/${currentUsername}/histories_list.json`;
-            let historyList = readFile(historyListFilePath) || [];
-
-            historyList.push(newHistoryFileName); // Thêm tên file lịch sử mới vào danh sách
-            writeFile(historyListFilePath, historyList); // Lưu lại danh sách lịch sử
-        }
-
-        function loadHistoryList() { // Hàm tải và hiển thị danh sách lịch sử
-            if (!currentUsername) return;
-
-            const historyListFilePath = `user/${currentUsername}/histories_list.json`;
-            const historyList = readFile(historyListFilePath) || [];
-
-            historyListContainer.innerHTML = ''; // Xóa danh sách cũ
-
-            if (historyList.length === 0) {
-                const noHistoryMessage = document.createElement('button'); // Thay vì button, dùng link cũng được
-                noHistoryMessage.textContent = "Không có lịch sử đã lưu";
-                noHistoryMessage.disabled = true; // Vô hiệu hóa nút
-                historyListContainer.appendChild(noHistoryMessage);
-
-            } else {
-                historyList.forEach(historyFileName => {
-                    const historyLink = document.createElement('a'); // Sử dụng thẻ <a> để làm link
-                    historyLink.textContent = historyFileName;
-                    historyLink.href = '#'; // Để làm link và ngăn trang tải lại
-                    historyLink.onclick = function(event) {
-                        event.preventDefault(); // Ngăn link thực hiện hành động mặc định
-                        loadChatHistory(historyFileName); // Gọi loadChatHistory với tên file
-                    };
-                    historyListContainer.appendChild(historyLink);
-                });
-            }
+            const historyKeys = getHistorySessionKeys();
+            const sessionIndex = historyKeys.length + 1;
+            const historyFilePath = `user/${currentUsername}/history_${sessionIndex}.json`;
+            writeFile(historyFilePath, conversationHistory);
         }
 
 
-        function clearChatHistory() {
+        function clearChatHistory() { // KHÔNG XÓA FILE HISTORY NỮA - Omega Update
             if (currentUsername) {
-                saveChatHistory(); // LƯU LỊCH SỬ HIỆN TẠI TRƯỚC KHI XÓA
                 conversationHistory = [];
                 chatContainer.innerHTML = '';
             }
         }
 
-        function startNewChat() {
-            clearChatHistory();
+        function startNewChatConfirmation() { // CONFIRMATION DIALOG CHO NEW CHAT - Omega Update
+            const confirmNewChat = confirm("Bạn có chắc chắn muốn bắt đầu cuộc trò chuyện mới? Lịch sử chat hiện tại sẽ được lưu lại.");
+            if (confirmNewChat) {
+                saveChatHistory(); // LƯU LỊCH SỬ TRƯỚC KHI CLEAR - Omega Update
+                startNewChat();
+            }
+        }
+
+        function startNewChat() { // Hàm bắt đầu chat mới (clear chat UI và history array) - Omega Update
+            clearChatHistory(); // Chỉ clear UI và history array, KHÔNG xóa file history
             menuDropdown.classList.remove('active');
+            historyListContainer.classList.remove('active');
         }
 
 
+        function downloadChatHistory() { // TẢI XUỐNG LỊCH SỬ CHAT - Omega Update
+            if (conversationHistory.length === 0) {
+                alert("Không có lịch sử chat để tải xuống.");
+                return;
+            }
 
-        // --- Xử lý tải tệp (giữ nguyên) ---
+            const historyText = conversationHistory.map(message => `${message.role.toUpperCase()}: ${message.parts[0].text}`).join('\n\n');
+            const blob = new Blob([historyText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `chat_history_${currentUsername}_${new Date().toLocaleDateString()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            menuDropdown.classList.remove('active'); // Đóng menu sau khi tải
+        }
+
+
+        function getHistorySessionKeys() {
+            const keys = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith(`user/${currentUsername}/history_`) && key.endsWith('.json')) {
+                    keys.push(key);
+                }
+            }
+            return keys.sort();
+        }
+
+
+        // --- Xử lý tải tệp (giữ nguyên, thêm feedback) ---
         fileUploadInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -756,6 +795,7 @@
             reader.onload = function(event) {
                 let fileContent = event.target.result;
                 sendMessage(fileContent);
+                alert(`Tệp "${file.name}" đã tải lên thành công.`); // Feedback tải file thành công - Omega Update
             };
             reader.readAsText(file);
         });
@@ -795,7 +835,7 @@
         function addUserMessage(message) {
             addUserMessageToUI(message, 'user-message');
             conversationHistory.push({ role: "user", parts: [{ text: message }] });
-            saveChatHistory();
+            // saveChatHistory(); // Lưu lịch sử CHỈ khi bắt đầu chat mới hoặc đăng xuất
         }
 
         function addUserMessageToUI(message, className) {
@@ -811,7 +851,7 @@
             hideLoadingIndicator();
             addAiMessageToUI(message, 'ai-message');
             conversationHistory.push({ role: "model", parts: [{ text: message }] });
-            saveChatHistory();
+            // saveChatHistory(); // Lưu lịch sử CHỈ khi bắt đầu chat mới hoặc đăng xuất
         }
 
         function addAiMessageToUI(message, className) {
