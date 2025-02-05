@@ -1,3 +1,5 @@
+--- START OF FILE new_page.html ---
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -61,6 +63,7 @@
             position: fixed;
             top: 10px;
             right: 10px;
+            z-index: 1000; /* Đảm bảo menu luôn ở trên cùng */
         }
 
         .menu-button {
@@ -97,7 +100,7 @@
             transform: scaleY(0);
             transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-            z-index: 10;
+            z-index: 999;
             width: 250px;
         }
 
@@ -438,6 +441,7 @@
                 <button id="loadHistoryButton" onclick="toggleHistoryDropdown()">Tải lại lịch sử</button>
                 <button onclick="downloadChatHistory()">Tải xuống lịch sử chat</button>
                 <button onclick="logoutUser()">Đăng xuất</button>
+
                 <div id="history-list-container">
                     <!-- Danh sách lịch sử chat sẽ được tạo ở đây -->
                 </div>
@@ -542,19 +546,23 @@
 
         // --- Menu Danh mục (giữ nguyên) ---
         function toggleMenu() {
-           menuDropdown.classList.toggle('active');
+            menuDropdown.classList.toggle('active');
+            if (!menuDropdown.classList.contains('active')) {
+              hideHistoryDropdown(); // Đóng lịch sử khi đóng menu
+            }
         }
 
         window.addEventListener('click', function(event) {
-             if (!event.target.matches('.menu-button')) {
+            if (!event.target.matches('.menu-button')) {
                 if (menuDropdown.classList.contains('active')) {
-                    menuDropdown.classList.remove('active');
+                  //  menuDropdown.classList.remove('active');
                 }
             }
 
 
             if (event.target !== loadHistoryButton && !historyListContainer.contains(event.target) && historyDropdownActive) {
                 hideHistoryDropdown();
+                menuDropdown.classList.remove('active'); // Đóng menu nếu click ra ngoài lịch sử
             }
         });
 
@@ -676,11 +684,7 @@
 
 
         function toggleHistoryDropdown() {
-           if (historyDropdownActive) {
-                hideHistoryDropdown();
-            } else {
-                loadChatHistoryDropdown();
-            }
+            loadChatHistoryDropdown();
         }
 
         function hideHistoryDropdown() {
@@ -709,7 +713,7 @@
                     historyButton.onclick = function() {
                         loadSpecificHistory(key);
                         hideHistoryDropdown();
-                         menuDropdown.classList.remove('active');
+                        menuDropdown.classList.remove('active');
                     };
 
                     const deleteButton = document.createElement('button'); // Nút xóa lịch sử
@@ -734,7 +738,7 @@
 
             historyListContainer.style.display = 'block';
             historyDropdownActive = true;
-            menuDropdown.classList.add('active'); // giữ menu
+             menuDropdown.classList.add('active');
         }
 
         function deleteChatHistory(historyKey) { // Hàm xóa lịch sử chat
@@ -749,30 +753,49 @@
 
 
         function loadSpecificHistory(historyKey) {
-            const history = readFile(historyKey);
-            if (history) {
-                conversationHistory = history;
-                chatContainer.innerHTML = '';
-                conversationHistory.forEach(message => {
-                    if (message.role === 'user') {
-                        addUserMessageToUI(message.parts[0].text, 'user-message');
-                    } else if (message.role === 'model') {
-                        addAiMessageToUI(message.parts[0].text, 'ai-message');
-                    }
-                });
-                chatContainer.scrollTop = chatContainer.scrollHeight;
+           try {
+                const history = readFile(historyKey);
+                if (history) {
+                    conversationHistory = history;
+                    chatContainer.innerHTML = '';
+                    conversationHistory.forEach(message => {
+                        if (message.role === 'user') {
+                            addUserMessageToUI(message.parts[0].text, 'user-message');
+                        } else if (message.role === 'model') {
+                            addAiMessageToUI(message.parts[0].text, 'ai-message');
+                        }
+                    });
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                } else {
+                    console.warn(`Không tìm thấy lịch sử chat với key: ${historyKey}`);
+                }
+            } catch (error) {
+                console.error("Lỗi khi tải lịch sử chat:", error);
+                alert("Lỗi khi tải lịch sử chat. Vui lòng thử lại sau.");
             }
         }
 
 
-        function saveChatHistory() { // LƯU LỊCH SỬ - Omega Update - gọi khi logout và new chat
-            if (!currentUsername || conversationHistory.length === 0) return;
+       function saveChatHistory() {
+            if (!currentUsername) return;
 
             const historyKeys = getHistorySessionKeys();
-            const sessionIndex = historyKeys.length + 1;
-            const historyFilePath = `user/${currentUsername}/history_${sessionIndex}.json`;
-            writeFile(historyFilePath, conversationHistory);
+            let sessionIndex = historyKeys.length;
+            let newHistoryKey = `user/${currentUsername}/history_${sessionIndex + 1}.json`;
+            let existingKey = localStorage.getItem(newHistoryKey);
+
+            if (existingKey) {
+
+            } else {
+                localStorage.setItem(newHistoryKey, JSON.stringify(conversationHistory));
+                console.log("lưu thành công")
+            }
+
+            console.log(historyKeys)
+
         }
+
+
 
 
         function clearChatHistory() { // KHÔNG XÓA FILE HISTORY NỮA - Omega Update
@@ -879,8 +902,7 @@
         function addUserMessage(message) {
             addUserMessageToUI(message, 'user-message');
             conversationHistory.push({ role: "user", parts: [{ text: message }] });
-            // saveChatHistory();
-            // Lưu lịch sử CHỈ khi bắt đầu chat mới hoặc đăng xuất
+            // saveChatHistory(); // Lưu lịch sử CHỈ khi bắt đầu chat mới hoặc đăng xuất
         }
 
         function addUserMessageToUI(message, className) {
