@@ -6,34 +6,31 @@
     <title>AI Hiện Đại với Gemini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        /* Updated Copy Code Button Styles (Like ChatGPT) */
+        /* Updated Copy Button Style to ChatGPT-like */
         .copy-code-button {
             position: absolute;
-            top: 8px;        /* Adjust vertical position */
-            right: 8px;       /* Adjust horizontal position */
-            background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent white background */
+            top: 8px; /* Adjust top position */
+            right: 8px; /* Adjust right position */
+            background-color: rgba(255, 255, 255, 0.05); /* Slightly transparent background */
             color: #fff;
-            border: none;
-            border-radius: 4px; /* Slightly less rounded */
-            padding: 4px 8px;   /* Reduced padding */
+            border: 1px solid #ccc; /* Light gray border */
+            border-radius: 5px;
+            padding: 4px 8px;
             font-size: 0.9em;
             cursor: pointer;
-            opacity: 0;         /* Initially hidden */
-            transition: opacity 0.2s ease, background-color 0.2s ease;
-        }
-
-        pre[class*="language-"]:hover .copy-code-button { /* Show on pre:hover */
-            opacity: 0.8;      /* Fade in on hover */
+            opacity: 0.6; /* Lower opacity initially */
+            transition: opacity 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .copy-code-button:hover {
-            opacity: 1;          /* Full opacity on button hover itself */
-            background-color: rgba(255, 255, 255, 0.2); /* Slightly darker hover bg */
+            opacity: 1; /* Full opacity on hover */
+            background-color: rgba(255, 255, 255, 0.15); /* Slightly darker hover background */
+            border-color: #eee; /* Lighter border on hover */
         }
 
 
-        /* Keep the rest of the CSS styles from the most recent "modern UI" version - No Changes Needed Below This Line  */
-         body {
+        /* Keep the rest of the CSS styles from the most recent "modern UI" version, without code block styles modification  */
+        body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
@@ -58,7 +55,6 @@
             -moz-osx-font-smoothing: grayscale;
             transition: background-color 0.3s ease;
         }
-
 
         body::-webkit-scrollbar {
             width: 9px;
@@ -528,6 +524,12 @@
         }
 
 
+        .custom-modal-overlay.show-modal {
+            display: flex;
+            pointer-events: auto;
+        }
+
+
         .custom-modal {
             background-color: #3a3c43;
             color: #fff;
@@ -598,7 +600,7 @@
 </head>
 <body>
 
-    <aside class="sidebar" id="sidebar">
+    <aside class="sidebar" id="sidebar" ontouchmove="event.stopPropagation();">  <!-- Prevent body scroll when touching sidebar -->
         <div class="sidebar-header">
             <h3>Lịch sử Chat</h3>
         </div>
@@ -690,8 +692,6 @@
         let savedHistories = {};
         let historyNameToDelete = null;
         let isAutoSaveEnabled = localStorage.getItem('autoSaveEnabled') === 'true';
-        let firstUserMessageForHistoryName = null;
-
 
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('autoSaveToggle').checked = isAutoSaveEnabled;
@@ -702,7 +702,7 @@
             isAutoSaveEnabled = !isAutoSaveEnabled;
             localStorage.setItem('autoSaveEnabled', isAutoSaveEnabled);
              if (isAutoSaveEnabled) {
-                alert("Tự động lưu đoạn chat đã được bật. Lịch sử chat sẽ tự động được lưu khi bạn bắt đầu đoạn chat mới.");
+                alert("Tự động lưu đoạn chat đã được bật. Lịch sử chat sẽ tự động được lưu khi bạn tạo đoạn chat mới.");
             } else {
                 alert("Tự động lưu đoạn chat đã được tắt.");
             }
@@ -710,25 +710,22 @@
 
 
 
-
         function autoSaveConversation() {
             if (conversationHistory.length > 0) {
-                let historyName;
-                if (firstUserMessageForHistoryName) {
-                    const truncatedMessage = firstUserMessageForHistoryName.substring(0, 30) + "...";
-                    historyName = `autosave-${truncatedMessage.replace(/[^a-zA-Z0-9\s]/g, "").trim().replace(/\s+/g, '-')}`;
-                } else {
-                     historyName = `autosave-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-                }
+                // Use first user message for history name
+                let historyName = `autosave-${Date.now()}-${Math.floor(Math.random() * 1000)}`; // Default random name
 
+                const firstUserMessage = conversationHistory.find(message => message.role === 'user');
+                if (firstUserMessage && firstUserMessage.parts && firstUserMessage.parts[0].text) {
+                    const firstMessageText = firstUserMessage.parts[0].text.substring(0, 30) + "..."; // Use first 30 chars of message
+                    historyName = `autosave-start: "${firstMessageText}"`; // Create name from first message
+                }
                 savedHistories[historyName] = [...conversationHistory];
                 localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
                 loadSavedHistoriesList();
                 console.log(`Đoạn chat đã được tự động lưu: ${historyName}`);
-                firstUserMessageForHistoryName = null;
             }
         }
-
 
 
         function toggleSidebar() {
@@ -740,11 +737,9 @@
             overlay.classList.toggle('sidebar--open');
             if (sidebar.classList.contains('sidebar--open')) {
                  loadSavedHistoriesList();
-                 body.classList.add('sidebar-active');
             } else {
                 hideHistoryMenu();
                 hideSettingsMenu();
-                 body.classList.remove('sidebar-active');
             }
         }
 
@@ -793,7 +788,6 @@
             saveChatHistory();
             renderMessages();
             toggleSidebar();
-            firstUserMessageForHistoryName = null;
         }
 
 
@@ -854,7 +848,6 @@
                 renderMessages();
                 toggleHistoryMenu();
                 toggleSidebar();
-                firstUserMessageForHistoryName = savedHistories[historyName][0]?.parts[0]?.text || null;
             } else {
                 alert("Không tìm thấy lịch sử chat đã lưu.");
             }
@@ -991,11 +984,6 @@
             saveChatHistory();
             renderMessages();
             document.getElementById('user-prompt').value = '';
-
-            // CAPTURE FIRST USER MESSAGE FOR HISTORY NAME
-            if (!firstUserMessageForHistoryName) {
-                firstUserMessageForHistoryName = userPrompt;
-            }
 
 
             const aiMessageDiv = document.createElement('div');
