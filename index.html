@@ -1,4 +1,3 @@
---- START OF FILE vip1.html ---
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -7,13 +6,13 @@
     <title>AI Hiện Đại với Gemini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        /* Enhanced Base Styles and Animations */
+        /* Reverted Code Block and Copy Button Styles, Maintained Dark Theme */
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #1e2124;
-            color: #e0e0e0; /* Lighter text color */
+            background-color: #1e2124; /* Dark Background - Kept from modern theme */
+            color: #d1d5db; /* Kept from dark theme */
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
@@ -28,157 +27,127 @@
             font-size: 16px;
             overflow-y: scroll;
             scrollbar-width: thin;
-            scrollbar-color: #555 #2a2a2a;
-            -webkit-font-smoothing: antialiased; /* Improve font rendering */
-            -moz-osx-font-smoothing: grayscale;
-            transition: background-color 0.3s ease; /* Smooth background color transition */
+            scrollbar-color: #555 #252525;
         }
 
         body::-webkit-scrollbar {
-            width: 9px; /* Slightly wider scrollbar */
+            width: 8px;
         }
 
         body::-webkit-scrollbar-track {
-            background: #2a2a2a; /* Darker scrollbar track */
+            background: #252525;
         }
 
         body::-webkit-scrollbar::-webkit-scrollbar-thumb {
             background-color: #555;
-            border-radius: 5px;
-             border: 2px solid #2a2a2a; /* Added border to scrollbar thumb */
+            border-radius: 4px;
         }
 
 
         .container {
-            width: 96%; /* Slightly wider container */
-            max-width: 1250px; /* Increased max-width */
-            margin: 25px auto;
-            padding: 35px; /* Further increased padding */
-            background-color: #2a2d31; /* Darker container background */
-            border-radius: 20px; /* Even more rounded corners */
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6); /* Enhanced shadow */
+            width: 95%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 25px; /* Padding - Kept from modern theme value */
+            background-color: #25272b; /* Dark container - Kept from modern theme */
+            border-radius: 12px; /* Rounded container - Kept from modern theme value */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Shadow - Kept from modern theme value */
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 50px);
+            height: 100vh;
             flex-grow: 1;
             margin-left: auto;
-            transition: margin-left 0.3s ease, background-color 0.3s ease;
-            border: none; /* Removed container border */
+            transition: margin-left 0.3s ease;
+            border: 1px solid #333;
         }
 
         .container.sidebar-open {
-            margin-left: 270px; /* Increased sidebar margin */
+            margin-left: 250px;
         }
 
         h1 {
             text-align: center;
             color: #fff;
-            margin-bottom: 30px;
-            font-size: 2.7em; /* Further title size increase */
-            letter-spacing: 0.7px;
-            padding-bottom: 22px;
-            border-bottom: 3px solid #4a4a4a; /* More prominent heading border */
-            font-weight: 500; /* Slightly lighter font-weight for title */
-            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5); /* Added text shadow to title */
+            margin-bottom: 20px;
+            font-size: 2.2em;
+            letter-spacing: 0.3px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #444;
         }
 
         #messages-container {
             flex-grow: 1;
-            padding: 30px; /* Increased padding */
+            padding: 20px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             scrollbar-width: thin;
-            scrollbar-color: #555 #2a2a2a;
-            padding-bottom: 90px;
-            border: none;
-            border-radius: 16px; /* More rounded message area */
-            background-color: #232529; /* Darker message container */
-            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.4); /* Deeper inner shadow */
-            opacity: 0; /* Initially hidden */
-            animation: fadeIn 0.5s ease-out 0.1s forwards; /* Fade-in animation on load */
+            scrollbar-color: #555 #252525;
+            padding-bottom: 70px;
+            border: 1px solid #333;
+            border-radius: 8px; /* Rounded messages container - Kept from modern theme value */
+            background-color: #1e2124; /* Dark message container - Kept from modern theme */
         }
-
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-
 
         #messages-container::-webkit-scrollbar {
-            width: 9px;
+            width: 8px;
         }
 
         #messages-container::-webkit-scrollbar-track {
-            background: #2a2a2a;
+            background: #252525;
         }
 
         #messages-container::-webkit-scrollbar::-webkit-scrollbar-thumb {
             background-color: #555;
-            border-radius: 5px;
-            border: 2px solid #2a2a2a;
+            border-radius: 4px;
         }
 
         .message {
-            margin-bottom: 18px; /* Increased message margin */
-            padding: 14px 22px; /* Further padding adjustments */
-            border-radius: 25px; /* Even more rounded message bubbles */
+            margin-bottom: 12px;
+            padding: 10px 14px;
+            border-radius: 15px;
             clear: both;
             word-wrap: break-word;
             max-width: 80%;
             display: inline-block;
-            border: none; /* Removed message border */
-             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Slightly stronger message shadow */
-            transform: translateY(15px); /* Initial position for message animation */
-            opacity: 0;
-            animation: slideUpFadeIn 0.4s ease-out forwards; /* Slide up and fade in animation */
-             margin-top: 5px; /* Added margin top to message bubble*/
+            border: 1px solid #444;
+            position: relative;
         }
-
-        @keyframes slideUpFadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
 
         .user-message {
-            background-color: #3a3c43; /* Darker user message background */
+            background-color: #343541;
             color: #fff;
             align-self: flex-end;
             float: right;
-            border-top-right-radius: 8px; /* More rounded user message corners */
+            border-top-right-radius: 3px;
         }
 
         .ai-message {
-            background-color: #4e515a; /* Darker AI message background */
-            color: #d8d8d8; /* Slightly lighter AI text */
+            background-color: #444654;
+            color: #d1d5db;
             align-self: flex-start;
             float: left;
-            border-top-left-radius: 8px; /* More rounded AI message corners */
+            border-top-left-radius: 3px;
         }
 
         .ai-message .ai-message-text {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Arial', sans-serif; /* Font - Kept from modern theme */
             font-weight: normal;
-            line-height: 1.8; /* Further improved line height */
+            line-height: 1.6; /* Line Height - Kept from modern theme value */
             white-space: pre-line;
-            font-size: 17px; /* Slightly larger AI text */
-            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3); /* Subtle text shadow for AI text */
+            font-size: 16px; /* Font size - Kept from modern theme value */
         }
 
         .markdown-bold-uppercase {
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 0.8px; /* Adjusted letter spacing */
-            color: #f5f5f5; /* Even lighter emphasis color */
-            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4); /* Added shadow to bold uppercase text */
+            letter-spacing: 0.5px;
         }
 
         .input-area {
-            padding: 14px 22px; /* Further input area padding adjust */
-            background-color: #3a3c43; /* Darker input area background */
-            border-top: 2px solid #5a5a5a; /* Thicker border and darker color */
+            padding: 15px 20px; /* Padding - Kept from original value, can adjust if needed */
+            background-color: #343541; /* Dark Input area - Kept from modern theme */
+            border-top: 1px solid #555;
             display: flex;
             align-items: center;
             position: fixed;
@@ -189,76 +158,67 @@
             padding-left: 20px;
             padding-right: 20px;
             z-index: 100;
-            border-bottom-left-radius: 20px; /* More rounded input area corners */
-            border-bottom-right-radius: 20px;
+            border-bottom-left-radius: 12px; /* Rounded input area corners - Kept from modern theme value */
+            border-bottom-right-radius: 12px;
              border-top: 1px solid #444;
         }
 
         .input-area textarea {
             flex-grow: 1;
-            padding: 11px; /* More textarea padding adjust */
-            border: none; /* Removed textarea border */
-            border-radius: 15px; /* More rounded textarea corners */
-            font-size: 17px; /* Slightly larger input text */
-            background-color: #4a4d54; /* Darker textarea background */
+            padding: 10px;
+            border: 1px solid #555;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #40414f; /* Dark textarea - Kept from modern theme */
             color: #fff;
             resize: none;
-            min-height: 42px; /* Further min-height adjust */
+            min-height: 40px;
             overflow-y: auto;
-             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4); /* Deeper textarea inner shadow */
-            transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Added background and shadow transition */
+            border: 1px solid #444;
         }
 
         .input-area textarea:focus {
-            border-color: transparent;
+            border-color: #00bcd4;
             outline: none;
-            background-color: #555860; /* Slightly lighter on focus */
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5), 0 0 7px rgba(0, 188, 212, 0.7); /* Enhanced focus shadow */
+            box-shadow: 0 0 5px rgba(0, 188, 212, 0.5);
         }
 
         .input-area button {
-            padding: 13px 24px; /* Further button padding adjustment */
-            background-color: #00c7e0; /* Slightly brighter button color */
-            color: #fff;
+            padding: 10px 20px;
+            background-color: #00bcd4;
+            color: white;
             border: none;
-            border-radius: 15px; /* More rounded button */
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 17px;
-            margin-left: 14px;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
-             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* Added shadow to button */
-             font-weight: 500; /* Slightly bolder button text */
+            font-size: 16px;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
         }
 
         .input-area button:hover {
-            background-color: #00a9bf; /* Darker on hover */
-            transform: scale(1.04);
-             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5); /* Enhanced hover shadow */
+            background-color: #0097a7;
         }
 
         .file-upload-button {
-            background-color: #5a5a5a; /* Darker file button background */
-            color: #fff;
+            background-color: #555; /* Dark file upload button - Kept from modern theme */
+            color: white;
             border: none;
-            border-radius: 15px; /* More rounded file button */
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1.1em; /* Slightly larger file button icon */
-            width: 44px;
-            height: 44px;
+            font-size: 1em;
+            width: 40px;
+            height: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-right: 14px;
-            opacity: 0.95; /* Further opacity adjust */
-            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Added shadow transition */
-             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* Added shadow to file button */
+            margin-right: 10px;
+            opacity: 0.8;
+            transition: opacity 0.3s ease, background-color 0.3s ease;
         }
 
         .file-upload-button:hover {
             opacity: 1;
-            background-color: #666666; /* Lighter on hover */
-             transform: scale(1.04);
-             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5); /* Enhanced hover shadow */
+            background-color: #666;
         }
 
 
@@ -266,31 +226,29 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 270px; /* Wider sidebar */
+            width: 250px;
             height: 100%;
-            background-color: #2a2a2a; /* Darker sidebar background */
+            background-color: #252525; /* Dark Sidebar - Kept from modern theme */
             color: #fff;
             transform: translateX(-100%);
-            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Added shadow transition */
+            transition: transform 0.3s ease;
             z-index: 200;
-            padding-top: 80px;
-            box-shadow: 5px 0 10px rgba(0,0,0,0.4); /* Enhanced sidebar shadow */
+            padding-top: 60px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
             overflow-y: auto;
             touch-action: manipulation;
-            border-right: none; /* Removed sidebar border */
-             backdrop-filter: blur(12px); /* Increased blur */
+            border-right: 1px solid #444;
         }
 
         .sidebar.sidebar--open {
             transform: translateX(0);
-             box-shadow: 8px 0 15px rgba(0,0,0,0.5); /* Even more pronounced open sidebar shadow */
         }
 
         .sidebar-header {
-            padding: 28px 22px; /* Further header padding adjust */
+            padding: 20px;
             text-align: center;
-            border-bottom: 2px solid #5a5a5a; /* Darker and thicker */
-            margin-bottom: 28px;
+            border-bottom: 1px solid #555;
+            margin-bottom: 20px;
             border-bottom: 1px solid #444;
         }
 
@@ -300,44 +258,42 @@
         }
 
         .sidebar-menu-item {
-            padding: 18px 22px; /* Further menu item padding adjust */
+            padding: 15px 20px;
             cursor: pointer;
-            transition: background-color 0.2s ease, border-bottom-color 0.3s ease, padding-left 0.2s ease; /* Added padding-left transition */
+            transition: background-color 0.2s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 3px solid transparent; /* Even thicker bottom border on hover */
-             font-size: 17px; /* Slightly larger menu text */
-            font-weight: 400; /* Lighter menu font weight */
+            border-bottom: 1px solid transparent;
+            transition: border-bottom-color 0.3s ease;
         }
 
         .sidebar-menu-item:hover {
-            background-color: #3a3a3a; /* Darker hover background */
+            background-color: #343541;
              border-bottom-color: #00bcd4;
-             padding-left: 28px; /* Indent on hover */
         }
 
         .sidebar-menu-item.has-submenu > .menu-link::after {
             content: '>';
             float: right;
-            margin-left: 14px;
-            font-size: 0.95em;
+            margin-left: 10px;
+            font-size: 0.8em;
             display: inline-block;
-            color: #888; /* Darker submenu indicator */
+            color: #aaa;
         }
 
         .submenu {
             list-style: none;
             padding-left: 0;
             margin: 0;
-            border-radius: 16px; /* More rounded submenu corners */
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.5); /* Deeper submenu shadow */
-            background-color: #333333; /* Slightly darker submenu background */
-            margin-top: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            background-color: #2c2c2c; /* Dark Submenu - Kept from modern theme */
+            margin-top: 5px;
             max-height: 0;
             opacity: 0;
-            transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
+            transition: max-height 0.3s ease-out, opacity 0.2s ease-out;
             overflow-y: hidden;
             padding-top: 0;
             padding-bottom: 0;
@@ -345,23 +301,22 @@
 
         .submenu.open {
             display: block;
-            max-height: 700px; /* Further max-height increase for submenu */
+            max-height: 500px;
             opacity: 1;
             overflow-y: auto;
-            padding-top: 10px;
-            padding-bottom: 15px;
+            padding-top: 5px;
+            padding-bottom: 10px;
         }
 
 
         .submenu-item {
-            padding: 16px 22px; /* Further submenu item padding adjust */
+            padding: 12px 20px;
             cursor: pointer;
-            transition: background-color 0.2s ease, padding-left 0.2s ease; /* Added padding-left transition */
+            transition: background-color 0.2s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #444;
-             font-size: 16px; /* Slightly smaller submenu text */
+            border-bottom: 1px solid #333;
         }
 
         .submenu-item:last-child {
@@ -370,8 +325,7 @@
 
 
         .submenu-item:hover {
-            background-color: #3a3a3a;
-             padding-left: 28px; /* Indent submenu items on hover too */
+            background-color: #343541;
         }
 
         .history-name {
@@ -381,43 +335,38 @@
         .delete-history-btn {
             background: transparent;
             border: none;
-            color: #999; /* Darker delete button color */
+            color: #aaa;
             cursor: pointer;
-            font-size: 1.1em;
-            padding: 0 12px;
-            opacity: 0.9;
-            transition: opacity 0.2s ease, color 0.2s ease, transform 0.2s ease; /* Added transform transition */
+            font-size: 1em;
+            padding: 0 8px;
+            opacity: 0.7;
+            transition: opacity 0.2s ease, color 0.2s ease;
         }
 
         .delete-history-btn:hover {
             opacity: 1;
             color: #fff;
-             transform: scale(1.1); /* Subtle scale up on hover */
         }
 
         .sidebar-toggle-button {
             position: fixed;
-            top: 30px; /* Adjusted toggle button position */
-            left: 30px;
-            background: #00c7e0; /* Brighter toggle button */
+            top: 20px;
+            left: 20px;
+            background: #00bcd4;
             color: white;
             border: none;
             border-radius: 50%;
-            width: 50px; /* Slightly larger toggle button */
-            height: 50px;
+            width: 40px;
+            height: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             z-index: 300;
-             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); /* Enhanced toggle button shadow */
-             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
         }
 
         .sidebar-toggle-button:hover {
-            background-color: #00a9bf;
-             transform: scale(1.07); /* More scale up on hover */
-              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Even more pronounced hover shadow */
+            background-color: #0097a7;
         }
 
         .sidebar-overlay {
@@ -426,44 +375,32 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7); /* Even darker overlay */
+            background-color: rgba(0, 0, 0, 0.5);
             z-index: 150;
             display: none;
-            animation: fadeInOverlay 0.2s ease-out forwards; /* Overlay fade-in animation */
         }
-
-        @keyframes fadeInOverlay {
-            to { background-color: rgba(0, 0, 0, 0.7); } /* Animated background color */
-        }
-
 
         .sidebar-overlay.sidebar--open {
             display: block;
         }
 
-        .close-history-menu-btn, .close-settings-menu-btn, .modal-button { /* Grouped close buttons and modal buttons for consistent style */
-            padding: 13px 24px; /* Consistent button padding */
-            background-color: #00c7e0;
+        .close-history-menu-btn {
+            background-color: #00bcd4;
             color: white;
             border: none;
-            border-radius: 15px;
+            border-radius: 8px;
+            padding: 10px 15px;
             cursor: pointer;
-            font-size: 17px;
-            margin-top: 18px;
+            margin-top: 10px;
             display: block;
             margin-left: auto;
             margin-right: auto;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
-             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-             font-weight: 500;
+            transition: background-color 0.3s ease;
         }
 
-        .close-history-menu-btn:hover, .close-settings-menu-btn:hover, .modal-button.confirm:hover, .modal-button.cancel:hover {
-            background-color: #00a9bf;
-             transform: scale(1.04);
-              box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+        .close-history-menu-btn:hover {
+            background-color: #0097a7;
         }
-
 
         .custom-modal-overlay {
             display: none;
@@ -472,18 +409,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.75); /* Even darker modal overlay */
+            background-color: rgba(0, 0, 0, 0.6);
             z-index: 400;
             justify-content: center;
             align-items: center;
             pointer-events: none;
-             animation: fadeInModalOverlay 0.3s ease-out forwards; /* Modal overlay fade-in animation */
         }
-
-         @keyframes fadeInModalOverlay {
-            to { background-color: rgba(0, 0, 0, 0.75); } /* Animated modal overlay bg color */
-        }
-
 
         .custom-modal-overlay.show-modal {
             display: flex;
@@ -492,163 +423,108 @@
 
 
         .custom-modal {
-            background-color: #3a3c43; /* Darker modal background */
+            background-color: #343541; /* Dark Modal - Kept from modern theme */
             color: #fff;
-            padding: 35px; /* Further increased modal padding */
-            border-radius: 16px; /* More rounded modal */
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7); /* Enhanced modal shadow */
-            width: 90%; /* Slightly wider modal */
-            max-width: 500px; /* Increased modal max-width */
+            padding: 20px;
+            border-radius: 10px; /* Rounded Modal - Kept from modern theme value */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            width: 80%;
+            max-width: 400px;
             text-align: center;
-            border: none; /* Removed modal border */
-            transform: translateY(-30px); /* Initial modal position for animation */
-            opacity: 0;
-            animation: slideInModal 0.4s ease-out 0.15s forwards; /* Modal slide-in and fade-in animation */
+            border: 1px solid #444;
         }
-
-        @keyframes slideInModal {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
 
         .modal-message {
-            margin-bottom: 25px;
-            font-size: 1.2em; /* Larger modal message font */
-            font-weight: 400; /* Lighter modal message weight */
+            margin-bottom: 15px;
         }
 
         .modal-input {
-            width: calc(100% - 28px);
-            padding: 14px; /* Adjusted modal input padding */
-            margin-bottom: 25px;
-            border: none; /* Removed modal input border */
-            border-radius: 12px; /* More rounded modal input */
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 8px;
             border: 1px solid #555;
-            background-color: #4a4d54; /* Darker modal input background */
+            background-color: #40414f; /* Dark Modal Input - Kept from modern theme */
             color: #fff;
-             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
-            font-size: 17px; /* Slightly larger modal input font */
         }
 
         .modal-buttons {
             display: flex;
             justify-content: center;
-            gap: 25px; /* Increased modal button gap */
+            gap: 15px;
         }
 
-        .modal-button { /* Using grouped style from .close-history-menu-btn etc. */
-            /* Styles are already defined above */
+        .modal-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            border: 1px solid #444;
         }
 
         .modal-button.confirm {
-            background-color: #00c7e0;
+            background-color: #00bcd4;
             color: white;
+        }
+
+        .modal-button.confirm:hover {
+            background-color: #0097a7;
         }
 
         .modal-button.cancel {
-            background-color: #5a5a5a; /* Darker cancel button background */
+            background-color: #555;
             color: white;
         }
 
+        .modal-button.cancel:hover {
+            background-color: #666;
+        }
 
         code[class*="language-"],
         pre[class*="language-"] {
             color: #f8f8f2;
-            background: #33353b; /* Darker code block background */
+            background: #272822;
             position: relative;
-            border-radius: 12px; /* More rounded code blocks */
-            padding: 20px; /* Further increased code block padding */
-            margin-bottom: 20px;
-            overflow-x: auto;
-             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); /* Enhanced code block shadow */
-            font-size: 15px; /* Slightly smaller code font */
         }
+
+        .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #6c6767; }
+        .token.punctuation { color: #f8f8f2; }
+        .token.namespace { opacity: .7; }
+        .token.property, .token.tag, .token.constant, .token.symbol, .token.deleted { color: #f92672; }
+        .token.boolean, .token.number { color: #ae81ff; }
+        .token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted { color: #a6e22e; }
+        .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string { color: #f8f8f2; background: none; }
+        .token.atrule, .token.attr-value, .token.keyword { color: #00bcd4; }
+        .token.function, .token.class-name { color: #e6db74; }
+        .token.regex, .token.important, .token.variable { color: #fd971f; }
+        .token.important, .token.bold { font-weight: bold; }
+        .token.italic { font-style: italic; }
+        .token.entity { cursor: help; }
 
         .copy-code-button {
             position: absolute;
-            top: 12px; /* Adjusted copy button position */
-            right: 12px;
-            background-color: #555;
+            bottom: 5px;
+            left: 5px;
+            background-color: #444;
             color: white;
             border: none;
-            border-radius: 10px;
-            padding: 7px 12px; /* Further copy button padding adjust */
-            font-size: 0.95em;
+            border-radius: 5px;
+            padding: 5px 8px;
+            font-size: 0.8em;
             cursor: pointer;
-            opacity: 0.8;
-            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Added shadow transition */
-             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Added shadow to copy button */
+            opacity: 0.7;
+            transition: opacity 0.3s ease, background-color 0.3s ease;
         }
 
         .copy-code-button:hover {
             opacity: 1;
-            background-color: #00c7e0; /* Brighter on hover */
-             transform: scale(1.06);
-             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); /* Enhanced hover shadow */
+            background-color: #00bcd4;
         }
 
-         /* Switch styles (inspired by iOS) - No changes needed here as it's from previous version */
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 44px;
-      height: 24px;
-    }
 
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      transition: .4s;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: .4s;
-    }
-
-    input:checked + .slider {
-      background-color: #00bcd4;
-    }
-
-    input:focus + .slider {
-      box-shadow: 0 0 2px #00bcd4;
-    }
-
-    input:checked + .slider:before {
-      -webkit-transform: translateX(20px);
-      -ms-transform: translateX(20px);
-      transform: translateX(20px);
-    }
-
-    .slider.round {
-      border-radius: 24px;
-    }
-
-    .slider.round:before {
-      border-radius: 50%;
-    }
-
-</style>
+    </style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
@@ -839,7 +715,7 @@
 
         function startNewChat() {
             if (conversationHistory.length > 0 && isAutoSaveEnabled) {
-                autoSaveConversation(); // Auto-save existing chat before starting new
+                autoSaveConversation();
             }
             conversationHistory = [];
             saveChatHistory();
@@ -989,12 +865,12 @@
                 const messagesContainer = document.getElementById('messages-container');
                 const aiMessageDiv = document.createElement('div');
                 aiMessageDiv.classList.add('message', 'ai-message');
-                aiMessageDiv.innerHTML = `<span class="ai-message-text">Đang tải tệp...</span>`;
+                aiMessageDiv.innerHTML = `<span class="ai-message-text">Đang tải tệp... ${files[0].name}</span>`;
                 messagesContainer.appendChild(aiMessageDiv);
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
                 let fileNames = Array.from(files).map(file => file.name).join(', ');
-                const userMessage = `Tệp đã tải lên: ${fileNames}. Đang chờ AI xử lý...`;
+                const userMessage = `Tệp đã tải lên: ${fileNames}. Vui lòng đợi AI xử lý.`;
 
                 const userMessageDiv = document.createElement('div');
                 userMessageDiv.classList.add('message', 'user-message');
@@ -1013,7 +889,7 @@
 
                     const aiResponseDiv = document.createElement('div');
                     aiResponseDiv.classList.add('message', 'ai-message');
-                    aiResponseDiv.innerHTML = `<span class="ai-message-text">Đã nhận được tệp: ${fileNames}. Vui lòng cho biết bạn muốn AI làm gì với tệp này.</span>`;
+                    aiResponseDiv.innerHTML = `<span class="ai-message-text">Đã nhận được tệp: ${fileNames}.<br>Bạn muốn AI làm gì với chúng?</span>`;
                     messagesContainer.appendChild(aiResponseDiv);
                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
@@ -1169,6 +1045,66 @@
         }
     </script>
 
+<style>
+    /* Switch styles (inspired by iOS) - Kept as is */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+    }
+
+    input:checked + .slider {
+      background-color: #00bcd4;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 2px #00bcd4;
+    }
+
+    input:checked + .slider:before {
+      -webkit-transform: translateX(20px);
+      -ms-transform: translateX(20px);
+      transform: translateX(20px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+      border-radius: 24px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+</style>
 
 </body>
 </html>
