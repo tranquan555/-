@@ -5,28 +5,23 @@
 <head>
     <title>AI Chatbot - Gemini API</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/vsc-dark-plus.min.css" integrity="sha512-wK08rvoY+eesi45s+kCXgKq4+4yE6k0wDbgx/0USm12Lq33b3u8sU8L/Z5tQZ9eK8L5qKzV2MztZ7r3L+LZA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        /* CSS Dark Mode hiện đại và Responsive - ChatGPT Interface Style */
+        /* CSS Dark Mode hiện đại và Responsive - ChatGPT Interface Style - UPDATED Buttons & Layout */
         :root {
-            --bg-color: #1e1e1e;
-            --text-color: #d4d4d4;
-            --primary-color: #b39ddb;
-            --secondary-bg: #252526;
+            --bg-color: #121212;
+            --text-color: #f0f0f0;
+            --primary-color: #64ffda;
+            --secondary-bg: #1e1e1e;
             --border-color: #333;
             --message-user-bg: #3498db;
             --message-ai-bg: #4a5568;
-            --button-bg: #673ab7;
-            --button-hover-bg: #512da8;
-            --menu-bg: #303031;
+            --button-bg: #3498db;
+            --button-hover-bg: #2980b9;
+            --menu-bg: #252525;
             --loading-color: #ffc107;
-            --history-list-bg: #373738;
-            --history-list-item-hover: #424243;
+            --history-list-bg: #252525;
+            --history-list-item-hover: #333;
             --auth-input-bg: #333;
-        }
-
-        *, *::before, *::after {
-            box-sizing: border-box;
         }
 
         body {
@@ -39,8 +34,7 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden;
-            -webkit-text-size-adjust: 100%; /* Chặn zoom trên iOS */
+            overflow: hidden; /* Disable zoom */
         }
 
         h1 {
@@ -64,7 +58,7 @@
             flex-direction: column;
         }
 
-        /* Custom Button Style */
+         /* Custom Button Style */
         .custom-button {
             padding: 10px 15px;
             border: none;
@@ -73,25 +67,25 @@
             color: var(--text-color);
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            transition: background-color 0.3s, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             outline: none;
             display: inline-flex;
             justify-content: center;
             align-items: center;
             gap: 5px;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent; /* Loại bỏ highlight khi tap trên mobile */
+            user-select: none; /* Ngăn chọn văn bản khi nhấp */
         }
 
         .custom-button:hover {
             background-color: var(--button-hover-bg);
-            transform: translateY(-2px);
+            transform: translateY(-2px); /* Nút nhô lên khi hover */
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         }
 
         .custom-button:active {
-            transform: translateY(0);
+            background-color: var(--button-hover-bg);
+            transform: translateY(0); /* Nút lún xuống khi active */
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         }
 
@@ -103,7 +97,7 @@
             z-index: 1000;
         }
 
-        .menu-dropdown {
+       .menu-dropdown {
             position: absolute;
             top: 100%;
             right: 0;
@@ -206,28 +200,32 @@
         }
 
         .history-modal-close {
-            padding: 10px 15px;
+             padding: 10px 15px;
             border: none;
             border-radius: 8px;
             background-color: var(--button-bg);
             color: var(--text-color);
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            transition: background-color 0.3s, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             outline: none;
-             user-select: none; /* Ngăn chọn văn bản khi nhấp */
-            -webkit-tap-highlight-color: transparent; /* Loại bỏ highlight khi tap trên mobile */
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            user-select: none;
         }
 
         .history-modal-close:hover {
-            background-color: var(--button-hover-bg);
-            transform: translateY(-2px);
+           background-color: var(--button-hover-bg);
+            transform: translateY(-2px); /* Nút nhô lên khi hover */
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         }
 
         .history-modal-close:active {
-            transform: translateY(0);
+             background-color: var(--button-hover-bg);
+            transform: translateY(0); /* Nút lún xuống khi active */
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         }
 
@@ -306,61 +304,30 @@
 
         /* Code Block */
         .code-block {
-            position: relative;
-            margin-bottom: 1em;
-            border-radius: 0.5em;
-            box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.4);
-            overflow: hidden;
             background-color: #282c34;
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 10px;
+            overflow-x: auto;
+            position: relative;
+            margin-bottom: 10px;
         }
 
         .code-block pre {
             white-space: pre-wrap;
-            max-height: 300px;
-            overflow-y: auto;
-            padding: 1em;
-            margin: 0;
         }
 
-        .code-block code {
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            line-height: 1.4;
-            display: block;
-        }
-
-        .prism-container {
-            position: relative;
-            margin-bottom: 1em;
-            border-radius: 0.5em;
-            box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.4);
-            overflow: hidden;
-        }
-
-        .prism-copy-toolbar {
+        .code-block .custom-button {
             position: absolute;
-            top: 0.5em;
-            right: 0.5em;
-            display: flex;
+            bottom: 10px;
+            right: 10px; /* Changed to right for better visibility */
+            left: auto;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 14px;
         }
 
-        .prism-copy-toolbar button {
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: 0;
-            border-radius: .5em;
-            cursor: pointer;
-            font-size: 1em;
-            line-height: 1.2;
-            margin: 0;
-            padding: .5em .75em;
-         }
-
-        .prism-copy-toolbar button:hover {
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-
-         /* Input Container */
+        /* Input Container */
         #input-container {
             display: flex;
             position: fixed;
@@ -380,8 +347,6 @@
             height: 35px;
             margin-right: 10px;
             font-size: 1.2em;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent; /* Loại bỏ highlight khi tap trên mobile */
         }
 
         #prompt-input {
@@ -400,8 +365,6 @@
         #send-button {
             width: 35px;
             height: 35px;
-             user-select: none;
-             -webkit-tap-highlight-color: transparent; /* Loại bỏ highlight khi tap trên mobile */
         }
 
         .user-message, .ai-message, .loading-message {
@@ -438,8 +401,6 @@
             font-style: italic;
             animation: blinkLoading 1.5s infinite;
         }
-
-         /* PrismJS styles */
 
         /* Responsive */
         @media (max-width: 768px) {
@@ -524,17 +485,13 @@
 
             <div id="input-container">
                 <button id="uploadButton" class="custom-button" onclick="triggerFileUpload()"></button>
-                <input type="text" id="prompt-input" placeholder="Nhập tin nhắn..." onkeydown="if (event.keyCode == 13 && !event.shiftKey) { sendMessage(); return false; }">
+                <input type="text" id="prompt-input" placeholder="Nhập tin nhắn..." onkeydown="if (event.keyCode == 13) { sendMessage(); return false; }">
                 <button id="sendButton" class="custom-button" onclick="sendMessage()">➡</button>
                 <input type="file" id="file-upload" style="display: none;" accept=".txt">
             </div>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js" integrity="sha512-ugROW6gYqS8mI0j7G0oI7iU0hGg5Gg0+4U1g1w6gJnlG/4v4y1b1oI6lOq7gW4l1iT2s2WqK0w741Jm1uE2w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js" integrity="sha512-fTLgXCm7mRwgzMmU7gYJw6bHSuE2S3SK6xJ+5w08b8Z3q16w4V+E1F5g1PPOWJw/RJDoe/E32x7426m6Jpb0w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js" integrity="sha512-jSnm1jEzo6kFUAVsn4PrywCGP5J7+L6i70fP/nWmQ8K69u69N+0vcLHzpvR94cgvM/2HQtqZgm+N9JdI4dMw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js" integrity="sha512-Tfxz76/6wW9+9hJ1SgjzH89iNq2RzL9X20S589G307Hq658rD2E/yZtS0Z2f7x+I++d+LqRkFj5qXF/B+9dw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
     // Disable zoom
     document.addEventListener('gesturestart', function (e) {
@@ -555,17 +512,7 @@
         }
         lastTouchEnd = now;
     }, false);
-    // Configuration PrismJS
-       Prism.plugins.toolbar.registerButton('copy-code', function (prism) {
-            var button = document.createElement('button');
-            button.textContent = 'Sao chép';
-            button.classList.add('custom-button');
-            button.addEventListener('click', function () {
-                Prism.plugins.copyToClipboard.copyText(prism.element.textContent);
-                alert('Đã sao chép code!');
-            });
-             return button;
-        });
+
         // Globals
         const chatContainer = document.getElementById('chat-container');
         const promptInput = document.getElementById('prompt-input');
@@ -585,52 +532,62 @@
         const menuButton = document.getElementById('menuButton');
         const uploadButton = document.getElementById('uploadButton');
         const sendButton = document.getElementById('sendButton');
+
         let currentUsername = '';
         let isLoading = false;
         let currentHistoryKey = null;
-        let menuActive = false;
         const GEMINI_API_KEY_DEFAULT = 'AIzaSyCl21Ku_prQnyMHFs_dJRL8-pgjg9hrc2w';
         let currentApiKey = GEMINI_API_KEY_DEFAULT;
         const FIXED_PROMPT = "Bạn là một trợ lý AI hữu ích, thông minh và luôn trả lời một cách chi tiết và chính xác. Hãy giúp người dùng giải quyết mọi vấn đề và cung cấp thông tin tốt nhất có thể.";
         const MODEL_NAME = "gemini-2.0-flash-exp";
+
         // Helper Functions
         const writeFile = (filepath, data) => localStorage.setItem(filepath, JSON.stringify(data));
         const readFile = (filepath) => {
             const data = localStorage.getItem(filepath);
             return data ? JSON.parse(data) : null;
         };
-        // Function mở file
-         function triggerFileUpload() {
+    function triggerFileUpload() {
             fileUpload.click();
         }
+
         // Menu Functions
+        let menuActive = false;
         function toggleMenu() {
             menuActive = !menuActive;
             menuDropdown.classList.toggle('active', menuActive);
         }
-    // Close menu when clicking outside
 
+         // Close menu when clicking outside
         document.addEventListener('click', function(event) {
-             if (!event.target.closest('.menu-container') ) {
+            if (!event.target.closest('.menu-container')) {
                 menuActive = false;
                 menuDropdown.classList.remove('active');
             }
-        });
+         });
+
 
         // History Modal Functions
         function showHistoryModal() {
             historyModal.classList.add('active');
             loadHistoryList();
-               if (menuActive) {
-                toggleMenu();
-            }
+            menuDropdown.classList.remove('active'); // Đóng menu khi mở modal
         }
 
         function hideHistoryModal() {
             historyModal.classList.remove('active');
-             menuActive = false;
+            currentHistoryKey = null;
 
-        }
+            // Kiểm tra xem menu có đang mở không và đóng nếu cần
+            if (menuActive) {
+                menuActive = false;
+                 menuDropdown.classList.remove('active');
+
+            }
+         }
+
+
+
         // Auth Functions
         function registerUser() {
             const username = registerUsernameInput.value.trim();
@@ -677,7 +634,7 @@
             }
         }
 
-       function logoutUser() {
+        function logoutUser() {
             currentUsername = '';
             localStorage.removeItem('geminiChatCurrentUsername');
             conversationHistory = [];
@@ -686,6 +643,8 @@
             authFormsContainer.style.display = 'block';
             usernameDisplay.textContent = '';
             menuActive = false;
+             menuDropdown.classList.remove('active');
+
             hideHistoryModal();
             saveChatHistory();
         }
@@ -732,6 +691,7 @@
             loginForm.style.display = 'none';
             registerForm.style.display = 'block';
         }
+
         // Chat Functions
         function loadChatHistory() {
             if (!currentUsername) return;
@@ -744,63 +704,74 @@
                 chatContainer.innerHTML = '';
                 conversationHistory = [];
             }
-          menuActive = false;
+             menuDropdown.classList.remove('active');
             hideHistoryModal();
         }
-      function loadHistoryList() {
+
+          function loadHistoryList() {
             if (!currentUsername) return;
+
             historyList.innerHTML = '';
             const historyKeys = getHistorySessionKeys();
-              historyKeys.forEach(key => {
-                const historyName = key.split('/').pop().replace(/_/g, ' ').replace(/\.json$/, '');
+
+            historyKeys.forEach(key => {
                 const historyItem = document.createElement('li');
                 historyItem.className = 'history-item';
 
-                 const historyItemContent = document.createElement('span');
+                const historyName = key.split('/').pop().replace(/_/g, ' ').replace(/\.json$/, '');
+                const historyItemContent = document.createElement('span');
                 historyItemContent.className = 'history-item-content';
                 historyItemContent.textContent = historyName;
                 historyItemContent.onclick = () => loadSpecificHistory(key, historyName);
                 historyItem.appendChild(historyItemContent);
 
-             const deleteButton = document.createElement('button');
-                deleteButton.className = 'history-item-delete custom-button';
-                 deleteButton.textContent = "Xóa";
+
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'history-item-delete';
+                deleteButton.innerHTML = '✕';
                 deleteButton.onclick = (event) => {
                     event.stopPropagation();
                     deleteChatHistory(key);
-                   loadHistoryList();
+                    loadHistoryList();
                 };
                 historyItem.appendChild(deleteButton);
-               historyList.appendChild(historyItem);
-          });
+
+                historyList.appendChild(historyItem);
+            });
         }
-         function deleteChatHistory(historyKey) {
+
+        function deleteChatHistory(historyKey) {
             const confirmDelete = confirm("Bạn có chắc chắn muốn xóa lịch sử chat này?");
             if (confirmDelete) {
                 localStorage.removeItem(historyKey);
-               loadHistoryList();
+                loadHistoryList();
                 chatContainer.innerHTML = '';
                 conversationHistory = [];
             }
         }
+
          function loadSpecificHistory(historyKey, historyName) {
             try {
                 const history = readFile(historyKey);
                 if (history) {
-                    currentHistoryKey = historyKey;
+                    currentHistoryKey = historyKey; // set current History key
+
                     conversationHistory = history;
                     chatContainer.innerHTML = '';
 
+                    // Add history name as a user message
                     addUserMessageToUI(`Bạn đang xem lịch sử: ${historyName}`, 'ai-message');
+
                     conversationHistory.forEach(message => {
                         if (message.role === 'user') {
                             addUserMessageToUI(message.parts[0].text, 'user-message');
                         } else if (message.role === 'model') {
-                            addAiMessage(message.parts[0].text);
+                            addAiMessage(message.parts[0].text); // Use addAiMessage to handle code blocks correctly
                         }
                     });
                     chatContainer.scrollTop = chatContainer.scrollHeight;
                     menuActive = false;
+                     menuDropdown.classList.remove('active');
                     hideHistoryModal();
                 } else {
                     console.warn(`Không tìm thấy lịch sử chat với key: ${historyKey}`);
@@ -810,7 +781,7 @@
                 alert("Lỗi khi tải lịch sử chat. Vui lòng thử lại sau.");
             }
         }
-        function saveChatHistory() {
+         function saveChatHistory() {
              if (!currentUsername) return;
 
              let historyName = prompt("Vui lòng nhập tên cho cuộc trò chuyện này:", "Cuộc trò chuyện mới");
@@ -829,13 +800,17 @@
                  localStorage.setItem(newHistoryKey, JSON.stringify(conversationHistory));
                  console.log("lưu thành công")
              }
+
+
         }
+
         function clearChatHistory() {
             if (currentUsername) {
                 conversationHistory = [];
                 chatContainer.innerHTML = '';
             }
         }
+
         function startNewChatConfirmation() {
             const confirmNewChat = confirm("Bạn có chắc chắn muốn bắt đầu cuộc trò chuyện mới? Lịch sử chat hiện tại sẽ được lưu lại.");
             if (confirmNewChat) {
@@ -846,11 +821,13 @@
 
         function startNewChat() {
             clearChatHistory();
-            menuActive = false;
+          menuActive = false;
+             menuDropdown.classList.remove('active');
             hideHistoryModal();
             currentHistoryKey = null;
-            showLoginForm();
+
         }
+
         function downloadChatHistory() {
             if (conversationHistory.length === 0) {
                 alert("Không có lịch sử chat để tải xuống.");
@@ -868,6 +845,7 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             menuActive = false;
+             menuDropdown.classList.remove('active');
             hideHistoryModal();
         }
 
@@ -884,25 +862,21 @@
 
         // Send/Receive Functions
         function sendMessage(userMessageFromFile = null) {
-             if (!currentUsername) {
+            if (!currentUsername) {
                 alert("Bạn cần đăng nhập để sử dụng chatbot.");
                 return;
             }
 
-             let userMessage = userMessageFromFile || promptInput.value;
-             promptInput.value = '';
+            let userMessage = userMessageFromFile || promptInput.value;
+            promptInput.value = '';
 
-             if (!userMessage && !userMessageFromFile) {
-                 return;
-             }
-
-              const apiKey = currentApiKey;
+            if (!userMessage) return;
 
             addUserMessage(userMessage);
-             showLoadingIndicator();
+            showLoadingIndicator();
 
             const combinedPrompt = `${FIXED_PROMPT}\n\n${userMessage}`;
-            sendToGeminiAPI(apiKey, combinedPrompt);
+            sendToGeminiAPI(currentApiKey, combinedPrompt);
         }
 
          function addUserMessage(message) {
@@ -914,7 +888,7 @@
             }
         }
 
-          function addUserMessageToUI(message, className) {
+       function addUserMessageToUI(message, className) {
             const messageDiv = document.createElement('div');
             messageDiv.className = className;
             messageDiv.textContent = message;
@@ -922,26 +896,25 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
 
-        function addAiMessage(message) {
+         function addAiMessage(message) {
             hideLoadingIndicator();
-           let messageDiv = document.createElement('div');
+
+            const messageDiv = document.createElement('div');
             messageDiv.className = 'ai-message';
             messageDiv.style.textAlign = 'left';
 
             let content;
             if (message.startsWith("```") && message.endsWith("```")) {
-                 const code = message.slice(3, -3);
-
-                 content = `<div class="code-block">
-                         <pre class="language-javascript"><code class="language-javascript">${code}</code></pre>
-                     </div>`;
+                content = `<div class="code-block">
+                             <pre>${message.slice(3, -3)}</pre>
+                             <button class="custom-button copy-button" onclick="copyCode(this)">Sao chép</button>
+                         </div>`;
             } else {
                 content = message;
             }
 
             messageDiv.innerHTML = content;
             chatContainer.appendChild(messageDiv);
-            Prism.highlightAllUnder(chatContainer);
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             conversationHistory.push({ role: "model", parts: [{ text: message }] });
@@ -962,6 +935,7 @@
                 });
         }
 
+
         // API Call
         async function sendToGeminiAPI(apiKey, prompt) {
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent`;
@@ -978,7 +952,6 @@
                     },
                     body: JSON.stringify(requestBody)
                 });
-
                 if (!response.ok) {
                     hideLoadingIndicator();
                     const errorData = await response.json();
@@ -1033,12 +1006,12 @@
         // Initial Check
         checkLoginStatus();
 
-        // Prevent zoom on double tap
+          // Prevent zoom on double tap
         document.addEventListener('dblclick', function(event) {
             event.preventDefault();
         });
 
-         fileUpload.addEventListener('change', function(event) {
+      fileUpload.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (!file) return;
 
