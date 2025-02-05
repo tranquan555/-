@@ -6,8 +6,37 @@
     <title>AI Hiện Đại với Gemini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        /* Enhanced Base Styles (No Animation for Code Blocks) */
-        body {
+        /* Reverted Code Block and Copy Button Styles to Previous Version */
+        code[class*="language-"],
+        pre[class*="language-"] {
+            color: #f8f8f2;
+            background: #272822;
+            position: relative; /* for copy button positioning */
+        }
+
+        .copy-code-button {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            background-color: #444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 8px;
+            font-size: 0.8em;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s ease, background-color 0.3s ease;
+        }
+
+        .copy-code-button:hover {
+            opacity: 1;
+            background-color: #00bcd4;
+        }
+
+
+        /* Keep the rest of the CSS styles from the most recent "modern UI" version */
+         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
@@ -73,10 +102,10 @@
             text-align: center;
             color: #fff;
             margin-bottom: 25px;
-            font-size: 2.7em;
-            letter-spacing: 0.7px;
+            font-size: 2.5em;
+            letter-spacing: 0.5px;
             padding-bottom: 20px;
-            border-bottom: 3px solid #4a4a4a;
+            border-bottom: 2px solid #444;
             font-weight: 500;
             text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
         }
@@ -94,13 +123,17 @@
             border-radius: 12px;
             background-color: #232529;
             box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.4);
-            opacity: 1; /* Removed opacity animation and fade-in animation trigger */
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out 0.1s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
         }
 
 
-
         #messages-container::-webkit-scrollbar {
-            width: 9px;
+            width: 8px;
         }
 
         #messages-container::-webkit-scrollbar-track {
@@ -121,15 +154,16 @@
             word-wrap: break-word;
             max-width: 80%;
             display: inline-block;
-            border: none;
-             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            opacity: 1; /* Removed opacity animation and initial position transform */
-            transform: none;
-            margin-top: 5px;
-             animation: slideUpFadeIn 0.4s ease-out forwards; /* Kept slide-up animation for other message types, can remove entirely from .message if no animations at all are wanted for messages */
+            border: 1px solid #444;
+            position: relative;
+             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            transform: translateY(15px);
+            opacity: 0;
+            animation: slideUpFadeIn 0.4s ease-out forwards;
+             margin-top: 5px;
         }
 
-        @keyframes slideUpFadeIn { /* Kept for general messages if animation is still wanted for regular text */
+        @keyframes slideUpFadeIn {
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -138,19 +172,19 @@
 
 
         .user-message {
-            background-color: #3a3c43;
+            background-color: #343541;
             color: #fff;
             align-self: flex-end;
             float: right;
-            border-top-right-radius: 8px;
+            border-top-right-radius: 5px;
         }
 
         .ai-message {
-            background-color: #4e515a;
-            color: #d8d8d8;
+            background-color: #444654;
+            color: #d1d5db;
             align-self: flex-start;
             float: left;
-            border-top-left-radius: 8px;
+            border-top-left-radius: 5px;
         }
 
         .ai-message .ai-message-text {
@@ -158,22 +192,37 @@
             font-weight: normal;
             line-height: 1.7;
             white-space: pre-line;
-            font-size: 17px;
+            font-size: 16px;
             text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
         }
+
+        .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #6c6767; }
+        .token.punctuation { color: #f8f8f2; }
+        .token.namespace { opacity: .7; }
+        .token.property, .token.tag, .token.constant, .token.symbol, .token.deleted { color: #f92672; }
+        .token.boolean, .token.number { color: #ae81ff; }
+        .token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted { color: #a6e22e; }
+        .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string { color: #f8f8f2; background: none; }
+        .token.atrule, .token.attr-value, .token.keyword { color: #00bcd4; }
+        .token.function, .token.class-name { color: #e6db74; }
+        .token.regex, .token.important, .token.variable { color: #fd971f; }
+        .token.important, .token.bold { font-weight: bold; }
+        .token.italic { font-style: italic; }
+        .token.entity { cursor: help; }
+
 
         .markdown-bold-uppercase {
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 0.6px;
-            color: #f5f5f5;
+            color: #f0f0f0;
             text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
         }
 
         .input-area {
             padding: 12px 20px;
-            background-color: #3a3c43;
-            border-top: 2px solid #5a5a5a;
+            background-color: #343541;
+            border-top: 2px solid #555;
             display: flex;
             align-items: center;
             position: fixed;
@@ -184,23 +233,24 @@
             padding-left: 20px;
             padding-right: 20px;
             z-index: 100;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
              border-top: 1px solid #444;
         }
 
         .input-area textarea {
             flex-grow: 1;
             padding: 10px;
-            border: none;
-            border-radius: 15px;
-            font-size: 17px;
-            background-color: #4a4d54;
+            border: 1px solid #555;
+            border-radius: 12px;
+            font-size: 16px;
+            background-color: #40414f;
             color: #fff;
             resize: none;
             min-height: 38px;
             overflow-y: auto;
-             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+            border: 1px solid #444;
+             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
 
@@ -216,9 +266,9 @@
             background-color: #00c7e0;
             color: white;
             border: none;
-            border-radius: 15px;
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 17px;
+            font-size: 16px;
             margin-left: 12px;
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
@@ -235,7 +285,7 @@
             background-color: #5a5a5a;
             color: white;
             border: none;
-            border-radius: 15px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 1.1em;
             width: 44px;
@@ -243,7 +293,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-right: 12px;
+            margin-right: 14px;
             opacity: 0.95;
             transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
@@ -427,7 +477,7 @@
             animation: fadeInOverlay 0.2s ease-out forwards;
         }
 
-        @keyframes fadeInOverlay {
+         @keyframes fadeInOverlay {
             to { background-color: rgba(0, 0, 0, 0.7); }
         }
 
@@ -519,7 +569,6 @@
             width: calc(100% - 28px);
             padding: 14px;
             margin-bottom: 25px;
-            border: none;
             border-radius: 12px;
             border: 1px solid #555;
             background-color: #4a4d54;
@@ -534,8 +583,8 @@
             gap: 25px;
         }
 
-        .modal-button {
-            /* Styles are already defined in .close-history-menu-btn, .close-settings-menu-btn, .modal-button group */
+        .modal-button { /* Using grouped style from .close-history-menu-btn etc. */
+            /* Styles are already defined above */
         }
 
         .modal-button.confirm {
@@ -548,103 +597,6 @@
             color: white;
         }
 
-        code[class*="language-"],
-        pre[class*="language-"] {
-            color: #f8f8f2;
-            background: #33353b;
-            position: relative;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            overflow-x: auto;
-             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
-            font-size: 15px;
-            opacity: 1; /* Reverted opacity to 1 and removed animation properties from here */
-            transform: none;
-            animation: none !important; /* Explicitly remove any animations that might still be cascading */
-
-        }
-
-        .copy-code-button {
-            position: absolute;
-            top: 10px; /* Copy button position remains unchanged */
-            right: 10px;
-            background-color: #444;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 6px 10px;
-            font-size: 0.95em;
-            cursor: pointer;
-            opacity: 0.7;
-            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .copy-code-button:hover {
-            opacity: 1;
-            background-color: #00c7e0;
-             transform: scale(1.06);
-             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
-        }
-
-         /* Switch styles (inspired by iOS) - No changes needed here */
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 44px;
-      height: 24px;
-    }
-
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      transition: .4s;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: .4s;
-    }
-
-    input:checked + .slider {
-      background-color: #00bcd4;
-    }
-
-    input:focus + .slider {
-      box-shadow: 0 0 2px #00bcd4;
-    }
-
-    input:checked + .slider:before {
-      -webkit-transform: translateX(20px);
-      -ms-transform: translateX(20px);
-      transform: translateX(20px);
-    }
-
-    .slider.round {
-      border-radius: 24px;
-    }
-
-    .slider.round:before {
-      border-radius: 50%;
-    }
 
 </style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
@@ -830,6 +782,10 @@
                 }
                 messagesContainer.appendChild(messageDiv);
                 Prism.highlightAllUnder(messageDiv);
+                 // Apply slide-up animation to each message after it's rendered
+                requestAnimationFrame(() => {
+                    messageDiv.classList.add('animate-message');
+                });
             });
              messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
