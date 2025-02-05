@@ -6,216 +6,152 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Hiện Đại với Gemini</title>
     <style>
-        /* Dark Mode Styles */
+        /* Dark Mode ChatGPT-like Styles */
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #121212; /* Deep dark background */
-            color: #ffffff; /* Light text color */
+            background-color: #1e2124; /* Dark background - ChatGPT dark grey */
+            color: #d1d5db; /* Light grey text color */
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: center; /* Center container horizontally */
             min-height: 100vh;
         }
 
         .container {
             width: 95%;
-            max-width: 1000px;
-            margin: 30px auto;
-            padding: 30px;
-            background-color: #1e1e1e; /* Slightly lighter dark container */
-            border-radius: 12px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Deeper shadow for dark mode */
-            transition: box-shadow 0.3s ease;
-        }
-
-        .container:hover {
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Hover shadow deeper */
+            max-width: 1200px; /* Wider container for chat layout */
+            margin: 20px auto; /* Reduced top margin */
+            padding: 0; /* No padding for container */
+            background-color: transparent; /* Container is transparent */
+            border-radius: 0; /* No rounded corners */
+            box-shadow: none; /* No shadow */
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Full viewport height */
         }
 
         h1 {
             text-align: center;
-            color: #00bcd4; /* Teal accent color remains */
-            margin-bottom: 25px;
-            font-size: 2.5em;
-            letter-spacing: 0.5px;
+            color: #fff; /* White title - Optional, maybe remove in ChatGPT layout */
+            margin-bottom: 10px; /* Reduced margin */
+            font-size: 1.8em; /* Smaller title */
+            letter-spacing: 0.3px;
+            padding: 20px 0;
+        }
+
+        #messages-container {
+            flex-grow: 1; /* Messages take up most space */
+            padding: 20px;
+            overflow-y: auto; /* Scrollable messages */
+            display: flex;
+            flex-direction: column;
+            scrollbar-width: thin; /* For Firefox */
+            scrollbar-color: #555 #252525; /* For Firefox */
+        }
+
+        /* Scrollbar styling for Chrome, Safari, and Opera */
+        #messages-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #messages-container::-webkit-scrollbar-track {
+            background: #252525;
+        }
+
+        #messages-container::-webkit-scrollbar-thumb {
+            background-color: #555;
+            border-radius: 4px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            clear: both; /* Prevent float issues */
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            background-color: #343541; /* User message background - ChatGPT grey bubble */
+            color: #fff;
+            align-self: flex-end; /* Right align user messages */
+            float: right;
+        }
+
+        .ai-message {
+            background-color: #444654; /* AI message background - slightly darker */
+            color: #d1d5db;
+            align-self: flex-start; /* Left align AI messages */
+            float: left;
         }
 
         .input-area {
-            margin-bottom: 30px;
-        }
-
-        .input-area label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #eee; /* Lighter label text */
+            padding: 20px;
+            background-color: #343541; /* Input area background - same as user message */
+            border-top: 1px solid #555; /* Input area border top */
+            display: flex;
+            align-items: center; /* Vertically center items in input area */
         }
 
         .input-area textarea {
-            width: calc(100% - 22px);
-            padding: 12px;
-            border: 1px solid #555; /* Darker border */
+            flex-grow: 1; /* Textarea takes available space */
+            padding: 10px;
+            border: 1px solid #555;
             border-radius: 8px;
-            margin-bottom: 15px;
             font-size: 16px;
-            background-color: #252525; /* Darker input background */
-            color: #ffffff; /* Light input text color */
-            transition: border-color 0.3s ease;
+            background-color: #40414f; /* Slightly darker input bg */
+            color: #fff;
+            resize: none; /* No resize handle */
+            min-height: 40px; /* Minimum height for textarea */
+            overflow-y: auto; /* Add vertical scroll if needed */
         }
 
         .input-area textarea:focus {
-            border-color: #00bcd4;
+            border-color: #00bcd4; /* Focus border color */
             outline: none;
             box-shadow: 0 0 5px rgba(0, 188, 212, 0.5);
         }
 
         .input-area button {
-            padding: 12px 25px;
+            padding: 10px 20px;
             background-color: #00bcd4; /* Teal button */
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* Deeper button shadow */
+            margin-left: 10px; /* Space between textarea and button */
+            transition: background-color 0.3s ease;
         }
 
         .input-area button:hover {
             background-color: #0097a7; /* Darker teal on hover */
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Hover shadow deeper */
         }
 
-        .input-area button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-        }
 
-        #response-area {
-            padding: 25px;
-            border: 1px solid #555; /* Darker border */
-            border-radius: 12px;
-            background-color: #252525; /* Dark response area background */
-            color: #ffffff; /* Light response text color */
-            white-space: pre-wrap;
-            font-size: 16px;
-            line-height: 1.6;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2); /* Inset shadow for depth */
-            overflow-x: auto;
-        }
-
-        /* Prism.js for dark mode - adjusted colors for visibility in dark theme */
+        /* Prism.js Dark Theme Adjustments - Reusing from previous, but double check contrast*/
         code[class*="language-"],
         pre[class*="language-"] {
-            color: #f8f8f2; /* Light code text color */
-            background: #272822; /* Dark code block background */
-            text-shadow: none;
-            font-family: Consolas, 'Space Mono', monospace;
-            font-size: 14px;
-            text-align: left;
-            white-space: pre;
-            word-spacing: normal;
-            word-break: normal;
-            word-wrap: normal;
-            line-height: 1.5;
-            -moz-tab-size: 4;
-            -o-tab-size: 4;
-            tab-size: 4;
-            -webkit-hyphens: none;
-            -moz-hyphens: none;
-            -ms-hyphens: none;
-            hyphens: none;
+            color: #f8f8f2;
+            background: #272822;
         }
+        /* ... (Prism.js theme styles - as before) ... */
+        .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #6c6767; }
+        .token.punctuation { color: #f8f8f2; }
+        .token.namespace { opacity: .7; }
+        .token.property, .token.tag, .token.constant, .token.symbol, .token.deleted { color: #f92672; }
+        .token.boolean, .token.number { color: #ae81ff; }
+        .token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted { color: #a6e22e; }
+        .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string { color: #f8f8f2; background: none; }
+        .token.atrule, .token.attr-value, .token.keyword { color: #00bcd4; }
+        .token.function, .token.class-name { color: #e6db74; }
+        .token.regex, .token.important, .token.variable { color: #fd971f; }
+        .token.important, .token.bold { font-weight: bold; }
+        .token.italic { font-style: italic; }
+        .token.entity { cursor: help; }
 
-        pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
-        code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
-            text-shadow: none;
-            background: #999; /* Selection background in dark mode */
-        }
-
-        pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
-        code[class*="language-"]::selection, code[class*="language-"] ::selection {
-            text-shadow: none;
-            background: #999; /* Selection background in dark mode */
-        }
-
-        .token.comment,
-        .token.prolog,
-        .token.doctype,
-        .token.cdata {
-            color: #6c6767; /* Darker comment color for contrast */
-        }
-
-        .token.punctuation {
-            color: #f8f8f2; /* White punctuation */
-        }
-
-        .token.namespace {
-            opacity: .7;
-        }
-
-        .token.property,
-        .token.tag,
-        .token.constant,
-        .token.symbol,
-        .token.deleted {
-            color: #f92672; /* Pink/Red colors similar to Dracula theme */
-        }
-
-        .token.boolean,
-        .token.number {
-            color: #ae81ff; /* Purple for boolean/number */
-        }
-
-        .token.selector,
-        .token.attr-name,
-        .token.string,
-        .token.char,
-        .token.builtin,
-        .token.inserted {
-            color: #a6e22e; /* Greenish for strings etc. */
-        }
-
-        .token.operator,
-        .token.entity,
-        .token.url,
-        .language-css .token.string,
-        .style .token.string {
-            color: #f8f8f2; /* White for operators, etc. */
-            background: none;
-        }
-
-        .token.atrule,
-        .token.attr-value,
-        .token.keyword {
-            color: #00bcd4; /* Teal for keywords */
-        }
-
-        .token.function,
-        .token.class-name {
-            color: #e6db74; /* Yellowish for functions, class names */
-        }
-
-        .token.regex,
-        .token.important,
-        .token.variable {
-            color: #fd971f; /* Orange for regex etc. */
-        }
-
-        .token.important,
-        .token.bold {
-            font-weight: bold;
-        }
-        .token.italic {
-            font-style: italic;
-        }
-
-        .token.entity {
-            cursor: help;
-        }
 
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
@@ -223,19 +159,15 @@
 </head>
 <body>
     <div class="container">
-        <h1>AI Hiện Đại với Gemini</h1>
+        <h1>AI Hiện Đại với Gemini</h1>  <!-- Optional: Keep title or remove for cleaner ChatGPT feel -->
 
-        <div class="input-area">
-            <label for="user-prompt">Nhập Prompt của bạn:</label>
-            <textarea id="user-prompt" placeholder="Nhập câu hỏi hoặc yêu cầu của bạn"></textarea>
-            <button onclick="getGeminiResponse()">Gửi Prompt</button>
+        <div id="messages-container">
+            <!-- Messages will be appended here -->
         </div>
 
-        <div>
-            <h2>Phản hồi của AI:</h2>
-            <div id="response-area">
-                <!-- Phản hồi của AI sẽ hiển thị ở đây -->
-            </div>
+        <div class="input-area">
+            <textarea id="user-prompt" placeholder="Nhập tin nhắn"></textarea>
+            <button onclick="getGeminiResponse()">Gửi</button>
         </div>
     </div>
 
@@ -244,22 +176,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
     <script>
         async function getGeminiResponse() {
-            // API Key được hardcode trực tiếp vào code
             const apiKey = 'AIzaSyCl21Ku_prQnyMHFs_dJRL8-pgjg9hrc2w';
             const userPrompt = document.getElementById('user-prompt').value.trim();
-            const responseArea = document.getElementById('response-area');
+            const messagesContainer = document.getElementById('messages-container');
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.classList.add('message', 'user-message');
+            userMessageDiv.textContent = userPrompt;
+            messagesContainer.appendChild(userMessageDiv);
+            document.getElementById('user-prompt').value = ''; // Clear input after sending
 
             if (!userPrompt) {
-                alert("Vui lòng nhập prompt của bạn.");
+                alert("Vui lòng nhập tin nhắn.");
                 return;
             }
 
-            responseArea.textContent = "Đang suy nghĩ...";
+            const aiMessageDiv = document.createElement('div');
+            aiMessageDiv.classList.add('message', 'ai-message');
+            aiMessageDiv.textContent = "Đang suy nghĩ...";
+            messagesContainer.appendChild(aiMessageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight; // Scroll to bottom
 
-            const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`; // Updated model here
+            const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
 
-            // Fixed System Prompt
-            const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác.";
+            // Fixed System Prompt - Now with code block instruction!
+            const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
             const fullPrompt = `${systemPrompt}\n\n${userPrompt}`;
 
 
@@ -281,7 +221,7 @@
                 if (!response.ok) {
                     const errorData = await response.json();
                     console.error("Lỗi API:", errorData);
-                    responseArea.textContent = `Lỗi API: ${response.status} - ${errorData.error.message || 'Không rõ nguyên nhân'}`;
+                    aiMessageDiv.textContent = `Lỗi API: ${response.status} - ${errorData.error.message || 'Không rõ nguyên nhân'}`;
                     return;
                 }
 
@@ -289,15 +229,16 @@
                 console.log("Dữ liệu phản hồi từ API:", data);
 
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
-                    responseArea.innerHTML = data.candidates[0].content.parts[0].text;
-                    Prism.highlightAllUnder(responseArea);
+                    aiMessageDiv.innerHTML = data.candidates[0].content.parts[0].text; // Set response HTML
+                    Prism.highlightAllUnder(aiMessageDiv); // Highlight code blocks in AI message
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight; // Keep scrolling to bottom after response
                 } else {
-                    responseArea.textContent = "Không nhận được phản hồi hợp lệ từ AI.";
+                    aiMessageDiv.textContent = "Không nhận được phản hồi hợp lệ từ AI.";
                 }
 
             } catch (error) {
                 console.error("Lỗi fetch:", error);
-                responseArea.textContent = "Đã xảy ra lỗi khi kết nối đến API.";
+                aiMessageDiv.textContent = "Đã xảy ra lỗi khi kết nối đến API.";
             }
         }
     </script>
