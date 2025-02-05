@@ -6,7 +6,7 @@
     <title>AI Hiện Đại với Gemini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        /* Dark Mode ChatGPT-like Styles with Sidebar, Custom Modals, and Animations */
+        /* Dark Mode ChatGPT-like Styles with Sidebar, Custom Modals, and Animations - Styles remain same as last version */
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
@@ -28,8 +28,8 @@
             width: 95%;
             max-width: 1200px;
             margin: 20px auto;
-            padding: 25px; /* Added padding to container itself */
-            background-color: #25272b; /* Slightly lighter container background */
+            padding: 25px;
+            background-color: #25272b;
             border-radius: 12px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
             display: flex;
@@ -38,7 +38,7 @@
             flex-grow: 1;
             margin-left: auto;
             transition: margin-left 0.3s ease;
-            border: 1px solid #333; /* Added subtle border to container */
+            border: 1px solid #333;
         }
 
         .container.sidebar-open {
@@ -48,11 +48,11 @@
         h1 {
             text-align: center;
             color: #fff;
-            margin-bottom: 20px; /* Increased margin bottom for title */
-            font-size: 2.2em; /* Slightly larger title */
+            margin-bottom: 20px;
+            font-size: 2.2em;
             letter-spacing: 0.3px;
             padding-bottom: 15px;
-            border-bottom: 1px solid #444; /* Underline for title section */
+            border-bottom: 1px solid #444;
         }
 
         #messages-container {
@@ -64,9 +64,9 @@
             scrollbar-width: thin;
             scrollbar-color: #555 #252525;
             padding-bottom: 70px;
-            border: 1px solid #333; /* Added subtle border to message container */
-            border-radius: 8px; /* Slightly rounded message area */
-            background-color: #1e2124; /* Set message area to main background color for depth */
+            border: 1px solid #333;
+            border-radius: 8px;
+            background-color: #1e2124;
         }
 
         #messages-container::-webkit-scrollbar {
@@ -90,7 +90,7 @@
             word-wrap: break-word;
             max-width: 80%;
             display: inline-block;
-            border: 1px solid #444; /* Subtle border to message bubbles */
+            border: 1px solid #444;
         }
 
         .user-message {
@@ -123,9 +123,9 @@
             padding-left: 20px;
             padding-right: 20px;
             z-index: 100;
-            border-bottom-left-radius: 12px; /* Match container radius */
-            border-bottom-right-radius: 12px; /* Match container radius */
-             border-top: 1px solid #444; /* Slightly refined border color */
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+             border-top: 1px solid #444;
         }
 
         .input-area textarea {
@@ -139,7 +139,7 @@
             resize: none;
             min-height: 40px;
             overflow-y: auto;
-            border: 1px solid #444; /* Refined input border color */
+            border: 1px solid #444;
         }
 
         .input-area textarea:focus {
@@ -164,7 +164,7 @@
             background-color: #0097a7;
         }
 
-        /* Sidebar Styles */
+        /* Sidebar Styles - remain same */
         .sidebar {
             position: fixed;
             top: 0;
@@ -180,7 +180,7 @@
             box-shadow: 2px 0 5px rgba(0,0,0,0.2);
             overflow-y: auto;
             touch-action: manipulation;
-            border-right: 1px solid #444; /* Subtle right border on sidebar */
+            border-right: 1px solid #444;
         }
 
         .sidebar.sidebar--open {
@@ -192,7 +192,7 @@
             text-align: center;
             border-bottom: 1px solid #555;
             margin-bottom: 20px;
-            border-bottom: 1px solid #444; /* Refined sidebar header border */
+            border-bottom: 1px solid #444;
         }
 
         .sidebar-menu {
@@ -207,13 +207,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid transparent; /* Prepare for animation hover effect */
-            transition: border-bottom-color 0.3s ease; /* Animated bottom border */
+            border-bottom: 1px solid transparent;
+            transition: border-bottom-color 0.3s ease;
         }
 
         .sidebar-menu-item:hover {
             background-color: #343541;
-             border-bottom-color: #00bcd4; /* Border on hover for animated effect */
+             border-bottom-color: #00bcd4;
         }
 
         .sidebar-menu-item.has-submenu > .menu-link::after {
@@ -233,22 +233,20 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
             background-color: #2c2c2c;
             margin-top: 5px;
-
-            /* Dropdown Animation - Refined */
             max-height: 0;
             opacity: 0;
             transition: max-height 0.3s ease-out, opacity 0.2s ease-out;
-            overflow-y: hidden; /* Hide vertical scroll initially when closed */
-            padding-top: 0;      /* Remove top/bottom padding when closed */
+            overflow-y: hidden;
+            padding-top: 0;
             padding-bottom: 0;
         }
 
         .submenu.open {
-            display: block; /* Keep display block for layout purposes */
-            max-height: 500px; /* Or adjust to a large enough value to fit your submenu items */
+            display: block;
+            max-height: 500px;
             opacity: 1;
-            overflow-y: auto;  /* Enable vertical scroll if content overflows when open */
-            padding-top: 5px;      /* Restore padding when open */
+            overflow-y: auto;
+            padding-top: 5px;
             padding-bottom: 10px;
         }
 
@@ -260,11 +258,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #333; /* Separator in submenu items */
+            border-bottom: 1px solid #333;
         }
 
         .submenu-item:last-child {
-            border-bottom: none; /* No border for the last item */
+            border-bottom: none;
         }
 
 
@@ -346,7 +344,7 @@
             background-color: #0097a7;
         }
 
-        /* Custom Modals Styles - No changes from previous version */
+        /* Custom Modals Styles - remain same */
         .custom-modal-overlay {
             display: none;
             position: fixed;
@@ -376,7 +374,7 @@
             width: 80%;
             max-width: 400px;
             text-align: center;
-            border: 1px solid #444; /* Subtle border for modals */
+            border: 1px solid #444;
         }
 
         .modal-message {
@@ -406,7 +404,7 @@
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s ease;
-            border: 1px solid #444; /* Subtle border for modal buttons */
+            border: 1px solid #444;
         }
 
         .modal-button.confirm {
@@ -428,7 +426,7 @@
         }
 
 
-        /* Prism.js Dark Theme Adjustments - No changes */
+        /* Prism.js Dark Theme Adjustments - remain same */
         code[class*="language-"],
         pre[class*="language-"] {
             color: #f8f8f2;
@@ -474,7 +472,7 @@
             <button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>
         </ul>
 
-        <!-- Save History Modal - No changes -->
+        <!-- Save History Modal - remain same -->
         <div class="custom-modal-overlay" id="saveHistoryModalOverlay">
             <div class="custom-modal">
                 <p class="modal-message">Nhập tên cho lịch sử chat này:</p>
@@ -486,7 +484,7 @@
             </div>
         </div>
 
-         <!-- Delete History Confirm Modal - No changes -->
+         <!-- Delete History Confirm Modal - remain same -->
         <div class="custom-modal-overlay" id="deleteHistoryModalOverlay">
             <div class="custom-modal">
                 <p class="modal-message" id="deleteConfirmationMessage">Bạn có chắc chắn muốn xóa lịch sử chat "<span id="historyNameToDelete"></span>" không?</p>
@@ -530,7 +528,7 @@
         let savedHistories = {};
         let historyNameToDelete = null;
 
-        // Sidebar toggle function - No changes
+        // Sidebar toggle function - remain same
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const container = document.getElementById('container');
@@ -545,7 +543,7 @@
             }
         }
 
-        // Function to load chat history from local storage - No changes
+        // Function to load chat history from local storage - remain same
         function loadChatHistory() {
             const storedHistory = localStorage.getItem('chatHistory');
             if (storedHistory) {
@@ -554,12 +552,12 @@
             }
         }
 
-        // Function to save chat history to local storage (current session) - No changes
+        // Function to save chat history to local storage (current session) - remain same
         function saveChatHistory() {
             localStorage.setItem('chatHistory', JSON.stringify(conversationHistory));
         }
 
-        // Render messages from conversationHistory to UI - No changes
+        // Render messages from conversationHistory to UI - remain same
         function renderMessages() {
             const messagesContainer = document.getElementById('messages-container');
             messagesContainer.innerHTML = '';
@@ -574,7 +572,7 @@
         }
 
 
-        // --- Custom Modal Functions --- - No changes
+        // --- Custom Modal Functions --- - remain same
         function openSaveHistoryModal() {
             document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
             document.getElementById('historyNameInput').value = '';
@@ -616,7 +614,7 @@
         }
 
 
-        // Function to delete a saved history - No changes
+        // Function to delete a saved history - remain same
         function deleteSavedHistory(historyName) {
             delete savedHistories[historyName];
             localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
@@ -626,7 +624,7 @@
         }
 
 
-        // Function to load a specific saved history by name - No changes
+        // Function to load a specific saved history by name - remain same
         function loadChatHistoryByName(historyName) {
             if (savedHistories[historyName]) {
                 conversationHistory = [...savedHistories[historyName]];
@@ -640,7 +638,7 @@
         }
 
 
-        // Function to toggle visibility of saved histories menu -  No major changes, just keep function name same for consistency
+        // Function to toggle visibility of saved histories menu -  modified for dropdown animation
         function toggleHistoryMenu() {
             const submenu = document.getElementById('saved-histories-menu');
             submenu.classList.toggle('open');
@@ -652,7 +650,7 @@
         }
 
 
-        // Function to load and display saved history names in the sidebar menu - No changes
+        // Function to load and display saved history names in the sidebar menu - Modified for file download offer
         function loadSavedHistoriesList() {
             const historiesMenu = document.getElementById('saved-histories-menu');
             historiesMenu.innerHTML = '<button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>';
@@ -696,7 +694,7 @@
         }
 
 
-        // Load history when page loads - No changes
+        // Load history when page loads - remain same
         loadChatHistory();
         loadSavedHistoriesList();
 
@@ -710,7 +708,7 @@
                 return;
             }
 
-            // Add user message to history and display - No changes
+            // Add user message to history and display - remain same
             const userMessageObject = { role: 'user', parts: [{ text: userPrompt }] };
             conversationHistory.push(userMessageObject);
             saveChatHistory();
@@ -724,7 +722,7 @@
             messagesContainer.appendChild(aiMessageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-            // Prepare payload with conversation history and system prompt - No changes
+            // Prepare payload with conversation history and system prompt - remain same
             let promptContents = conversationHistory.map(message => ({
                 role: message.role,
                 parts: message.parts
@@ -757,16 +755,44 @@
                 console.log("Dữ liệu phản hồi từ API:", data);
 
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
-                    const aiResponseText = data.candidates[0].content.parts[0].text;
+                    let aiResponseText = data.candidates[0].content.parts[0].text;
 
-                    // Add AI message to history and save - No changes, **removed file download logic**
-                    const aiMessageObject = { role: 'model', parts: [{ text: aiResponseText }] };
+                    // Regex to find code blocks (```language ... ``` or ``` ... ```) - same as before
+                    const codeBlockRegex = /```([\w]*)\n([\s\S]*?)```/gm;
+                    let match;
+                    let codeContent = null;
+                    let language = 'text'; // Default language for file
+                    let nonCodeText = aiResponseText; // Assume all is non-code initially
+
+                    while ((match = codeBlockRegex.exec(aiResponseText))) {
+                        language = match[1] || 'text'; // Get language or default to text
+                        codeContent = match[2].trim(); // Extract code and trim whitespace
+
+                        if (codeContent) {
+                            // Create download link for code - same as before
+                            const blob = new Blob([codeContent], { type: 'text/plain' }); // Adjust mime type if needed
+                            const url = URL.createObjectURL(blob);
+                            const downloadLink = document.createElement('a');
+                            downloadLink.href = url;
+                            downloadLink.download = `code.${language}`; // Suggest file name
+                            downloadLink.textContent = 'Tải xuống code';
+                            downloadLink.style.display = 'block'; // Make it a block element for better visibility
+                            downloadLink.style.marginTop = '10px'; // Add some space
+                            aiMessageDiv.appendChild(downloadLink);
+
+                            // Remove the code block from the displayed message
+                            nonCodeText = nonCodeText.replace(match[0], '').trim(); // Remove the matched codeblock from the displayed text
+                        }
+                    }
+                    aiMessageDiv.innerHTML = nonCodeText; // Display the text (without code block) in chat
+                    Prism.highlightAllUnder(aiMessageDiv); // Still highlight any remaining code in the text if any
+
+                    // Add AI message to history and save - remain same
+                    const aiMessageObject = { role: 'model', parts: [{ text: aiResponseText }] }; // Save original response including code for history
                     conversationHistory.push(aiMessageObject);
                     saveChatHistory();
-                    renderMessages();
-                     aiMessageDiv.innerHTML = aiResponseText; // Display full response
-                    Prism.highlightAllUnder(aiMessageDiv); // Highlight code blocks
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight; // Keep scrolling to bottom after response
+
 
                 } else {
                     aiMessageDiv.textContent = "Không nhận được phản hồi hợp lệ từ AI.";
