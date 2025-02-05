@@ -113,20 +113,19 @@
 
         .ai-message .ai-message-text {
             font-family: 'Arial', sans-serif;
-            font-weight: normal; /* Reverted to normal bold as boldness will be controlled by markdown class */
+            font-weight: normal;
             line-height: 1.6;
+            white-space: pre-line; /* Preserve line breaks */
         }
 
-        /* New CSS class for markdown bold and uppercase */
         .markdown-bold-uppercase {
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 0.5px; /* Optional: adjust letter spacing if needed */
+            letter-spacing: 0.5px;
         }
 
-
         .input-area {
-            padding: 15px 20px;
+            padding: 10px 20px; /* Reduced padding for vertical height */
             background-color: #343541;
             border-top: 1px solid #555;
             display: flex;
@@ -146,14 +145,14 @@
 
         .input-area textarea {
             flex-grow: 1;
-            padding: 10px;
+            padding: 8px; /* Slightly reduced textarea padding */
             border: 1px solid #555;
             border-radius: 8px;
             font-size: 16px;
             background-color: #40414f;
             color: #fff;
             resize: none;
-            min-height: 40px;
+            min-height: 35px; /* Reduced min-height of textarea */
             overflow-y: auto;
             border: 1px solid #444;
         }
@@ -179,6 +178,30 @@
         .input-area button:hover {
             background-color: #0097a7;
         }
+
+        /* File upload button styling */
+        .file-upload-button {
+            background-color: #555; /* Darker background for file button */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            width: 40px; /* Square button size */
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px; /* Spacing between file button and textarea */
+            opacity: 0.8;
+            transition: opacity 0.3s ease, background-color 0.3s ease;
+        }
+
+        .file-upload-button:hover {
+            opacity: 1;
+            background-color: #666; /* Slightly lighter on hover */
+        }
+
 
         .sidebar {
             position: fixed;
@@ -546,9 +569,13 @@
         </div>
 
         <div class="input-area">
+            <button class="file-upload-button" onclick="triggerFileUpload()">
+                <i class="fas fa-paperclip"></i>
+            </button>
             <textarea id="user-prompt" placeholder="Nhập tin nhắn"></textarea>
             <button onclick="getGeminiResponse()">Gửi</button>
         </div>
+         <input type="file" id="file-upload" style="display:none" multiple onchange="handleFileUpload(this.files)">
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
@@ -557,7 +584,7 @@
     <script>
         const apiKey = 'AIzaSyCl21Ku_prQnyMHFs_dJRL8-pgjg9hrc2w';
         const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
-        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường."; // System prompt remains unchanged
+        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
 
         let conversationHistory = [];
         let savedHistories = {};
@@ -595,14 +622,13 @@
             conversationHistory.forEach(message => {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
-                // Create a span for AI text content
                 const messageTextSpan = document.createElement('span');
                 messageTextSpan.classList.add('ai-message-text');
                 messageTextSpan.innerHTML = message.parts[0].text;
                 if (message.role === 'ai') {
-                    messageDiv.appendChild(messageTextSpan); // Append the span only for AI messages
+                    messageDiv.appendChild(messageTextSpan);
                 } else {
-                    messageDiv.innerHTML = message.parts[0].text; // For user messages, keep original HTML structure
+                    messageDiv.innerHTML = message.parts[0].text;
                 }
                 messagesContainer.appendChild(messageDiv);
                 Prism.highlightAllUnder(messageDiv);
@@ -739,6 +765,52 @@
         loadChatHistory();
         loadSavedHistoriesList();
 
+        function triggerFileUpload() {
+            document.getElementById('file-upload').click();
+        }
+
+        function handleFileUpload(files) {
+            if (files && files.length > 0) {
+                const messagesContainer = document.getElementById('messages-container');
+                const aiMessageDiv = document.createElement('div');
+                aiMessageDiv.classList.add('message', 'ai-message');
+                aiMessageDiv.innerHTML = `<span class="ai-message-text">Đang tải tệp...</span>`;
+                messagesContainer.appendChild(aiMessageDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                let fileNames = Array.from(files).map(file => file.name).join(', ');
+                const userMessage = `Tệp đã tải lên: ${fileNames}. Đang chờ AI xử lý...`;
+
+                const userMessageDiv = document.createElement('div');
+                userMessageDiv.classList.add('message', 'user-message');
+                userMessageDiv.textContent = userMessage;
+                messagesContainer.appendChild(userMessageDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                const userMessageObject = { role: 'user', parts: [{ text: userMessage }] };
+                conversationHistory.push(userMessageObject);
+                saveChatHistory();
+                renderMessages();
+
+                // Simulate AI acknowledging the file (for UI purposes - actual file upload to Gemini needs server-side)
+                setTimeout(() => {
+                    aiMessageDiv.remove(); // Remove "Đang tải tệp..." message
+
+                    const aiResponseDiv = document.createElement('div');
+                    aiResponseDiv.classList.add('message', 'ai-message');
+                    aiResponseDiv.innerHTML = `<span class="ai-message-text">Đã nhận được tệp: ${fileNames}. Vui lòng cho biết bạn muốn AI làm gì với tệp này.</span>`;
+                    messagesContainer.appendChild(aiResponseDiv);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                     const aiMessageObject = { role: 'model', parts: [{ text: aiResponseDiv.innerHTML }] };
+                    conversationHistory.push(aiMessageObject);
+                    saveChatHistory();
+                    renderMessages();
+
+                }, 1500); // Simulate a delay for "file processing"
+            }
+        }
+
 
         async function getGeminiResponse() {
             const userPrompt = document.getElementById('user-prompt').value.trim();
@@ -799,8 +871,12 @@
                     const aiTextContentSpan = document.createElement('span');
                     aiTextContentSpan.classList.add('ai-message-text');
 
-                    // Process **bold uppercase** markdown
-                    let processedText = aiResponseText.replace(/\*\*([^*]+)\*\*/g, '<span class="markdown-bold-uppercase">$1</span>');
+                    // Improved line break handling - convert \n to <br> and preserve existing new lines in AI output
+                    processedText = aiResponseText.replace(/\n/g, '<br>');
+
+
+                    // Process **bold uppercase** markdown (after line break processing)
+                    processedText = processedText.replace(/\*\*([^*]+)\*\*/g, '<span class="markdown-bold-uppercase">$1</span>');
 
 
                     let textContent = '';
