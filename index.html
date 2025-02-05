@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/vsc-dark-plus.min.css" integrity="sha512-wK08rvoY+eesi45s+kCXgKq4+4yE6k0wDbgx/0USm12Lq33b3u8sU8L/Z5tQZ9eK8L5qKzV2MztZ7r3L+LZA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        /* CSS Dark Mode hiện đại và Responsive - ChatGPT Interface Style - UPDATED Buttons & Layout */
+        /* CSS Dark Mode hiện đại và Responsive - ChatGPT Interface Style */
         :root {
             --bg-color: #1e1e1e;
             --text-color: #d4d4d4;
@@ -25,6 +25,10 @@
             --auth-input-bg: #333;
         }
 
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -36,6 +40,7 @@
             align-items: center;
             min-height: 100vh;
             overflow: hidden;
+            -webkit-text-size-adjust: 100%; /* Chặn zoom trên iOS */
         }
 
         h1 {
@@ -68,7 +73,7 @@
             color: var(--text-color);
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            transition: background-color 0.3s, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             outline: none;
             display: inline-flex;
@@ -76,17 +81,17 @@
             align-items: center;
             gap: 5px;
             user-select: none;
+            -webkit-tap-highlight-color: transparent; /* Loại bỏ highlight khi tap trên mobile */
         }
 
         .custom-button:hover {
             background-color: var(--button-hover-bg);
-            transform: translateY(-2px); /* Nút nhô lên khi hover */
+            transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         }
 
         .custom-button:active {
-            background-color: var(--button-hover-bg);
-            transform: translateY(0); /* Nút lún xuống khi active */
+            transform: translateY(0);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         }
 
@@ -208,24 +213,20 @@
             color: var(--text-color);
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            transition: background-color 0.3s, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             outline: none;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            user-select: none;
+             user-select: none; /* Ngăn chọn văn bản khi nhấp */
+            -webkit-tap-highlight-color: transparent; /* Loại bỏ highlight khi tap trên mobile */
         }
 
         .history-modal-close:hover {
-            background-color: var(--button-hover-bg);
+             background-color: var(--button-hover-bg);
             transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         }
 
         .history-modal-close:active {
-            background-color: var(--button-hover-bg);
             transform: translateY(0);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         }
@@ -304,68 +305,60 @@
         }
 
         /* Code Block */
-       .code-block {
-            background-color: #282c34;
-            color: #abb2bf;
-            padding: 15px;
-            border-radius: 10px;
-            overflow-x: auto;
-            position: relative;
-            margin-bottom: 10px;
+        .code-block {
+          position: relative;
+          margin-bottom: 1em;
+           border-radius: 0.5em;
+           box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.4);
+           overflow: hidden;
+          background-color: #282c34;
         }
 
         .code-block pre {
             white-space: pre-wrap;
+           max-height: 300px;  /* Giới hạn chiều cao tối đa */
+           overflow-y: auto;  /* Thêm thanh cuộn nếu nội dung quá dài */
         }
 
-        .code-block code { /* Áp dụng cho các thẻ `code` bên trong .code-block */
+        .code-block code {
             font-family: 'Courier New', monospace;
             font-size: 14px;
             line-height: 1.4;
-            display: block; /* Đảm bảo hiển thị dưới dạng block */
-        }
-         .code-block .custom-button {
-            position: absolute;
-            bottom: 10px;
-            right: 10px; /* Changed to right for better visibility */
-            left: auto;
-            padding: 8px 12px;
-            border-radius: 5px;
-            font-size: 14px;
+            display: block;
         }
 
-         /* PrismJS styles */
         .prism-container {
-            position: relative;
-            margin-bottom: 1em;
-            border-radius: 0.5em;
-            box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.4);
-            overflow: hidden;
+                position: relative;
+                margin-bottom: 1em;
+                border-radius: 0.5em;
+                box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.4);
+                 overflow: hidden;
         }
 
         .prism-copy-toolbar {
-            position: absolute;
-            top: 0.5em;
-            right: 0.5em;
-            display: flex;
+              position: absolute;
+              top: 0.5em;
+               right: 0.5em;
+                display: flex;
         }
 
-         .prism-copy-toolbar button {
+        .prism-copy-toolbar button {
             background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            padding: 0.3em 0.5em;
-            border-radius: 0.3em;
+              color: white;
+              border: 0;
+             border-radius: .5em;
             cursor: pointer;
-            transition: background-color 0.3s;
+            font-size: 1em;
+            line-height: 1.2;
+            margin: 0;
+            padding: .5em .75em;
+         }
+
+        .prism-copy-toolbar button:hover {
+                background-color: rgba(0, 0, 0, 0.8);
         }
 
-         .prism-copy-toolbar button:hover {
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-
-
-        /* Input Container */
+         /* Input Container */
         #input-container {
             display: flex;
             position: fixed;
@@ -385,6 +378,10 @@
             height: 35px;
             margin-right: 10px;
             font-size: 1.2em;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent; /* Loại bỏ highlight khi tap trên mobile */
+            background-color: var(--button-bg);
+             color: var(--text-color);
         }
 
         #prompt-input {
@@ -403,6 +400,10 @@
         #send-button {
             width: 35px;
             height: 35px;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent; /* Loại bỏ highlight khi tap trên mobile */
+            background-color: var(--button-bg);
+             color: var(--text-color);
         }
 
         .user-message, .ai-message, .loading-message {
@@ -440,6 +441,8 @@
             animation: blinkLoading 1.5s infinite;
         }
 
+         /* PrismJS styles */
+
         /* Responsive */
         @media (max-width: 768px) {
             .container {
@@ -459,18 +462,6 @@
                 margin-bottom: 8px;
             }
         }
-
-         .toolbar-item>button {
-                background-color: rgba(0, 0, 0, 0.5);
-                border: 0;
-                border-radius: .5em;
-                color: white;
-                cursor: pointer;
-                font-size: 1em;
-                line-height: 1.2;
-                margin: 0;
-                padding: .5em .75em;
-            }
     </style>
 </head>
 <body>
@@ -535,12 +526,13 @@
 
             <div id="input-container">
                 <button id="uploadButton" class="custom-button" onclick="triggerFileUpload()"></button>
-                <input type="text" id="prompt-input" placeholder="Nhập tin nhắn..." onkeydown="if (event.keyCode == 13) { sendMessage(); return false; }">
+                <input type="text" id="prompt-input" placeholder="Nhập tin nhắn..." onkeydown="if (event.keyCode == 13 && !event.shiftKey) { sendMessage(); return false; }">
                 <button id="sendButton" class="custom-button" onclick="sendMessage()">➡</button>
                 <input type="file" id="file-upload" style="display: none;" accept=".txt">
             </div>
         </div>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js" integrity="sha512-ugROW6gYqS8mI0j7G0oI7iU0hGg5Gg0+4U1g1w6gJnlG/4v4y1b1oI6lOq7gW4l1iT2s2WqK0w741Jm1uE2w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js" integrity="sha512-fTLgXCm7mRwgzMmU7gYJw6bHSuE2S3SK6xJ+5w08b8Z3q16w4V+E1F5g1PPOWJw/RJDoe/E32x7426m6Jpb0w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js" integrity="sha512-jSnm1jEzo6kFUAVsn4PrywCGP5J7+L6i70fP/nWmQ8K69u69N+0vcLHzpvR94cgvM/2HQtqZgm+N9JdI4dMw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -565,17 +557,17 @@
         }
         lastTouchEnd = now;
     }, false);
-
-    Prism.plugins.toolbar.registerButton('copy-code', function (prism, callback) {
-        var button = document.createElement('button');
-        button.textContent = 'Sao chép';
-        button.addEventListener('click', function () {
-            Prism.plugins.copyToClipboard.copyText(prism.element.textContent);
+    // Configuration PrismJS
+        Prism.plugins.toolbar.registerButton('copy-code', function (prism) {
+            var button = document.createElement('button');
+            button.textContent = 'Sao chép';
+            button.classList.add('custom-button');
+            button.addEventListener('click', function () {
+                Prism.plugins.copyToClipboard.copyText(prism.element.textContent);
                 alert('Đã sao chép code!');
+            });
+             return button;
         });
-        return button;
-    });
-
         // Globals
         const chatContainer = document.getElementById('chat-container');
         const promptInput = document.getElementById('prompt-input');
@@ -595,55 +587,55 @@
         const menuButton = document.getElementById('menuButton');
         const uploadButton = document.getElementById('uploadButton');
         const sendButton = document.getElementById('sendButton');
-
         let currentUsername = '';
         let isLoading = false;
         let currentHistoryKey = null;
+        let menuActive = false;
         const GEMINI_API_KEY_DEFAULT = 'AIzaSyCl21Ku_prQnyMHFs_dJRL8-pgjg9hrc2w';
         let currentApiKey = GEMINI_API_KEY_DEFAULT;
         const FIXED_PROMPT = "Bạn là một trợ lý AI hữu ích, thông minh và luôn trả lời một cách chi tiết và chính xác. Hãy giúp người dùng giải quyết mọi vấn đề và cung cấp thông tin tốt nhất có thể.";
         const MODEL_NAME = "gemini-2.0-flash-exp";
-
         // Helper Functions
         const writeFile = (filepath, data) => localStorage.setItem(filepath, JSON.stringify(data));
         const readFile = (filepath) => {
             const data = localStorage.getItem(filepath);
             return data ? JSON.parse(data) : null;
         };
-        function triggerFileUpload() {
+        // Function mở file
+         function triggerFileUpload() {
             fileUpload.click();
         }
-
         // Menu Functions
-        let menuActive = false;
         function toggleMenu() {
             menuActive = !menuActive;
             menuDropdown.classList.toggle('active', menuActive);
         }
 
-         // Close menu when clicking outside
+       // Close menu when clicking outside
         document.addEventListener('click', function(event) {
-            if (!event.target.closest('.menu-container')) {
-                menuActive = false;
-                menuDropdown.classList.remove('active');
+            if (!event.target.closest('.menu-container') && menuActive) {
+                 toggleMenu();
             }
-         });
+          if (!event.target.closest('.history-modal') && historyModal.classList.contains('active')) {
+          hideHistoryModal(); // Close the history modal if it's open
+           menuActive = false;
+
+            }
+        });
 
 
         // History Modal Functions
         function showHistoryModal() {
             historyModal.classList.add('active');
             loadHistoryList();
-           menuDropdown.classList.remove('active');
+            if (menuActive) {
+                toggleMenu();
+            }
         }
 
         function hideHistoryModal() {
             historyModal.classList.remove('active');
-            currentHistoryKey = null;
-          menuActive = false;
-          menuDropdown.classList.remove('active');
-
-
+             menuActive = false;
         }
 
         // Auth Functions
@@ -692,7 +684,7 @@
             }
         }
 
-        function logoutUser() {
+       function logoutUser() {
             currentUsername = '';
             localStorage.removeItem('geminiChatCurrentUsername');
             conversationHistory = [];
@@ -701,8 +693,6 @@
             authFormsContainer.style.display = 'block';
             usernameDisplay.textContent = '';
             menuActive = false;
-            menuDropdown.classList.remove('active');
-
             hideHistoryModal();
             saveChatHistory();
         }
@@ -762,29 +752,28 @@
                 chatContainer.innerHTML = '';
                 conversationHistory = [];
             }
-           menuDropdown.classList.remove('active');
+            menuActive = false;
             hideHistoryModal();
         }
 
-         function loadHistoryList() {
+          function loadHistoryList() {
             if (!currentUsername) return;
 
             historyList.innerHTML = '';
             const historyKeys = getHistorySessionKeys();
 
             historyKeys.forEach(key => {
+                const historyName = key.split('/').pop().replace(/_/g, ' ').replace(/\.json$/, '');
                 const historyItem = document.createElement('li');
                 historyItem.className = 'history-item';
 
-                const historyName = key.split('/').pop().replace(/_/g, ' ').replace(/\.json$/, '');
                 const historyItemContent = document.createElement('span');
                 historyItemContent.className = 'history-item-content';
                 historyItemContent.textContent = historyName;
                 historyItemContent.onclick = () => loadSpecificHistory(key, historyName);
                 historyItem.appendChild(historyItemContent);
 
-
-                const deleteButton = document.createElement('button');
+                 const deleteButton = document.createElement('button');
                 deleteButton.className = 'history-item-delete';
                 deleteButton.innerHTML = '✕';
                 deleteButton.onclick = (event) => {
@@ -794,11 +783,10 @@
                 };
                 historyItem.appendChild(deleteButton);
 
-                 historyList.appendChild(historyItem);
+                historyList.appendChild(historyItem);
             });
         }
-
-        function deleteChatHistory(historyKey) {
+         function deleteChatHistory(historyKey) {
             const confirmDelete = confirm("Bạn có chắc chắn muốn xóa lịch sử chat này?");
             if (confirmDelete) {
                 localStorage.removeItem(historyKey);
@@ -813,7 +801,6 @@
                 const history = readFile(historyKey);
                 if (history) {
                     currentHistoryKey = historyKey; // set current History key
-
                     conversationHistory = history;
                     chatContainer.innerHTML = '';
 
@@ -828,7 +815,7 @@
                         }
                     });
                     chatContainer.scrollTop = chatContainer.scrollHeight;
-                     menuActive = false;
+                    menuActive = false;
                       menuDropdown.classList.remove('active');
                     hideHistoryModal();
                 } else {
@@ -839,8 +826,7 @@
                 alert("Lỗi khi tải lịch sử chat. Vui lòng thử lại sau.");
             }
         }
-
-      function saveChatHistory() {
+ function saveChatHistory() {
              if (!currentUsername) return;
 
              let historyName = prompt("Vui lòng nhập tên cho cuộc trò chuyện này:", "Cuộc trò chuyện mới");
@@ -859,6 +845,8 @@
                  localStorage.setItem(newHistoryKey, JSON.stringify(conversationHistory));
                  console.log("lưu thành công")
              }
+
+
         }
 
 
@@ -879,11 +867,11 @@
 
         function startNewChat() {
             clearChatHistory();
-            menuActive = false;
-            menuDropdown.classList.remove('active');
+              menuActive = false;
+               menuDropdown.classList.remove('active');
             hideHistoryModal();
             currentHistoryKey = null;
-
+            showLoginForm();
         }
 
         function downloadChatHistory() {
@@ -902,8 +890,8 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-           menuActive = false;
-             menuDropdown.classList.remove('active');
+              menuActive = false;
+               menuDropdown.classList.remove('active');
             hideHistoryModal();
         }
 
@@ -919,25 +907,25 @@
         }
 
         // Send/Receive Functions
-         function sendMessage(userMessageFromFile = null) {
-            if (!currentUsername) {
+        function sendMessage(userMessageFromFile = null) {
+             if (!currentUsername) {
                 alert("Bạn cần đăng nhập để sử dụng chatbot.");
                 return;
             }
 
-            let userMessage = userMessageFromFile || promptInput.value;
-            promptInput.value = '';
+             let userMessage = userMessageFromFile || promptInput.value;
+             promptInput.value = '';
 
-            if (!userMessage) return;
+             if (!userMessage) return;
 
             addUserMessage(userMessage);
-            showLoadingIndicator();
+             showLoadingIndicator();
 
             const combinedPrompt = `${FIXED_PROMPT}\n\n${userMessage}`;
             sendToGeminiAPI(currentApiKey, combinedPrompt);
         }
 
-         function addUserMessage(message) {
+        function addUserMessage(message) {
             addUserMessageToUI(message, 'user-message');
             conversationHistory.push({ role: "user", parts: [{ text: message }] });
 
@@ -954,28 +942,31 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
 
-       function addAiMessage(message) {
-           hideLoadingIndicator();
+          function addAiMessage(message) {
+            hideLoadingIndicator();
+
+             let messageDiv = document.createElement('div');
+            messageDiv.className = 'ai-message';
+            messageDiv.style.textAlign = 'left';
+
             let content;
             if (message.startsWith("```") && message.endsWith("```")) {
                  const code = message.slice(3, -3);
 
-                content = `<div class="code-block">
-                            <pre class="language-javascript">
-                             <code class="language-javascript">${code}</code>
-                            </pre>
-                            </div>`;
+              content = `<div class="code-block">
+                        <pre class="language-javascript">
+                         <code class="language-javascript">${code}</code>
+                         </pre>
 
+                         </div>`;
             } else {
                 content = message;
             }
 
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'ai-message';
-            messageDiv.innerHTML = content;
-            chatContainer.appendChild(messageDiv);
-            Prism.highlightAllUnder(chatContainer); // Highlight new code
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+           messageDiv.innerHTML = content;
+           chatContainer.appendChild(messageDiv);
+           Prism.highlightAllUnder(chatContainer); // Highlight new code
+           chatContainer.scrollTop = chatContainer.scrollHeight;
 
             conversationHistory.push({ role: "model", parts: [{ text: message }] });
 
@@ -984,7 +975,7 @@
             }
         }
 
-       function copyCode(button) {
+        function copyCode(button) {
             const pre = button.parentNode.querySelector('pre');
             navigator.clipboard.writeText(pre.textContent)
                 .then(() => {
@@ -1062,7 +1053,11 @@
                 isLoading = false;
             }
         }
+      // Function highlight code
+         function highlightCode() {
+             Prism.highlightAll();
 
+        }
         // Initial Check
         checkLoginStatus();
 
@@ -1071,7 +1066,7 @@
             event.preventDefault();
         });
 
-         fileUpload.addEventListener('change', function(event) {
+          fileUpload.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (!file) return;
 
