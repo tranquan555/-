@@ -48,7 +48,7 @@
             margin-bottom: 30px;
         }
 
-        /* Menu danh mục (giữ nguyên) */
+        /* Menu danh mục (CẬP NHẬT MENU LỊCH SỬ) */
         .menu-container {
             position: absolute;
             top: 10px;
@@ -91,7 +91,7 @@
             transform: scaleY(1);
         }
 
-        .menu-dropdown button {
+        .menu-dropdown button, .menu-dropdown a { /* Style cho cả button và link lịch sử */
             display: block;
             width: 100%;
             padding: 10px 20px;
@@ -101,10 +101,16 @@
             text-align: left;
             cursor: pointer;
             transition: background-color 0.2s;
+            text-decoration: none; /* Loại bỏ gạch chân mặc định của link */
         }
 
-        .menu-dropdown button:hover {
+        .menu-dropdown button:hover, .menu-dropdown a:hover {
             background-color: #333;
+        }
+
+        .history-list-container { /* Container cho danh sách lịch sử */
+            max-height: 200px; /* Giới hạn chiều cao để scrollable */
+            overflow-y: auto;
         }
 
 
@@ -258,6 +264,25 @@
         }
 
 
+        #prompt-input {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px 0 0 5px;
+            font-size: 16px;
+            background-color: var(--secondary-bg);
+            color: var(--text-color);
+            transition: border-color 0.3s;
+            border-right: none;
+        }
+
+        #prompt-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(100, 255, 218, 0.2);
+        }
+
+
         #send-button, #upload-button {
             padding: 12px 20px;
             border: none;
@@ -270,12 +295,12 @@
 
         #send-button {
             border-radius: 0 5px 5px 0;
-            flex-grow: 1;
+            flex-grow: 0;
         }
 
         #upload-button {
             border-radius: 5px 0 0 5px;
-            margin-right: 0;
+            margin-right: 10px;
         }
 
 
@@ -287,25 +312,25 @@
 
         /* API Key container (ĐÃ XÓA KHỎI HTML) - CSS không cần thiết nữa */
         #api-key-container {
-            display: none; /* Ẩn hoàn toàn vì không còn trong HTML */
-            margin-bottom: 20px; /* Không còn tác dụng */
+            display: none;
+            margin-bottom: 20px;
         }
 
         #api-key-input {
-            padding: 12px; /* Không còn tác dụng */
-            width: calc(100% - 26px); /* Không còn tác dụng */
-            border: 1px solid var(--border-color); /* Không còn tác dụng */
-            border-radius: 5px; /* Không còn tác dụng */
-            font-size: 16px; /* Không còn tác dụng */
-            background-color: var(--secondary-bg); /* Không còn tác dụng */
-            color: var(--text-color); /* Không còn tác dụng */
-            transition: border-color 0.3s; /* Không còn tác dụng */
+            padding: 12px;
+            width: calc(100% - 26px);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: var(--secondary-bg);
+            color: var(--text-color);
+            transition: border-color 0.3s;
         }
 
         #api-key-input:focus {
-            border-color: var(--primary-color); /* Không còn tác dụng */
-            outline: none; /* Không còn tác dụng */
-            box-shadow: 0 0 0 2px rgba(100, 255, 218, 0.2); /* Không còn tác dụng */
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(100, 255, 218, 0.2);
         }
 
         /* Nút chat mới và tải lại lịch sử (ẩn trong menu) - giữ nguyên */
@@ -385,7 +410,7 @@
                 font-size: 14px;
                 padding: 8px 12px;
             }
-            .menu-dropdown button {
+            .menu-dropdown button, .menu-dropdown a {
                 padding: 10px 15px;
                 font-size: 14px;
             }
@@ -403,7 +428,9 @@
             <button class="menu-button" onclick="toggleMenu()">Danh mục</button>
             <div class="menu-dropdown" id="menuDropdown">
                 <button onclick="startNewChat()">Bắt đầu cuộc trò chuyện mới</button>
-                <button onclick="loadChatHistory()">Tải lại lịch sử</button>
+                <div class="history-list-container" id="historyListContainer">
+                    <!-- Danh sách lịch sử sẽ được thêm vào đây -->
+                </div>
                 <button onclick="logoutUser()">Đăng xuất</button>
             </div>
         </div>
@@ -450,6 +477,7 @@
             <div id="input-container">
                 <input type="file" id="file-upload" style="display: none;" accept=".txt">
                 <button id="upload-button" onclick="document.getElementById('file-upload').click();">Tải tệp lên</button>
+                <input type="text" id="prompt-input" placeholder="Nhập prompt của bạn và nhấn Enter hoặc nút Gửi" onkeydown="if (event.keyCode == 13) { sendMessage(); return false; }">
                 <button id="send-button" onclick="sendMessage()">Gửi</button>
             </div>
         </div>
@@ -458,7 +486,7 @@
     <script>
         const chatContainer = document.getElementById('chat-container');
         const promptInput = document.getElementById('prompt-input');
-        const apiKeyInput = document.getElementById('api-key-input'); // Vẫn giữ lại để tránh lỗi tham chiếu cũ
+        const apiKeyInput = document.getElementById('api-key-input');
         const usernameDisplay = document.getElementById('username-display');
         const chatInterfaceContainer = document.getElementById('chat-interface-container');
         const authFormsContainer = document.getElementById('auth-forms-container');
@@ -470,6 +498,7 @@
         const registerPasswordInput = document.getElementById('register-password');
         const fileUploadInput = document.getElementById('file-upload');
         const menuDropdown = document.getElementById('menuDropdown');
+        const historyListContainer = document.getElementById('historyListContainer'); // Container danh sách lịch sử
 
 
         let conversationHistory = [];
@@ -494,9 +523,12 @@
         }
 
 
-        // --- Menu Danh mục (giữ nguyên) ---
+        // --- Menu Danh mục (CẬP NHẬT MENU LỊCH SỬ) ---
         function toggleMenu() {
-            menuDropdown.classList.toggle('active');
+            const menu = menuDropdown.classList.toggle('active');
+            if (menu) { // Nếu menu vừa được mở, tải danh sách lịch sử
+                loadHistoryList();
+            }
         }
 
         window.addEventListener('click', function(event) {
@@ -535,12 +567,11 @@
             // Mô phỏng đường dẫn file thông tin người dùng
             const userFilePath = `user/${username}/info.json`;
 
-            if (readFile(userFilePath)) { // Kiểm tra "file" tồn tại
+            if (readFile(userFilePath)) {
                 alert("Tên người dùng đã tồn tại. Vui lòng chọn tên người dùng khác.");
                 return;
             }
 
-            // Lưu thông tin người dùng vào "file" info.json
             writeFile(userFilePath, { username: username, password: password });
             alert("Đăng ký thành công. Vui lòng đăng nhập.");
             showLoginForm();
@@ -556,9 +587,8 @@
                 return;
             }
 
-            // Mô phỏng đường dẫn file thông tin người dùng
             const userFilePath = `user/${username}/info.json`;
-            const userInfo = readFile(userFilePath); // Đọc thông tin từ "file"
+            const userInfo = readFile(userFilePath);
 
             if (userInfo && userInfo.password === password) {
                 currentUsername = username;
@@ -620,13 +650,18 @@
         checkLoginStatus();
 
 
-        // --- Quản lý lịch sử chat (CẬP NHẬT LƯU FILE) ---
-        function loadChatHistory() {
+        // --- Quản lý lịch sử chat (CẬP NHẬT MENU LỊCH SỬ) ---
+        function loadChatHistory(historyFileName) { // Thêm tham số historyFileName (tùy chọn)
             if (!currentUsername) return;
 
-            // Mô phỏng đường dẫn file lịch sử chat
-            const historyFilePath = `user/${currentUsername}/history.json`;
-            const history = readFile(historyFilePath); // Đọc lịch sử từ "file"
+            let historyFilePath;
+            if (historyFileName) { // Nếu có historyFileName được cung cấp, tải lịch sử cụ thể
+                historyFilePath = `user/${currentUsername}/histories/${historyFileName}.json`;
+            } else { // Nếu không có, tải lịch sử gần nhất (có thể không cần thiết trong logic mới này)
+                historyFilePath = `user/${currentUsername}/history.json`; // Đường dẫn mặc định (có thể không dùng nữa)
+            }
+
+            const history = readFile(historyFilePath);
 
             if (history) {
                 conversationHistory = history;
@@ -648,20 +683,59 @@
 
 
         function saveChatHistory() {
-            if (currentUsername) {
-                // Mô phỏng đường dẫn file lịch sử chat
-                const historyFilePath = `user/${currentUsername}/history.json`;
-                writeFile(historyFilePath, conversationHistory); // Lưu lịch sử vào "file"
+            if (!currentUsername || conversationHistory.length === 0) return;
+
+            // Tạo tên file lịch sử dựa trên thời gian
+            const timestamp = Date.now();
+            const historyFileName = `history_${timestamp}`;
+            const historyFilePath = `user/${currentUsername}/histories/${historyFileName}.json`;
+
+            writeFile(historyFilePath, conversationHistory); // Lưu lịch sử với tên file mới
+
+            saveHistoryList(historyFileName); // Cập nhật danh sách lịch sử
+        }
+
+        function saveHistoryList(newHistoryFileName) { // Hàm cập nhật danh sách lịch sử
+            const historyListFilePath = `user/${currentUsername}/histories_list.json`;
+            let historyList = readFile(historyListFilePath) || [];
+
+            historyList.push(newHistoryFileName); // Thêm tên file lịch sử mới vào danh sách
+            writeFile(historyListFilePath, historyList); // Lưu lại danh sách lịch sử
+        }
+
+        function loadHistoryList() { // Hàm tải và hiển thị danh sách lịch sử
+            if (!currentUsername) return;
+
+            const historyListFilePath = `user/${currentUsername}/histories_list.json`;
+            const historyList = readFile(historyListFilePath) || [];
+
+            historyListContainer.innerHTML = ''; // Xóa danh sách cũ
+
+            if (historyList.length === 0) {
+                const noHistoryMessage = document.createElement('button'); // Thay vì button, dùng link cũng được
+                noHistoryMessage.textContent = "Không có lịch sử đã lưu";
+                noHistoryMessage.disabled = true; // Vô hiệu hóa nút
+                historyListContainer.appendChild(noHistoryMessage);
+
+            } else {
+                historyList.forEach(historyFileName => {
+                    const historyLink = document.createElement('a'); // Sử dụng thẻ <a> để làm link
+                    historyLink.textContent = historyFileName;
+                    historyLink.href = '#'; // Để làm link và ngăn trang tải lại
+                    historyLink.onclick = function(event) {
+                        event.preventDefault(); // Ngăn link thực hiện hành động mặc định
+                        loadChatHistory(historyFileName); // Gọi loadChatHistory với tên file
+                    };
+                    historyListContainer.appendChild(historyLink);
+                });
             }
         }
 
+
         function clearChatHistory() {
             if (currentUsername) {
-                saveChatHistory();
+                saveChatHistory(); // LƯU LỊCH SỬ HIỆN TẠI TRƯỚC KHI XÓA
                 conversationHistory = [];
-                // Mô phỏng đường dẫn file lịch sử chat (không xóa "file", chỉ làm trống lịch sử)
-                // const historyFilePath = `user/${currentUsername}/history.json`;
-                // localStorage.removeItem(historyFilePath); // Không xóa file, chỉ làm trống nội dung
                 chatContainer.innerHTML = '';
             }
         }
@@ -670,6 +744,7 @@
             clearChatHistory();
             menuDropdown.classList.remove('active');
         }
+
 
 
         // --- Xử lý tải tệp (giữ nguyên) ---
