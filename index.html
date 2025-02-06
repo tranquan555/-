@@ -1,3 +1,5 @@
+--- START OF FILE vip4ganhoanchinh 3.html ---
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -8,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" integrity="sha512-mkooOlRKXerYZWtP3IkfKPbvztNNwVIgXyPVgsd08p+9Et7WHVbVWJgk3gGguey3e65drKAUhVJczmn9f8w5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
         :root {
@@ -570,65 +574,10 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
         }
 
-        code[class*="language-"],
-        pre[class*="language-"] {
-            color: black;
-            background: transparent; /* Transparent background */
-            position: relative;
-            overflow-x: auto;
-             padding: 1em;
-             border-radius: 8px;
-             margin-bottom: 18px;
-             border: 1px solid #ccc; /* Gemini-like border */
-             font-family: monospace, monospace;
-             white-space: pre-wrap; /* Keep white-space: pre-wrap for text wrap */
-        }
 
-       .copy-code-button {
-            position: absolute;
-            bottom: 4px; /* Slightly lower button */
-            left: 8px;
-            background-color: #ddd;
-            color: black;
-            border: 1px solid #bbb;
-            border-radius: 6px;
-            padding: 6px 10px;
-            font-size: 0.85em;
-            cursor: pointer;
-            opacity: 0.8;
-            transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-            z-index: 2;
-        }
-        .copy-code-button:hover {
-            opacity: 1;
-            background-color: var(--button-primary-color);
-            color: white;
-            border-color:  var(--button-primary-color);
-        }
-        pre[class*="language-"] {
-            position: relative;
-            z-index: 0;
-        }
-
-        /* Success Notification Styles */
+        /* Success Notification Styles - REMOVED */
         .copy-success-notification {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 8px;
-            opacity: 0;
-            visibility: hidden;
-            z-index: 500;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .copy-success-notification.show {
-            opacity: 1;
-            visibility: visible;
+            display: none !important; /* Completely hide the old notification */
         }
 
 
@@ -638,6 +587,59 @@
         }
         .setting-item .toggle-switch input:checked + .slider {
             background-color: var(--button-primary-color);
+        }
+
+        /* New Code Block Styles - Similar to Gemini/ChatGPT */
+        pre[class*="language-"] {
+            position: relative;
+            background-color: #282a36 !important; /* Okaidia theme background */
+            color: #f8f8f2 !important; /* Okaidia theme text color */
+            border-radius: 12px;
+            padding: 1.5rem 1rem 1rem 1rem; /* Adjusted padding */
+            margin-bottom: 20px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        pre[class*="language-"]::before { /* Language label - optional */
+            position: absolute;
+            top: 0.5rem;
+            right: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+        pre[class="language-html"]::before { content: 'html'; }
+        pre[class="language-css"]::before { content: 'css'; }
+        pre[class="language-javascript"]::before { content: 'javascript'; }
+        pre[class="language-python"]::before { content: 'python'; }
+        pre[class="language-"]::before { content: 'code'; color: rgba(255, 255, 255, 0.5);} /* Default "code" if language is not specified */
+
+
+        .code-toolbar {
+            position: absolute;
+            top: 0;
+            right: 0;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+        pre[class*="language-"]:hover .code-toolbar {
+            opacity: 1;
+        }
+
+        .toolbar-item > a, .toolbar-item > button, .toolbar-item > span {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            font-size: 0.8rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.3rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .toolbar-item > a:hover, .toolbar-item > button:hover, .toolbar-item > span:hover {
+            background-color: rgba(255, 255, 255, 0.25);
         }
 
 
@@ -764,6 +766,11 @@
     </div>
 
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-Nfia0yuUxg344oE1bGOt5g5WwRlvah+cWj8s85WgsC1z37XzQpwG71FfH52o/w+8t6rtp/mnfgxPq53L8/Pzfg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js" integrity="sha512-EppCfxn0oVcHSN7fpjR1xKDWnUYCrr1x/x/KzV7CuCgQ3xG71m0xG0YJYoEuiz3XyXQzNlKhnDkHhL8k2i9V6w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js" integrity="sha512-bbQT4U1gqP8pviOXhUv/Ovdw/wiVz/b3e9eAmd4e536u+jUyoNn7n9S2O/Rblw1al9YQRuV4sVJyqsZzT7tPA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
     <script>
         const apiKey = 'AIzaSyAd9p1hXhUcRx4Pz7EmbUKC-V8ULN8L61Q';
         const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
@@ -785,20 +792,6 @@
 
         let currentHistoryName = null;
 
-        document.body.addEventListener('click', async (event) => {
-            if (event.target.classList.contains('copy-code-button')) {
-                const codeElement = event.target.closest('pre').querySelector('code');
-                if (codeElement) {
-                    try {
-                        await navigator.clipboard.writeText(codeElement.textContent);
-                        showCopyNotification();
-                    } catch (err) {
-                        console.error('Failed to copy code: ', err);
-                        alert('Failed to copy code.');
-                    }
-                }
-            }
-        });
 
         function showCopyNotification() {
             const notification = document.getElementById('copyNotification');
@@ -850,14 +843,11 @@
 
                     messageDiv.innerHTML = `<span class="ai-message-text">${messageText}</span>`;
 
-                    messageDiv.querySelectorAll('pre').forEach(codeBlock => {
-
-                      let buttonExists =  codeBlock.querySelector('.copy-code-button') !== null
-
-                         if(!buttonExists )
-                            codeBlock.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>');
-
-                        })
+                    messageDiv.querySelectorAll('pre code').forEach(codeBlock => {
+                        if (!codeBlock.className.startsWith('language-')) {
+                             codeBlock.className = 'language-none'; // Default to no highlighting if language not specified
+                        }
+                    });
                 } else {
                     messageDiv.innerHTML = messageText;
                 }
@@ -866,6 +856,7 @@
             });
 
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
+             Prism.highlightAll();
 
         }
 
@@ -1147,6 +1138,13 @@
                     let aiResponseText = data.candidates[0].content.parts[0].text;
                     aiMessageDiv.innerHTML = '';
 
+                    // Replace markdown code blocks with Prism.js compatible blocks
+                    const codeBlockRegex = /```(\w*)\n([\s\S]*?)\n```/g;
+                    aiResponseText = aiResponseText.replace(codeBlockRegex, (match, language, code) => {
+                        const langClass = language ? `language-${language.toLowerCase()}` : 'language-none';
+                        return `<pre class="${langClass}"><code class="${langClass}">${escapeHtml(code)}</code></pre>`;
+                    });
+
 
                       aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
 
@@ -1177,6 +1175,16 @@
             }
 
         }
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                 .replace(/&/g, "&")
+                 .replace(/</g, "<")
+                 .replace(/>/g, ">")
+                 .replace(/"/g, """)
+                 .replace(/'/g, "'");
+         }
+
 
         function loadSettings() {
             const storedSettings = localStorage.getItem('chatSettings');
