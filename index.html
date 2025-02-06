@@ -612,23 +612,19 @@
             background-color: #444;
             color: white;
             border: none;
-            border-radius: 12px;
-            padding: 8px 12px; /* Adjusted copy button padding */
+            border-radius: 8px;
+            padding: 6px 10px; /* Adjusted copy button padding */
             font-size: 0.9em;
             cursor: pointer;
-            opacity: 0.7; /* slightly lower opacity for copy button */
-            /* Removed transitions from copy button */
+            opacity: 0.7;
+            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
         }
 
         .copy-code-button:hover {
             opacity: 1;
             background-color: var(--button-primary-color);
-             transform: scale(1.05); /* Subtle scale up on hover */
+            transform: scale(1.05);
         }
-         .copy-code-button:active {
-             transform: scale(0.98); /* subtle scale down on active click for feedback */
-             opacity: 0.9; /* slight opacity reduction for feedback */
-         }
 
 
         /* Settings Styles */
@@ -1284,7 +1280,7 @@
                          textPara.innerHTML = textContent.trim();
                          aiTextContentSpan.appendChild(textPara);
                     }
-                    
+
 
                     if (!aiTextContentSpan.hasChildNodes() && processedText.trim()) {
                          aiTextContentSpan.innerHTML = processedText.trim();
@@ -1410,11 +1406,13 @@
         }
 
         document.getElementById('user-prompt').addEventListener('focus', function() {
-             const messagesContainer = document.getElementById('messages-container');
-             const inputArea = document.querySelector('.input-area');
-             if (messagesContainer) {
-                messagesContainer.scrollIntoView(false); // or inputArea.scrollIntoView(false);
-             }
+            // delay scroll slightly to allow keyboard to appear and input area to adjust
+            setTimeout(() => {
+                const inputArea = document.querySelector('.input-area');
+                if (inputArea) {
+                    inputArea.scrollIntoView({block: 'end'});
+                }
+            }, 100); // 100ms delay - you can adjust if needed
         });
 
 
