@@ -797,21 +797,17 @@
             if (!isSaveHistoryModalOpen) {
                 const modalOverlay = document.getElementById('saveHistoryModalOverlay');
                 modalOverlay.classList.add('show-modal');
-                modalOverlay.style.display = 'flex'; // Ensure display is flex - **MODIFIED LINE**
+                modalOverlay.style.display = 'flex'; // Ensure it's displayed as flex
                 document.getElementById('historyNameInput').value = '';
                 isSaveHistoryModalOpen = true;
-                console.log("Save History Modal opened. isSaveHistoryModalOpen:", isSaveHistoryModalOpen); // Debug log
-            } else {
-                console.log("Save History Modal already open, ignoring click."); // Debug log
             }
         }
 
         function closeSaveHistoryModal() {
             const modalOverlay = document.getElementById('saveHistoryModalOverlay');
             modalOverlay.classList.remove('show-modal');
-            modalOverlay.style.display = 'none'; // Explicitly hide - **MODIFIED LINE**
+            modalOverlay.style.display = 'none'; // Explicitly set display to none when closing
             isSaveHistoryModalOpen = false;
-            console.log("Save History Modal closed. isSaveHistoryModalOpen:", isSaveHistoryModalOpen); // Debug log
         }
 
         function saveHistoryWithInputName() {
@@ -821,7 +817,7 @@
                 localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
                 alert(`Lịch sử chat đã được lưu với tên: ${historyName}`);
                 loadSavedHistoriesList();
-                closeSaveHistoryModal();
+                closeSaveHistoryModal(); // Keep closeSaveHistoryModal call here
             } else {
                 alert("Vui lòng nhập tên cho lịch sử chat.");
             }
