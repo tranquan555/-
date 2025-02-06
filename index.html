@@ -6,7 +6,7 @@
     <title>AI Hiện Đại với Gemini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <style>
-         :root {
+        :root {
             --background-color: #1e2124;
             --container-background-color: #25272b;
             --text-color: #d1d5db;
@@ -14,17 +14,11 @@
             --message-ai-background-color: #444654;
             --input-area-background-color: #343541;
             --input-text-background-color: #40414f;
-            --button-primary-color: #00bcd4; /* Giữ nguyên màu này vì bạn thích nó */
-            --button-primary-hover-color: #0097a7; /* Tương tự */
+            --button-primary-color: #00bcd4;
+            --button-primary-hover-color: #0097a7;
             --sidebar-background-color: #252525;
             --sidebar-text-color: #fff;
             --modal-background-color: #343541;
-
-            /* Màu mới giống ChatGPT hơn */
-            --chatgpt-background: #343541; /* Nền tin nhắn ChatGPT */
-            --chatgpt-text: #f8f8f2; /* Màu chữ code ChatGPT */
-            --chatgpt-code-bg: #282c34; /* Nền code block ChatGPT */
-            --chatgpt-scrollbar-color: #555; /* Màu scrollbar ChatGPT */
         }
 
         body {
@@ -45,13 +39,14 @@
             touch-action: manipulation;
             -webkit-text-size-adjust: 100%;
             font-size: 16px;
-            overflow-y: scroll;
-            scrollbar-width: thin;
-            scrollbar-color: var(--chatgpt-scrollbar-color) #252525; /* Sử dụng màu scrollbar ChatGPT */
-            transition: background-color 0.3s ease, color 0.3s ease;
-            overscroll-behavior-y: none;
+            overflow-y: scroll; /* Ensure scrollbar for very long content */
+            scrollbar-width: thin; /* For Firefox */
+            scrollbar-color: #444 #252525; /* For Firefox */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Global text and background transition */
+            overscroll-behavior-y: none; /* Prevent pull-to-refresh on iOS */
         }
 
+        /* Chrome, Safari and Opera scrollbar styling */
         body::-webkit-scrollbar {
             width: 8px;
         }
@@ -61,29 +56,29 @@
         }
 
         body::-webkit-scrollbar::-webkit-scrollbar-thumb {
-            background-color: var(--chatgpt-scrollbar-color); /* Sử dụng màu scrollbar ChatGPT */
+            background-color: #444;
             border-radius: 4px;
         }
+
 
         .container {
             width: 95%;
             max-width: 1200px;
             margin: 20px auto;
-            padding: 25px; /* Giảm padding một chút để giống ChatGPT */
+            padding: 30px; /* Increased padding */
             background-color: var(--container-background-color);
-            border-radius: 15px; /* Giảm độ bo tròn để giống ChatGPT */
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); /* Điều chỉnh shadow cho giống ChatGPT */
+            border-radius: 24px; /* More rounded corners for container */
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6); /* Deeper shadow, more modern */
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 40px);
+            height: calc(100vh - 40px); /* Adjusted height with margin */
             flex-grow: 1;
             margin-left: auto;
-            transition: margin-left 0.3s ease, background-color 0.3s ease;
-            border: none;
-            padding-top: max(25px, env(safe-area-inset-top));
-            padding-bottom: max(25px, env(safe-area-inset-bottom));
+            transition: margin-left 0.3s ease, background-color 0.3s ease; /* Container background transition */
+            border: none; /* Remove default border */
+            padding-top: max(30px, env(safe-area-inset-top)); /* iOS safe area padding */
+            padding-bottom: max(30px, env(safe-area-inset-bottom));
         }
-
 
         .container.sidebar-open {
             margin-left: 250px;
@@ -92,37 +87,35 @@
         h1 {
             text-align: center;
             color: #fff;
-            margin-bottom: 20px; /* Giảm margin bottom */
-            font-size: 2.2em; /* Giảm kích thước chữ một chút */
-            letter-spacing: -0.5px; /* Điều chỉnh letter spacing */
-            padding-bottom: 20px;
-            border-bottom: 1px solid #444;
-            opacity: 0.9;
-            font-weight: 500;
+            margin-bottom: 30px; /* Increased margin bottom for title */
+            font-size: 2.8em; /* Slightly larger title */
+            letter-spacing: -0.8px; /* Tighter letter spacing for modern look */
+            padding-bottom: 25px;
+            border-bottom: 1px solid #444; /* Thinner border */
+            opacity: 0.95; /* Slightly less opaque text */
+            font-weight: 500; /* Medium font weight */
             transition: color 0.3s ease;
         }
 
         #messages-container {
             flex-grow: 1;
-            padding: 15px; /* Giảm padding để giống ChatGPT */
+            padding: 25px; /* Increased padding */
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             scrollbar-width: thin;
-            scrollbar-color: var(--chatgpt-scrollbar-color) #252525; /* Sử dụng màu scrollbar ChatGPT */
-            padding-bottom: 70px; /* Giảm padding bottom */
-            border: none;
-            border-radius: 10px; /* Giảm độ bo tròn message container */
-            background-color: #1e2124;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3); /* Điều chỉnh inner shadow */
-            transition: background-color 0.3s ease;
-            padding-top: 20px; /* Giảm padding top */
-            scroll-behavior: smooth; /* Thêm smooth scroll */
+            scrollbar-color: #555 #252525;
+            padding-bottom: 80px;
+            border: none; /* Removed border */
+            border-radius: 16px; /* Slightly less rounded message container */
+            background-color: #1e2124; /* Consistent background */
+             box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.4); /* Deeper inner shadow for depth */
+             transition: background-color 0.3s ease; /* Messages container background transition */
+             padding-top: 30px; /* Increased padding at top of messages */
         }
 
-
         #messages-container::-webkit-scrollbar {
-            width: 6px; /* Scrollbar mỏng hơn */
+            width: 8px;
         }
 
         #messages-container::-webkit-scrollbar::-webkit-scrollbar-track {
@@ -130,34 +123,29 @@
         }
 
         #messages-container::-webkit-scrollbar::-webkit-scrollbar-thumb {
-            background-color: var(--chatgpt-scrollbar-color); /* Sử dụng màu scrollbar ChatGPT */
-            border-radius: 3px;
+            background-color: #555;
+            border-radius: 4px;
         }
-
 
         .message {
-            margin-bottom: 15px; /* Giảm margin bottom */
-            padding: 10px 15px; /* Giảm padding */
-            border-radius: 15px; /* Giảm độ bo tròn message bubbles */
+            margin-bottom: 20px; /* Further Increased margin between messages */
+            padding: 14px 20px; /* Adjusted padding */
+            border-radius: 24px; /* Even More rounded message bubbles */
             clear: both;
             word-wrap: break-word;
-            max-width: 80%; /* Giảm max width */
+            max-width: 85%; /* Increased max width for messages */
             display: inline-block;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Điều chỉnh message shadow */
-            transition: background-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease;
-            font-size: 15px; /* Giảm font size message */
-            line-height: 1.6; /* Điều chỉnh line-height message */
+             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25); /* More pronounced message shadow */
+             transition: background-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease; /* Message transitions - also borderRadius */
         }
-
 
         .user-message {
             background-color: var(--message-user-background-color);
             color: #fff;
             align-self: flex-end;
             float: right;
-            border-top-right-radius: 5px; /* Giảm độ bo tròn user message */
-            border-bottom-right-radius: 15px;
-            background-color: var(--chatgpt-background); /* Màu user message giống ChatGPT */
+            border-top-right-radius: 8px; /* Slightly less rounded corners for user message */
+            border-bottom-right-radius: 24px;
         }
 
         .ai-message {
@@ -165,33 +153,32 @@
             color: var(--text-color);
             align-self: flex-start;
             float: left;
-            border-top-left-radius: 5px; /* Giảm độ bo tròn AI message */
-            border-bottom-left-radius: 15px;
+            border-top-left-radius: 8px; /* Slightly less rounded corners for ai message */
+            border-bottom-left-radius: 24px;
         }
 
         .ai-message .ai-message-text {
             font-family: 'Arial', sans-serif;
-            font-weight: 400;
-            line-height: 1.7; /* Điều chỉnh line height */
+            font-weight: 400; /* Regular font weight */
+            line-height: 1.8; /* Further improved line height */
             white-space: pre-line;
-            font-size: 15px; /* Giảm font size */
-            transition: color 0.3s ease;
+            font-size: 16px;
+             transition: color 0.3s ease; /* AI message text color transition */
         }
 
-
         .markdown-bold-uppercase {
-            font-weight: 600;
+            font-weight: 600; /* Slightly bolder uppercase text */
             text-transform: uppercase;
-            letter-spacing: 0.5px; /* Điều chỉnh letter spacing */
-            color: #f0f0f0;
-            opacity: 1;
-            transition: color 0.3s ease;
+            letter-spacing: 0.8px; /* Adjusted letter spacing */
+            color: #f0f0f0; /* Slightly lighter color for emphasis */
+            opacity: 1; /* Full opacity for emphasized text */
+             transition: color 0.3s ease;
         }
 
         .input-area {
-            padding: 12px 15px; /* Giảm padding input area */
+            padding: 16px 24px; /* Adjusted input area padding - more horizontal padding */
             background-color: var(--input-area-background-color);
-            border-top: 1px solid #555;
+            border-top: 1px solid #555; /* Thinner border */
             display: flex;
             align-items: center;
             position: fixed;
@@ -199,81 +186,77 @@
             left: 0;
             width: 100%;
             box-sizing: border-box;
-            padding-left: 15px;
-            padding-right: 15px;
+            padding-left: 20px;
+            padding-right: 20px;
             z-index: 100;
-            border-bottom-left-radius: 15px; /* Giảm độ bo tròn input area */
-            border-bottom-right-radius: 15px;
-            border-top: 1px solid #444;
-            transition: background-color 0.3s ease;
-            padding-bottom: max(12px, env(safe-area-inset-bottom));
+            border-bottom-left-radius: 24px; /* More rounded input area */
+            border-bottom-right-radius: 24px;
+             border-top: 1px solid #444;
+             transition: background-color 0.3s ease; /* Input area background transition */
+             padding-bottom: max(16px, env(safe-area-inset-bottom)); /* iOS safe area padding */
         }
-
 
         .input-area textarea {
             flex-grow: 1;
-            padding: 10px 12px; /* Giảm padding textarea */
-            border: none;
-            border-radius: 10px; /* Giảm độ bo tròn textarea */
-            font-size: 15px; /* Giảm font size textarea */
+            padding: 12px 16px; /* Adjusted textarea padding */
+            border: none; /* Remove textarea border */
+            border-radius: 16px; /* More rounded textarea */
+            font-size: 16px;
             background-color: var(--input-text-background-color);
             color: #fff;
             resize: none;
-            min-height: 38px; /* Giảm min height */
+            min-height: 42px; /* Slightly increased min-height */
             overflow-y: auto;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3); /* Điều chỉnh inner shadow textarea */
-            transition: background-color 0.3s ease, color 0.3s ease;
+             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.35); /* Deeper inner shadow for textarea */
+             transition: background-color 0.3s ease, color 0.3s ease; /* Textarea background and text color transition */
         }
-
 
         .input-area textarea:focus {
             border-color: var(--button-primary-color);
             outline: none;
-            box-shadow: 0 0 6px rgba(0, 188, 212, 0.6); /* Điều chỉnh focus shadow */
+            box-shadow: 0 0 8px rgba(0, 188, 212, 0.7); /* More pronounced focus shadow */
         }
 
         .input-area button {
-            padding: 12px 20px; /* Giảm padding button */
+            padding: 14px 24px; /* Adjusted button padding */
             background-color: var(--button-primary-color);
             color: white;
             border: none;
-            border-radius: 10px; /* Giảm độ bo tròn button */
+            border-radius: 16px; /* Rounded button */
             cursor: pointer;
-            font-size: 15px; /* Giảm font size button */
-            margin-left: 12px; /* Giảm margin left */
-            transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
+            font-size: 16px;
+            margin-left: 16px; /* Increased button margin */
+            transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease; /* Button transitions - also borderRadius */
         }
-
 
         .input-area button:hover {
             background-color: var(--button-primary-hover-color);
-            transform: scale(1.02); /* Giảm scale hover */
+            transform: scale(1.03); /* Subtle scale up on hover */
         }
-
 
         .file-upload-button {
             background-color: #555;
             color: white;
             border: none;
-            border-radius: 10px; /* Giảm độ bo tròn file button */
+            border-radius: 16px; /* Rounded file button */
             cursor: pointer;
-            font-size: 0.9em; /* Giảm font size file button */
-            width: 40px; /* Giảm width */
-            height: 40px; /* Giảm height */
+            font-size: 1em;
+            width: 44px; /* Slightly wider file button */
+            height: 44px; /* Slightly taller file button */
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-right: 12px; /* Giảm margin right */
-            opacity: 0.8; /* Điều chỉnh opacity */
-            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
+            margin-right: 16px; /* Increased margin */
+            opacity: 0.9; /* Increased opacity */
+            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease; /* File button transitions - also borderRadius */
         }
-
 
         .file-upload-button:hover {
             opacity: 1;
             background-color: #666;
-            transform: scale(1.02); /* Giảm scale hover */
+             transform: scale(1.03); /* Subtle scale up on hover */
         }
+
 
         .sidebar {
             position: fixed;
@@ -284,30 +267,28 @@
             background-color: var(--sidebar-background-color);
             color: var(--sidebar-text-color);
             transform: translateX(-100%);
-            transition: transform 0.3s ease, background-color 0.3s ease;
+            transition: transform 0.3s ease, background-color 0.3s ease; /* Sidebar background transition */
             z-index: 200;
-            padding-top: 60px; /* Giảm padding top */
-            box-shadow: 4px 0 8px rgba(0,0,0,0.3); /* Điều chỉnh sidebar shadow */
+            padding-top: 70px; /* Increased sidebar top padding */
+            box-shadow: 6px 0 12px rgba(0,0,0,0.4); /* More pronounced sidebar shadow */
             overflow-y: auto;
             touch-action: manipulation;
             border-right: 1px solid #444;
-            backdrop-filter: blur(8px); /* Giảm độ blur */
+             backdrop-filter: blur(12px); /* Stronger frosted glass effect */
         }
-
 
         .sidebar.sidebar--open {
             transform: translateX(0);
         }
 
         .sidebar-header {
-            padding: 20px 15px; /* Giảm padding header */
+            padding: 28px 24px; /* Adjusted header padding */
             text-align: center;
-            border-bottom: 1px solid #555;
-            margin-bottom: 20px; /* Giảm margin bottom */
+            border-bottom: 1px solid #555; /* Thinner header border */
+            margin-bottom: 30px;
             border-bottom: 1px solid #444;
-            transition: background-color 0.3s ease, border-bottom-color 0.3s ease;
+            transition: background-color 0.3s ease, border-bottom-color 0.3s ease; /* Sidebar header background & border transition */
         }
-
 
         .sidebar-menu {
             padding: 0;
@@ -315,46 +296,46 @@
         }
 
         .sidebar-menu-item {
-            padding: 15px 20px; /* Giảm padding menu item */
+            padding: 18px 24px; /* Adjusted menu item padding */
             cursor: pointer;
-            transition: background-color 0.2s ease, border-bottom-color 0.3s ease, color 0.3s ease, padding-left 0.2s ease;
+            transition: background-color 0.2s ease, border-bottom-color 0.3s ease, color 0.3s ease, padding-left 0.2s ease; /* Menu item transitions - also padding-left */
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid transparent;
-             font-size: 15px; /* Giảm font size menu item */
+            border-bottom: 1px solid transparent; /* Thinner bottom border on hover */
         }
-        .sidebar-menu-item:active {
-             background-color: #3a3b47;
+         .sidebar-menu-item:active {
+             background-color: #3a3b47; /* slightly darker on active click for feedback */
          }
+
 
         .sidebar-menu-item:hover {
             background-color: #343541;
-            border-bottom-color: var(--button-primary-color);
-            padding-left: 25px; /* Giảm indent hover */
+             border-bottom-color: var(--button-primary-color);
+             padding-left: 30px; /* Slightly indented on hover for visual feedback */
         }
 
         .sidebar-menu-item.has-submenu > .menu-link::after {
             content: '>';
             float: right;
-            margin-left: 10px; /* Giảm margin left */
-            font-size: 0.8em; /* Giảm font size submenu indicator */
+            margin-left: 12px;
+            font-size: 0.9em;
             display: inline-block;
-            color: #aaa;
+            color: #aaa; /* Lighter submenu indicator */
         }
 
         .submenu {
             list-style: none;
             padding-left: 0;
             margin: 0;
-            border-radius: 10px; /* Giảm độ bo tròn submenu */
+            border-radius: 16px; /* Rounded submenu */
             overflow: hidden;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.35); /* Điều chỉnh submenu shadow */
+            box-shadow: 0 5px 10px rgba(0,0,0,0.45); /* Deeper submenu shadow */
             background-color: #2c2c2c;
-            margin-top: 10px; /* Giảm margin top */
+            margin-top: 12px; /* Increased margin top */
             max-height: 0;
             opacity: 0;
-            transition: max-height 0.4s ease-out, opacity 0.3s ease-out, background-color 0.3s ease, margin-top 0.3s ease;
+            transition: max-height 0.4s ease-out, opacity 0.3s ease-out, background-color 0.3s ease, margin-top 0.3s ease; /* Submenu transitions and background transition & marginTop */
             overflow-y: hidden;
             padding-top: 0;
             padding-bottom: 0;
@@ -362,43 +343,43 @@
 
         .submenu.open {
             display: block;
-            max-height: 500px; /* Giảm max height submenu */
+            max-height: 600px; /* Increased max-height for submenu */
             opacity: 1;
             overflow-y: auto;
-            padding-top: 10px;
-            padding-bottom: 12px; /* Giảm padding bottom */
-            margin-top: 12px; /* Giảm margin top khi mở */
+            padding-top: 12px;
+            padding-bottom: 16px;
+            margin-top: 16px; /* increased marginTop when opened */
         }
 
 
         .submenu-item {
-            padding: 12px 20px; /* Giảm padding submenu item */
+            padding: 16px 24px; /* Adjusted submenu item padding */
             cursor: pointer;
-            transition: background-color 0.2s ease, color 0.3s ease, padding-left 0.2s ease;
+            transition: background-color 0.2s ease, color 0.3s ease, padding-left 0.2s ease; /* Submenu item transitions - also padding-left */
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #333;
-             font-size: 15px; /* Giảm font size submenu item */
         }
          .submenu-item:active {
-             background-color: #3a3b47;
+             background-color: #3a3b47; /* slightly darker on active click for feedback */
          }
+
 
         .submenu-item:last-child {
             border-bottom: none;
         }
 
+
         .submenu-item:hover {
             background-color: #343541;
-            padding-left: 25px; /* Giảm indent submenu item hover */
+            padding-left: 30px; /* Indented on submenu item hover too */
         }
-
 
         .history-name {
             flex-grow: 1;
-            transition: color 0.3s ease;
-            opacity: 0.9;
+             transition: color 0.3s ease; /* History name text color transition */
+             opacity: 0.9; /* slightly less opaque history names */
         }
 
         .delete-history-btn {
@@ -406,9 +387,9 @@
             border: none;
             color: #aaa;
             cursor: pointer;
-            font-size: 0.9em; /* Giảm font size delete button */
-            padding: 0 8px; /* Giảm padding delete button */
-            opacity: 0.6; /* Điều chỉnh opacity */
+            font-size: 1em;
+            padding: 0 10px; /* Adjusted delete button padding */
+            opacity: 0.7; /* Lower opacity initially */
             transition: opacity 0.2s ease, color 0.2s ease;
         }
 
@@ -417,34 +398,32 @@
             color: #fff;
         }
 
-
         .sidebar-toggle-button {
             position: fixed;
-            top: 25px; /* Giảm top position */
-            left: 25px; /* Giảm left position */
+            top: 30px; /* Adjusted toggle button position */
+            left: 30px;
             background: var(--button-primary-color);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 45px; /* Giảm width */
-            height: 45px; /* Giảm height */
+            width: 50px; /* Slightly larger toggle button */
+            height: 50px; /* Slightly larger toggle button */
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             z-index: 300;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Điều chỉnh toggle button shadow */
-            transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
+             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35); /* Added shadow to toggle button */
+             transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease; /* Button transitions - also borderRadius */
         }
-
 
         .sidebar-toggle-button:hover {
             background-color: var(--button-primary-hover-color);
-            transform: scale(1.03);
+             transform: scale(1.05); /* Subtle scale up on hover */
         }
-         .sidebar-toggle-button:active {
-             transform: scale(0.98);
-             opacity: 0.95;
+        .sidebar-toggle-button:active {
+             transform: scale(0.98); /* subtle scale down on active click for feedback */
+             opacity: 0.95; /* slight opacity reduction for feedback */
          }
 
         .sidebar-overlay {
@@ -453,41 +432,40 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Giảm độ đậm overlay */
+            background-color: rgba(0, 0, 0, 0.6); /* Slightly darker overlay */
             z-index: 150;
             display: none;
-            opacity: 0;
-            transition: opacity 0.3s ease, background-color 0.3s ease;
+            opacity: 0; /* Hidden initially */
+            transition: opacity 0.3s ease, background-color 0.3s ease; /* Modal overlay transitions */
+
         }
 
         .sidebar-overlay.sidebar--open {
             display: block;
-            opacity: 1;
+            opacity: 1; /* Fade in when sidebar opens */
         }
 
-
         .close-history-menu-btn, .close-settings-menu-btn, .modal-button {
-            padding: 12px 20px; /* Giảm padding close button */
+            padding: 14px 24px; /* Adjusted close button padding */
             background-color: var(--button-primary-color);
             color: white;
             border: none;
-            border-radius: 10px; /* Giảm độ bo tròn close button */
+            border-radius: 16px; /* Rounded close button */
             cursor: pointer;
-            margin-top: 15px; /* Giảm margin top */
+            margin-top: 20px; /* Increased marginTop for close buttons */
             display: block;
             margin-left: auto;
             margin-right: auto;
-            transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
-             font-size: 15px; /* Giảm font size close button */
+            transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease; /* Close button transitions - also borderRadius */
         }
 
         .close-history-menu-btn:hover, .close-settings-menu-btn:hover, .modal-button.confirm:hover {
             background-color: var(--button-primary-hover-color);
-            transform: scale(1.02); /* Giảm scale hover */
+             transform: scale(1.03); /* Subtle scale up on hover */
         }
          .close-history-menu-btn:active, .close-settings-menu-btn:active,  .modal-button.confirm:active {
-             transform: scale(0.98);
-             opacity: 0.95;
+             transform: scale(0.98); /* subtle scale down on active click for feedback */
+             opacity: 0.95; /* slight opacity reduction for feedback */
          }
 
 
@@ -498,11 +476,11 @@
 
         .modal-button.cancel:hover {
             background-color: #666;
-            transform: scale(1.02); /* Giảm scale hover */
+             transform: scale(1.03); /* Subtle scale up on hover */
         }
          .modal-button.cancel:active {
-             transform: scale(0.98);
-             opacity: 0.95;
+             transform: scale(0.98); /* subtle scale down on active click for feedback */
+             opacity: 0.95; /* slight opacity reduction for feedback */
          }
 
 
@@ -513,20 +491,19 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); /* Giảm độ đậm modal overlay */
+            background-color: rgba(0, 0, 0, 0.7); /* Darker modal overlay */
             z-index: 400;
             justify-content: center;
             align-items: center;
             pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s ease, background-color 0.3s ease;
-            backdrop-filter: blur(6px); /* Giảm độ blur modal overlay */
+            opacity: 0; /* Hidden initially */
+            transition: opacity 0.3s ease, background-color 0.3s ease; /* Modal overlay transitions */
+            backdrop-filter: blur(10px); /* Apply blur to modal overlay */
         }
-
 
         .custom-modal-overlay.show-modal {
             display: flex;
-            opacity: 1;
+            opacity: 1; /* Fade in when modal opens */
             pointer-events: auto;
         }
 
@@ -534,158 +511,147 @@
         .custom-modal {
             background-color: var(--modal-background-color);
             color: #fff;
-            padding: 25px; /* Giảm padding modal */
-            border-radius: 15px; /* Giảm độ bo tròn modal */
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* Điều chỉnh modal shadow */
-            width: 80%; /* Giảm width modal */
-            max-width: 450px; /* Giảm max width modal */
+            padding: 35px; /* Increased modal padding */
+            border-radius: 24px; /* More rounded modal */
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.7); /* Deeper modal shadow */
+            width: 85%; /* Slightly wider modal */
+            max-width: 500px; /* Increased max width for modal */
             text-align: center;
-            border: none;
-            transform: scale(0.95); /* Giảm scale start */
-            opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, border-radius 0.3s ease;
+            border: none; /* Remove default border */
+            transform: scale(0.97); /* Start slightly smaller */
+            opacity: 0; /* Hidden initially */
+            transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, border-radius 0.3s ease; /* Modal transitions and background/borderRadius transition */
         }
 
-
         .custom-modal-overlay.show-modal .custom-modal {
-            transform: scale(1);
-            opacity: 1;
+            transform: scale(1); /* Scale up to normal size when visible */
+            opacity: 1; /* Fade in when modal opens */
         }
 
 
         .modal-message {
-            margin-bottom: 20px; /* Giảm margin bottom modal message */
-            font-size: 1.1em; /* Giảm font size modal message */
-            transition: color 0.3s ease;
-            font-weight: 500;
-            opacity: 0.9;
+            margin-bottom: 25px; /* Increased modal message margin */
+            font-size: 1.2em; /* Slightly larger modal message font */
+             transition: color 0.3s ease; /* Modal message text color transition */
+             font-weight: 500; /* Medium font weight for modal message */
+             opacity: 0.95;
         }
-
 
         .modal-input {
-            width: calc(100% - 20px);
-            padding: 12px 14px; /* Giảm padding modal input */
-            margin-bottom: 20px; /* Giảm margin bottom modal input */
-            border-radius: 8px; /* Giảm độ bo tròn modal input */
-            border: none;
+            width: calc(100% - 24px);
+            padding: 14px 16px; /* Adjusted modal input padding */
+            margin-bottom: 25px; /* Increased margin for modal input */
+            border-radius: 12px;
+            border: none; /* Remove modal input border */
             background-color: var(--input-text-background-color);
             color: #fff;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3); /* Điều chỉnh inner shadow modal input */
-            transition: background-color 0.3s ease, color 0.3s ease;
-             font-size: 15px; /* Giảm font size modal input */
+             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.35); /* Deeper inner shadow for modal input */
+             transition: background-color 0.3s ease, color 0.3s ease; /* Modal input background & text transition */
         }
-
 
         .modal-buttons {
             display: flex;
             justify-content: center;
-            gap: 20px; /* Giảm gap modal buttons */
-            margin-top: 8px; /* Giảm margin top modal buttons */
+            gap: 25px; /* Increased gap between modal buttons */
+            margin-top: 10px; /* added margin to the modal buttons group */
         }
 
         .modal-button {
-            padding: 12px 24px; /* Giảm padding modal button */
+            padding: 14px 28px; /* Adjusted modal button padding */
             border: none;
-            border-radius: 10px; /* Giảm độ bo tròn modal button */
+            border-radius: 16px;
             cursor: pointer;
-            font-size: 15px; /* Giảm font size modal button */
-            transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
-            border: none;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Điều chỉnh shadow modal button */
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease; /* Modal buttons transitions - also borderRadius */
+            border: none; /* Remove modal button border */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25); /* Add shadow to modal buttons */
         }
-
 
         code[class*="language-"],
         pre[class*="language-"] {
-            color: var(--chatgpt-text); /* Màu chữ code ChatGPT */
-            background: var(--chatgpt-code-bg); /* Nền code block ChatGPT */
+            color: #f8f8f2;
+            background: #272822;
             position: relative;
-            border-radius: 10px; /* Giảm độ bo tròn code blocks */
-            padding: 15px; /* Giảm padding code block */
-            margin-bottom: 15px; /* Giảm margin bottom code blocks */
-            overflow-x: auto;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Điều chỉnh code block shadow */
-            font-size: 14px; /* Giảm font size code blocks */
-            line-height: 1.5; /* Điều chỉnh line height code blocks */
+            border-radius: 12px; /* Rounded code blocks */
+            padding: 20px; /* Increased code block padding */
+            margin-bottom: 20px; /* Increased margin below code blocks */
+            overflow-x: auto; /* Horizontal scroll if code is wide */
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); /* Shadow for code blocks */
         }
-
 
         .copy-code-button {
             position: absolute;
-            top: 8px; /* Giảm top position copy button */
-            right: 8px; /* Giảm right position copy button */
+            top: 12px; /* Adjusted copy button position */
+            right: 12px;
             background-color: #444;
             color: white;
             border: none;
-            border-radius: 8px; /* Giảm độ bo tròn copy button */
-            padding: 6px 10px; /* Giảm padding copy button */
-            font-size: 0.8em; /* Giảm font size copy button */
+            border-radius: 12px;
+            padding: 8px 12px; /* Adjusted copy button padding */
+            font-size: 0.9em;
             cursor: pointer;
-            opacity: 0.6; /* Điều chỉnh opacity */
-            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
+            opacity: 0.7; /* slightly lower opacity for copy button */
+            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease; /* Copy button transitions - also borderRadius */
         }
 
         .copy-code-button:hover {
             opacity: 1;
             background-color: var(--button-primary-color);
-            transform: scale(1.03);
+             transform: scale(1.05); /* Subtle scale up on hover */
         }
          .copy-code-button:active {
-             transform: scale(0.98);
-             opacity: 0.9;
+             transform: scale(0.98); /* subtle scale down on active click for feedback */
+             opacity: 0.9; /* slight opacity reduction for feedback */
          }
 
-        /* Setting Styles - Giữ nguyên các style setting, chỉ cần điều chỉnh padding và font-size nếu cần */
+
+        /* Settings Styles */
         .setting-item {
-            padding: 15px 20px;
+            padding: 18px 24px; /* Adjusted setting-item padding */
             border-bottom: 1px solid #333;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: background-color 0.3s ease, border-bottom-color 0.3s ease, padding-left 0.2s ease;
-             font-size: 15px; /* Giảm font size setting item */
+             transition: background-color 0.3s ease, border-bottom-color 0.3s ease, padding-left 0.2s ease; /* Setting item transitions - also padding-left */
         }
-
 
         .setting-item:last-child {
             border-bottom: none;
         }
          .setting-item:active {
-             background-color: #3a3b47;
+             background-color: #3a3b47; /* slightly darker on active click for feedback */
          }
 
 
         .setting-item:hover {
             background-color: #343541;
-            padding-left: 25px;
+            padding-left: 30px; /* Indent settings items on hover too */
         }
+
 
         .setting-label {
             flex-grow: 1;
-            transition: color 0.3s ease;
-            opacity: 0.9;
-            font-weight: 400;
+             transition: color 0.3s ease; /* Setting label text color transition */
+             opacity: 0.9; /* slightly less opaque setting label */
+             font-weight: 400; /* regular font weight for setting labels */
         }
 
         .setting-control {
             /* Style for controls like toggle or color picker */
         }
 
-
         .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 45px; /* Giảm width toggle */
-            height: 22px; /* Giảm height toggle */
+            width: 50px;
+            height: 24px;
         }
-
 
         .toggle-switch input[type="checkbox"] {
             opacity: 0;
             width: 0;
             height: 0;
         }
-
 
         .slider {
             position: absolute;
@@ -695,17 +661,17 @@
             right: 0;
             bottom: 0;
             background-color: #ccc;
-            transition: .4s, background-color 0.3s ease;
-            border-radius: 30px; /* Giảm độ bo tròn slider */
+            transition: .4s, background-color 0.3s ease; /* Slider transitions and background color transition */
+            border-radius: 34px;
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 16px; /* Giảm height slider before */
-            width: 16px; /* Giảm width slider before */
-            left: 2px; /* Điều chỉnh left position */
-            bottom: 2px; /* Điều chỉnh bottom position */
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
             background-color: white;
             transition: .4s;
             border-radius: 50%;
@@ -719,25 +685,24 @@
             box-shadow: 0 0 1px var(--button-primary-color);
         }
 
-
         input:checked + .slider:before {
-            transform: translateX(23px); /* Điều chỉnh translateX */
+            transform: translateX(26px);
         }
         .color-picker-input {
             padding: 0;
             border: none;
-            width: 28px; /* Giảm width color picker */
-            height: 22px; /* Giảm height color picker */
+            width: 30px;
+            height: 24px;
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
             background-color: transparent;
             cursor: pointer;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+             transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Color picker transitions */
         }
          .color-picker-input:hover, .color-picker-input:focus {
              border-color: var(--button-primary-color);
-             box-shadow: 0 0 4px rgba(0, 188, 212, 0.5);
+             box-shadow: 0 0 5px rgba(0, 188, 212, 0.5);
              outline: none;
          }
 
@@ -747,20 +712,21 @@
         }
         .color-picker-input::-webkit-color-swatch {
             border: 1px solid #555;
-            border-radius: 5px; /* Giảm độ bo tròn color picker swatch */
+            border-radius: 6px;
         }
         .color-picker-input::-moz-color-swatch-wrapper {
             padding: 0;
         }
         .color-picker-input::-moz-color-swatch {
             border: 1px solid #555;
-            border-radius: 5px; /* Giảm độ bo tròn color picker swatch */
+            border-radius: 6px;
         }
+
 
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/okaidia.min.css" /> <!-- Thay đổi theme PrismJS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
@@ -826,11 +792,12 @@
                     <input type="color" id="containerColorPicker" class="color-picker-input" value="#25272b">
                 </span>
             </li>
-            <li class="setting-item" style="justify-content: center; border-bottom: none; padding-top: 20px;">
+            <li class="setting-item" style="justify-content: center; border-bottom: none; padding-top: 25px;">
                 <button class="modal-button confirm" onclick="saveSettingsAndApplyTheme()">Lưu cài đặt</button>
                 <button class="modal-button cancel" onclick="resetTheme()">Hoàn tác</button>
             </li>
         </ul>
+
 
         <div class="custom-modal-overlay" id="saveHistoryModalOverlay">
             <div class="custom-modal">
@@ -881,9 +848,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script> <!-- Thêm component python -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>    <!-- Thêm component css -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>   <!-- Thêm component json -->
     <script>
         const apiKey = 'AIzaSyCl21Ku_prQnyMHFs_dJRL8-pgjg9hrc2w';
         const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
@@ -895,12 +859,12 @@
         let autoSaveHistory = true;
         let useFirstMessageAsName = false;
 
-        // Theme Variables
+        // Theme Variables - Store current values, not yet applied until "Save"
         let currentBackgroundColor = '#1e2124';
         let currentTextColor = '#d1d5db';
         let currentContainerColor = '#25272b';
 
-        // Default Theme Values
+        // Default Theme Values for Reset Functionality
         const defaultBackgroundColor = '#1e2124';
         const defaultTextColor = '#d1d5db';
         const defaultContainerColor = '#25272b';
@@ -947,18 +911,14 @@
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
                 const messageTextSpan = document.createElement('span');
                 messageTextSpan.classList.add('ai-message-text');
-
-                // **Process Code Blocks and Text for Both User and AI messages**
-                let processedContentHTML = processContentWithCodeHighlighting(message.parts[0].text);
-                messageTextSpan.innerHTML = processedContentHTML;
-
+                messageTextSpan.innerHTML = message.parts[0].text;
                 if (message.role === 'ai') {
                     messageDiv.appendChild(messageTextSpan);
                 } else {
-                    messageDiv.appendChild(messageTextSpan); // User message uses messageTextSpan now too.
+                    messageDiv.innerHTML = message.parts[0].text;
                 }
                 messagesContainer.appendChild(messageDiv);
-                Prism.highlightAllUnder(messageDiv); // Re-highlight after rendering all messages.
+                Prism.highlightAllUnder(messageDiv);
             });
              messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
@@ -994,7 +954,7 @@
             let historyName = document.getElementById('historyNameInput').value.trim();
             if (!historyName) {
                 if (useFirstMessageAsNameSetting() && conversationHistory.length > 0 && conversationHistory[0].role === 'user') {
-                    historyName = conversationHistory[0].parts[0].text.substring(0, 50) || 'No Title';
+                    historyName = conversationHistory[0].parts[0].text.substring(0, 50) || 'No Title'; // Use first message as fallback, with 'No Title' if still empty
                 } else {
                     alert("Vui lòng nhập tên cho lịch sử chat.");
                     return;
@@ -1006,7 +966,7 @@
             alert(`Lịch sử chat đã được lưu với tên: ${historyName}`);
             loadSavedHistoriesList();
             closeSaveHistoryModal();
-             currentHistoryName = historyName;
+             currentHistoryName = historyName; // set current history name after save
 
         }
 
@@ -1034,7 +994,7 @@
             localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
             loadSavedHistoriesList();
             alert(`Lịch sử chat "${historyName}" đã bị xóa.`);
-            if (currentHistoryName === historyName) {
+            if (currentHistoryName === historyName) { // if deleted history was the current one, reset
                 currentHistoryName = null;
             }
 
@@ -1048,7 +1008,7 @@
                 renderMessages();
                 toggleHistoryMenu();
                 toggleSidebar();
-                currentHistoryName = historyName;
+                currentHistoryName = historyName; // set current history name when loaded
 
             } else {
                 alert("Không tìm thấy lịch sử chat đã lưu.");
@@ -1145,7 +1105,7 @@
 
                 const userMessageDiv = document.createElement('div');
                 userMessageDiv.classList.add('message', 'user-message');
-                userMessageDiv.innerHTML = `<span class="ai-message-text">${userMessage}</span>`; // Use processContent... if you need markdown in user messages too
+                userMessageDiv.textContent = userMessage;
                 messagesContainer.appendChild(userMessageDiv);
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
@@ -1154,7 +1114,7 @@
                 saveChatHistory();
                 renderMessages();
 
-                // Simulate AI acknowledging the file
+                // Simulate AI acknowledging the file (for UI purposes - actual file upload to Gemini needs server-side)
                 setTimeout(() => {
                     aiMessageDiv.remove();
 
@@ -1173,45 +1133,6 @@
             }
         }
 
-        // **Moved Code Processing to a Separate Function (for reusability)**
-        function processContentWithCodeHighlighting(text) {
-            let processedText = text;
-            processedText = processedText.replace(/\*\*([^*]+)\*\*/g, '<span class="markdown-bold-uppercase">$1</span>');
-
-            let textContent = '';
-            let codeContent = null;
-            let language = 'text';
-            const codeBlockRegex = /```([\w]*)\n([\s\S]*?)```/gm;
-            let lastIndex = 0;
-            let match;
-            let finalHTML = ''; // Accumulate HTML here
-
-            while ((match = codeBlockRegex.exec(processedText)) !== null) {
-                textContent = processedText.substring(lastIndex, match.index);
-                if (textContent.trim()) {
-                    finalHTML += `<p>${textContent.trim()}</p>`;
-                }
-
-                language = match[1] || 'text';
-                codeContent = match[2].trim();
-
-                finalHTML += `<pre class="language-${language}"><code class="language-${language}">${codeContent}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button></pre>`;
-
-                lastIndex = codeBlockRegex.lastIndex;
-            }
-
-            textContent = processedText.substring(lastIndex);
-            if (textContent.trim()) {
-                finalHTML += `<p>${textContent.trim()}</p>`;
-            }
-             if (!finalHTML && processedText.trim()) {
-                 finalHTML = processedText.trim(); // Plain text if no code and not empty
-             } else if (!finalHTML) {
-                 finalHTML = "Không có phản hồi nội dung từ AI."; // Default if completely empty response.
-             }
-            return finalHTML;
-        }
-
 
         async function getGeminiResponse() {
             const userPrompt = document.getElementById('user-prompt').value.trim();
@@ -1222,15 +1143,16 @@
                 return;
             }
 
-             if (currentHistoryName) { // if in a saved history, save immediately
+             if (currentHistoryName) { // if in a saved history, save history with new message immediately
                 savedHistories[currentHistoryName] = [...conversationHistory, { role: 'user', parts: [{ text: userPrompt }] } ];
                 localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
             }
 
+
             const userMessageObject = { role: 'user', parts: [{ text: userPrompt }] };
             conversationHistory.push(userMessageObject);
             saveChatHistory();
-            renderMessages(); // Re-render messages after user message is added
+            renderMessages();
             document.getElementById('user-prompt').value = '';
 
 
@@ -1277,40 +1199,83 @@
                     const aiTextContentSpan = document.createElement('span');
                     aiTextContentSpan.classList.add('ai-message-text');
 
-                    aiTextContentSpan.innerHTML = processContentWithCodeHighlighting(aiResponseText); // Use the function here
+                    let processedText = aiResponseText;
+
+                    processedText = processedText.replace(/\*\*([^*]+)\*\*/g, '<span class="markdown-bold-uppercase">$1</span>');
+
+
+                    let textContent = '';
+                    let codeContent = null;
+                    let language = 'text';
+                    const codeBlockRegex = /```([\w]*)\n([\s\S]*?)```/gm;
+                    let lastIndex = 0;
+                    let match;
+
+                    while ((match = codeBlockRegex.exec(processedText)) !== null) {
+                        textContent = processedText.substring(lastIndex, match.index);
+                        if (textContent.trim()) {
+                            const textPara = document.createElement('p');
+                            textPara.innerHTML = textContent.trim();
+                            aiTextContentSpan.appendChild(textPara);
+                        }
+
+                        language = match[1] || 'text';
+                        codeContent = match[2].trim();
+
+                        const codePre = document.createElement('pre');
+                        codePre.classList.add('language-' + language);
+
+                        const codeElement = document.createElement('code');
+                        codeElement.classList.add('language-' + language);
+                        codeElement.textContent = codeContent;
+                        codePre.appendChild(codeElement);
+
+                        const copyButton = document.createElement('button');
+                        copyButton.classList.add('copy-code-button');
+                        copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+                        copyButton.onclick = function() { // Modified to use a proper function
+                            console.log('Copy button clicked'); // Debugging log
+                            navigator.clipboard.writeText(codeContent).then(() => {
+                                alert('Đã sao chép code vào clipboard!');
+                            }).catch(err => {
+                                console.error('Lỗi khi sao chép: ', err);
+                                alert('Lỗi khi sao chép code.');
+                            });
+                        };
+                        codePre.appendChild(copyButton);
+
+                        aiTextContentSpan.appendChild(codePre);
+
+                        lastIndex = codeBlockRegex.lastIndex;
+                    }
+
+                    textContent = processedText.substring(lastIndex);
+                    if (textContent.trim()) {
+                         const textPara = document.createElement('p');
+                         textPara.innerHTML = textContent.trim();
+                         aiTextContentSpan.appendChild(textPara);
+                    }
+
+
+                    if (!aiTextContentSpan.hasChildNodes() && processedText.trim()) {
+                         aiTextContentSpan.innerHTML = processedText.trim();
+                    } else if (!aiTextContentSpan.hasChildNodes()) {
+                         aiTextContentSpan.textContent = "Không có phản hồi nội dung từ AI.";
+                    }
 
                     aiMessageDiv.appendChild(aiTextContentSpan);
-
 
                     const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
                     conversationHistory.push(aiMessageObject);
 
-                     if (currentHistoryName) { // If in saved history, update it
+                     if (currentHistoryName) { // If in saved history, update it with AI response
                         savedHistories[currentHistoryName] = [...conversationHistory];
                         localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
                     } else {
                          saveChatHistory(); // only save to 'chatHistory' if not a named saved history.
                     }
 
-                    // **Re-attach Copy Button Listeners After Rendering New Message**
-                    aiMessageDiv.querySelectorAll('.copy-code-button').forEach(button => {
-                         button.addEventListener('click', async (event) => {
-                             const codeElement = event.target.closest('pre').querySelector('code');
-                             const codeContent = codeElement ? codeElement.textContent : null;
-                             if (codeContent) {
-                                 try {
-                                     await navigator.clipboard.writeText(codeContent);
-                                     alert('Đã sao chép code vào clipboard!');
-                                 } catch (err) {
-                                     console.error('Lỗi khi sao chép: ', err);
-                                     alert('Lỗi khi sao chép code.');
-                                 }
-                             }
-                         });
-                     });
-
-
-                    Prism.highlightAllUnder(aiMessageDiv); // Re-highlight this new message only.
+                    Prism.highlightAllUnder(aiMessageDiv);
                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
 
@@ -1324,9 +1289,8 @@
             }
         }
 
-        // Settings Functions - (No changes here from last version)
+        // Settings Functions
         function loadSettings() {
-            // ... (rest of settings functions are same as last updated version)
             const storedSettings = localStorage.getItem('chatSettings');
             if (storedSettings) {
                 const settings = JSON.parse(storedSettings);
@@ -1362,13 +1326,13 @@
                 // Settings are only saved to localstorage on "Save" button click now.
             });
             document.getElementById('backgroundColorPicker').addEventListener('change', function() {
-                currentBackgroundColor = this.value;
+                currentBackgroundColor = this.value; // Update current value, but apply only on Save
             });
              document.getElementById('textColorPicker').addEventListener('change', function() {
-                currentTextColor = this.value;
+                currentTextColor = this.value; // Update current value, but apply only on Save
             });
             document.getElementById('containerColorPicker').addEventListener('change', function() {
-                currentContainerColor = this.value;
+                currentContainerColor = this.value; // Update current value, but apply only on Save
             });
         }
 
