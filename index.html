@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Hiện Đại với Gemini</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
         :root {
             --background-color: #1e2124;
@@ -19,8 +19,6 @@
             --sidebar-background-color: #252525;
             --sidebar-text-color: #fff;
             --modal-background-color: #343541;
-            --transition-duration: 0.2s; /* Standard transition duration */
-            --transition-easing: ease-out; /* Standard transition easing */
         }
 
         body {
@@ -41,16 +39,15 @@
             touch-action: manipulation;
             -webkit-text-size-adjust: 100%;
             font-size: 16px;
-            overflow-y: scroll;
-            scrollbar-width: thin;
-            scrollbar-color: #444 #252525;
-            transition: background-color var(--transition-duration) var(--transition-easing), color var(--transition-duration) var(--transition-easing);
-            overscroll-behavior-y: contain; /* Prevent pull-to-refresh interference */
+            overflow-y: scroll; /* Ensure scrollbar for very long content */
+            scrollbar-width: thin; /* For Firefox */
+            scrollbar-color: #444 #252525; /* For Firefox */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Global text and background transition */
         }
 
         /* Chrome, Safari and Opera scrollbar styling */
         body::-webkit-scrollbar {
-            width: 6px; /* Thinner scrollbar */
+            width: 8px;
         }
 
         body::-webkit-scrollbar-track {
@@ -59,7 +56,7 @@
 
         body::-webkit-scrollbar::-webkit-scrollbar-thumb {
             background-color: #444;
-            border-radius: 3px; /* More rounded scrollbar thumb */
+            border-radius: 4px;
         }
 
 
@@ -67,18 +64,17 @@
             width: 95%;
             max-width: 1200px;
             margin: 20px auto;
-            padding: 30px;
+            padding: 30px; /* Increased padding */
             background-color: var(--container-background-color);
-            border-radius: 20px; /* Even more rounded container */
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6); /* Deeper shadow */
+            border-radius: 16px; /* More rounded corners */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* Deeper shadow */
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 40px);
+            height: calc(100vh - 40px); /* Adjusted height with margin */
             flex-grow: 1;
             margin-left: auto;
-            transition: margin-left var(--transition-duration) var(--transition-easing), background-color var(--transition-duration) var(--transition-easing);
+            transition: margin-left 0.3s ease, background-color 0.3s ease; /* Container background transition */
             border: 1px solid #333;
-            padding-bottom: calc(20px + env(safe-area-inset-bottom)); /* Safe area for bottom nav */
         }
 
         .container.sidebar-open {
@@ -88,59 +84,52 @@
         h1 {
             text-align: center;
             color: #fff;
-            margin-bottom: 30px; /* Increased margin bottom for title */
-            font-size: 2.7em; /* Larger title */
-            letter-spacing: 0.7px;
-            padding-bottom: 25px;
-            border-bottom: 2px solid #444;
-            opacity: 0.95; /* Slightly reduce title opacity */
+            margin-bottom: 25px; /* Increased margin bottom */
+            font-size: 2.5em; /* Slightly larger title */
+            letter-spacing: 0.5px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #444; /* Thicker border */
         }
 
         #messages-container {
             flex-grow: 1;
-            padding: 30px; /* Increased padding */
+            padding: 25px; /* Increased padding */
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             scrollbar-width: thin;
             scrollbar-color: #555 #252525;
-            padding-bottom: 90px; /* Increased padding bottom for input area space */
-            border: none;
-            border-radius: 15px; /* More rounded messages container */
-            background-color: #1e2124;
-            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.4); /* Deeper inner shadow */
-            transition: background-color var(--transition-duration) var(--transition-easing);
-            scroll-behavior: smooth; /* Smooth scrolling for messages */
+            padding-bottom: 80px;
+            border: none; /* Removed border */
+            border-radius: 12px;
+            background-color: #1e2124; /* Consistent background */
+             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3); /* Inner shadow for depth */
+             transition: background-color 0.3s ease; /* Messages container background transition */
         }
 
         #messages-container::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
         }
 
-        #messages-container::-webkit-scrollbar-track {
+        #messages-container::-webkit-scrollbar::-webkit-scrollbar-track {
             background: #252525;
         }
 
         #messages-container::-webkit-scrollbar::-webkit-scrollbar-thumb {
             background-color: #555;
-            border-radius: 3px;
+            border-radius: 4px;
         }
 
         .message {
-            margin-bottom: 18px; /* Increased message margin */
-            padding: 14px 20px; /* Adjusted padding */
-            border-radius: 25px; /* Even more rounded message bubbles */
+            margin-bottom: 15px; /* Increased margin */
+            padding: 12px 18px; /* Adjusted padding */
+            border-radius: 20px; /* More rounded message bubbles */
             clear: both;
             word-wrap: break-word;
-            max-width: 85%; /* Slightly wider messages */
+            max-width: 80%;
             display: inline-block;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25); /* Slightly stronger message shadow */
-            opacity: 0.98; /* Slightly reduce message opacity */
-            transition: background-color var(--transition-duration) var(--transition-easing), color var(--transition-duration) var(--transition-easing), transform 0.15s var(--transition-easing); /* Message hover animation */
-        }
-
-        .message:hover {
-            transform: scale(1.01); /* Gentle scale up on hover for messages */
+             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Subtle message shadow */
+             transition: background-color 0.3s ease, color 0.3s ease; /* Message background and text color transition */
         }
 
         .user-message {
@@ -148,7 +137,7 @@
             color: #fff;
             align-self: flex-end;
             float: right;
-            border-top-right-radius: 8px;
+            border-top-right-radius: 5px;
         }
 
         .ai-message {
@@ -156,31 +145,29 @@
             color: var(--text-color);
             align-self: flex-start;
             float: left;
-            border-top-left-radius: 8px;
+            border-top-left-radius: 5px;
         }
 
         .ai-message .ai-message-text {
             font-family: 'Arial', sans-serif;
             font-weight: normal;
-            line-height: 1.7;
+            line-height: 1.7; /* Further improved line height */
             white-space: pre-line;
-            font-size: 17px; /* Slightly larger AI message text */
-            opacity: 0.9; /* Slightly reduced AI text opacity */
-            transition: color var(--transition-duration) var(--transition-easing);
+            font-size: 16px;
+             transition: color 0.3s ease; /* AI message text color transition */
         }
 
         .markdown-bold-uppercase {
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 0.8px; /* Adjusted letter spacing */
-            color: #f0f0f0;
-             opacity: 1; /* Full opacity for emphasized text */
+            letter-spacing: 0.6px; /* Adjusted letter spacing */
+            color: #f0f0f0; /* Slightly lighter color for emphasis */
         }
 
         .input-area {
-            padding: 15px 25px; /* Adjusted input area padding */
+            padding: 12px 20px; /* Adjusted input area padding */
             background-color: var(--input-area-background-color);
-            border-top: 2px solid #555;
+            border-top: 2px solid #555; /* Thicker border */
             display: flex;
             align-items: center;
             position: fixed;
@@ -188,76 +175,75 @@
             left: 0;
             width: 100%;
             box-sizing: border-box;
-            padding-left: 25px;
-            padding-right: 25px;
+            padding-left: 20px;
+            padding-right: 20px;
             z-index: 100;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-            border-top: 1px solid #444;
-            transition: background-color var(--transition-duration) var(--transition-easing);
-            padding-bottom: env(safe-area-inset-bottom); /* Safe area for bottom nav */
+            border-bottom-left-radius: 16px; /* More rounded input area */
+            border-bottom-right-radius: 16px;
+             border-top: 1px solid #444;
+             transition: background-color 0.3s ease; /* Input area background transition */
         }
 
         .input-area textarea {
             flex-grow: 1;
-            padding: 12px;
+            padding: 10px;
             border: 1px solid #555;
-            border-radius: 15px; /* More rounded textarea */
-            font-size: 17px; /* Slightly larger input text */
+            border-radius: 12px; /* More rounded textarea */
+            font-size: 16px;
             background-color: var(--input-text-background-color);
             color: #fff;
             resize: none;
-            min-height: 42px; /* Slightly increased min-height */
+            min-height: 38px; /* Slightly increased min-height */
             overflow-y: auto;
             border: 1px solid #444;
-            box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.4); /* Deeper inner shadow */
-            transition: background-color var(--transition-duration) var(--transition-easing), color var(--transition-duration) var(--transition-easing);
+             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3); /* Inner shadow for textarea */
+             transition: background-color 0.3s ease, color 0.3s ease; /* Textarea background and text color transition */
         }
 
         .input-area textarea:focus {
             border-color: var(--button-primary-color);
             outline: none;
-            box-shadow: 0 0 8px rgba(0, 188, 212, 0.7); /* More pronounced focus shadow */
+            box-shadow: 0 0 6px rgba(0, 188, 212, 0.6); /* More pronounced focus shadow */
         }
 
         .input-area button {
-            padding: 14px 24px; /* Adjusted button padding */
+            padding: 12px 22px; /* Adjusted button padding */
             background-color: var(--button-primary-color);
             color: white;
             border: none;
-            border-radius: 15px; /* More rounded button */
+            border-radius: 12px; /* Rounded button */
             cursor: pointer;
-            font-size: 17px; /* Slightly larger button text */
-            margin-left: 15px;
-            transition: background-color var(--transition-duration) var(--transition-easing), transform 0.15s var(--transition-easing);
+            font-size: 16px;
+            margin-left: 12px;
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Added transform transition */
         }
 
         .input-area button:hover {
             background-color: var(--button-primary-hover-color);
-            transform: scale(1.04); /* Slightly larger scale up on hover */
+            transform: scale(1.03); /* Subtle scale up on hover */
         }
 
         .file-upload-button {
             background-color: #555;
             color: white;
             border: none;
-            border-radius: 15px; /* Rounded file button */
+            border-radius: 12px; /* Rounded file button */
             cursor: pointer;
-            font-size: 1.1em;
-            width: 45px;
-            height: 45px;
+            font-size: 1em;
+            width: 40px;
+            height: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-right: 15px;
-            opacity: 0.9;
-            transition: opacity var(--transition-duration) var(--transition-easing), background-color var(--transition-duration) var(--transition-easing), transform 0.15s var(--transition-easing);
+            margin-right: 12px;
+            opacity: 0.9; /* Increased opacity */
+            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
         }
 
         .file-upload-button:hover {
             opacity: 1;
             background-color: #666;
-            transform: scale(1.04); /* Slightly larger scale up on hover */
+             transform: scale(1.03); /* Subtle scale up on hover */
         }
 
 
@@ -270,14 +256,14 @@
             background-color: var(--sidebar-background-color);
             color: var(--sidebar-text-color);
             transform: translateX(-100%);
-            transition: transform 0.25s var(--transition-easing), background-color var(--transition-duration) var(--transition-easing); /* Slightly faster sidebar transition */
+            transition: transform 0.3s ease, background-color 0.3s ease; /* Sidebar background transition */
             z-index: 200;
-            padding-top: 80px; /* Increased sidebar top padding */
-            box-shadow: 5px 0 10px rgba(0,0,0,0.4); /* More pronounced sidebar shadow */
+            padding-top: 70px; /* Increased sidebar top padding */
+            box-shadow: 4px 0 8px rgba(0,0,0,0.3); /* More pronounced sidebar shadow */
             overflow-y: auto;
             touch-action: manipulation;
             border-right: 1px solid #444;
-            backdrop-filter: blur(12px); /* Slightly stronger blur */
+             backdrop-filter: blur(10px); /* Frosted glass effect (may impact performance on low-end devices) */
         }
 
         .sidebar.sidebar--open {
@@ -285,12 +271,12 @@
         }
 
         .sidebar-header {
-            padding: 30px 25px; /* Adjusted header padding */
+            padding: 25px 20px; /* Adjusted header padding */
             text-align: center;
-            border-bottom: 2px solid #555;
-            margin-bottom: 30px;
+            border-bottom: 2px solid #555; /* Thicker header border */
+            margin-bottom: 25px;
             border-bottom: 1px solid #444;
-            transition: background-color var(--transition-duration) var(--transition-easing), border-bottom-color var(--transition-duration) var(--transition-easing);
+            transition: background-color 0.3s ease, border-bottom-color 0.3s ease; /* Sidebar header background & border transition */
         }
 
         .sidebar-menu {
@@ -299,42 +285,41 @@
         }
 
         .sidebar-menu-item {
-            padding: 18px 25px; /* Adjusted menu item padding */
+            padding: 16px 20px; /* Adjusted menu item padding */
             cursor: pointer;
-            transition: background-color 0.2s var(--transition-easing), border-bottom-color 0.2s var(--transition-easing), color var(--transition-duration) var(--transition-easing);
+            transition: background-color 0.2s ease, border-bottom-color 0.3s ease, color 0.3s ease; /* Menu item transitions */
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid transparent;
-            opacity: 0.95; /* Slightly reduce sidebar item opacity */
+            border-bottom: 2px solid transparent; /* Thicker bottom border on hover */
         }
 
         .sidebar-menu-item:hover {
             background-color: #343541;
-            border-bottom-color: var(--button-primary-color);
+             border-bottom-color: var(--button-primary-color);
         }
 
         .sidebar-menu-item.has-submenu > .menu-link::after {
             content: '>';
             float: right;
-            margin-left: 15px;
-            font-size: 1em;
+            margin-left: 12px;
+            font-size: 0.9em;
             display: inline-block;
-            color: #aaa;
+            color: #aaa; /* Lighter submenu indicator */
         }
 
         .submenu {
             list-style: none;
             padding-left: 0;
             margin: 0;
-            border-radius: 15px; /* More rounded submenu */
+            border-radius: 12px; /* Rounded submenu */
             overflow: hidden;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.5); /* Deeper submenu shadow */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4); /* Deeper submenu shadow */
             background-color: #2c2c2c;
-            margin-top: 10px;
+            margin-top: 8px;
             max-height: 0;
             opacity: 0;
-            transition: max-height 0.35s var(--transition-easing), opacity 0.25s var(--transition-easing), background-color var(--transition-duration) var(--transition-easing); /* Slightly smoother submenu transitions */
+            transition: max-height 0.4s ease-out, opacity 0.3s ease-out, background-color 0.3s ease; /* Submenu transitions and background transition */
             overflow-y: hidden;
             padding-top: 0;
             padding-bottom: 0;
@@ -342,23 +327,22 @@
 
         .submenu.open {
             display: block;
-            max-height: 600px;
+            max-height: 600px; /* Increased max-height for submenu */
             opacity: 1;
             overflow-y: auto;
-            padding-top: 10px;
-            padding-bottom: 15px;
+            padding-top: 8px;
+            padding-bottom: 12px;
         }
 
 
         .submenu-item {
-            padding: 16px 25px; /* Adjusted submenu item padding */
+            padding: 14px 20px; /* Adjusted submenu item padding */
             cursor: pointer;
-            transition: background-color 0.2s var(--transition-easing), color var(--transition-duration) var(--transition-easing);
+            transition: background-color 0.2s ease, color 0.3s ease; /* Submenu item transitions */
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #333;
-            opacity: 0.9; /* Slightly reduce submenu item opacity */
         }
 
         .submenu-item:last-child {
@@ -372,8 +356,7 @@
 
         .history-name {
             flex-grow: 1;
-            opacity: 0.95; /* Slightly reduce history name opacity */
-            transition: color var(--transition-duration) var(--transition-easing);
+             transition: color 0.3s ease; /* History name text color transition */
         }
 
         .delete-history-btn {
@@ -382,9 +365,9 @@
             color: #aaa;
             cursor: pointer;
             font-size: 1em;
-            padding: 0 12px; /* Adjusted delete button padding */
-            opacity: 0.7; /* Slightly reduced delete button opacity */
-            transition: opacity 0.2s var(--transition-easing), color 0.2s var(--transition-easing);
+            padding: 0 10px; /* Adjusted delete button padding */
+            opacity: 0.8; /* Increased opacity */
+            transition: opacity 0.2s ease, color 0.2s ease;
         }
 
         .delete-history-btn:hover {
@@ -394,27 +377,26 @@
 
         .sidebar-toggle-button {
             position: fixed;
-            top: 30px; /* Adjusted toggle button position */
-            left: 30px;
+            top: 25px; /* Adjusted toggle button position */
+            left: 25px;
             background: var(--button-primary-color);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 50px; /* Slightly larger toggle button */
-            height: 50px;
+            width: 45px; /* Slightly larger toggle button */
+            height: 45px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             z-index: 300;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); /* Deeper shadow for toggle button */
-            transition: background-color var(--transition-duration) var(--transition-easing), transform 0.15s var(--transition-easing);
-            opacity: 0.98; /* Slightly reduce toggle button opacity */
+             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Added shadow to toggle button */
+             transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .sidebar-toggle-button:hover {
             background-color: var(--button-primary-hover-color);
-            transform: scale(1.06); /* Slightly larger scale up on hover */
+             transform: scale(1.05); /* Subtle scale up on hover */
         }
 
         .sidebar-overlay {
@@ -423,35 +405,36 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7); /* Slightly darker overlay */
+            background-color: rgba(0, 0, 0, 0.6); /* Slightly darker overlay */
             z-index: 150;
             display: none;
-            opacity: 0;
-            transition: opacity 0.25s var(--transition-easing), background-color var(--transition-duration) var(--transition-easing); /* Slightly faster overlay transition */
+            opacity: 0; /* Hidden initially */
+            transition: opacity 0.3s ease, background-color 0.3s ease; /* Overlay transitions */
+
         }
 
         .sidebar-overlay.sidebar--open {
             display: block;
-            opacity: 1;
+            opacity: 1; /* Fade in when sidebar opens */
         }
 
         .close-history-menu-btn, .close-settings-menu-btn, .modal-button {
-            padding: 14px 24px; /* Adjusted close button padding */
+            padding: 12px 20px; /* Adjusted close button padding */
             background-color: var(--button-primary-color);
             color: white;
             border: none;
-            border-radius: 15px; /* More rounded close button */
+            border-radius: 12px; /* Rounded close button */
             cursor: pointer;
-            margin-top: 20px;
+            margin-top: 15px;
             display: block;
             margin-left: auto;
             margin-right: auto;
-            transition: background-color var(--transition-duration) var(--transition-easing), transform 0.15s var(--transition-easing);
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .close-history-menu-btn:hover, .close-settings-menu-btn:hover, .modal-button.confirm:hover {
             background-color: var(--button-primary-hover-color);
-            transform: scale(1.04); /* Slightly larger scale up on hover */
+             transform: scale(1.03); /* Subtle scale up on hover */
         }
          .modal-button.cancel {
             background-color: #555;
@@ -460,7 +443,7 @@
 
         .modal-button.cancel:hover {
             background-color: #666;
-            transform: scale(1.04); /* Slightly larger scale up on hover */
+             transform: scale(1.03); /* Subtle scale up on hover */
         }
 
 
@@ -471,18 +454,18 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.75); /* Darker modal overlay */
+            background-color: rgba(0, 0, 0, 0.7); /* Darker modal overlay */
             z-index: 400;
             justify-content: center;
             align-items: center;
             pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.25s var(--transition-easing), background-color var(--transition-duration) var(--transition-easing); /* Slightly faster modal overlay transition */
+            opacity: 0; /* Hidden initially */
+            transition: opacity 0.3s ease, background-color 0.3s ease; /* Modal overlay transitions */
         }
 
         .custom-modal-overlay.show-modal {
             display: flex;
-            opacity: 1;
+            opacity: 1; /* Fade in when modal opens */
             pointer-events: auto;
         }
 
@@ -490,59 +473,56 @@
         .custom-modal {
             background-color: var(--modal-background-color);
             color: #fff;
-            padding: 35px; /* Increased modal padding */
-            border-radius: 15px; /* More rounded modal */
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7); /* Deeper modal shadow */
-            width: 90%; /* Slightly wider modal */
-            max-width: 500px; /* Increased max width modal */
+            padding: 30px; /* Increased modal padding */
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6); /* Deeper modal shadow */
+            width: 85%; /* Slightly wider modal */
+            max-width: 450px;
             text-align: center;
             border: 1px solid #444;
-            transform: scale(0.96); /* Start slightly smaller */
-            opacity: 0;
-            transition: transform 0.25s var(--transition-easing), opacity 0.25s var(--transition-easing), background-color var(--transition-duration) var(--transition-easing); /* Slightly faster modal transitions */
+            transform: scale(0.95); /* Start slightly smaller */
+            opacity: 0; /* Hidden initially */
+            transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease; /* Modal transitions and background transition */
         }
 
         .custom-modal-overlay.show-modal .custom-modal {
-            transform: scale(1);
-            opacity: 1;
+            transform: scale(1); /* Scale up to normal size when visible */
+            opacity: 1; /* Fade in when modal opens */
         }
 
 
         .modal-message {
-            margin-bottom: 25px; /* Increased modal message margin */
-            font-size: 1.2em; /* Larger modal message font */
-            opacity: 0.95; /* Slightly reduce modal message opacity */
-            transition: color var(--transition-duration) var(--transition-easing);
+            margin-bottom: 20px; /* Increased modal message margin */
+            font-size: 1.1em; /* Slightly larger modal message font */
+             transition: color 0.3s ease; /* Modal message text color transition */
         }
 
         .modal-input {
-            width: calc(100% - 30px);
-            padding: 14px; /* Adjusted modal input padding */
-            margin-bottom: 25px;
-            border-radius: 12px;
+            width: calc(100% - 24px);
+            padding: 12px; /* Adjusted modal input padding */
+            margin-bottom: 20px;
+            border-radius: 10px;
             border: 1px solid #555;
             background-color: var(--input-text-background-color);
             color: #fff;
-            box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.4); /* Deeper inner shadow */
-            transition: background-color var(--transition-duration) var(--transition-easing), color var(--transition-duration) var(--transition-easing);
-            font-size: 17px; /* Larger modal input font */
+             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3); /* Inner shadow for modal input */
+             transition: background-color 0.3s ease, color 0.3s ease; /* Modal input background & text transition */
         }
 
         .modal-buttons {
             display: flex;
             justify-content: center;
-            gap: 25px; /* Increased gap between modal buttons */
+            gap: 20px; /* Increased gap between modal buttons */
         }
 
         .modal-button {
-            padding: 14px 28px; /* Adjusted modal button padding */
+            padding: 12px 25px; /* Adjusted modal button padding */
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 17px; /* Larger modal button font */
-            transition: background-color var(--transition-duration) var(--transition-easing), transform 0.15s var(--transition-easing);
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
             border: 1px solid #444;
-            opacity: 0.98; /* Slightly reduce modal button opacity */
         }
 
         code[class*="language-"],
@@ -550,43 +530,41 @@
             color: #f8f8f2;
             background: #272822;
             position: relative;
-            border-radius: 12px; /* More rounded code blocks */
-            padding: 18px; /* Increased code block padding */
-            margin-bottom: 18px;
-            overflow-x: auto;
-            opacity: 0.95; /* Slightly reduce code block opacity */
+            border-radius: 10px; /* Rounded code blocks */
+            padding: 15px; /* Increased code block padding */
+            margin-bottom: 15px;
+            overflow-x: auto; /* Horizontal scroll if code is wide */
         }
 
         .copy-code-button {
             position: absolute;
-            top: 12px; /* Adjusted copy button position */
-            right: 12px;
+            top: 10px; /* Adjusted copy button position */
+            right: 10px;
             background-color: #444;
             color: white;
             border: none;
-            border-radius: 10px;
-            padding: 8px 12px; /* Adjusted copy button padding */
-            font-size: 0.95em;
+            border-radius: 8px;
+            padding: 6px 10px; /* Adjusted copy button padding */
+            font-size: 0.9em;
             cursor: pointer;
-            opacity: 0.6; /* Reduced copy button opacity */
-            transition: opacity 0.25s var(--transition-easing), background-color var(--transition-duration) var(--transition-easing), transform 0.15s var(--transition-easing);
+            opacity: 0.7;
+            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease; /* Added transform transition */
         }
 
         .copy-code-button:hover {
-            opacity: 0.9; /* Increased opacity on hover for copy button */
+            opacity: 1;
             background-color: var(--button-primary-color);
-            transform: scale(1.04); /* Slightly larger scale up on hover */
+             transform: scale(1.05); /* Subtle scale up on hover */
         }
 
         /* Settings Styles */
         .setting-item {
-            padding: 16px 25px; /* Adjusted setting item padding */
+            padding: 14px 20px;
             border-bottom: 1px solid #333;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: background-color 0.2s var(--transition-easing), border-bottom-color 0.2s var(--transition-easing);
-            opacity: 0.95; /* Slightly reduce setting item opacity */
+             transition: background-color 0.3s ease, border-bottom-color 0.3s ease; /* Setting item transitions */
         }
 
         .setting-item:last-child {
@@ -600,8 +578,7 @@
 
         .setting-label {
             flex-grow: 1;
-            opacity: 0.95; /* Slightly reduce setting label opacity */
-            transition: color var(--transition-duration) var(--transition-easing);
+             transition: color 0.3s ease; /* Setting label text color transition */
         }
 
         .setting-control {
@@ -611,8 +588,8 @@
         .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 55px; /* Wider toggle switch */
-            height: 28px; /* Taller toggle switch */
+            width: 50px;
+            height: 24px;
         }
 
         .toggle-switch input[type="checkbox"] {
@@ -629,15 +606,15 @@
             right: 0;
             bottom: 0;
             background-color: #ccc;
-            transition: .4s, background-color var(--transition-duration) var(--transition-easing);
+            transition: .4s, background-color 0.3s ease; /* Slider transitions and background color transition */
             border-radius: 34px;
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 22px; /* Taller slider handle */
-            width: 22px; /* Wider slider handle */
+            height: 18px;
+            width: 18px;
             left: 3px;
             bottom: 3px;
             background-color: white;
@@ -659,8 +636,8 @@
         .color-picker-input {
             padding: 0;
             border: none;
-            width: 35px; /* Wider color picker */
-            height: 28px; /* Taller color picker */
+            width: 30px;
+            height: 24px;
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
@@ -673,14 +650,14 @@
         }
         .color-picker-input::-webkit-color-swatch {
             border: 1px solid #555;
-            border-radius: 6px; /* Slightly more rounded color swatch */
+            border-radius: 4px;
         }
         .color-picker-input::-moz-color-swatch-wrapper {
             padding: 0;
         }
         .color-picker-input::-moz-color-swatch {
             border: 1px solid #555;
-            border-radius: 6px;
+            border-radius: 4px;
         }
 
 
@@ -753,7 +730,7 @@
                     <input type="color" id="containerColorPicker" class="color-picker-input" value="#25272b">
                 </span>
             </li>
-            <li class="setting-item" style="justify-content: center; border-bottom: none; padding-top: 25px;">
+            <li class="setting-item" style="justify-content: center; border-bottom: none; padding-top: 20px;">
                 <button class="modal-button confirm" onclick="saveSettingsAndApplyTheme()">Lưu cài đặt</button>
                 <button class="modal-button cancel" onclick="resetTheme()">Hoàn tác</button>
             </li>
@@ -819,7 +796,6 @@
         let historyNameToDelete = null;
         let autoSaveHistory = true;
         let useFirstMessageAsName = false;
-        let isViewingSavedHistory = false; // Track if a saved history is being viewed
 
         // Theme Variables - Store current values, not yet applied until "Save"
         let currentBackgroundColor = '#1e2124';
@@ -885,13 +861,10 @@
 
 
         function startNewChat() {
-            if (!isViewingSavedHistory) { // Only clear if not viewing a saved history
-                conversationHistory = [];
-                saveChatHistory();
-                renderMessages();
-            }
+            conversationHistory = [];
+            saveChatHistory();
+            renderMessages();
             toggleSidebar();
-            isViewingSavedHistory = false; // Reset flag when explicitly starting new
         }
 
 
@@ -900,7 +873,7 @@
             document.getElementById('historyNameInput').value = '';
 
             if (useFirstMessageAsNameSetting() && conversationHistory.length > 0 && conversationHistory[0].role === 'user') {
-                document.getElementById('historyNameInput').value = conversationHistory[0].parts[0].text.substring(0, 50);
+                document.getElementById('historyNameInput').value = conversationHistory[0].parts[0].text.substring(0, 50); // Use first message, limit length
             }
         }
 
@@ -912,7 +885,7 @@
             let historyName = document.getElementById('historyNameInput').value.trim();
             if (!historyName) {
                 if (useFirstMessageAsNameSetting() && conversationHistory.length > 0 && conversationHistory[0].role === 'user') {
-                    historyName = conversationHistory[0].parts[0].text.substring(0, 50) || 'No Title';
+                    historyName = conversationHistory[0].parts[0].text.substring(0, 50) || 'No Title'; // Use first message as fallback, with 'No Title' if still empty
                 } else {
                     alert("Vui lòng nhập tên cho lịch sử chat.");
                     return;
@@ -962,7 +935,6 @@
                 renderMessages();
                 toggleHistoryMenu();
                 toggleSidebar();
-                isViewingSavedHistory = true; // Set flag to indicate viewing saved history
             } else {
                 alert("Không tìm thấy lịch sử chat đã lưu.");
             }
