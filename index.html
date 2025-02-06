@@ -573,13 +573,13 @@
         code[class*="language-"],
         pre[class*="language-"] {
             color: black; /* Ensure text color is in the foreground */
-            background-color: #f0f0f0; /* Gemini-like background */
+            background-color: transparent; /* Removed background color */
             position: relative;
             overflow-x: auto;
              padding: 1em;
              border-radius: 8px;
              margin-bottom: 18px;
-             border: none; /* Removed the inner border to match Gemini */
+             border: 1px solid black; /* Added black border */
              font-family: monospace, monospace;
              white-space: pre-wrap; /* Keep white-space: pre-wrap for text wrap */
              z-index: 0; /* Ensure code block background is behind the text if layering issues occur */
@@ -608,7 +608,7 @@
         }
         pre[class*="language-"] {
             position: relative;
-            z-index: 0; /* Ensure pre element itself also has correct stacking if needed */
+            z-index: 0;
         }
 
         /* Success Notification Styles */
