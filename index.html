@@ -1,3 +1,4 @@
+--- START OF FILE vip4ganhoanchinh 2.html ---
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -274,7 +275,7 @@
             z-index: 200;
             padding-top: 70px;
             box-shadow: 6px 0 12px rgba(0,0,0,0.4);
-            overflow-y: auto; /* Enable scroll on sidebar itself */
+            overflow-y: auto; /* Add scroll to sidebar if content is long */
             touch-action: manipulation;
             border-right: 1px solid #444;
              backdrop-filter: blur(12px);
@@ -296,8 +297,14 @@
         .sidebar-menu {
             padding: 0;
             list-style: none;
-            margin-bottom: 50px; /* Add extra bottom margin to allow more scroll */
+            overflow-y: auto; /* Enable scroll for menu items */
+            max-height: calc(100vh - 150px); /* Adjust max height as needed */
         }
+        /* Prevent sidebar menu scroll from affecting body scroll */
+        .sidebar {
+            overflow: hidden; /* Clip content, prevent body scroll */
+        }
+
 
         .sidebar-menu-item {
             padding: 18px 24px;
@@ -578,16 +585,21 @@
             position: relative;
             overflow-x: auto;
              padding: 1em;
-             border-radius: 0px; /* Square corners */
+             border-radius: 8px;
              margin-bottom: 18px;
              border: 1px solid #ccc;
              font-family: monospace, monospace;
              white-space: pre-wrap;
+             text-decoration: none; /* Remove any text-decoration like underline */
         }
+         code[class*="language-"] * , pre[class*="language-"] * {
+             text-decoration: none !important; /* make sure elements inside also no underline */
+         }
+
 
        .copy-code-button {
             position: absolute;
-            bottom: 2px; /* Further lowered copy button */
+            bottom: 4px; /* Adjusted bottom position slightly lower */
             left: 8px;
             background-color: #ddd;
             color: black;
@@ -651,7 +663,7 @@
         <div class="sidebar-header">
             <h3>Lịch sử Chat & Cài đặt</h3>
         </div>
-        <ul class="sidebar-menu">
+        <ul class="sidebar-menu" id="sidebar-scrollable-menu"> <!-- Added ID for scrollable menu -->
             <li class="sidebar-menu-item" onclick="startNewChat()">
                 <span class="menu-link">Đoạn chat mới</span>
             </li>
