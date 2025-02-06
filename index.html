@@ -91,13 +91,11 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
             display: flex;
             flex-direction: column;
+            height: calc(100vh - 50px);
             flex-grow: 1;
             margin-left: auto;
             transition: margin-left 0.3s ease, background-color 0.3s ease;
             border: none;
-            overflow: hidden; /* Ensure container doesn't scroll, messages-container will scroll */
-            display: flex; /* Ensure flexbox is still active */
-            flex-direction: column; /* Keep vertical layout */
         }
 
         .container.sidebar-open {
@@ -107,11 +105,11 @@
         h1 {
             text-align: center;
             color: #fff;
-            margin-bottom: 15px; /* Reduced margin-bottom */
+            margin-bottom: 20px; /* Reduced margin-bottom */
             font-size: 2.0em; /* Reduced font-size */
             letter-spacing: 0.5px;
             padding-bottom: 15px; /* Reduced padding-bottom */
-            border-bottom: 1px solid #444; /* Thinner border */
+            border-bottom: 2px solid #444;
             font-weight: 500;
             text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
         }
@@ -355,7 +353,7 @@
         }
 
         .sidebar-menu-item.has-submenu > .menu-link::after {
-            content: '>';
+            content: '>',
             float: right;
             margin-left: 14px;
             font-size: 0.95em;
@@ -662,7 +660,7 @@
     </button>
 
     <div class="container" id="container">
-        <h1>AI Hiện Đại với Gemini</h1>
+        <h1>AI với Gemini</h1> <!-- Shortened header text -->
 
         <div id="messages-container">
             <!-- Messages will be appended here -->
@@ -690,6 +688,7 @@
         let savedHistories = {};
         let historyNameToDelete = null;
         let isAutoSaveEnabled = localStorage.getItem('autoSaveEnabled') === 'true';
+        let isSaveHistoryModalOpen = false; // Flag to track modal state - **ADDITION**
 
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -795,12 +794,16 @@
 
 
         function openSaveHistoryModal() {
-            document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
-            document.getElementById('historyNameInput').value = '';
+            if (!isSaveHistoryModalOpen) { // Check if modal is already open - **ADDITION**
+                document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
+                document.getElementById('historyNameInput').value = '';
+                isSaveHistoryModalOpen = true; // Set modal state to open - **ADDITION**
+            }
         }
 
         function closeSaveHistoryModal() {
             document.getElementById('saveHistoryModalOverlay').classList.remove('show-modal');
+            isSaveHistoryModalOpen = false; // Set modal state to closed - **ADDITION**
         }
 
         function saveHistoryWithInputName() {
