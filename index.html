@@ -66,7 +66,7 @@
 
         .container {
             width: 95%;
-            max-width: 1400px; /* Increased max-width for container to allow wider chat */
+            max-width: 1400px;
             margin: 20px auto;
             padding: 30px;
             background-color: var(--container-background-color);
@@ -136,7 +136,7 @@
             border-radius: 24px;
             clear: both;
             word-wrap: break-word;
-            max-width: 95%; /* Further increase max width for messages */
+            max-width: 95%;
             display: inline-block;
              box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
              transition: background-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease;
@@ -274,7 +274,7 @@
             z-index: 200;
             padding-top: 70px;
             box-shadow: 6px 0 12px rgba(0,0,0,0.4);
-            overflow-y: auto;
+            overflow-y: auto; /* Enable scroll on sidebar itself */
             touch-action: manipulation;
             border-right: 1px solid #444;
              backdrop-filter: blur(12px);
@@ -296,6 +296,7 @@
         .sidebar-menu {
             padding: 0;
             list-style: none;
+            margin-bottom: 50px; /* Add extra bottom margin to allow more scroll */
         }
 
         .sidebar-menu-item {
@@ -572,21 +573,21 @@
 
         code[class*="language-"],
         pre[class*="language-"] {
-            color: black; /* Default code text color - or inherit */
-            background: transparent; /* Transparent background */
+            color: black;
+            background: transparent;
             position: relative;
             overflow-x: auto;
              padding: 1em;
-             border-radius: 8px;
+             border-radius: 0px; /* Square corners */
              margin-bottom: 18px;
-             border: 1px solid #ccc; /* Gemini-like border */
-             font-family: monospace, monospace; /* Monospace font for code */
-             white-space: pre-wrap; /* Important for long lines to wrap */
+             border: 1px solid #ccc;
+             font-family: monospace, monospace;
+             white-space: pre-wrap;
         }
 
        .copy-code-button {
             position: absolute;
-            bottom: 8px;
+            bottom: 2px; /* Further lowered copy button */
             left: 8px;
             background-color: #ddd;
             color: black;
@@ -634,10 +635,10 @@
 
         /* Settings Styles */
         .setting-item .toggle-switch .slider {
-            background-color: #ccc; /* Default grey color when OFF */
+            background-color: #ccc;
         }
         .setting-item .toggle-switch input:checked + .slider {
-            background-color: var(--button-primary-color); /* Primary color when ON */
+            background-color: var(--button-primary-color);
         }
 
 
@@ -1082,16 +1083,16 @@
         async function getGeminiResponse() {
             const userPrompt = document.getElementById('user-prompt').value.trim();
             const messagesContainer = document.getElementById('messages-container');
-            let aiMessageDiv = document.createElement('div'); // Define aiMessageDiv here
-            aiMessageDiv.classList.add('message', 'ai-message'); // Initialize classList
-            aiMessageDiv.innerHTML = '<span class="ai-message-text">Đang suy nghĩ...</span>'; // Set initial content
+            let aiMessageDiv = document.createElement('div');
+            aiMessageDiv.classList.add('message', 'ai-message');
+            aiMessageDiv.innerHTML = '<span class="ai-message-text">Đang suy nghĩ...</span>';
             messagesContainer.appendChild(aiMessageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
 
             if (!userPrompt) {
                 alert("Vui lòng nhập tin nhắn.");
-                aiMessageDiv.remove(); // Remove 'Đang suy nghĩ...' if no prompt
+                aiMessageDiv.remove();
                 return;
             }
 
@@ -1108,8 +1109,6 @@
             renderMessages();
             document.getElementById('user-prompt').value = '';
 
-
-             // aiMessageDiv was created above and appended already
 
 
             let promptContents = conversationHistory.map(message => ({
