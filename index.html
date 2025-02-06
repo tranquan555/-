@@ -794,16 +794,24 @@
 
 
         function openSaveHistoryModal() {
-            if (!isSaveHistoryModalOpen) { // Check if modal is already open - **ADDITION**
-                document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
+            if (!isSaveHistoryModalOpen) {
+                const modalOverlay = document.getElementById('saveHistoryModalOverlay');
+                modalOverlay.classList.add('show-modal');
+                modalOverlay.style.display = 'flex'; // Ensure display is flex - **MODIFIED LINE**
                 document.getElementById('historyNameInput').value = '';
-                isSaveHistoryModalOpen = true; // Set modal state to open - **ADDITION**
+                isSaveHistoryModalOpen = true;
+                console.log("Save History Modal opened. isSaveHistoryModalOpen:", isSaveHistoryModalOpen); // Debug log
+            } else {
+                console.log("Save History Modal already open, ignoring click."); // Debug log
             }
         }
 
         function closeSaveHistoryModal() {
-            document.getElementById('saveHistoryModalOverlay').classList.remove('show-modal');
-            isSaveHistoryModalOpen = false; // Set modal state to closed - **ADDITION**
+            const modalOverlay = document.getElementById('saveHistoryModalOverlay');
+            modalOverlay.classList.remove('show-modal');
+            modalOverlay.style.display = 'none'; // Explicitly hide - **MODIFIED LINE**
+            isSaveHistoryModalOpen = false;
+            console.log("Save History Modal closed. isSaveHistoryModalOpen:", isSaveHistoryModalOpen); // Debug log
         }
 
         function saveHistoryWithInputName() {
