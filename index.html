@@ -580,13 +580,13 @@
         code[class*="language-"],
         pre[class*="language-"] {
             color: var(--code-text-color);
-            background: var(--code-block-background);
+            background: none;
             position: relative;
             border-radius: var(--code-border-radius);
-            padding: 15px;
-            margin-bottom: 18px;
+            padding: 0;
+            margin-bottom: 0;
             overflow-x: auto;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: none;
         }
 
        .code-container {
@@ -594,6 +594,7 @@
             border: 1px solid #555;
             border-radius: 8px;
             margin-bottom: 18px;
+             background: var(--code-block-background);
         }
 
         .code-header {
@@ -613,7 +614,7 @@
             font-weight: bold;
         }
 
-        .copy-code-button {
+         .copy-code-button {
             position: absolute;
             bottom: 8px;
             left: 8px;
@@ -640,13 +641,30 @@
             border-radius: 0;
             background: none;
             box-shadow: none;
+             padding: 15px;
         }
 
         pre[class*="language-"] code {
             display: block;
-            padding: 15px;
+            padding: 0;
         }
-
+        .copy-success {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 188, 212, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .copy-success.show {
+            opacity: 1;
+        }
 
 
         .setting-item {
@@ -844,7 +862,7 @@
                 <div class="modal-buttons">
                     <button class="modal-button confirm" onclick="confirmDeleteHistory()">Xóa</button>
                     <button class="modal-button cancel" onclick="closeDeleteHistoryModal()">Huỷ</button>
-                                </div>
+                </div>
             </div>
         </div>
 
@@ -898,14 +916,31 @@
 
         document.body.addEventListener('click', async (event) => {
             if (event.target.classList.contains('copy-code-button')) {
-                const codeElement = event.target.closest('div.code-container').querySelector('code');
+                const codeContainer = event.target.closest('.code-container');
+                const codeElement = codeContainer.querySelector('code');
+                const copyButton = event.target;
+                const successMessage = document.createElement('span');
+                successMessage.classList.add('copy-success');
+                successMessage.textContent = 'Đã sao chép!';
+                codeContainer.appendChild(successMessage);
+                setTimeout(() => successMessage.classList.add('show'), 10);
+
                 if (codeElement) {
                     try {
                         await navigator.clipboard.writeText(codeElement.textContent);
-                        alert('Code copied to clipboard!');
+                         setTimeout(() => {
+                            successMessage.classList.remove('show');
+                            setTimeout(() => successMessage.remove(), 300);
+                        }, 1500);
+
                     } catch (err) {
                         console.error('Failed to copy code: ', err);
-                        alert('Failed to copy code.');
+                        successMessage.textContent = 'Sao chép thất bại!';
+                        setTimeout(() => successMessage.classList.add('show'), 10);
+                         setTimeout(() => {
+                            successMessage.classList.remove('show');
+                            setTimeout(() => successMessage.remove(), 300);
+                        }, 1500);
                     }
                 }
             }
@@ -986,6 +1021,7 @@
                                         <code class="language-${language}">${codeContent}</code>
                                     </pre>
                                     <button class="copy-code-button"><i class="fas fa-copy"></i></button>
+                                    <span class="copy-success">Đã sao chép!</span>
                                 </div>
                             `;
                         }
@@ -1313,6 +1349,7 @@
                                         <code class="language-${language}">${codeContent}</code>
                                     </pre>
                                     <button class="copy-code-button"><i class="fas fa-copy"></i></button>
+                                     <span class="copy-success">Đã sao chép!</span>
                                 </div>
                             `;
                         }
