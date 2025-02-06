@@ -1,4 +1,3 @@
---- START OF FILE vip1 2.html ---
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -795,12 +794,14 @@
 
 
         function openSaveHistoryModal() {
-            if (!isSaveHistoryModalOpen) { // Check if modal is already open - **ADDITION**
-                document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
+            if (!isSaveHistoryModalOpen) {
+                const modalOverlay = document.getElementById('saveHistoryModalOverlay');
+                modalOverlay.classList.add('show-modal'); // Add the class for styling
+                modalOverlay.style.display = 'flex';      // **Explicitly set display to flex**
                 document.getElementById('historyNameInput').value = '';
-                isSaveHistoryModalOpen = true; // Set modal state to open - **ADDITION**
-            }
+                isSaveHistoryModalOpen = true;
         }
+}
 
         function closeSaveHistoryModal() {
             const modalOverlay = document.getElementById('saveHistoryModalOverlay'); // Get the overlay element
