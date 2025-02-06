@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Thêm thư viện marked.js -->
 
     <style>
         :root {
@@ -774,7 +773,7 @@
     <script>
         const apiKey = 'AIzaSyAd9p1hXhUcRx4Pz7EmbUKC-V8ULN8L61Q';
         const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
-        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. **Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy luôn đảm bảo rằng code được bao quanh bởi ký tự ``` (ba dấu backtick) cho code blocks markdown, và chỉ định ngôn ngữ nếu có thể (ví dụ: ```javascript hoặc ```python).** Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
+        const systemPrompt = `Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. **Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown, bắt đầu và kết thúc bằng dấu \`\`\`.** Ví dụ:\n\`\`\`javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n\`\`\`\nhoặc:\n\`\`\`python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n\`\`\`\n**Nếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.**`;
 
         let conversationHistory = [];
         let savedHistories = {};
@@ -795,13 +794,13 @@
 
         document.body.addEventListener('click', async (event) => {
             if (event.target.classList.contains('copy-code-button')) {
-                const codeBlock = event.target.closest('pre'); // closest pre to include pre for notification target
+                const codeBlock = event.target.closest('pre');
                 if (codeBlock) {
                     const codeElement = codeBlock.querySelector('code');
                     if (codeElement) {
                         try {
                             await navigator.clipboard.writeText(codeElement.textContent);
-                            showCopyNotification(codeBlock); // Pass code block as target
+                            showCopyNotification(codeBlock);
                         } catch (err) {
                             console.error('Failed to copy code: ', err);
                             alert('Failed to copy code.');
@@ -812,13 +811,13 @@
         });
 
         function showCopyNotification(targetElement) {
-            let notification = targetElement.querySelector('.copy-success-notification'); // Check if notification already exists
+            let notification = targetElement.querySelector('.copy-success-notification');
 
             if (!notification) {
                 notification = document.createElement('div');
                 notification.classList.add('copy-success-notification');
                 notification.textContent = 'Đã sao chép vào clipboard!';
-                targetElement.prepend(notification); // Insert notification into the message
+                targetElement.prepend(notification);
             }
             notification.classList.add('show');
             setTimeout(() => {
@@ -864,21 +863,27 @@
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
                 let messageText = message.parts[0].text;
-                if (message.role === 'ai') {
-                    // Sử dụng marked.parse() để chuyển đổi markdown sang HTML
-                    let htmlText = marked.parse(messageText);
-                    messageDiv.innerHTML = `<span class="ai-message-text">${htmlText}</span>`;
 
-                    messageDiv.querySelectorAll('pre').forEach(codeBlock => {
-                      let buttonExists =  codeBlock.querySelector('.copy-code-button') !== null;
-                         if(!buttonExists ) {
-                             codeBlock.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>');
-                         }
-                          let notificationExists = codeBlock.querySelector('.copy-success-notification') !== null;
-                         if (notificationExists) {
-                             codeBlock.querySelector('.copy-success-notification').remove();
-                         }
+                if (message.role === 'ai') {
+                    // Xử lý markdown code blocks
+                    const codeBlockRegex = /```([a-zA-Z0-9]*)\n([\s\S]*?)\n```/g;
+                    let formattedText = messageText.replace(codeBlockRegex, (match, language, code) => {
+                        const pre = document.createElement('pre');
+                        const codeElement = document.createElement('code');
+                        codeElement.textContent = code; // Set textContent to properly escape HTML
+                        if (language) {
+                            codeElement.className = `language-${language}`;
+                        }
+                        pre.appendChild(codeElement);
+                        pre.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>');
+
+                        let tempDiv = document.createElement('div'); // Use a temporary div to hold HTML
+                        tempDiv.appendChild(pre);
+                        return tempDiv.innerHTML; // Return the HTML string to replace in messageText
                     });
+                    messageDiv.innerHTML = `<span class="ai-message-text">${formattedText}</span>`;
+
+
                 } else {
                     messageDiv.innerHTML = messageText;
                 }
@@ -1100,7 +1105,7 @@
         async function getGeminiResponse() {
             const userPrompt = document.getElementById('user-prompt').value.trim();
             const messagesContainer = document.getElementById('messages-container');
-            let aiMessageDiv = document.createElement('div'); // Declare aiMessageDiv here
+            let aiMessageDiv = document.createElement('div');
 
             if (!userPrompt) {
                 alert("Vui lòng nhập tin nhắn.");
@@ -1156,19 +1161,16 @@
 
 
                 const data = await response.json();
-                console.log("Dữ liệu phản hồi từ API:", data);
+
 
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
-                    aiMessageDiv.innerHTML = ''; // Clear "Đang suy nghĩ..." message before adding response
+                    aiMessageDiv.innerHTML = '';
 
-                      // Parse markdown text here again to ensure consistency even if API markdown is slightly different.
-                    let htmlResponseText = marked.parse(aiResponseText);
-                    aiMessageDiv.innerHTML = `<span class="ai-message-text">${htmlResponseText}</span>`;
+                     aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
 
 
                     const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
-
                     conversationHistory.push(aiMessageObject);
 
 
@@ -1180,6 +1182,8 @@
                     }
 
                    messagesContainer.appendChild(aiMessageDiv);
+                   renderMessages(); // Re-render to apply markdown formatting
+
 
                  messagesContainer.scrollTop = messagesContainer.scrollHeight;
                  }
