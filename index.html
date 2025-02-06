@@ -42,7 +42,7 @@
             overflow-y: scroll; /* Ensure scrollbar for very long content */
             scrollbar-width: thin; /* For Firefox */
             scrollbar-color: #444 #252525; /* For Firefox */
-            transition: background-color 0.3s ease, color 0.3s ease; /* Global body transition */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Global text and background transition */
         }
 
         /* Chrome, Safari and Opera scrollbar styling */
@@ -73,7 +73,7 @@
             height: calc(100vh - 40px); /* Adjusted height with margin */
             flex-grow: 1;
             margin-left: auto;
-            transition: margin-left 0.3s ease, background-color 0.3s ease; /* Container transition */
+            transition: margin-left 0.3s ease, background-color 0.3s ease; /* Container background transition */
             border: 1px solid #333;
         }
 
@@ -89,7 +89,6 @@
             letter-spacing: 0.5px;
             padding-bottom: 20px;
             border-bottom: 2px solid #444; /* Thicker border */
-            transition: color 0.3s ease; /* Title transition */
         }
 
         #messages-container {
@@ -103,8 +102,9 @@
             padding-bottom: 80px;
             border: none; /* Removed border */
             border-radius: 12px;
-            background-color: #1e2124;
+            background-color: #1e2124; /* Consistent background */
              box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3); /* Inner shadow for depth */
+             transition: background-color 0.3s ease; /* Messages container background transition */
         }
 
         #messages-container::-webkit-scrollbar {
@@ -129,17 +129,7 @@
             max-width: 80%;
             display: inline-block;
              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Subtle message shadow */
-            opacity: 0; /* Initially hidden */
-            transform: translateY(20px); /* Start from below */
-            animation: messageFadeIn 0.4s ease-out forwards; /* Animation */
-            animation-delay: var(--message-delay, 0s); /* Delay for staggered effect */
-        }
-
-        @keyframes messageFadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+             transition: background-color 0.3s ease, color 0.3s ease; /* Message background and text color transition */
         }
 
         .user-message {
@@ -156,7 +146,6 @@
             align-self: flex-start;
             float: left;
             border-top-left-radius: 5px;
-            transition: background-color 0.3s ease, color 0.3s ease; /* AI message transition */
         }
 
         .ai-message .ai-message-text {
@@ -165,7 +154,7 @@
             line-height: 1.7; /* Further improved line height */
             white-space: pre-line;
             font-size: 16px;
-            transition: color 0.3s ease; /* AI message text transition */
+             transition: color 0.3s ease; /* AI message text color transition */
         }
 
         .markdown-bold-uppercase {
@@ -173,7 +162,6 @@
             text-transform: uppercase;
             letter-spacing: 0.6px; /* Adjusted letter spacing */
             color: #f0f0f0; /* Slightly lighter color for emphasis */
-            transition: color 0.3s ease; /* Markdown bold text transition */
         }
 
         .input-area {
@@ -193,7 +181,7 @@
             border-bottom-left-radius: 16px; /* More rounded input area */
             border-bottom-right-radius: 16px;
              border-top: 1px solid #444;
-             transition: background-color 0.3s ease; /* Input area transition */
+             transition: background-color 0.3s ease; /* Input area background transition */
         }
 
         .input-area textarea {
@@ -209,7 +197,7 @@
             overflow-y: auto;
             border: 1px solid #444;
              box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3); /* Inner shadow for textarea */
-             transition: background-color 0.3s ease, color 0.3s ease; /* Textarea transition */
+             transition: background-color 0.3s ease, color 0.3s ease; /* Textarea background and text color transition */
         }
 
         .input-area textarea:focus {
@@ -268,7 +256,7 @@
             background-color: var(--sidebar-background-color);
             color: var(--sidebar-text-color);
             transform: translateX(-100%);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, background-color 0.3s ease; /* Sidebar background transition */
             z-index: 200;
             padding-top: 70px; /* Increased sidebar top padding */
             box-shadow: 4px 0 8px rgba(0,0,0,0.3); /* More pronounced sidebar shadow */
@@ -288,13 +276,8 @@
             border-bottom: 2px solid #555; /* Thicker header border */
             margin-bottom: 25px;
             border-bottom: 1px solid #444;
-             transition: background-color 0.3s ease, color 0.3s ease; /* Sidebar header transition */
+            transition: background-color 0.3s ease, border-bottom-color 0.3s ease; /* Sidebar header background & border transition */
         }
-
-        .sidebar-header h3 {
-            transition: color 0.3s ease; /* Sidebar header text transition */
-        }
-
 
         .sidebar-menu {
             padding: 0;
@@ -304,7 +287,7 @@
         .sidebar-menu-item {
             padding: 16px 20px; /* Adjusted menu item padding */
             cursor: pointer;
-            transition: background-color 0.2s ease, border-bottom-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.2s ease, border-bottom-color 0.3s ease, color 0.3s ease; /* Menu item transitions */
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -336,7 +319,7 @@
             margin-top: 8px;
             max-height: 0;
             opacity: 0;
-            transition: max-height 0.4s ease-out, opacity 0.3s ease-out; /* Slightly smoother transitions */
+            transition: max-height 0.4s ease-out, opacity 0.3s ease-out, background-color 0.3s ease; /* Submenu transitions and background transition */
             overflow-y: hidden;
             padding-top: 0;
             padding-bottom: 0;
@@ -355,7 +338,7 @@
         .submenu-item {
             padding: 14px 20px; /* Adjusted submenu item padding */
             cursor: pointer;
-            transition: background-color 0.2s ease, color 0.3s ease;
+            transition: background-color 0.2s ease, color 0.3s ease; /* Submenu item transitions */
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -373,7 +356,7 @@
 
         .history-name {
             flex-grow: 1;
-            transition: color 0.3s ease; /* History name transition */
+             transition: color 0.3s ease; /* History name text color transition */
         }
 
         .delete-history-btn {
@@ -425,19 +408,22 @@
             background-color: rgba(0, 0, 0, 0.6); /* Slightly darker overlay */
             z-index: 150;
             display: none;
-             transition: background-color 0.3s ease, opacity 0.3s ease; /* Overlay transition */
+            opacity: 0; /* Hidden initially */
+            transition: opacity 0.3s ease, background-color 0.3s ease; /* Overlay transitions */
+
         }
 
         .sidebar-overlay.sidebar--open {
             display: block;
+            opacity: 1; /* Fade in when sidebar opens */
         }
 
-        .close-history-menu-btn {
+        .close-history-menu-btn, .close-settings-menu-btn, .modal-button {
+            padding: 12px 20px; /* Adjusted close button padding */
             background-color: var(--button-primary-color);
             color: white;
             border: none;
             border-radius: 12px; /* Rounded close button */
-            padding: 12px 20px; /* Adjusted close button padding */
             cursor: pointer;
             margin-top: 15px;
             display: block;
@@ -446,10 +432,20 @@
             transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
-        .close-history-menu-btn:hover {
+        .close-history-menu-btn:hover, .close-settings-menu-btn:hover, .modal-button.confirm:hover {
             background-color: var(--button-primary-hover-color);
              transform: scale(1.03); /* Subtle scale up on hover */
         }
+         .modal-button.cancel {
+            background-color: #555;
+            color: white;
+        }
+
+        .modal-button.cancel:hover {
+            background-color: #666;
+             transform: scale(1.03); /* Subtle scale up on hover */
+        }
+
 
         .custom-modal-overlay {
             display: none;
@@ -463,13 +459,14 @@
             justify-content: center;
             align-items: center;
             pointer-events: none;
-            opacity: 0; /* Initially hidden */
-            transition: opacity 0.3s ease, background-color 0.3s ease; /* Modal overlay transition */
+            opacity: 0; /* Hidden initially */
+            transition: opacity 0.3s ease, background-color 0.3s ease; /* Modal overlay transitions */
         }
 
         .custom-modal-overlay.show-modal {
             display: flex;
-            opacity: 1; /* Fade in when shown */
+            opacity: 1; /* Fade in when modal opens */
+            pointer-events: auto;
         }
 
 
@@ -483,21 +480,21 @@
             max-width: 450px;
             text-align: center;
             border: 1px solid #444;
-            opacity: 0; /* Initially hidden */
-            transform: scale(0.9); /* Start scaled down */
-            transition: opacity 0.3s ease, transform 0.3s ease; /* Modal transition */
+            transform: scale(0.95); /* Start slightly smaller */
+            opacity: 0; /* Hidden initially */
+            transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease; /* Modal transitions and background transition */
         }
 
         .custom-modal-overlay.show-modal .custom-modal {
-            opacity: 1; /* Fade in when shown */
-            transform: scale(1); /* Scale up to normal size */
+            transform: scale(1); /* Scale up to normal size when visible */
+            opacity: 1; /* Fade in when modal opens */
         }
 
 
         .modal-message {
             margin-bottom: 20px; /* Increased modal message margin */
             font-size: 1.1em; /* Slightly larger modal message font */
-            transition: color 0.3s ease; /* Modal message text transition */
+             transition: color 0.3s ease; /* Modal message text color transition */
         }
 
         .modal-input {
@@ -509,7 +506,7 @@
             background-color: var(--input-text-background-color);
             color: #fff;
              box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3); /* Inner shadow for modal input */
-             transition: background-color 0.3s ease, color 0.3s ease; /* Modal input transition */
+             transition: background-color 0.3s ease, color 0.3s ease; /* Modal input background & text transition */
         }
 
         .modal-buttons {
@@ -526,26 +523,6 @@
             font-size: 16px;
             transition: background-color 0.3s ease, transform 0.2s ease;
             border: 1px solid #444;
-        }
-
-        .modal-button.confirm {
-            background-color: var(--button-primary-color);
-            color: white;
-        }
-
-        .modal-button.confirm:hover {
-            background-color: var(--button-primary-hover-color);
-             transform: scale(1.03); /* Subtle scale up on hover */
-        }
-
-        .modal-button.cancel {
-            background-color: #555;
-            color: white;
-        }
-
-        .modal-button.cancel:hover {
-            background-color: #666;
-             transform: scale(1.03); /* Subtle scale up on hover */
         }
 
         code[class*="language-"],
@@ -587,7 +564,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-             transition: background-color 0.2s ease, color 0.3s ease; /* Setting item transition */
+             transition: background-color 0.3s ease, border-bottom-color 0.3s ease; /* Setting item transitions */
         }
 
         .setting-item:last-child {
@@ -598,9 +575,10 @@
             background-color: #343541;
         }
 
+
         .setting-label {
             flex-grow: 1;
-             transition: color 0.3s ease; /* Setting label transition */
+             transition: color 0.3s ease; /* Setting label text color transition */
         }
 
         .setting-control {
@@ -628,7 +606,7 @@
             right: 0;
             bottom: 0;
             background-color: #ccc;
-            transition: .4s, background-color 0.3s ease;
+            transition: .4s, background-color 0.3s ease; /* Slider transitions and background color transition */
             border-radius: 34px;
         }
 
@@ -673,7 +651,6 @@
         .color-picker-input::-webkit-color-swatch {
             border: 1px solid #555;
             border-radius: 4px;
-            transition: border-color 0.3s ease; /* Color picker swatch transition */
         }
         .color-picker-input::-moz-color-swatch-wrapper {
             padding: 0;
@@ -681,7 +658,6 @@
         .color-picker-input::-moz-color-swatch {
             border: 1px solid #555;
             border-radius: 4px;
-            transition: border-color 0.3s ease; /* Color picker swatch transition */
         }
 
 
@@ -717,7 +693,7 @@
         </ul>
 
         <ul class="submenu" id="settings-menu">
-            <button class="close-history-menu-btn" onclick="toggleSettingsMenu()">Đóng</button>
+            <button class="close-settings-menu-btn" onclick="toggleSettingsMenu()">Đóng</button>
             <li class="setting-item">
                 <span class="setting-label">Tự động lưu lịch sử</span>
                 <span class="setting-control">
@@ -754,9 +730,9 @@
                     <input type="color" id="containerColorPicker" class="color-picker-input" value="#25272b">
                 </span>
             </li>
-            <li class="setting-item">
-                <button class="modal-button confirm" onclick="saveThemeSettings()" style="margin-right: 10px;">Lưu theme</button>
-                <button class="modal-button cancel" onclick="revertToDefaultTheme()">Hoàn tác</button>
+            <li class="setting-item" style="justify-content: center; border-bottom: none; padding-top: 20px;">
+                <button class="modal-button confirm" onclick="saveSettingsAndApplyTheme()">Lưu cài đặt</button>
+                <button class="modal-button cancel" onclick="resetTheme()">Hoàn tác</button>
             </li>
         </ul>
 
@@ -820,10 +796,16 @@
         let historyNameToDelete = null;
         let autoSaveHistory = true;
         let useFirstMessageAsName = false;
-        let backgroundColor = '#1e2124';
-        let textColor = '#d1d5db';
-        let containerColor = '#25272b';
-        let messageDelay = 0.1; // Delay increment for each message animation
+
+        // Theme Variables - Store current values, not yet applied until "Save"
+        let currentBackgroundColor = '#1e2124';
+        let currentTextColor = '#d1d5db';
+        let currentContainerColor = '#25272b';
+
+        // Default Theme Values for Reset Functionality
+        const defaultBackgroundColor = '#1e2124';
+        const defaultTextColor = '#d1d5db';
+        const defaultContainerColor = '#25272b';
 
 
         function toggleSidebar() {
@@ -860,13 +842,9 @@
         function renderMessages() {
             const messagesContainer = document.getElementById('messages-container');
             messagesContainer.innerHTML = '';
-            messageDelay = 0.1; // Reset delay for new render
             conversationHistory.forEach(message => {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
-                messageDiv.style.setProperty('--message-delay', `${messageDelay}s`); // Apply delay
-                messageDelay += 0.05; // Increment delay for next message
-
                 const messageTextSpan = document.createElement('span');
                 messageTextSpan.classList.add('ai-message-text');
                 messageTextSpan.innerHTML = message.parts[0].text;
@@ -1031,7 +1009,7 @@
         loadChatHistory();
         loadSavedHistoriesList();
         loadSettings();
-        applyTheme();
+        applyTheme(); // Apply initial theme on load
 
 
         function triggerFileUpload() {
@@ -1229,40 +1207,43 @@
                 const settings = JSON.parse(storedSettings);
                 autoSaveHistory = settings.autoSaveHistory !== undefined ? settings.autoSaveHistory : true;
                 useFirstMessageAsName = settings.useFirstMessageAsName !== undefined ? settings.useFirstMessageAsName : false;
-                backgroundColor = settings.backgroundColor || '#1e2124';
-                textColor = settings.textColor || '#d1d5db';
-                containerColor = settings.containerColor || '#25272b';
+                currentBackgroundColor = settings.backgroundColor || defaultBackgroundColor;
+                currentTextColor = settings.textColor || defaultTextColor;
+                currentContainerColor = settings.containerColor || defaultContainerColor;
+
 
                 document.getElementById('autoSaveHistoryToggle').checked = autoSaveHistory;
                 document.getElementById('useFirstMessageAsNameToggle').checked = useFirstMessageAsName;
-                document.getElementById('backgroundColorPicker').value = backgroundColor;
-                document.getElementById('textColorPicker').value = textColor;
-                document.getElementById('containerColorPicker').value = containerColor;
+                document.getElementById('backgroundColorPicker').value = currentBackgroundColor;
+                document.getElementById('textColorPicker').value = currentTextColor;
+                document.getElementById('containerColorPicker').value = currentContainerColor;
 
             } else {
                  document.getElementById('autoSaveHistoryToggle').checked = true;
                  document.getElementById('useFirstMessageAsNameToggle').checked = false;
+                 // Color pickers are already initialized to default values from HTML
+                 currentBackgroundColor = defaultBackgroundColor;
+                 currentTextColor = defaultTextColor;
+                 currentContainerColor = defaultContainerColor;
+
             }
 
             document.getElementById('autoSaveHistoryToggle').addEventListener('change', function() {
                 autoSaveHistory = this.checked;
-                saveSetting('autoSaveHistory', autoSaveHistory);
+                // Settings are only saved to localstorage on "Save" button click now.
             });
             document.getElementById('useFirstMessageAsNameToggle').addEventListener('change', function() {
                 useFirstMessageAsName = this.checked;
-                saveSetting('useFirstMessageAsName', useFirstMessageAsName);
+                // Settings are only saved to localstorage on "Save" button click now.
             });
             document.getElementById('backgroundColorPicker').addEventListener('change', function() {
-                backgroundColor = this.value;
-                applyTheme();
+                currentBackgroundColor = this.value; // Update current value, but apply only on Save
             });
              document.getElementById('textColorPicker').addEventListener('change', function() {
-                textColor = this.value;
-                applyTheme();
+                currentTextColor = this.value; // Update current value, but apply only on Save
             });
             document.getElementById('containerColorPicker').addEventListener('change', function() {
-                containerColor = this.value;
-                applyTheme();
+                currentContainerColor = this.value; // Update current value, but apply only on Save
             });
         }
 
@@ -1279,34 +1260,35 @@
             return useFirstMessageAsName;
         }
 
-        function saveThemeSettings() {
-            saveSetting('backgroundColor', backgroundColor);
-            saveSetting('textColor', textColor);
-            saveSetting('containerColor', containerColor);
-            alert('Theme đã được lưu!');
-        }
-
-        function revertToDefaultTheme() {
-            backgroundColor = '#1e2124';
-            textColor = '#d1d5db';
-            containerColor = '#25272b';
-            document.getElementById('backgroundColorPicker').value = backgroundColor;
-            document.getElementById('textColorPicker').value = textColor;
-            document.getElementById('containerColorPicker').value = containerColor;
-            applyTheme();
-            saveThemeSettings(); // Save defaults to local storage as well for persistence
-            alert('Theme đã hoàn tác về mặc định.');
-        }
-
 
         function applyTheme() {
-            backgroundColor = document.getElementById('backgroundColorPicker').value;
-            textColor = document.getElementById('textColorPicker').value;
-            containerColor = document.getElementById('containerColorPicker').value;
+            document.documentElement.style.setProperty('--background-color', currentBackgroundColor);
+            document.documentElement.style.setProperty('--text-color', currentTextColor);
+            document.documentElement.style.setProperty('--container-background-color', currentContainerColor);
+        }
 
-            document.documentElement.style.setProperty('--background-color', backgroundColor);
-            document.documentElement.style.setProperty('--text-color', textColor);
-            document.documentElement.style.setProperty('--container-background-color', containerColor);
+        function saveSettingsAndApplyTheme() {
+            saveSetting('autoSaveHistory', autoSaveHistory);
+            saveSetting('useFirstMessageAsName', useFirstMessageAsName);
+            saveSetting('backgroundColor', currentBackgroundColor);
+            saveSetting('textColor', currentTextColor);
+            saveSetting('containerColor', currentContainerColor);
+            applyTheme();
+            toggleSettingsMenu();
+            alert('Cài đặt đã được lưu và áp dụng!');
+        }
+
+        function resetTheme() {
+            currentBackgroundColor = defaultBackgroundColor;
+            currentTextColor = defaultTextColor;
+            currentContainerColor = defaultContainerColor;
+
+            document.getElementById('backgroundColorPicker').value = currentBackgroundColor;
+            document.getElementById('textColorPicker').value = currentTextColor;
+            document.getElementById('containerColorPicker').value = currentContainerColor;
+
+            applyTheme();
+            alert('Giao diện đã hoàn tác về mặc định. Nhấn "Lưu cài đặt" để lưu thay đổi.');
         }
 
 
