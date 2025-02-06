@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" integrity="sha512-vsweMjIyTnRe2oFPPgv divisionsbjSqVc2gOGMm6tAVu/liiNOzVt+oTJlDPg3Ju/Y+yj+6zlD1lGTnrXxyHxNurNtQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
         :root {
@@ -571,8 +570,34 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
         }
 
+        /* Gemini Code Block Styles Start */
+        .ai-message .ai-message-text pre {
+            background-color: #f0f0f0; /* Gemini code block background */
+            color: #333; /* Gemini code text color */
+            padding: 12px 16px; /* Gemini padding */
+            border: 1px solid #ddd; /* Gemini border */
+            border-radius: 0; /* Square corners like Gemini */
+            overflow-x: auto; /* For horizontal scrolling if code is too wide */
+            white-space: pre-wrap; /* Important for text to wrap within code block */
+            font-family: 'Arial', monospace; /* Gemini's likely font, adjust if needed */
+            font-size: 15px; /* Adjust font size to match Gemini */
+            line-height: 1.6;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
 
-        /* Success Notification Styles */
+        .ai-message .ai-message-text pre code {
+             background-color: transparent; /* Important to make code background transparent inside pre */
+             color: inherit; /* Inherit color from pre for code text */
+             padding: 0; /* Remove padding from code element */
+             border: none; /* Remove border from code element */
+             font-size: inherit; /* Inherit font-size from pre */
+             font-family: inherit; /* Inherit font-family from pre */
+        }
+        /* Gemini Code Block Styles End */
+
+
+        /* Success Notification Styles (Keeping this for copy success if you decide to re-add copy functionality later) */
         .copy-success-notification {
             position: fixed;
             bottom: 20px;
@@ -726,14 +751,10 @@
     </div>
 
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-SILsPQeZy0s7qK7BUnxa42v+oRXTJg14KSPP1nEqR3331lSgT4y5C7+j37jpjP/40n8iyjIipJEu2noo03rw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js" integrity="sha512-GDdRtBOn87s8imxGx04oN82yKxikN/V+R5y2G5o2kPj5OaJryv+Gu1KiJk5dCSjYJzWJ+Rme/yL9v50EctzKTA==" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" integrity="sha512-4I9xR+QlKJ72iVFsem8wEfegGxJx5MBsl6r1Ioz+tsjPdi991r+Lg5+a5I7j7XJp3xWXuYU9JGeOQXk5jI9i/Q==" crossorigin="anonymous"></script>
-
     <script>
         const apiKey = 'AIzaSyAd9p1hXhUcRx4Pz7EmbUKC-V8ULN8L61Q';
         const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
-        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
+        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n\`\`\`javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n\`\`\`\nhoặc:\n\`\`\`python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n\`\`\`\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
 
         let conversationHistory = [];
         let savedHistories = {};
@@ -813,13 +834,17 @@
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
                 let messageText = message.parts[0].text;
                 if (message.role === 'ai') {
+
                     messageDiv.innerHTML = `<span class="ai-message-text">${messageText}</span>`;
+
+
                 } else {
                     messageDiv.innerHTML = messageText;
                 }
+
                 messagesContainer.appendChild(messageDiv);
             });
-            Prism.highlightAll();
+
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
         }
@@ -1101,7 +1126,9 @@
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
                     aiMessageDiv.innerHTML = '';
-                    aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
+
+
+                      aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
 
                     const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
 
@@ -1117,6 +1144,7 @@
 
 
                    messagesContainer.appendChild(aiMessageDiv);
+
                  messagesContainer.scrollTop = messagesContainer.scrollHeight;
                  }
                 else
