@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Hiện Đại với Gemini</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit: cover;">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -66,7 +66,7 @@
 
         .container {
             width: 95%;
-            max-width: 1400px;
+            max-width: 1400px; /* Increased container max width */
             margin: 20px auto;
             padding: 30px;
             background-color: var(--container-background-color);
@@ -136,7 +136,7 @@
             border-radius: 24px;
             clear: both;
             word-wrap: break-word;
-            max-width: 95%;
+            max-width: 95%; /* Increased message max width */
             display: inline-block;
              box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
              transition: background-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease;
@@ -168,6 +168,46 @@
             font-size: 16px;
              transition: color 0.3s ease;
         }
+        .ai-message .ai-code-block {
+            background-color: #333;
+            color: #eee;
+            padding: 14px 20px;
+            border-radius: 12px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            overflow-x: auto;
+            font-family: monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            position: relative;
+        }
+        .ai-message .ai-code-block::before {
+            content: attr(data-lang);
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            padding: 2px 8px;
+            background-color: var(--button-primary-color);
+            color: white;
+            border-radius: 8px 8px 0 0;
+            font-size: 0.9em;
+        }
+        .ai-message .ai-code-block:empty::before {
+            content: "Code Block"; /* Default label if no language */
+        }
+        .ai-message .ai-text-block {
+            background-color: #333;
+            color: #eee;
+            padding: 14px 20px;
+            border-radius: 12px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            overflow-x: auto;
+            font-family: sans-serif;
+            font-size: 16px;
+            white-space: pre-wrap; /* or 'pre-line' */
+        }
+
 
         .markdown-bold-uppercase {
             font-weight: 600;
@@ -571,34 +611,12 @@
         }
 
 
+        /* Settings Styles */
         .setting-item .toggle-switch .slider {
             background-color: #ccc;
         }
         .setting-item .toggle-switch input:checked + .slider {
             background-color: var(--button-primary-color);
-        }
-
-         .code-block { /* Style for text/code blocks */
-            background-color: #333;
-            color: #fff;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            overflow-x: auto;
-            font-family: monospace;
-            white-space: pre-wrap;
-            position: relative;
-        }
-
-        .code-block-title {
-            position: absolute;
-            top: -10px;
-            left: 10px;
-            background-color: var(--button-primary-color);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.9em;
         }
 
 
@@ -744,7 +762,6 @@
         let currentHistoryName = null;
 
 
-
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const container = document.getElementById('container');
@@ -785,29 +802,24 @@
                 let messageText = message.parts[0].text;
                 if (message.role === 'ai') {
                     let formattedText = '';
-                    let textBlocks = messageText.split('```');
-                    for (let i = 0; i < textBlocks.length; i++) {
+                    let parts = messageText.split("'''");
+                    for (let i = 0; i < parts.length; i++) {
                         if (i % 2 === 0) {
-                            formattedText += textBlocks[i].replace(/</g, '<').replace(/>/g, '>'); // Escape HTML for regular text
+                            formattedText += parts[i];
                         } else {
-                            let blockContent = textBlocks[i];
-                            let language = '';
-                            let content = blockContent;
-                            const firstLineBreak = blockContent.indexOf('\n');
-                            if (firstLineBreak > -1) {
-                                language = blockContent.substring(0, firstLineBreak).trim();
-                                content = blockContent.substring(firstLineBreak + 1);
-                            } else {
-                                language = blockContent.trim(); // Language name only without content. Consider no title or handle differently? In this case, no title
-                                content = ''; // No actual content for block.
-                                language = ''; // If only language is specified on one line after ```
+                            let blockContent = parts[i];
+                            let lang = '';
+                            const langMatch = blockContent.match(/^([a-zA-Z]+)\n([\s\S]*)$/);
+                            if (langMatch) {
+                                lang = langMatch[1];
+                                blockContent = langMatch[2];
                             }
 
-                            formattedText += `<div class="code-block">`;
-                             if (language) {
-                                formattedText += `<div class="code-block-title">${language}</div>`;
-                             }
-                            formattedText += content.replace(/</g, '<').replace(/>/g, '>') + `</div>`; // Escape HTML for code/text block content
+                            if (lang) {
+                                formattedText += `<div class="ai-code-block" data-lang="${lang}">${blockContent}</div>`;
+                            } else {
+                                formattedText += `<div class="ai-text-block">${blockContent}</div>`;
+                            }
                         }
                     }
                     messageDiv.innerHTML = `<span class="ai-message-text">${formattedText}</span>`;
@@ -1033,7 +1045,7 @@
         async function getGeminiResponse() {
             const userPrompt = document.getElementById('user-prompt').value.trim();
             const messagesContainer = document.getElementById('messages-container');
-            let aiMessageDiv = document.createElement('div');
+            let aiMessageDiv = document.createElement('div'); // Declare aiMessageDiv here
 
             if (!userPrompt) {
                 alert("Vui lòng nhập tin nhắn.");
@@ -1093,38 +1105,35 @@
 
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
-                    aiMessageDiv.innerHTML = '';
+                    aiMessageDiv.innerHTML = ''; // Clear "Đang suy nghĩ..." message before adding response
+
 
                     let formattedText = '';
-                    let textBlocks = aiResponseText.split('```');
-                    for (let i = 0; i < textBlocks.length; i++) {
+                    let parts = aiResponseText.split("'''");
+                    for (let i = 0; i < parts.length; i++) {
                         if (i % 2 === 0) {
-                            formattedText += textBlocks[i].replace(/</g, '<').replace(/>/g, '>'); // Escape HTML for regular text
+                            formattedText += parts[i];
                         } else {
-                            let blockContent = textBlocks[i];
-                            let language = '';
-                            let content = blockContent;
-                            const firstLineBreak = blockContent.indexOf('\n');
-                            if (firstLineBreak > -1) {
-                                language = blockContent.substring(0, firstLineBreak).trim();
-                                content = blockContent.substring(firstLineBreak + 1);
-                            } else {
-                                language = blockContent.trim();
-                                content = '';
-                                language = '';
+                            let blockContent = parts[i];
+                            let lang = '';
+                            const langMatch = blockContent.match(/^([a-zA-Z]+)\n([\s\S]*)$/);
+                            if (langMatch) {
+                                lang = langMatch[1];
+                                blockContent = langMatch[2];
                             }
-                            formattedText += `<div class="code-block">`;
-                             if (language) {
-                                formattedText += `<div class="code-block-title">${language}</div>`;
-                             }
-                            formattedText += content.replace(/</g, '<').replace(/>/g, '>') + `</div>`; // Escape HTML for code/text block content
+
+                            if (lang) {
+                                formattedText += `<div class="ai-code-block" data-lang="${lang}">${blockContent}</div>`;
+                            } else {
+                                formattedText += `<div class="ai-text-block">${blockContent}</div>`;
+                            }
                         }
                     }
+                     aiMessageDiv.innerHTML = `<span class="ai-message-text">${formattedText}</span>`;
 
-                      aiMessageDiv.innerHTML = `<span class="ai-message-text">${formattedText}</span>`;
 
+                    const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
 
-                    const aiMessageObject = { role: 'model', parts: [{ text: formattedText }] }; // Store formatted content in history
                     conversationHistory.push(aiMessageObject);
 
 
