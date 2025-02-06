@@ -65,19 +65,19 @@
             width: 95%;
             max-width: 1200px;
             margin: 20px auto;
-            padding: 25px; /* Slightly reduced container padding */
+            padding: 30px; /* Increased padding */
             background-color: var(--container-background-color);
             border-radius: 24px; /* More rounded corners for container */
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6); /* Deeper shadow, more modern */
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 40px); /* Adjusted height with margin */
+            height: 100vh; /* Full viewport height */
             flex-grow: 1;
             margin-left: auto;
             transition: margin-left 0.3s ease, background-color 0.3s ease; /* Container background transition */
             border: none; /* Remove default border */
-            padding-top: max(25px, env(safe-area-inset-top)); /* iOS safe area padding, reduced top padding */
-            padding-bottom: max(25px, env(safe-area-inset-bottom)); /* reduced bottom padding */
+            padding-top: max(20px, env(safe-area-inset-top)); /* Reduced top safe area padding */
+            padding-bottom: max(60px, env(safe-area-inset-bottom)); /* Increased bottom safe area padding */
         }
 
         .container.sidebar-open {
@@ -90,16 +90,17 @@
             margin-bottom: 20px; /* Reduced margin bottom for title */
             font-size: 2.2em; /* Slightly smaller title */
             letter-spacing: -0.8px; /* Tighter letter spacing for modern look */
-            padding-bottom: 18px; /* Reduced padding bottom */
+            padding-bottom: 15px; /* Reduced padding bottom for title */
             border-bottom: 1px solid #444; /* Thinner border */
             opacity: 0.95; /* Slightly less opaque text */
             font-weight: 500; /* Medium font weight */
             transition: color 0.3s ease;
+            line-height: 1.2; /* Tighter line height for title */
         }
 
         #messages-container {
             flex-grow: 1;
-            padding: 20px; /* Reduced padding */
+            padding: 25px; /* Increased padding */
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -111,7 +112,7 @@
             background-color: #1e2124; /* Consistent background */
              box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.4); /* Deeper inner shadow for depth */
              transition: background-color 0.3s ease; /* Messages container background transition */
-             padding-top: 25px; /* Reduced padding at top of messages */
+             padding-top: 20px; /* Reduced padding at top of messages */
         }
 
         #messages-container::-webkit-scrollbar {
@@ -160,23 +161,23 @@
         .ai-message .ai-message-text {
             font-family: 'Arial', sans-serif;
             font-weight: 400; /* Regular font weight */
-            line-height: 1.8; /* Further improved line height */
+            line-height: 1.7; /* Adjusted line height */
             white-space: pre-line;
-            font-size: 16px;
+            font-size: 15px; /* Slightly smaller text in messages */
              transition: color 0.3s ease; /* AI message text color transition */
         }
 
         .markdown-bold-uppercase {
             font-weight: 600; /* Slightly bolder uppercase text */
             text-transform: uppercase;
-            letter-spacing: 0.8px; /* Adjusted letter spacing */
+            letter-spacing: 0.6px; /* Adjusted letter spacing */
             color: #f0f0f0; /* Slightly lighter color for emphasis */
             opacity: 1; /* Full opacity for emphasized text */
              transition: color 0.3s ease;
         }
 
         .input-area {
-            padding: 16px 24px; /* Adjusted input area padding - more horizontal padding */
+            padding: 14px 24px; /* Adjusted input area padding - more horizontal padding */
             background-color: var(--input-area-background-color);
             border-top: 1px solid #555; /* Thinner border */
             display: flex;
@@ -193,20 +194,19 @@
             border-bottom-right-radius: 24px;
              border-top: 1px solid #444;
              transition: background-color 0.3s ease; /* Input area background transition */
-             padding-bottom: max(16px, env(safe-area-inset-bottom)); /* iOS safe area padding */
-             padding-top: 12px; /* Reduced padding top on input area */
+             padding-bottom: max(20px, env(safe-area-inset-bottom)); /* Increased iOS safe area padding */
         }
 
         .input-area textarea {
             flex-grow: 1;
-            padding: 12px 16px; /* Adjusted textarea padding */
+            padding: 10px 14px; /* Adjusted textarea padding */
             border: none; /* Remove textarea border */
             border-radius: 16px; /* More rounded textarea */
-            font-size: 16px;
+            font-size: 15px; /* Slightly smaller text in textarea */
             background-color: var(--input-text-background-color);
             color: #fff;
             resize: none;
-            min-height: 42px; /* Slightly increased min-height */
+            min-height: 40px; /* Slightly decreased min-height */
             overflow-y: auto;
              box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.35); /* Deeper inner shadow for textarea */
              transition: background-color 0.3s ease, color 0.3s ease; /* Textarea background and text color transition */
@@ -219,14 +219,14 @@
         }
 
         .input-area button {
-            padding: 14px 24px; /* Adjusted button padding */
+            padding: 12px 24px; /* Adjusted button padding */
             background-color: var(--button-primary-color);
             color: white;
             border: none;
             border-radius: 16px; /* Rounded button */
             cursor: pointer;
-            font-size: 16px;
-            margin-left: 16px; /* Increased button margin */
+            font-size: 15px; /* Slightly smaller button text */
+            margin-left: 14px; /* Slightly Reduced button margin */
             transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease; /* Button transitions - also borderRadius */
         }
 
@@ -242,12 +242,12 @@
             border-radius: 16px; /* Rounded file button */
             cursor: pointer;
             font-size: 1em;
-            width: 44px; /* Slightly wider file button */
-            height: 44px; /* Slightly taller file button */
+            width: 42px; /* Slightly reduced file button width */
+            height: 42px; /* Slightly reduced file button height */
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-right: 16px; /* Increased margin */
+            margin-right: 14px; /* Slightly Reduced margin */
             opacity: 0.9; /* Increased opacity */
             transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease; /* File button transitions - also borderRadius */
         }
@@ -270,7 +270,7 @@
             transform: translateX(-100%);
             transition: transform 0.3s ease, background-color 0.3s ease; /* Sidebar background transition */
             z-index: 200;
-            padding-top: 65px; /* Reduced sidebar top padding */
+            padding-top: 60px; /* Reduced sidebar top padding */
             box-shadow: 6px 0 12px rgba(0,0,0,0.4); /* More pronounced sidebar shadow */
             overflow-y: auto;
             touch-action: manipulation;
@@ -283,10 +283,10 @@
         }
 
         .sidebar-header {
-            padding: 24px 20px; /* Reduced header padding */
+            padding: 24px 24px; /* Adjusted header padding */
             text-align: center;
             border-bottom: 1px solid #555; /* Thinner header border */
-            margin-bottom: 25px; /* Reduced margin bottom */
+            margin-bottom: 25px; /* Reduced margin below header */
             border-bottom: 1px solid #444;
             transition: background-color 0.3s ease, border-bottom-color 0.3s ease; /* Sidebar header background & border transition */
         }
@@ -294,7 +294,6 @@
         .sidebar-menu {
             padding: 0;
             list-style: none;
-            padding-bottom: 30px; /* Added padding to the bottom of the sidebar menu */
         }
 
         .sidebar-menu-item {
@@ -305,6 +304,7 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid transparent; /* Thinner bottom border on hover */
+            font-size: 15px; /* Slightly smaller menu font */
         }
          .sidebar-menu-item:active {
              background-color: #3a3b47; /* slightly darker on active click for feedback */
@@ -320,7 +320,7 @@
         .sidebar-menu-item.has-submenu > .menu-link::after {
             content: '>';
             float: right;
-            margin-left: 12px;
+            margin-left: 10px; /* Reduced margin for submenu indicator */
             font-size: 0.9em;
             display: inline-block;
             color: #aaa; /* Lighter submenu indicator */
@@ -334,7 +334,7 @@
             overflow: hidden;
             box-shadow: 0 5px 10px rgba(0,0,0,0.45); /* Deeper submenu shadow */
             background-color: #2c2c2c;
-            margin-top: 12px; /* Increased margin top */
+            margin-top: 10px; /* Reduced margin top */
             max-height: 0;
             opacity: 0;
             transition: max-height 0.4s ease-out, opacity 0.3s ease-out, background-color 0.3s ease, margin-top 0.3s ease; /* Submenu transitions and background transition & marginTop */
@@ -348,9 +348,9 @@
             max-height: 600px; /* Increased max-height for submenu */
             opacity: 1;
             overflow-y: auto;
-            padding-top: 12px;
-            padding-bottom: 16px;
-            margin-top: 16px; /* increased marginTop when opened */
+            padding-top: 10px; /* Reduced padding top for submenu */
+            padding-bottom: 14px; /* Reduced padding bottom for submenu */
+            margin-top: 14px; /* slightly reduced marginTop when opened */
         }
 
 
@@ -362,6 +362,7 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #333;
+            font-size: 15px; /* Slightly smaller submenu font */
         }
          .submenu-item:active {
              background-color: #3a3b47; /* slightly darker on active click for feedback */
@@ -389,8 +390,8 @@
             border: none;
             color: #aaa;
             cursor: pointer;
-            font-size: 1em;
-            padding: 0 10px; /* Adjusted delete button padding */
+            font-size: 0.9em; /* Slightly smaller delete button text */
+            padding: 0 8px; /* Adjusted delete button padding */
             opacity: 0.7; /* Lower opacity initially */
             transition: opacity 0.2s ease, color 0.2s ease;
         }
@@ -408,8 +409,8 @@
             color: white;
             border: none;
             border-radius: 50%;
-            width: 44px; /* Slightly larger toggle button */
-            height: 44px; /* Slightly larger toggle button */
+            width: 46px; /* Slightly smaller toggle button */
+            height: 46px; /* Slightly smaller toggle button */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -448,17 +449,18 @@
         }
 
         .close-history-menu-btn, .close-settings-menu-btn, .modal-button {
-            padding: 14px 24px; /* Adjusted close button padding */
+            padding: 12px 24px; /* Adjusted close button padding */
             background-color: var(--button-primary-color);
             color: white;
             border: none;
             border-radius: 16px; /* Rounded close button */
             cursor: pointer;
-            margin-top: 18px; /* Reduced marginTop for close buttons */
+            margin-top: 18px; /* Slightly reduced marginTop for close buttons */
             display: block;
             margin-left: auto;
             margin-right: auto;
             transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease; /* Close button transitions - also borderRadius */
+            font-size: 15px; /* Slightly smaller close button font */
         }
 
         .close-history-menu-btn:hover, .close-settings-menu-btn:hover, .modal-button.confirm:hover {
@@ -517,7 +519,7 @@
             border-radius: 24px; /* More rounded modal */
             box-shadow: 0 16px 32px rgba(0, 0, 0, 0.7); /* Deeper modal shadow */
             width: 85%; /* Slightly wider modal */
-            max-width: 500px; /* Increased max width for modal */
+            max-width: 480px; /* Slightly reduced max width for modal */
             text-align: center;
             border: none; /* Remove default border */
             transform: scale(0.97); /* Start slightly smaller */
@@ -532,8 +534,8 @@
 
 
         .modal-message {
-            margin-bottom: 22px; /* Reduced modal message margin */
-            font-size: 1.15em; /* Slightly larger modal message font */
+            margin-bottom: 20px; /* Reduced modal message margin */
+            font-size: 1.1em; /* Slightly smaller modal message font */
              transition: color 0.3s ease; /* Modal message text color transition */
              font-weight: 500; /* Medium font weight for modal message */
              opacity: 0.95;
@@ -541,29 +543,30 @@
 
         .modal-input {
             width: calc(100% - 24px);
-            padding: 14px 16px; /* Adjusted modal input padding */
-            margin-bottom: 22px; /* Reduced margin for modal input */
+            padding: 12px 14px; /* Adjusted modal input padding */
+            margin-bottom: 20px; /* Reduced margin for modal input */
             border-radius: 12px;
             border: none; /* Remove modal input border */
             background-color: var(--input-text-background-color);
             color: #fff;
              box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.35); /* Deeper inner shadow for modal input */
              transition: background-color 0.3s ease, color 0.3s ease; /* Modal input background & text transition */
+             font-size: 15px; /* Slightly smaller font for modal input */
         }
 
         .modal-buttons {
             display: flex;
             justify-content: center;
-            gap: 25px; /* Increased gap between modal buttons */
-            margin-top: 8px; /* reduced margin to the modal buttons group */
+            gap: 20px; /* Reduced gap between modal buttons */
+            margin-top: 10px; /* added margin to the modal buttons group */
         }
 
         .modal-button {
-            padding: 14px 28px; /* Adjusted modal button padding */
+            padding: 12px 24px; /* Adjusted modal button padding */
             border: none;
             border-radius: 16px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 15px; /* Slightly smaller modal button font */
             transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease; /* Modal buttons transitions - also borderRadius */
             border: none; /* Remove modal button border */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25); /* Add shadow to modal buttons */
@@ -575,22 +578,22 @@
             background: #272822;
             position: relative;
             border-radius: 12px; /* Rounded code blocks */
-            padding: 18px; /* Reduced code block padding */
-            margin-bottom: 18px; /* Reduced margin below code blocks */
+            padding: 18px; /* Slightly reduced code block padding */
+            margin-bottom: 18px; /* Slightly reduced margin below code blocks */
             overflow-x: auto; /* Horizontal scroll if code is wide */
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); /* Shadow for code blocks */
         }
 
         .copy-code-button {
             position: absolute;
-            top: 12px; /* Adjusted copy button position */
-            right: 12px;
+            top: 10px; /* Adjusted copy button position */
+            right: 10px;
             background-color: #444;
             color: white;
             border: none;
             border-radius: 12px;
-            padding: 7px 11px; /* Slightly Reduced copy button padding */
-            font-size: 0.9em;
+            padding: 7px 11px; /* Adjusted copy button padding */
+            font-size: 0.85em; /* Slightly smaller copy button font */
             cursor: pointer;
             opacity: 0.7; /* slightly lower opacity for copy button */
             transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease; /* Copy button transitions - also borderRadius */
@@ -615,6 +618,7 @@
             justify-content: space-between;
             align-items: center;
              transition: background-color 0.3s ease, border-bottom-color 0.3s ease, padding-left 0.2s ease; /* Setting item transitions - also padding-left */
+             font-size: 15px; /* Slightly smaller setting item font */
         }
 
         .setting-item:last-child {
@@ -645,8 +649,8 @@
         .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 50px;
-            height: 24px;
+            width: 45px; /* Slightly smaller toggle switch */
+            height: 22px; /* Slightly smaller toggle switch */
         }
 
         .toggle-switch input[type="checkbox"] {
@@ -670,8 +674,8 @@
         .slider:before {
             position: absolute;
             content: "";
-            height: 18px;
-            width: 18px;
+            height: 16px; /* Slightly smaller slider handle */
+            width: 16px; /* Slightly smaller slider handle */
             left: 3px;
             bottom: 3px;
             background-color: white;
@@ -688,13 +692,13 @@
         }
 
         input:checked + .slider:before {
-            transform: translateX(26px);
+            transform: translateX(23px); /* Adjusted translateX for smaller switch */
         }
         .color-picker-input {
             padding: 0;
             border: none;
-            width: 30px;
-            height: 24px;
+            width: 28px; /* Slightly smaller color picker */
+            height: 22px; /* Slightly smaller color picker */
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
@@ -714,40 +718,14 @@
         }
         .color-picker-input::-webkit-color-swatch {
             border: 1px solid #555;
-            border-radius: 6px;
+            border-radius: 5px;
         }
         .color-picker-input::-moz-color-swatch-wrapper {
             padding: 0;
         }
         .color-picker-input::-moz-color-swatch {
             border: 1px solid #555;
-            border-radius: 6px;
-        }
-
-        /* Landscape orientation adjustments */
-        @media screen and (orientation: landscape) {
-            .container {
-                flex-direction: row; /* Make container row in landscape */
-                height: calc(100vh - 40px); /* Adjust height if needed */
-                padding-left: max(20px, env(safe-area-inset-left));
-                padding-right: max(20px, env(safe-area-inset-right));
-            }
-             .container.sidebar-open {
-                margin-left: 300px; /* Wider sidebar margin in landscape if open */
-            }
-
-
-            #messages-container {
-                width: 70%; /* Take more width in landscape for messages */
-                height: auto; /* Adjust height in landscape */
-                border-radius: 24px; /* More rounded in landscape */
-                padding-bottom: 20px; /* reduce bottom padding */
-            }
-            .input-area {
-                border-radius: 24px; /* more rounded input in landscape */
-            }
-
-
+            border-radius: 5px;
         }
 
 
