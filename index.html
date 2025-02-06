@@ -595,8 +595,8 @@
             color: white;
             border: none;
             border-radius: 6px;
-            padding: 5px 10px;
-            font-size: 0.75em;
+            padding: 8px 14px; /* Increased padding */
+            font-size: 0.85em; /* Increased font-size */
             cursor: pointer;
             opacity: 0.7;
             transition: opacity 0.3s ease, background-color 0.3s ease;
@@ -610,7 +610,7 @@
         .copy-success-notification-inline {
             position: absolute;
             top: 0.5em;
-            right: 3.5em; /* Adjust to position next to the copy button */
+            right: 4.5em; /* Adjusted position further right */
             background-color: #4CAF50;
             color: white;
             padding: 5px 10px;
@@ -838,10 +838,27 @@
         }
 
         function saveChatHistory() {
-            if (autoSaveHistorySetting()) {
+            if (!autoSaveHistorySetting()) {
                 localStorage.setItem('chatHistory', JSON.stringify(conversationHistory));
+                return;
             }
+
+            let historyName = currentHistoryName;
+            if (autoSaveHistorySetting()) {
+                if (!historyName) {
+                    if (useFirstMessageAsNameSetting() && conversationHistory.length > 0 && conversationHistory[0].role === 'user') {
+                        historyName = conversationHistory[0].parts[0].text.substring(0, 50) || 'No Title';
+                    } else {
+                        historyName = `Chat lúc ${new Date().toLocaleTimeString()}, ${new Date().toLocaleDateString()}`;
+                    }
+                }
+                savedHistories[historyName] = [...conversationHistory];
+                localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
+                currentHistoryName = historyName; // Keep track of the auto-saved history name
+            }
+            localStorage.setItem('chatHistory', JSON.stringify(conversationHistory)); // Still keep session history
         }
+
 
         function renderMessages() {
             const messagesContainer = document.getElementById('messages-container');
@@ -850,13 +867,17 @@
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
                 let messageText = message.parts[0].text;
+
+                // Sanitize message text to prevent HTML/CSS injection
+                messageText = messageText.replace(/</g, '<').replace(/>/g, '>');
+
+
                 if (message.role === 'ai') {
 
-                    // Convert markdown code blocks to <pre><code>...</code></pre> and add copy button
-                    const codeBlockRegex = /```([a-zA-Z0-9]*)\n([\s\S]*?)\n```/g;
+                    // Re-enable code block formatting after sanitizing general text
+                    const codeBlockRegex = /<pre><code class="([a-zA-Z0-9]*)">([\s\S]*?)<\/code><\/pre>/g; // Adjusted regex for escaped <pre><code>
                     messageText = messageText.replace(codeBlockRegex, (match, language, code) => {
-                        const escapedCode = code.trim().replace(/</g, '<').replace(/>/g, '>'); // escape HTML
-                        return `<pre><code class="${language}">${escapedCode}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button><span class="copy-success-notification-inline"></span></pre>`;
+                        return `<pre><code class="${language}">${code}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button><span class="copy-success-notification-inline"></span></pre>`;
                     });
 
 
@@ -1091,15 +1112,9 @@
                 return;
             }
 
-             if (currentHistoryName) {
-                savedHistories[currentHistoryName] = [...conversationHistory, { role: 'user', parts: [{ text: userPrompt }] } ];
-                localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-            }
-
-
             const userMessageObject = { role: 'user', parts: [{ text: userPrompt }] };
             conversationHistory.push(userMessageObject);
-            saveChatHistory();
+            saveChatHistory(); // Save user message to history right away
             renderMessages();
             document.getElementById('user-prompt').value = '';
 
@@ -1146,11 +1161,14 @@
                     let aiResponseText = data.candidates[0].content.parts[0].text;
                     aiMessageDiv.innerHTML = ''; // Clear "Đang suy nghĩ..." message before adding response
 
-                    // Convert markdown code blocks to <pre><code>...</code></pre> and add copy button
-                    const codeBlockRegex = /```([a-zA-Z0-9]*)\n([\s\S]*?)\n```/g;
+
+                    // Sanitize AI response text
+                    aiResponseText = aiResponseText.replace(/</g, '<').replace(/>/g, '>');
+
+                    // Re-enable code block formatting after sanitizing general text
+                    const codeBlockRegex = /<pre><code class="([a-zA-Z0-9]*)">([\s\S]*?)<\/code><\/pre>/g; // Adjusted regex for escaped <pre><code>
                     aiResponseText = aiResponseText.replace(codeBlockRegex, (match, language, code) => {
-                        const escapedCode = code.trim().replace(/</g, '<').replace(/>/g, '>'); // escape HTML
-                        return `<pre><code class="${language}">${escapedCode}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button><span class="copy-success-notification-inline"></span></pre>`;
+                        return `<pre><code class="${language}">${code}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button><span class="copy-success-notification-inline"></span></pre>`;
                     });
 
 
