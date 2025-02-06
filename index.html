@@ -583,8 +583,8 @@
 
        .copy-code-button {
             position: absolute;
-            bottom: 8px; /* Moved to bottom */
-            left: 8px;   /* Moved to left */
+            bottom: 8px;
+            left: 8px;
             background-color: var(--copy-button-bg);
             color: var(--copy-button-text-color);
             border: none;
@@ -887,6 +887,7 @@
 
         let currentHistoryName = null;
 
+
         document.body.addEventListener('click', async (event) => {
             if (event.target.classList.contains('copy-code-button')) {
                 const codeElement = event.target.closest('pre').querySelector('code');
@@ -958,8 +959,7 @@
 
                          if(!buttonExists )
                             codeBlock.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>');
-
-                        })
+                    })
                 } else {
                     messageDiv.innerHTML = messageText;
                 }
@@ -968,7 +968,6 @@
             });
 
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
         }
 
 
