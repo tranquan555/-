@@ -576,7 +576,8 @@
             padding: 20px; /* Increased code block padding */
             margin-bottom: 20px; /* Increased margin below code blocks */
             overflow-x: auto; /* Horizontal scroll if code is wide */
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); /* Shadow for code blocks */
+            box-shadow: none; /* REMOVED Shadow for code blocks */
+            transition: none; /* REMOVED transition for code blocks */
         }
 
         .copy-code-button {
@@ -591,157 +592,8 @@
             font-size: 0.9em;
             cursor: pointer;
             opacity: 0.7; /* slightly lower opacity for copy button */
-            /* transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;  Copy button transitions - also borderRadius */ /* REMOVED TRANSITION */
+            transition: none; /* REMOVED transition for copy button */
         }
-
-        /*.copy-code-button:hover {  REMOVED HOVER EFFECT
-            opacity: 1;
-            background-color: var(--button-primary-color);
-             transform: scale(1.05);  Subtle scale up on hover
-        }*/
-         /*.copy-code-button:active {  REMOVED ACTIVE EFFECT
-             transform: scale(0.98);  subtle scale down on active click for feedback
-             opacity: 0.9;  slight opacity reduction for feedback
-         }*/
-
-
-        /* Settings Styles */
-        .setting-item {
-            padding: 18px 24px; /* Adjusted setting-item padding */
-            border-bottom: 1px solid #333;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-             transition: background-color 0.3s ease, border-bottom-color 0.3s ease, padding-left 0.2s ease; /* Setting item transitions - also padding-left */
-        }
-
-        .setting-item:last-child {
-            border-bottom: none;
-        }
-         .setting-item:active {
-             background-color: #3a3b47; /* slightly darker on active click for feedback */
-         }
-
-
-        .setting-item:hover {
-            background-color: #343541;
-            padding-left: 30px; /* Indent settings items on hover too */
-        }
-
-
-        .setting-label {
-            flex-grow: 1;
-             transition: color 0.3s ease; /* Setting label text color transition */
-             opacity: 0.9; /* slightly less opaque setting label */
-             font-weight: 400; /* regular font weight for setting labels */
-        }
-
-        .setting-control {
-            /* Style for controls like toggle or color picker */
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-
-        .toggle-switch input[type="checkbox"] {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s, background-color 0.3s ease; /* Slider transitions and background color transition */
-            border-radius: 34px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: var(--button-primary-color);
-        }
-
-        input:focus + .slider {
-            box-shadow: 0 0 1px var(--button-primary-color);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-        .color-picker-input {
-            padding: 0;
-            border: none;
-            width: 30px;
-            height: 24px;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            background-color: transparent;
-            cursor: pointer;
-             transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Color picker transitions */
-        }
-         .color-picker-input:hover, .color-picker-input:focus {
-             border-color: var(--button-primary-color);
-             box-shadow: 0 0 5px rgba(0, 188, 212, 0.5);
-             outline: none;
-         }
-
-
-        .color-picker-input::-webkit-color-swatch-wrapper {
-            padding: 0;
-        }
-        .color-picker-input::-webkit-color-swatch {
-            border: 1px solid #555;
-            border-radius: 6px;
-        }
-        .color-picker-input::-moz-color-swatch-wrapper {
-            padding: 0;
-        }
-        .color-picker-input::-moz-color-swatch {
-            border: 1px solid #555;
-            border-radius: 6px;
-        }
-
-        /* REMOVE ALL TRANSITIONS AND EFFECTS ON CODE BLOCK*/
-        code[class*="language-"],
-        pre[class*="language-"] {
-            /*transition: background-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease;*/ /* REMOVED TRANSITION */
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); /* Shadow for code blocks */
-        }
-
-        /*.copy-code-button { REMOVED TRANSITION FROM COPY BUTTON ALREADY*/
-        /*    transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;  Copy button transitions - also borderRadius */
-        /*}*/
-
-        /*.copy-code-button:hover { REMOVED HOVER EFFECT FROM COPY BUTTON ALREADY*/
-        /*    opacity: 1;
-        /*    background-color: var(--button-primary-color);
-        /*     transform: scale(1.05);  Subtle scale up on hover
-        /*}*/
-         /*.copy-code-button:active { REMOVED ACTIVE EFFECT FROM COPY BUTTON ALREADY*/
-         /*    transform: scale(0.98);  subtle scale down on active click for feedback
-         /*    opacity: 0.9;  slight opacity reduction for feedback
-         /*}*/
 
 
     </style>
@@ -866,7 +718,6 @@
          <input type="file" id="file-upload" style="display:none" multiple onchange="handleFileUpload(this.files)">
     </div>
 
-    <div id="copy-notification" style="position: fixed; top: 10px; right: 10px; background-color: #343541; color: white; padding: 10px 15px; border-radius: 8px; opacity: 0; transition: opacity 0.3s ease; z-index: 500;">Đã sao chép vào clipboard!</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
@@ -1258,13 +1109,13 @@
                         copyButton.innerHTML = '<i class="fas fa-copy"></i>';
                         codePre.appendChild(copyButton);
 
-                        // Modified copy button onclick
+                        // Modified copy button onclick to show in-message notification
                         copyButton.onclick = () => {
                             navigator.clipboard.writeText(codeContent).then(() => {
-                                showCopyNotification(); // Show in-page notification
+                                showCopyNotification(codePre, 'Đã sao chép!'); // Show in-message notification
                             }).catch(err => {
                                 console.error('Lỗi khi sao chép: ', err);
-                                alert('Lỗi khi sao chép code.');
+                                showCopyNotification(codePre, 'Lỗi sao chép!'); // Show error in-message notification
                             });
                         };
 
@@ -1314,13 +1165,22 @@
             }
         }
 
-        // Function to show in-page copy notification
-        function showCopyNotification() {
-            const notification = document.getElementById('copy-notification');
-            notification.style.opacity = '1';
+        // Function to show in-message copy notification
+        function showCopyNotification(codeBlockElement, message) {
+            const notificationSpan = document.createElement('span');
+            notificationSpan.textContent = message;
+            notificationSpan.style.backgroundColor = '#343541';
+            notificationSpan.style.color = 'white';
+            notificationSpan.style.padding = '10px 15px';
+            notificationSpan.style.borderRadius = '8px';
+            notificationSpan.style.fontSize = '1.1em'; // Slightly larger font
+            notificationSpan.style.marginLeft = '10px'; // Add some spacing
+            notificationSpan.style.verticalAlign = 'middle'; // Align with the button
+            codeBlockElement.appendChild(notificationSpan); // Append to code block
+
             setTimeout(() => {
-                notification.style.opacity = '0';
-            }, 2000); // Fade out after 2 seconds
+                notificationSpan.remove(); // Remove after 2 seconds
+            }, 2000);
         }
 
 
