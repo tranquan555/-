@@ -1,3 +1,4 @@
+--- START OF FILE vip1 2.html ---
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -732,23 +733,16 @@
             const sidebar = document.getElementById('sidebar');
             const container = document.getElementById('container');
             const overlay = document.getElementById('sidebar-overlay');
-            const body = document.querySelector('body'); // Lấy đối tượng body
-            
-        if (!sidebar.classList.contains('sidebar--open')) {
-            // Nếu sidebar đang đóng, thì mở nó ra
-            sidebar.classList.add('sidebar--open');
-            body.classList.add('sidebar--open');
-            container.classList.add('container.sidebar-open');
-            overlay.classList.add('sidebar--open');
-            loadSavedHistoriesList();
-        } else {
-            //Nếu sidebar đang mở, thì đóng nó lại
-            sidebar.classList.remove('sidebar--open');
-            container.classList.remove('sidebar-open');
-            container.classList.remove('container.sidebar-open');
-            overlay.classList.remove('sidebar--open');
-            hideHistoryMenu();
-            hideSettingsMenu();
+            sidebar.classList.toggle('sidebar--open');
+            body = document.querySelector('body');
+            body.classList.toggle('sidebar--open');
+            container.classList.toggle('container.sidebar-open');
+            overlay.classList.toggle('sidebar--open');
+            if (sidebar.classList.contains('sidebar--open')) {
+                 loadSavedHistoriesList();
+            } else {
+                hideHistoryMenu();
+                hideSettingsMenu();
             }
         }
 
@@ -801,20 +795,18 @@
 
 
         function openSaveHistoryModal() {
-            if (!isSaveHistoryModalOpen) {
-                const modalOverlay = document.getElementById('saveHistoryModalOverlay');
-                modalOverlay.classList.add('show-modal');
-                modalOverlay.style.display = 'flex'; // Ensure it's displayed as flex
+            if (!isSaveHistoryModalOpen) { // Check if modal is already open - **ADDITION**
+                document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
                 document.getElementById('historyNameInput').value = '';
-                isSaveHistoryModalOpen = true;
+                isSaveHistoryModalOpen = true; // Set modal state to open - **ADDITION**
             }
         }
 
         function closeSaveHistoryModal() {
-            const modalOverlay = document.getElementById('saveHistoryModalOverlay');
-            modalOverlay.classList.remove('show-modal');
-            modalOverlay.style.display = 'none'; // Explicitly set display to none when closing
-            isSaveHistoryModalOpen = false;
+            const modalOverlay = document.getElementById('saveHistoryModalOverlay'); // Get the overlay element
+            modalOverlay.classList.remove('show-modal'); // Make sure the class to show modal is removed
+            modalOverlay.style.display = 'none';       // Explicitly set display to none to hide it
+            isSaveHistoryModalOpen = false;             // Ensure the modal open flag is reset
         }
 
         function saveHistoryWithInputName() {
@@ -824,7 +816,7 @@
                 localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
                 alert(`Lịch sử chat đã được lưu với tên: ${historyName}`);
                 loadSavedHistoriesList();
-                closeSaveHistoryModal(); // Keep closeSaveHistoryModal call here
+                closeSaveHistoryModal();
             } else {
                 alert("Vui lòng nhập tên cho lịch sử chat.");
             }
