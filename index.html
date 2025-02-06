@@ -1,4 +1,5 @@
---- START OF FILE vip1 3.html ---
+--- START OF FILE vip4ganhoanchinh 2.html ---
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -590,6 +591,11 @@
             margin-bottom: 18px;   /* reduce size as requested by end use */
             overflow-x: auto;      /* Scroll only Horizontally */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Softer shadow */
+            /* Force crisp edges, disable any scaling/interpolation that may cause blur */
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            -ms-interpolation-mode: nearest-neighbor;
         }
 
        .copy-code-button {
@@ -615,6 +621,22 @@
             position: relative;
         }
 
+        /* Copy Success Message Style */
+        .copy-success-message {
+            position: absolute;
+            top: 8px;
+            right: 45px; /* Adjust to position next to the copy button */
+            background-color: var(--button-primary-color);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .copy-success-message.show {
+            opacity: 1;
+        }
 
 
         /* Settings Styles */
@@ -873,7 +895,21 @@
                 if (codeElement) {
                     try {
                         await navigator.clipboard.writeText(codeElement.textContent);
-                        alert('Code copied to clipboard!');
+                        // Modern copy success message
+                        const copyButton = event.target;
+                        let successMessage = copyButton.querySelector('.copy-success-message');
+                        if (!successMessage) {
+                            successMessage = document.createElement('span');
+                            successMessage.classList.add('copy-success-message');
+                            successMessage.textContent = 'Đã sao chép!';
+                            copyButton.appendChild(successMessage);
+                        }
+                        successMessage.classList.add('show');
+                        setTimeout(() => {
+                            successMessage.classList.remove('show');
+                        }, 1500); // Hide after 1.5 seconds
+
+
                     } catch (err) {
                         console.error('Failed to copy code: ', err);
                         alert('Failed to copy code.');
@@ -930,7 +966,7 @@
                       let buttonExists =  codeBlock.querySelector('.copy-code-button') !== null
 
                          if(!buttonExists )
-                            codeBlock.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>'); // Add copy-code buttons (Now ALWAYS and all new renders from code added.
+                            codeBlock.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i> <span class="copy-success-message"></span></button>'); // Add copy-code buttons (Now ALWAYS and all new renders from code added.
 
                         })
                 }
