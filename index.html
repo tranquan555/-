@@ -794,20 +794,27 @@
 
 
         function openSaveHistoryModal() {
+            console.log("openSaveHistoryModal() called. isSaveHistoryModalOpen before check:", isSaveHistoryModalOpen); // DEBUG LOG
             if (!isSaveHistoryModalOpen) {
-                const modalOverlay = document.getElementById('saveHistoryModalOverlay');
-                modalOverlay.classList.add('show-modal'); // Add the class for styling
-                modalOverlay.style.display = 'flex';      // **Explicitly set display to flex**
+                console.log("Modal is NOT open, proceeding to open."); // DEBUG LOG
+                document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
                 document.getElementById('historyNameInput').value = '';
                 isSaveHistoryModalOpen = true;
+                console.log("isSaveHistoryModalOpen set to TRUE (modal opened)."); // DEBUG LOG
+            } else {
+                console.log("Modal is ALREADY open, doing nothing."); // DEBUG LOG
+            }
+                console.log("isSaveHistoryModalOpen after openSaveHistoryModal():", isSaveHistoryModalOpen); // DEBUG LOG
         }
-}
 
         function closeSaveHistoryModal() {
-            const modalOverlay = document.getElementById('saveHistoryModalOverlay'); // Get the overlay element
-            modalOverlay.classList.remove('show-modal'); // Make sure the class to show modal is removed
-            modalOverlay.style.display = 'none';       // Explicitly set display to none to hide it
-            isSaveHistoryModalOpen = false;             // Ensure the modal open flag is reset
+            console.log("closeSaveHistoryModal() called. isSaveHistoryModalOpen before close:", isSaveHistoryModalOpen); // DEBUG LOG
+            const modalOverlay = document.getElementById('saveHistoryModalOverlay');
+            modalOverlay.classList.remove('show-modal');
+            modalOverlay.style.display = 'none';
+            isSaveHistoryModalOpen = false;
+            console.log("isSaveHistoryModalOpen set to FALSE (modal closed)."); // DEBUG LOG
+            console.log("isSaveHistoryModalOpen after closeSaveHistoryModal():", isSaveHistoryModalOpen); // DEBUG LOG
         }
 
         function saveHistoryWithInputName() {
