@@ -1063,19 +1063,13 @@
 
                         const copyButton = document.createElement('button');
                         copyButton.classList.add('copy-code-button');
-                        copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+                        copyButton.innerHTML = '<i class="fas fa-copy"></i>'; // Using Font Awesome icon
                         copyButton.onclick = () => {
-                            const originalButtonText = copyButton.innerHTML;
-                            copyButton.innerHTML = 'Đã sao chép!'; // Change button text to confirmation
-
                             navigator.clipboard.writeText(codeContent).then(() => {
-                                 setTimeout(() => { // Revert after delay
-                                    copyButton.innerHTML = originalButtonText;
-                                }, 1500); // 1.5 seconds delay
+                                alert('Đã sao chép code vào clipboard!');
                             }).catch(err => {
                                 console.error('Lỗi khi sao chép: ', err);
                                 alert('Lỗi khi sao chép code.');
-                                copyButton.innerHTML = originalButtonText; // Revert on error too
                             });
                         };
                         codePre.appendChild(copyButton);
