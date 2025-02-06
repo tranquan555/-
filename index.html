@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" integrity="sha512-vsweMjIyTnRe2oFPPgv divisionsbjSqVc2gOGMm6tAVu/liiNOzVt+oTJlDPg3Ju/Y+yj+6zlD1lGTnrXxyHxNurNtQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
         :root {
@@ -570,45 +571,6 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
         }
 
-        code[class*="language-"],
-        pre[class*="language-"] {
-            color: black;
-            background: transparent; /* Transparent background */
-            position: relative;
-            overflow-x: auto;
-             padding: 1em;
-             border-radius: 8px;
-             margin-bottom: 18px;
-             border: 1px solid #ccc; /* Gemini-like border */
-             font-family: monospace, monospace;
-             white-space: pre-wrap; /* Keep white-space: pre-wrap for text wrap */
-        }
-
-       .copy-code-button {
-            position: absolute;
-            bottom: 4px; /* Slightly lower button */
-            left: 8px;
-            background-color: #ddd;
-            color: black;
-            border: 1px solid #bbb;
-            border-radius: 6px;
-            padding: 6px 10px;
-            font-size: 0.85em;
-            cursor: pointer;
-            opacity: 0.8;
-            transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-            z-index: 2;
-        }
-        .copy-code-button:hover {
-            opacity: 1;
-            background-color: var(--button-primary-color);
-            color: white;
-            border-color:  var(--button-primary-color);
-        }
-        pre[class*="language-"] {
-            position: relative;
-            z-index: 0;
-        }
 
         /* Success Notification Styles */
         .copy-success-notification {
@@ -764,6 +726,10 @@
     </div>
 
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-SILsPQeZy0s7qK7BUnxa42v+oRXTJg14KSPP1nEqR3331lSgT4y5C7+j37jpjP/40n8iyjIipJEu2noo03rw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js" integrity="sha512-GDdRtBOn87s8imxGx04oN82yKxikN/V+R5y2G5o2kPj5OaJryv+Gu1KiJk5dCSjYJzWJ+Rme/yL9v50EctzKTA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" integrity="sha512-4I9xR+QlKJ72iVFsem8wEfegGxJx5MBsl6r1Ioz+tsjPdi991r+Lg5+a5I7j7XJp3xWXuYU9JGeOQXk5jI9i/Q==" crossorigin="anonymous"></script>
+
     <script>
         const apiKey = 'AIzaSyAd9p1hXhUcRx4Pz7EmbUKC-V8ULN8L61Q';
         const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
@@ -847,24 +813,13 @@
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
                 let messageText = message.parts[0].text;
                 if (message.role === 'ai') {
-
                     messageDiv.innerHTML = `<span class="ai-message-text">${messageText}</span>`;
-
-                    messageDiv.querySelectorAll('pre').forEach(codeBlock => {
-
-                      let buttonExists =  codeBlock.querySelector('.copy-code-button') !== null
-
-                         if(!buttonExists )
-                            codeBlock.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>');
-
-                        })
                 } else {
                     messageDiv.innerHTML = messageText;
                 }
-
                 messagesContainer.appendChild(messageDiv);
             });
-
+            Prism.highlightAll();
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
         }
@@ -1146,9 +1101,7 @@
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
                     aiMessageDiv.innerHTML = '';
-
-
-                      aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
+                    aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
 
                     const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
 
@@ -1164,7 +1117,6 @@
 
 
                    messagesContainer.appendChild(aiMessageDiv);
-
                  messagesContainer.scrollTop = messagesContainer.scrollHeight;
                  }
                 else
