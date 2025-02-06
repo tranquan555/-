@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Hiện Đại với Gemini</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit: cover;">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -586,36 +586,42 @@
         code {
             background-color: transparent; /* Ensure code background is transparent */
             padding: 0; /* Remove padding from inline code if any */
-        }
-        .copy-code-button {
-            position: absolute;
-            top: 0.5em;
-            right: 0.5em;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 8px 14px; /* Increased padding */
-            font-size: 0.85em; /* Increased font-size */
-            cursor: pointer;
-            opacity: 0.7;
-            transition: opacity 0.3s ease, background-color 0.3s ease;
+            display: block; /* Make code behave as block element within pre */
+            overflow-x: auto; /* Enable horizontal scroll for code within <code> */
+            white-space: pre; /* Preserve whitespace and line breaks */
         }
 
+        .copy-code-button {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            background-color: #ddd;
+            color: black;
+            border: 1px solid #bbb;
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 0.85em;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+            z-index: 2;
+        }
         .copy-code-button:hover {
             opacity: 1;
-            background-color: rgba(255, 255, 255, 0.2);
+            background-color: var(--button-primary-color);
+            color: white;
+            border-color:  var(--button-primary-color);
         }
 
         .copy-success-notification-inline {
             position: absolute;
-            top: 0.5em;
-            right: 4.5em; /* Adjusted position further right */
+            bottom: 8px;
+            right: 8px;
             background-color: #4CAF50;
             color: white;
-            padding: 5px 10px;
+            padding: 6px 10px;
             border-radius: 6px;
-            font-size: 0.75em;
+            font-size: 0.85em;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -785,7 +791,7 @@
             if (event.target.classList.contains('copy-code-button')) {
                 const codeElement = event.target.closest('pre').querySelector('code');
                 const copyButton = event.target;
-                if (codeElement) {
+                if (codeElement && copyButton) {
                     try {
                         await navigator.clipboard.writeText(codeElement.textContent);
                         showCopyNotificationInline(copyButton);
@@ -798,16 +804,16 @@
         });
 
         function showCopyNotificationInline(button) {
-            let notification = button.nextElementSibling;
-            if (!notification || !notification.classList.contains('copy-success-notification-inline')) {
-                notification = document.createElement('span');
-                notification.classList.add('copy-success-notification-inline');
-                notification.textContent = 'Đã sao chép!';
-                button.parentNode.insertBefore(notification, button.nextSibling); // Insert after button
+            let notificationSpan = button.nextElementSibling;
+            if (!notificationSpan || !notificationSpan.classList.contains('copy-success-notification-inline')) {
+                notificationSpan = document.createElement('span');
+                notificationSpan.classList.add('copy-success-notification-inline');
+                button.parentNode.appendChild(notificationSpan); // Append to pre, not button
+                notificationSpan.textContent = 'Đã sao chép!';
             }
-            notification.classList.add('show');
+            notificationSpan.classList.add('show');
             setTimeout(() => {
-                notification.classList.remove('show');
+                notificationSpan.classList.remove('show');
             }, 2000);
         }
 
@@ -838,27 +844,10 @@
         }
 
         function saveChatHistory() {
-            if (!autoSaveHistorySetting()) {
-                localStorage.setItem('chatHistory', JSON.stringify(conversationHistory));
-                return;
-            }
-
-            let historyName = currentHistoryName;
             if (autoSaveHistorySetting()) {
-                if (!historyName) {
-                    if (useFirstMessageAsNameSetting() && conversationHistory.length > 0 && conversationHistory[0].role === 'user') {
-                        historyName = conversationHistory[0].parts[0].text.substring(0, 50) || 'No Title';
-                    } else {
-                        historyName = `Chat lúc ${new Date().toLocaleTimeString()}, ${new Date().toLocaleDateString()}`;
-                    }
-                }
-                savedHistories[historyName] = [...conversationHistory];
-                localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-                currentHistoryName = historyName; // Keep track of the auto-saved history name
+                localStorage.setItem('chatHistory', JSON.stringify(conversationHistory));
             }
-            localStorage.setItem('chatHistory', JSON.stringify(conversationHistory)); // Still keep session history
         }
-
 
         function renderMessages() {
             const messagesContainer = document.getElementById('messages-container');
@@ -867,23 +856,26 @@
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
                 let messageText = message.parts[0].text;
-
-                // Sanitize message text to prevent HTML/CSS injection
-                messageText = messageText.replace(/</g, '<').replace(/>/g, '>');
-
-
                 if (message.role === 'ai') {
-
-                    // Re-enable code block formatting after sanitizing general text
-                    const codeBlockRegex = /<pre><code class="([a-zA-Z0-9]*)">([\s\S]*?)<\/code><\/pre>/g; // Adjusted regex for escaped <pre><code>
-                    messageText = messageText.replace(codeBlockRegex, (match, language, code) => {
-                        return `<pre><code class="${language}">${code}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button><span class="copy-success-notification-inline"></span></pre>`;
-                    });
-
 
                     messageDiv.innerHTML = `<span class="ai-message-text">${messageText}</span>`;
 
+                    messageDiv.querySelectorAll('pre').forEach(codeBlock => {
+                      let buttonExists =  codeBlock.querySelector('.copy-code-button') !== null;
+                         if(!buttonExists ) {
+                             const copyButton = document.createElement('button');
+                             copyButton.classList.add('copy-code-button');
+                             copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+                             codeBlock.appendChild(copyButton);
 
+                             const codeElement = document.createElement('code');
+                             codeElement.textContent = codeBlock.textContent; // Escape HTML and set code content
+                             codeBlock.textContent = ''; // Clear pre content
+                             codeBlock.appendChild(codeElement); // Append code element to pre
+                             codeBlock.appendChild(copyButton); // Re-append copy button
+
+                         }
+                    });
                 } else {
                     messageDiv.innerHTML = messageText;
                 }
@@ -1112,9 +1104,15 @@
                 return;
             }
 
+             if (currentHistoryName) {
+                savedHistories[currentHistoryName] = [...conversationHistory, { role: 'user', parts: [{ text: userPrompt }] } ];
+                localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
+            }
+
+
             const userMessageObject = { role: 'user', parts: [{ text: userPrompt }] };
             conversationHistory.push(userMessageObject);
-            saveChatHistory(); // Save user message to history right away
+            saveChatHistory(); // Save history immediately after user message
             renderMessages();
             document.getElementById('user-prompt').value = '';
 
@@ -1161,26 +1159,24 @@
                     let aiResponseText = data.candidates[0].content.parts[0].text;
                     aiMessageDiv.innerHTML = ''; // Clear "Đang suy nghĩ..." message before adding response
 
+                    // Escape HTML entities to prevent execution, and wrap in pre/code
+                    const escapedResponse = aiResponseText.replace(/</g, '<').replace(/>/g, '>');
+                    aiMessageDiv.innerHTML = `<span class="ai-message-text">${escapedResponse}</span>`;
 
-                    // Sanitize AI response text
-                    aiResponseText = aiResponseText.replace(/</g, '<').replace(/>/g, '>');
-
-                    // Re-enable code block formatting after sanitizing general text
-                    const codeBlockRegex = /<pre><code class="([a-zA-Z0-9]*)">([\s\S]*?)<\/code><\/pre>/g; // Adjusted regex for escaped <pre><code>
-                    aiResponseText = aiResponseText.replace(codeBlockRegex, (match, language, code) => {
-                        return `<pre><code class="${language}">${code}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button><span class="copy-success-notification-inline"></span></pre>`;
-                    });
-
-
-                      aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
 
                     const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
 
                     conversationHistory.push(aiMessageObject);
-                    saveChatHistory(); // Save history after AI response
 
-                   messagesContainer.appendChild(aiMessageDiv);
 
+                     if (currentHistoryName) {
+                        savedHistories[currentHistoryName] = [...conversationHistory];
+                        localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
+                    } else {
+                         saveChatHistory(); // Save history after AI response
+                    }
+
+                   renderMessages(); // Re-render messages to apply code block and copy button
                  messagesContainer.scrollTop = messagesContainer.scrollHeight;
                  }
                 else
@@ -1222,11 +1218,9 @@
 
             document.getElementById('autoSaveHistoryToggle').addEventListener('change', function() {
                 autoSaveHistory = this.checked;
-                saveSetting('autoSaveHistory', autoSaveHistory); // Save immediately when changed
             });
             document.getElementById('useFirstMessageAsNameToggle').addEventListener('change', function() {
                 useFirstMessageAsName = this.checked;
-                saveSetting('useFirstMessageAsName', useFirstMessageAsName); // Save immediately when changed
             });
             document.getElementById('backgroundColorPicker').addEventListener('change', function() {
                 currentBackgroundColor = this.value;
