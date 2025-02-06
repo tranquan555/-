@@ -16,12 +16,14 @@
             min-height: 100vh;
             overflow-x: hidden;
             -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            touch-action: manipulation; /* Prevent zoom on touch devices - added here */
+            -webkit-user-select: text;
+            -khtml-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+            touch-action: manipulation;
+            -webkit-text-size-adjust: 100%; /* Ensure text size adjust is 100% to prevent scaling */
+            font-size: 16px; /* Explicitly set a base font size on the body */
         }
 
         .container {
@@ -77,7 +79,7 @@
             background: #252525;
         }
 
-        #messages-container::-webkit-scrollbar-thumb {
+        #messages-container::-webkit-scrollbar::-webkit-scrollbar-thumb {
             background-color: #555;
             border-radius: 4px;
         }
@@ -91,7 +93,7 @@
             max-width: 80%;
             display: inline-block;
             border: 1px solid #444;
-            position: relative; /* For positioning copy button */
+            position: relative;
         }
 
         .user-message {
@@ -110,8 +112,22 @@
             border-top-left-radius: 3px;
         }
 
+        .ai-message .ai-message-text {
+            font-family: 'Arial', sans-serif;
+            font-weight: normal;
+            line-height: 1.6;
+            white-space: pre-line;
+            font-size: 16px; /* Explicitly set font-size for AI text too */
+        }
+
+        .markdown-bold-uppercase {
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         .input-area {
-            padding: 15px 20px;
+            padding: 10px 20px;
             background-color: #343541;
             border-top: 1px solid #555;
             display: flex;
@@ -131,14 +147,14 @@
 
         .input-area textarea {
             flex-grow: 1;
-            padding: 10px;
+            padding: 8px;
             border: 1px solid #555;
             border-radius: 8px;
             font-size: 16px;
             background-color: #40414f;
             color: #fff;
             resize: none;
-            min-height: 40px;
+            min-height: 35px;
             overflow-y: auto;
             border: 1px solid #444;
         }
@@ -164,6 +180,29 @@
         .input-area button:hover {
             background-color: #0097a7;
         }
+
+        .file-upload-button {
+            background-color: #555;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            opacity: 0.8;
+            transition: opacity 0.3s ease, background-color 0.3s ease;
+        }
+
+        .file-upload-button:hover {
+            opacity: 1;
+            background-color: #666;
+        }
+
 
         .sidebar {
             position: fixed;
@@ -428,7 +467,7 @@
         pre[class*="language-"] {
             color: #f8f8f2;
             background: #272822;
-            position: relative; /* for copy button positioning */
+            position: relative;
         }
 
         .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #6c6767; }
@@ -468,6 +507,7 @@
 
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
@@ -530,9 +570,13 @@
         </div>
 
         <div class="input-area">
+            <button class="file-upload-button" onclick="triggerFileUpload()">
+                <i class="fas fa-paperclip"></i>
+            </button>
             <textarea id="user-prompt" placeholder="Nhập tin nhắn"></textarea>
             <button onclick="getGeminiResponse()">Gửi</button>
         </div>
+         <input type="file" id="file-upload" style="display:none" multiple onchange="handleFileUpload(this.files)">
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
@@ -579,12 +623,20 @@
             conversationHistory.forEach(message => {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
-                messageDiv.innerHTML = message.parts[0].text;
+                const messageTextSpan = document.createElement('span');
+                messageTextSpan.classList.add('ai-message-text');
+                messageTextSpan.innerHTML = message.parts[0].text;
+                if (message.role === 'ai') {
+                    messageDiv.appendChild(messageTextSpan);
+                } else {
+                    messageDiv.innerHTML = message.parts[0].text;
+                }
                 messagesContainer.appendChild(messageDiv);
                 Prism.highlightAllUnder(messageDiv);
             });
              messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
+
 
         function startNewChat() {
             conversationHistory = [];
@@ -714,6 +766,52 @@
         loadChatHistory();
         loadSavedHistoriesList();
 
+        function triggerFileUpload() {
+            document.getElementById('file-upload').click();
+        }
+
+        function handleFileUpload(files) {
+            if (files && files.length > 0) {
+                const messagesContainer = document.getElementById('messages-container');
+                const aiMessageDiv = document.createElement('div');
+                aiMessageDiv.classList.add('message', 'ai-message');
+                aiMessageDiv.innerHTML = `<span class="ai-message-text">Đang tải tệp...</span>`;
+                messagesContainer.appendChild(aiMessageDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                let fileNames = Array.from(files).map(file => file.name).join(', ');
+                const userMessage = `Tệp đã tải lên: ${fileNames}. Đang chờ AI xử lý...`;
+
+                const userMessageDiv = document.createElement('div');
+                userMessageDiv.classList.add('message', 'user-message');
+                userMessageDiv.textContent = userMessage;
+                messagesContainer.appendChild(userMessageDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                const userMessageObject = { role: 'user', parts: [{ text: userMessage }] };
+                conversationHistory.push(userMessageObject);
+                saveChatHistory();
+                renderMessages();
+
+                // Simulate AI acknowledging the file (for UI purposes - actual file upload to Gemini needs server-side)
+                setTimeout(() => {
+                    aiMessageDiv.remove();
+
+                    const aiResponseDiv = document.createElement('div');
+                    aiResponseDiv.classList.add('message', 'ai-message');
+                    aiResponseDiv.innerHTML = `<span class="ai-message-text">Đã nhận được tệp: ${fileNames}. Vui lòng cho biết bạn muốn AI làm gì với tệp này.</span>`;
+                    messagesContainer.appendChild(aiResponseDiv);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                     const aiMessageObject = { role: 'model', parts: [{ text: aiResponseDiv.innerHTML }] };
+                    conversationHistory.push(aiMessageObject);
+                    saveChatHistory();
+                    renderMessages();
+
+                }, 1500);
+            }
+        }
+
 
         async function getGeminiResponse() {
             const userPrompt = document.getElementById('user-prompt').value.trim();
@@ -733,7 +831,7 @@
 
             const aiMessageDiv = document.createElement('div');
             aiMessageDiv.classList.add('message', 'ai-message');
-            aiMessageDiv.textContent = "Đang suy nghĩ...";
+            aiMessageDiv.innerHTML = '<span class="ai-message-text">Đang suy nghĩ...</span>';
             messagesContainer.appendChild(aiMessageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
@@ -761,7 +859,7 @@
                 if (!response.ok) {
                     const errorData = await response.json();
                     console.error("Lỗi API:", errorData);
-                    aiMessageDiv.textContent = `Lỗi API: ${response.status} - ${errorData.error.message || 'Không rõ nguyên nhân'}`;
+                    aiMessageDiv.innerHTML = `<span class="ai-message-text">Lỗi API: ${response.status} - ${errorData.error.message || 'Không rõ nguyên nhân'}</span>`;
                     return;
                 }
 
@@ -771,6 +869,13 @@
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
                     aiMessageDiv.innerHTML = '';
+                    const aiTextContentSpan = document.createElement('span');
+                    aiTextContentSpan.classList.add('ai-message-text');
+
+                    let processedText = aiResponseText;
+
+                    processedText = processedText.replace(/\*\*([^*]+)\*\*/g, '<span class="markdown-bold-uppercase">$1</span>');
+
 
                     let textContent = '';
                     let codeContent = null;
@@ -779,12 +884,12 @@
                     let lastIndex = 0;
                     let match;
 
-                    while ((match = codeBlockRegex.exec(aiResponseText)) !== null) {
-                        textContent = aiResponseText.substring(lastIndex, match.index);
+                    while ((match = codeBlockRegex.exec(processedText)) !== null) {
+                        textContent = processedText.substring(lastIndex, match.index);
                         if (textContent.trim()) {
                             const textPara = document.createElement('p');
                             textPara.innerHTML = textContent.trim();
-                            aiMessageDiv.appendChild(textPara);
+                            aiTextContentSpan.appendChild(textPara);
                         }
 
                         language = match[1] || 'text';
@@ -792,15 +897,15 @@
 
                         const codePre = document.createElement('pre');
                         codePre.classList.add('language-' + language);
+
                         const codeElement = document.createElement('code');
                         codeElement.classList.add('language-' + language);
                         codeElement.textContent = codeContent;
                         codePre.appendChild(codeElement);
 
-                        // Create copy button for each code block
                         const copyButton = document.createElement('button');
                         copyButton.classList.add('copy-code-button');
-                        copyButton.innerHTML = '<i class="fas fa-copy"></i>'; // Using Font Awesome icon
+                        copyButton.innerHTML = '<i class="fas fa-copy"></i>';
                         copyButton.onclick = () => {
                             navigator.clipboard.writeText(codeContent).then(() => {
                                 alert('Đã sao chép code vào clipboard!');
@@ -811,26 +916,26 @@
                         };
                         codePre.appendChild(copyButton);
 
-
-                        aiMessageDiv.appendChild(codePre);
+                        aiTextContentSpan.appendChild(codePre);
 
                         lastIndex = codeBlockRegex.lastIndex;
                     }
 
-                    textContent = aiResponseText.substring(lastIndex);
+                    textContent = processedText.substring(lastIndex);
                     if (textContent.trim()) {
                          const textPara = document.createElement('p');
                          textPara.innerHTML = textContent.trim();
-                         aiMessageDiv.appendChild(textPara);
+                         aiTextContentSpan.appendChild(textPara);
                     }
 
 
-                    if (!aiMessageDiv.hasChildNodes() && aiResponseText.trim()) {
-                         aiMessageDiv.innerHTML = aiResponseText.trim();
-                    } else if (!aiMessageDiv.hasChildNodes()) {
-                         aiMessageDiv.textContent = "Không có phản hồi nội dung từ AI.";
+                    if (!aiTextContentSpan.hasChildNodes() && processedText.trim()) {
+                         aiTextContentSpan.innerHTML = processedText.trim();
+                    } else if (!aiTextContentSpan.hasChildNodes()) {
+                         aiTextContentSpan.textContent = "Không có phản hồi nội dung từ AI.";
                     }
 
+                    aiMessageDiv.appendChild(aiTextContentSpan);
 
                     const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
                     conversationHistory.push(aiMessageObject);
@@ -840,12 +945,12 @@
 
 
                 } else {
-                    aiMessageDiv.textContent = "Không nhận được phản hồi hợp lệ từ AI.";
+                    aiMessageDiv.innerHTML = `<span class="ai-message-text">Không nhận được phản hồi hợp lệ từ AI.</span>`;
                 }
 
             } catch (error) {
                 console.error("Lỗi fetch:", error);
-                aiMessageDiv.textContent = "Đã xảy ra lỗi khi kết nối đến API.";
+                aiMessageDiv.innerHTML = `<span class="ai-message-text">Đã xảy ra lỗi khi kết nối đến API.</span>`;
             }
         }
     </script>
