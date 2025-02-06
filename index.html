@@ -580,11 +580,51 @@
             margin-bottom: 18px; /* Consistent margin */
             font-family: 'Courier New', monospace; /* Monospace font for code */
             font-size: 14px; /* Adjust font size if needed */
+            position: relative; /* For positioning copy button */
         }
 
         code {
             background-color: transparent; /* Ensure code background is transparent */
             padding: 0; /* Remove padding from inline code if any */
+        }
+
+        .copy-code-button {
+            position: absolute;
+            top: 0.5em;
+            right: 0.5em;
+            background-color: rgba(255, 255, 255, 0.1); /* Slightly visible button background */
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 5px 8px;
+            font-size: 0.8em;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s ease, background-color 0.2s ease;
+        }
+
+        .copy-code-button:hover {
+            opacity: 1;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .copy-code-button i {
+            margin-right: 0; /* No margin for icon if only icon is used */
+        }
+
+        .copy-success-message {
+            position: absolute;
+            top: 0.5em;
+            right: 3.5em; /* Adjust to position to the left of the copy button */
+            color: #4CAF50; /* Green color for success */
+            font-size: 0.8em;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            padding: 5px;
+        }
+
+        .copy-success-message.show {
+            opacity: 1;
         }
 
 
@@ -742,11 +782,7 @@
         let currentHistoryName = null;
 
 
-        document.body.removeEventListener('click', async (event) => {}); // Remove old event listener to prevent errors
-
-        function showCopyNotification() { // remove old function, not used anymore
-        }
-
+        document.body.removeEventListener('click', async (event) => {}); // Clean up old listener
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -789,6 +825,38 @@
                 if (message.role === 'ai') {
 
                     messageDiv.innerHTML = `<span class="ai-message-text">${messageText}</span>`;
+
+                    messageDiv.querySelectorAll('pre').forEach(codeBlock => {
+                        if (!codeBlock.querySelector('.copy-code-button')) { // Prevent duplicate buttons
+                            const copyButton = document.createElement('button');
+                            copyButton.classList.add('copy-code-button');
+                            copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+
+                            const successMessage = document.createElement('span');
+                            successMessage.classList.add('copy-success-message');
+                            successMessage.textContent = 'Đã sao chép!';
+
+                            codeBlock.appendChild(copyButton);
+                            codeBlock.appendChild(successMessage);
+
+                            copyButton.addEventListener('click', async (event) => {
+                                event.stopPropagation(); // Stop event bubbling
+                                const codeElement = codeBlock.querySelector('code');
+                                if (codeElement) {
+                                    try {
+                                        await navigator.clipboard.writeText(codeElement.textContent);
+                                        successMessage.classList.add('show');
+                                        setTimeout(() => {
+                                            successMessage.classList.remove('show');
+                                        }, 1500); // Hide message after 1.5 seconds
+                                    } catch (err) {
+                                        console.error('Failed to copy code: ', err);
+                                        alert('Không thể sao chép mã.');
+                                    }
+                                }
+                            });
+                        }
+                    });
 
 
                 } else {
