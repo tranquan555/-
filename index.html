@@ -573,21 +573,20 @@
         code[class*="language-"],
         pre[class*="language-"] {
             color: black;
-            background: transparent;
+            background: transparent; /* Transparent background */
             position: relative;
             overflow-x: auto;
              padding: 1em;
              border-radius: 8px;
              margin-bottom: 18px;
-             border: 1px solid #ccc;
+             border: 1px solid #ccc; /* Gemini-like border */
              font-family: monospace, monospace;
-             white-space: pre-wrap;
-             text-decoration: none; /* Added rule to remove underlines if any */
+             white-space: pre-wrap; /* Keep white-space: pre-wrap for text wrap */
         }
 
        .copy-code-button {
             position: absolute;
-            bottom: 15px; /* Lowered button position */
+            bottom: 4px; /* Slightly lower button */
             left: 8px;
             background-color: #ddd;
             color: black;
@@ -1110,7 +1109,6 @@
             document.getElementById('user-prompt').value = '';
 
 
-             // aiMessageDiv is already created and appended
 
             let promptContents = conversationHistory.map(message => ({
                 role: message.role,
