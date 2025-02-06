@@ -9,8 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" integrity="sha512-mkooOlRKXerYZWtP3IkfKPbvztNNwVIgXyPVgsd08p+9Et7WHVbVWJgk3gGguey3e65drKAUhVJczmn9f8w5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
     <style>
         :root {
             --background-color: #1e2124;
@@ -37,11 +35,11 @@
             min-height: 100vh;
             overflow-x: hidden;
             -webkit-touch-callout: none;
-            -webkit-user-select: text;
+            -webkit-user-select: text; /* Keep for text selection */
             -khtml-user-select: text;
             -moz-user-select: text;
             -ms-user-select: text;
-            user-select: text;
+            user-select: text;       /* Keep for text selection */
             touch-action: manipulation;
             -webkit-text-size-adjust: 100%;
             font-size: 16px;
@@ -572,10 +570,84 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
         }
 
+        /* Code Block Styles */
+        .code-block {
+            position: relative;
+            background-color: #282c34; /* Dark background */
+            border-radius: 8px;
+            margin-bottom: 1em;
+            overflow: hidden; /* For rounded corners on ::before */
+             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+             border: 1px solid #444;
+        }
 
-        /* Success Notification Styles - REMOVED */
+        .code-block-header {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            background-color: #333842; /* Slightly lighter than code block */
+            color: #eee;
+            border-bottom: 1px solid #444;
+             font-family: monospace;
+             font-size: 0.9em;
+        }
+
+        .code-block-lang {
+            flex-grow: 1;
+             font-weight: bold;
+             opacity: 0.9;
+        }
+
+        .code-block-copy {
+            background-color: var(--button-primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 5px 8px;
+            cursor: pointer;
+            font-size: 0.8em;
+            opacity: 0.8;
+            transition: opacity 0.2s ease, background-color 0.2s ease;
+        }
+
+        .code-block-copy:hover {
+            opacity: 1;
+             background-color: var(--button-primary-hover-color);
+        }
+
+        .code-block pre {
+            padding: 1em;
+            margin: 0;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            line-height: 1.4;
+             color: #eee;
+        }
+         .code-block pre code {
+              white-space: pre-wrap;
+         }
+
+
+        /* Success Notification Styles */
         .copy-success-notification {
-            display: none !important; /* Completely hide the old notification */
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 500;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .copy-success-notification.show {
+            opacity: 1;
+            visibility: visible;
         }
 
 
@@ -585,59 +657,6 @@
         }
         .setting-item .toggle-switch input:checked + .slider {
             background-color: var(--button-primary-color);
-        }
-
-        /* New Code Block Styles - Similar to Gemini/ChatGPT */
-        pre[class*="language-"] {
-            position: relative;
-            background-color: #282a36 !important; /* Okaidia theme background */
-            color: #f8f8f2 !important; /* Okaidia theme text color */
-            border-radius: 12px;
-            padding: 1.5rem 1rem 1rem 1rem; /* Adjusted padding */
-            margin-bottom: 20px;
-            overflow-x: auto;
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        pre[class*="language-"]::before { /* Language label - optional */
-            position: absolute;
-            top: 0.5rem;
-            right: 1rem;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-        }
-        pre[class="language-html"]::before { content: 'html'; }
-        pre[class="language-css"]::before { content: 'css'; }
-        pre[class="language-javascript"]::before { content: 'javascript'; }
-        pre[class="language-python"]::before { content: 'python'; }
-        pre[class="language-"]::before { content: 'code'; color: rgba(255, 255, 255, 0.5);} /* Default "code" if language is not specified */
-
-
-        .code-toolbar {
-            position: absolute;
-            top: 0;
-            right: 0;
-            opacity: 0.9;
-            transition: opacity 0.3s ease;
-        }
-        pre[class*="language-"]:hover .code-toolbar {
-            opacity: 1;
-        }
-
-        .toolbar-item > a, .toolbar-item > button, .toolbar-item > span {
-            background-color: rgba(255, 255, 255, 0.15);
-            color: #fff;
-            font-size: 0.8rem;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.3rem;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .toolbar-item > a:hover, .toolbar-item > button:hover, .toolbar-item > span:hover {
-            background-color: rgba(255, 255, 255, 0.25);
         }
 
 
@@ -764,15 +783,14 @@
     </div>
 
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-Nfia0yuUxg344oE1bGOt5g5WwRlvah+cWj8s85WgsC1z37XzQpwG71FfH52o/w+8t6rtp/mnfgxPq53L8/Pzfg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js" integrity="sha512-EppCfxn0oVcHSN7fpjR1xKDWnUYCrr1x/x/KzV7CuCgQ3xG71m0xG0YJYoEuiz3XyXQzNlKhnDkHhL8k2i9V6w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js" integrity="sha512-bbQT4U1gqP8pviOXhUv/Ovdw/wiVz/b3e9eAmd4e536u+jUyoNn7n9S2O/Rblw1al9YQRuV4sVJyqsZzT7tPA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-
     <script>
         const apiKey = 'AIzaSyAd9p1hXhUcRx4Pz7EmbUKC-V8ULN8L61Q';
         const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
-        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
+
+        // Updated system prompt to ensure code is always in code blocks
+        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác.  **Luôn luôn trả lời bằng tiếng Việt**. Bất kể người dùng nhập ngôn ngữ gì. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, **luôn luôn** đảm bảo rằng code được đặt trong các khối code markdown, và bạn **không bao giờ** hiển thị code trực tiếp mà không có định dạng code block. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!');\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường. **Không bao giờ** hiển thị code trực tiếp trong văn bản trả lời, **luôn luôn** sử dụng định dạng code block.";
+
+
 
         let conversationHistory = [];
         let savedHistories = {};
@@ -790,13 +808,28 @@
 
         let currentHistoryName = null;
 
+        document.body.addEventListener('click', async (event) => {
+          if (event.target.classList.contains('code-block-copy')) {
+                const codeBlock = event.target.closest('.code-block');
+                const codeElement = codeBlock.querySelector('pre code');
+                if (codeElement) {
+                  try{
+                    await navigator.clipboard.writeText(codeElement.textContent);
+                    showCopyNotification();
+                  } catch (err) {
+                    console.error("Lỗi sao chép", err);
+                    alert("Sao chép thất bại");
+                  }
+                }
+            }
+        });
 
         function showCopyNotification() {
             const notification = document.getElementById('copyNotification');
             notification.classList.add('show');
             setTimeout(() => {
                 notification.classList.remove('show');
-            }, 2000);
+                        }, 2000);
         }
 
         function toggleSidebar() {
@@ -830,32 +863,57 @@
             }
         }
 
+
         function renderMessages() {
             const messagesContainer = document.getElementById('messages-container');
             messagesContainer.innerHTML = '';
             conversationHistory.forEach(message => {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
-                let messageText = message.parts[0].text;
-                if (message.role === 'ai') {
 
-                    messageDiv.innerHTML = `<span class="ai-message-text">${messageText}</span>`;
-
-                    messageDiv.querySelectorAll('pre code').forEach(codeBlock => {
-                        if (!codeBlock.className.startsWith('language-')) {
-                             codeBlock.className = 'language-none'; // Default to no highlighting if language not specified
-                        }
-                    });
+                if (message.role === 'model') {
+                    let messageText = message.parts[0].text;
+                    messageDiv.classList.add('ai-message');
+                    messageDiv.innerHTML = `<span class="ai-message-text">${parseAndFormatCode(messageText)}</span>`;
                 } else {
-                    messageDiv.innerHTML = messageText;
+                    messageDiv.textContent = message.parts[0].text;
                 }
 
                 messagesContainer.appendChild(messageDiv);
             });
-
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
-             Prism.highlightAll();
+        }
 
+        // Function to parse and format code blocks
+        function parseAndFormatCode(text) {
+            const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
+            return text.replace(codeBlockRegex, (match, lang, code) => {
+                const language = lang ? lang.trim() : '';
+                const escapedCode = escapeHtml(code.trim());
+                return `
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <span class="code-block-lang">${language || 'Code'}</span>
+                            <button class="code-block-copy">Copy</button>
+                        </div>
+                        <pre><code class="language-${language}">${escapedCode}</code></pre>
+                    </div>
+                `;
+            });
+        }
+
+        // Utility function to escape HTML
+        function escapeHtml(html) {
+            return html.replace(/[&<>"']/g, function(m) {
+                switch (m) {
+                    case '&': return '&';
+                    case '<': return '<';
+                    case '>': return '>';
+                    case '"': return '"';
+                    case "'": return ''';
+                    default: return m;
+                }
+            });
         }
 
 
@@ -1071,7 +1129,9 @@
         async function getGeminiResponse() {
             const userPrompt = document.getElementById('user-prompt').value.trim();
             const messagesContainer = document.getElementById('messages-container');
-            let aiMessageDiv = document.createElement('div');
+
+            // Show thinking message immediately
+            const aiMessageDiv = document.createElement('div');
             aiMessageDiv.classList.add('message', 'ai-message');
             aiMessageDiv.innerHTML = '<span class="ai-message-text">Đang suy nghĩ...</span>';
             messagesContainer.appendChild(aiMessageDiv);
@@ -1080,7 +1140,7 @@
 
             if (!userPrompt) {
                 alert("Vui lòng nhập tin nhắn.");
-                aiMessageDiv.remove();
+                aiMessageDiv.remove(); // Remove thinking message
                 return;
             }
 
@@ -1094,7 +1154,7 @@
             const userMessageObject = { role: 'user', parts: [{ text: userPrompt }] };
             conversationHistory.push(userMessageObject);
             saveChatHistory();
-            renderMessages();
+            renderMessages(); // Re-render to include the user message and the thinking message
             document.getElementById('user-prompt').value = '';
 
 
@@ -1124,6 +1184,7 @@
                     const errorData = await response.json();
                     const errorMsg = `Lỗi API: ${response.status} - ${response.statusText} - ${errorData?.error?.message || 'No details provided'}`;
                     console.error("Lỗi API:", errorMsg);
+                     // Replace thinking message with error
                     aiMessageDiv.innerHTML = `<span class="ai-message-text">${errorMsg}</span>`;
                     return;
                 }
@@ -1132,24 +1193,16 @@
                 const data = await response.json();
                 console.log("Dữ liệu phản hồi từ API:", data);
 
+
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
-                    aiMessageDiv.innerHTML = '';
 
-                    // Replace markdown code blocks with Prism.js compatible blocks
-                    const codeBlockRegex = /```(\w*)\n([\s\S]*?)\n```/g;
-                    aiResponseText = aiResponseText.replace(codeBlockRegex, (match, language, code) => {
-                        const langClass = language ? `language-${language.toLowerCase()}` : 'language-none';
-                        return `<pre class="${langClass}"><code class="${langClass}">${escapeHtml(code)}</code></pre>`;
-                    });
+                    // Replace the thinking message with the actual response.
+                    aiMessageDiv.innerHTML = `<span class="ai-message-text">${parseAndFormatCode(aiResponseText)}</span>`;
 
 
-                      aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
-
-                    const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
-
+                    const aiMessageObject = { role: 'model', parts: [{ text: aiResponseText }] };
                     conversationHistory.push(aiMessageObject);
-
 
                      if (currentHistoryName) {
                         savedHistories[currentHistoryName] = [...conversationHistory];
@@ -1157,32 +1210,20 @@
                     } else {
                          saveChatHistory();
                     }
+                    // No need to re-append, we just modified the existing div
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-
-                   messagesContainer.appendChild(aiMessageDiv);
-
-                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                 } else {
+                   // Replace thinking message with "no response"
+                    aiMessageDiv.innerHTML = `<span class="ai-message-text">Không nhận được phản hồi hợp lệ từ AI.</span>`;
                  }
-                else
-                   aiMessageDiv.innerHTML = `<span class="ai-message-text">Không nhận được phản hồi hợp lệ từ AI.</span>`;
-
 
             } catch (error) {
                 console.error("Lỗi fetch:", error);
+                 // Replace thinking message with error
                 aiMessageDiv.innerHTML = `<span class="ai-message-text">Đã xảy ra lỗi khi kết nối đến API: ${error}</span>`;
             }
-
         }
-
-        function escapeHtml(unsafe) {
-            return unsafe
-                 .replace(/&/g, "&")
-                 .replace(/</g, "<")
-                 .replace(/>/g, ">")
-                 .replace(/"/g, """)
-                 .replace(/'/g, "'");
-         }
-
 
         function loadSettings() {
             const storedSettings = localStorage.getItem('chatSettings');
