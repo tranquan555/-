@@ -7,9 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.css" integrity="sha512-iJEuC4iYqD4yDYYuD2vDdm8x6Q6Oqz4xPDeaZ507/tNnqB2P2Gz+E45WCAoE6UfA6zMvYcZ+t6eIuD6D+sUqZw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
         :root {
@@ -25,12 +23,6 @@
             --sidebar-background-color: #252525;
             --sidebar-text-color: #fff;
             --modal-background-color: #343541;
-             /* Styling For Updated Look - Readability - Accessibility - Better Viewing for OLDER Display Phones*/
-            --code-block-background: #2e3035;  /* Muted background */
-            --code-text-color: #f0f0f0;        /* Brighter text for visibility */
-            --code-border-radius: 8px;       /* Less aggressive rounding */
-            --copy-button-bg: #555;           /* Button stands out a bit */
-            --copy-button-text-color: white;
         }
 
         body {
@@ -581,14 +573,10 @@
 
         code[class*="language-"],
         pre[class*="language-"] {
-            color: var(--code-text-color);
-            background: var(--code-block-background);
+            color: black; /* Default code text color */
+            background: white; /* White background for code blocks */
             position: relative;
-            border-radius: var(--code-border-radius);
-            padding: 15px;         /* Reduce overall Padding  for Smaller Screens */
-            margin-bottom: 18px;   /* reduce size as requested by end use */
             overflow-x: auto;      /* Scroll only Horizontally */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Softer shadow */
         }
 
        .copy-code-button {
@@ -598,16 +586,16 @@
             background-color: var(--copy-button-bg); /* Muted but slightly Dark */
             color: var(--copy-button-text-color);  /* Simple Standard*/
             border: none;
-            border-radius: 6px;     /* Even Tighter, a  Subtle Rounding to help phone versions */
-            padding: 6px 10px;       /* adjust down also (same logic as Code section above to fit more small displays well)*/
-            font-size: 0.85em;       /* EVEN further Scale button text *DOWN*! because that's critical and matters in the picture above */
-            cursor: pointer;           /* give that interaction help */
-            opacity: 0.7;            /* Initially reduced more so not to distracting from reading.*/
-            transition: opacity 0.2s ease, background-color 0.2s ease; /* smooth but  quick subtle*/
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 0.85em;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s ease, background-color 0.2s ease;
         }
         .copy-code-button:hover { /* give better reaction/clue */
-            opacity: 1;  /* fully engage user hovering! it matters even using touch displays and larger tablet and PC display*/
-            background-color: var(--button-primary-color); /* let stand a great color clue */
+            opacity: 1;
+            background-color: var(--button-primary-color);
         }
         /* Fix positioning for Copy but need PRE relative position first - Important Note Also keep AFTER so will always have greatest strength to apply.*/
         pre[class*="language-"] {
@@ -683,6 +671,18 @@
             width: 0;
             height: 0;
                 }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
 
         .slider:before {
             position: absolute;
@@ -867,7 +867,7 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" integrity="sha512-kFkP9V0CjKCpYF9C1xY8qg1rF67j5n048JdZTJ9zDPE70QPH/X0K5eS9fB+/TqHwHk5fL6CgD0pDap6f0gHj7Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
-        const apiKey = 'AIzaSyCGd-w96-bJENQ9pGnLBcUg6pH1srsud20';
+        const apiKey = 'AIzaSyAd9p1hXhUcRx4Pz7EmbUKC-V8ULN8L61Q';
         const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
         const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
 
@@ -970,11 +970,11 @@
 
 
                 messagesContainer.appendChild(messageDiv);
-              Prism.highlightAllUnder(messageDiv);  // Highlight Current message added. but NOT others, until called one other last time in  "Prism.highlightAll();".
+              //Prism.highlightAllUnder(messageDiv);  // remove highlight
             });
 
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
-          // Prism.highlightAll(); //  Highlight on ALL not just currently active and displayed text and tags.   Can cause errors still if missing tag from CDN!. Check if still the required one is here.
+          // Prism.highlightAll(); // remove highlight
 
 
         }
@@ -1259,7 +1259,7 @@
 
                     const aiMessageObject = { role: 'model', parts: [{ text: messageDiv.innerHTML }] };//Only Save Html Code result for speed/clean.   NO need all prior parts ever.  Make SMALL JSON too
 
-                     Prism.highlightAllUnder(messageDiv);
+                    //Prism.highlightAllUnder(messageDiv); // remove highlight
                     conversationHistory.push(aiMessageObject);
 
 
@@ -1279,7 +1279,7 @@
                 else
                    aiMessageDiv.innerHTML = `<span class="ai-message-text">Không nhận được phản hồi hợp lệ từ AI.</span>`;
 
-             Prism.highlightAll();//Try FULL Load Always also since error reported here in code as to CSS broken after all the rendering etc occur (reported here!)
+             //Prism.highlightAll();// remove highlight
 
 
             } catch (error) {
@@ -1381,7 +1381,7 @@
         }
 
 
-     Prism.highlightAll();//Fire ONE Time after all code at page ready
+     //Prism.highlightAll();// remove highlight
 
     </script>
 </body>
