@@ -1,3 +1,4 @@
+--- START OF FILE vip1 2.html ---
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -688,7 +689,7 @@
         let savedHistories = {};
         let historyNameToDelete = null;
         let isAutoSaveEnabled = localStorage.getItem('autoSaveEnabled') === 'true';
-        let isSaveHistoryModalOpen = false; // Flag to track modal state - **ADDITION**
+        let isSaveHistoryModalOpen = false; // Flag to track modal state
 
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -732,18 +733,29 @@
             const sidebar = document.getElementById('sidebar');
             const container = document.getElementById('container');
             const overlay = document.getElementById('sidebar-overlay');
+            const body = document.querySelector('body');
+
+            // Toggle the sidebar's open state
             sidebar.classList.toggle('sidebar--open');
-            body = document.querySelector('body');
-            body.classList.toggle('sidebar--open');
-            container.classList.toggle('container.sidebar-open');
-            overlay.classList.toggle('sidebar--open');
+            body.classList.toggle('sidebar--open'); // Toggle body class
+
+            // Now handle the overlay more explicitly
             if (sidebar.classList.contains('sidebar--open')) {
-                 loadSavedHistoriesList();
+                overlay.classList.add('sidebar--open'); // Ensure overlay is shown
+                loadSavedHistoriesList();
             } else {
+                overlay.classList.remove('sidebar--open'); // Ensure overlay is hidden
                 hideHistoryMenu();
                 hideSettingsMenu();
             }
+
+            // Debugging logs (remove after testing)
+            console.log("Sidebar state:", sidebar.classList.contains('sidebar--open') ? "Open" : "Closed");
+            console.log("Overlay state:", overlay.classList.contains('sidebar--open') ? "Visible" : "Hidden");
+
+            container.classList.toggle('container.sidebar-open');
         }
+
 
         function loadChatHistory() {
             const storedHistory = localStorage.getItem('chatHistory');
@@ -794,27 +806,16 @@
 
 
         function openSaveHistoryModal() {
-            console.log("openSaveHistoryModal() called. isSaveHistoryModalOpen before check:", isSaveHistoryModalOpen); // DEBUG LOG
-            if (!isSaveHistoryModalOpen) {
-                console.log("Modal is NOT open, proceeding to open."); // DEBUG LOG
+            if (!isSaveHistoryModalOpen) { // Check if modal is already open
                 document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
                 document.getElementById('historyNameInput').value = '';
-                isSaveHistoryModalOpen = true;
-                console.log("isSaveHistoryModalOpen set to TRUE (modal opened)."); // DEBUG LOG
-            } else {
-                console.log("Modal is ALREADY open, doing nothing."); // DEBUG LOG
+                isSaveHistoryModalOpen = true; // Set modal state to open
             }
-                console.log("isSaveHistoryModalOpen after openSaveHistoryModal():", isSaveHistoryModalOpen); // DEBUG LOG
         }
 
         function closeSaveHistoryModal() {
-            console.log("closeSaveHistoryModal() called. isSaveHistoryModalOpen before close:", isSaveHistoryModalOpen); // DEBUG LOG
-            const modalOverlay = document.getElementById('saveHistoryModalOverlay');
-            modalOverlay.classList.remove('show-modal');
-            modalOverlay.style.display = 'none';
-            isSaveHistoryModalOpen = false;
-            console.log("isSaveHistoryModalOpen set to FALSE (modal closed)."); // DEBUG LOG
-            console.log("isSaveHistoryModalOpen after closeSaveHistoryModal():", isSaveHistoryModalOpen); // DEBUG LOG
+            document.getElementById('saveHistoryModalOverlay').classList.remove('show-modal');
+            isSaveHistoryModalOpen = false; // Set modal state to closed
         }
 
         function saveHistoryWithInputName() {
