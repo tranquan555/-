@@ -66,7 +66,7 @@
 
         .container {
             width: 95%;
-            max-width: 1400px; /* Increased container max width */
+            max-width: 1400px;
             margin: 20px auto;
             padding: 30px;
             background-color: var(--container-background-color);
@@ -136,7 +136,7 @@
             border-radius: 24px;
             clear: both;
             word-wrap: break-word;
-            max-width: 95%; /* Increased message max width */
+            max-width: 95%;
             display: inline-block;
              box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
              transition: background-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease;
@@ -573,13 +573,15 @@
         code[class*="language-"],
         pre[class*="language-"] {
             color: black;
-            background: transparent; /* Transparent background for code blocks */
+            background-color: #f0f0f0; /* Light grey background for code blocks */
+            border: 1px solid #ccc;       /* Light border for frame effect */
             position: relative;
             overflow-x: auto;
              padding: 1em;
              border-radius: 8px;
              margin-bottom: 18px;
              z-index: 1;
+             white-space: pre; /* important to keep code formatting */
         }
 
        .copy-code-button {
@@ -1076,7 +1078,7 @@
         async function getGeminiResponse() {
             const userPrompt = document.getElementById('user-prompt').value.trim();
             const messagesContainer = document.getElementById('messages-container');
-            let aiMessageDiv = document.createElement('div'); // Declare aiMessageDiv here
+            let aiMessageDiv = document.createElement('div');
 
             if (!userPrompt) {
                 alert("Vui lòng nhập tin nhắn.");
@@ -1136,7 +1138,7 @@
 
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
-                    aiMessageDiv.innerHTML = ''; // Clear "Đang suy nghĩ..." message before adding response
+                    aiMessageDiv.innerHTML = '';
 
                       aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
 
