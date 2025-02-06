@@ -918,9 +918,28 @@
                     messageDiv.innerHTML = message.parts[0].text;
                 }
                 messagesContainer.appendChild(messageDiv);
-                Prism.highlightAllUnder(messageDiv);
+
+                // Find all code blocks within the message and attach copy functionality
+                messageDiv.querySelectorAll('pre code').forEach(codeBlock => {
+                    if (!codeBlock.parentElement.querySelector('.copy-code-button')) { // Prevent duplicate buttons
+                        const copyButton = document.createElement('button');
+                        copyButton.classList.add('copy-code-button');
+                        copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+                        copyButton.onclick = function() {
+                            navigator.clipboard.writeText(codeBlock.textContent).then(() => {
+                                alert('Đã sao chép code vào clipboard!');
+                            }).catch(err => {
+                                console.error('Lỗi khi sao chép: ', err);
+                                alert('Lỗi khi sao chép code.');
+                            });
+                        };
+                        codeBlock.parentElement.appendChild(copyButton);
+                    }
+                });
+                Prism.highlightAllUnder(messageDiv); // Highlight syntax within the message
             });
              messagesContainer.scrollTop = messagesContainer.scrollHeight;
+             Prism.highlightAll(); // Re-highlight all code blocks in the container - for good measure
         }
 
 
