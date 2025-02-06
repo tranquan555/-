@@ -579,28 +579,33 @@
              padding: 1em;
              border-radius: 8px;
              margin-bottom: 18px;
+             z-index: 1; /* Added z-index */
         }
 
        .copy-code-button {
             position: absolute;
             bottom: 8px;
             left: 8px;
-            background-color: var(--copy-button-bg);
-            color: var(--copy-button-text-color);
-            border: none;
+            background-color: #ddd; /* Light grey background */
+            color: black;        /* Black text */
+            border: 1px solid #bbb; /* Slightly darker border to stand out more */
             border-radius: 6px;
             padding: 6px 10px;
             font-size: 0.85em;
             cursor: pointer;
-            opacity: 0.7;
-            transition: opacity 0.2s ease, background-color 0.2s ease;
+            opacity: 0.8;       /* Slightly higher initial opacity */
+            transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; /* Added transitions for more properties */
+            z-index: 2;         /* Higher z-index than code */
         }
         .copy-code-button:hover {
             opacity: 1;
             background-color: var(--button-primary-color);
+            color: white;         /* White text on hover */
+            border-color:  var(--button-primary-color); /* Matching border color on hover */
         }
         pre[class*="language-"] {
             position: relative;
+            z-index: 0; /* Ensure pre is below button */
         }
 
         /* Success Notification Styles */
@@ -764,7 +769,7 @@
                 </li>
             <li class="sidebar-menu-item has-submenu" onclick="toggleSettingsMenu()">
                 <span class="menu-link">Cài đặt</span>
-            </li>
+                </li>
         </ul>
 
         <ul class="submenu" id="saved-histories-menu">
@@ -867,7 +872,7 @@
 
 
     <script>
-        const apiKey = 'AIzaSyAd9p1hXhUcRx4Pz7EmbUKC-V8ULN8L61Q';
+        const apiKey = 'AIzaSyCGd-w96-bJENQ9pGnLBcUg6pH1srsud20';
         const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
         const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
 
@@ -886,7 +891,6 @@
         const defaultContainerColor = '#25272b';
 
         let currentHistoryName = null;
-
 
         document.body.addEventListener('click', async (event) => {
             if (event.target.classList.contains('copy-code-button')) {
@@ -959,7 +963,8 @@
 
                          if(!buttonExists )
                             codeBlock.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>');
-                    })
+
+                        })
                 } else {
                     messageDiv.innerHTML = messageText;
                 }
@@ -968,6 +973,7 @@
             });
 
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
         }
 
 
@@ -1231,10 +1237,12 @@
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    console.error("Lỗi API:", errorData);
-                    aiMessageDiv.innerHTML = `<span class="ai-message-text">Lỗi API: ${response.status} - ${errorData.error.message || 'Không rõ nguyên nhân'}</span>`;
+                    const errorMsg = `Lỗi API: ${response.status} - ${response.statusText} - ${errorData?.error?.message || 'No details provided'}`;
+                    console.error("Lỗi API:", errorMsg);
+                    aiMessageDiv.innerHTML = `<span class="ai-message-text">${errorMsg}</span>`;
                     return;
                 }
+
 
                 const data = await response.json();
                 console.log("Dữ liệu phản hồi từ API:", data);
@@ -1270,7 +1278,7 @@
 
             } catch (error) {
                 console.error("Lỗi fetch:", error);
-                aiMessageDiv.innerHTML = `<span class="ai-message-text">Đã xảy ra lỗi khi kết nối đến API.</span>`;
+                aiMessageDiv.innerHTML = `<span class="ai-message-text">Đã xảy ra lỗi khi kết nối đến API: ${error}</span>`;
             }
 
         }
