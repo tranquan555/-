@@ -732,7 +732,7 @@
             const sidebar = document.getElementById('sidebar');
             const container = document.getElementById('container');
             const overlay = document.getElementById('sidebar-overlay');
-            const body = document.body;
+            const body = document.querySelector('body'); // Lấy đối tượng body
             
         if (!sidebar.classList.contains('sidebar--open')) {
             // Nếu sidebar đang đóng, thì mở nó ra
