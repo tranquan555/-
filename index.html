@@ -23,6 +23,12 @@
             --sidebar-background-color: #252525;
             --sidebar-text-color: #fff;
             --modal-background-color: #343541;
+            /* Code block specific variables */
+            --code-block-bg: #282c34; /* Slightly darker background */
+            --code-block-border: #555; /* Darker border color */
+            --copy-button-bg: #555;
+            --copy-button-color: white;
+
         }
 
         body {
@@ -34,7 +40,7 @@
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
-            -webkit-touch-callout: none;
+             -webkit-touch-callout: none;
             -webkit-user-select: text;
             -khtml-user-select: text;
             -moz-user-select: text;
@@ -50,19 +56,9 @@
             overscroll-behavior-y: none;
         }
 
-        body::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        body::-webkit-scrollbar-track {
-            background: #252525;
-        }
-
-        body::-webkit-scrollbar::-webkit-scrollbar-thumb {
-            background-color: #444;
-            border-radius: 4px;
-        }
-
+        body::-webkit-scrollbar {width: 8px;}
+        body::-webkit-scrollbar-track {background: #252525;}
+        body::-webkit-scrollbar-thumb {background-color: #444; border-radius: 4px;}
 
         .container {
             width: 95%;
@@ -82,10 +78,7 @@
             padding-top: max(30px, env(safe-area-inset-top));
             padding-bottom: max(30px, env(safe-area-inset-bottom));
         }
-
-        .container.sidebar-open {
-            margin-left: 250px;
-        }
+        .container.sidebar-open {margin-left: 250px;}
 
         h1 {
             text-align: center;
@@ -112,23 +105,13 @@
             border: none;
             border-radius: 16px;
             background-color: #1e2124;
-             box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.4);
-             transition: background-color 0.3s ease;
-             padding-top: 30px;
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.4);
+            transition: background-color 0.3s ease;
+            padding-top: 30px;
         }
-
-        #messages-container::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        #messages-container::-webkit-scrollbar::-webkit-scrollbar-track {
-            background: #252525;
-        }
-
-        #messages-container::-webkit-scrollbar::-webkit-scrollbar-thumb {
-            background-color: #555;
-            border-radius: 4px;
-        }
+        #messages-container::-webkit-scrollbar {width: 8px;}
+        #messages-container::-webkit-scrollbar-track {background: #252525;}
+        #messages-container::-webkit-scrollbar-thumb {background-color: #555;border-radius: 4px;}
 
         .message {
             margin-bottom: 20px;
@@ -138,27 +121,12 @@
             word-wrap: break-word;
             max-width: 95%;
             display: inline-block;
-             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
-             transition: background-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+            transition: background-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease;
         }
 
-        .user-message {
-            background-color: var(--message-user-background-color);
-            color: #fff;
-            align-self: flex-end;
-            float: right;
-            border-top-right-radius: 8px;
-            border-bottom-right-radius: 24px;
-        }
-
-        .ai-message {
-            background-color: var(--message-ai-background-color);
-            color: var(--text-color);
-            align-self: flex-start;
-            float: left;
-            border-top-left-radius: 8px;
-            border-bottom-left-radius: 24px;
-        }
+        .user-message { background-color: var(--message-user-background-color); color: #fff; align-self: flex-end; float: right; border-top-right-radius: 8px; border-bottom-right-radius: 24px;}
+        .ai-message { background-color: var(--message-ai-background-color); color: var(--text-color); align-self: flex-start; float: left; border-top-left-radius: 8px; border-bottom-left-radius: 24px;}
 
         .ai-message .ai-message-text {
             font-family: 'Arial', sans-serif;
@@ -169,474 +137,147 @@
              transition: color 0.3s ease;
         }
 
-        .markdown-bold-uppercase {
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: #f0f0f0;
-            opacity: 1;
-             transition: color 0.3s ease;
-        }
+        .markdown-bold-uppercase {font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: #f0f0f0; opacity: 1; transition: color 0.3s ease;}
+        .input-area {padding: 16px 24px; background-color: var(--input-area-background-color); border-top: 1px solid #555; display: flex; align-items: center; position: fixed; bottom: 0; left: 0; width: 100%; box-sizing: border-box;
+        padding-left: 20px;
+        padding-right: 20px; z-index: 100; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; border-top: 1px solid #444; transition: background-color 0.3s ease; padding-bottom: max(16px, env(safe-area-inset-bottom));}
+        .input-area textarea {flex-grow: 1; padding: 12px 16px; border: none; border-radius: 16px; font-size: 16px; background-color: var(--input-text-background-color); color: #fff; resize: none; min-height: 42px; overflow-y: auto; box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.35); transition: background-color 0.3s ease, color 0.3s ease;}
+        .input-area textarea:focus {border-color: var(--button-primary-color); outline: none; box-shadow: 0 0 8px rgba(0, 188, 212, 0.7);}
+        .input-area button {padding: 14px 24px; background-color: var(--button-primary-color); color: white; border: none; border-radius: 16px; cursor: pointer; font-size: 16px; margin-left: 16px; transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;}
+        .input-area button:hover {background-color: var(--button-primary-hover-color); transform: scale(1.03);}
 
-        .input-area {
-            padding: 16px 24px;
-            background-color: var(--input-area-background-color);
-            border-top: 1px solid #555;
-            display: flex;
-            align-items: center;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            box-sizing: border-box;
-            padding-left: 20px;
-            padding-right: 20px;
-            z-index: 100;
-            border-bottom-left-radius: 24px;
-            border-bottom-right-radius: 24px;
-             border-top: 1px solid #444;
-             transition: background-color 0.3s ease;
-             padding-bottom: max(16px, env(safe-area-inset-bottom));
-        }
+        .file-upload-button { background-color: #555; color: white; border: none; border-radius: 16px; cursor: pointer; font-size: 1em; width: 44px; height: 44px; display: flex; justify-content: center; align-items: center;
+            margin-right: 16px; opacity: 0.9; transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;}
+        .file-upload-button:hover {opacity: 1; background-color: #666; transform: scale(1.03);}
 
-        .input-area textarea {
-            flex-grow: 1;
-            padding: 12px 16px;
-            border: none;
-            border-radius: 16px;
-            font-size: 16px;
-            background-color: var(--input-text-background-color);
-            color: #fff;
-            resize: none;
-            min-height: 42px;
-            overflow-y: auto;
-             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.35);
-             transition: background-color 0.3s ease, color 0.3s ease;
-        }
+        .sidebar { position: fixed; top: 0; left: 0; width: 250px; height: 100%; background-color: var(--sidebar-background-color); color: var(--sidebar-text-color); transform: translateX(-100%);
+            transition: transform 0.3s ease, background-color 0.3s ease; z-index: 200; padding-top: 70px; box-shadow: 6px 0 12px rgba(0,0,0,0.4); overflow-y: auto; touch-action: manipulation; border-right: 1px solid #444;
+            backdrop-filter: blur(12px); }
+        .sidebar.sidebar--open {transform: translateX(0);}
 
-        .input-area textarea:focus {
-            border-color: var(--button-primary-color);
-            outline: none;
-            box-shadow: 0 0 8px rgba(0, 188, 212, 0.7);
-        }
+        .sidebar-header { padding: 28px 24px; text-align: center; border-bottom: 1px solid #555; margin-bottom: 30px; border-bottom: 1px solid #444; transition: background-color 0.3s ease, border-bottom-color 0.3s ease; }
+        .sidebar-menu { padding: 0; list-style: none; }
+        .sidebar-menu-item { padding: 18px 24px; cursor: pointer; transition: background-color 0.2s ease, border-bottom-color 0.3s ease, color 0.3s ease, padding-left 0.2s ease; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid transparent;}
+        .sidebar-menu-item:active { background-color: #3a3b47;}
 
-        .input-area button {
-            padding: 14px 24px;
-            background-color: var(--button-primary-color);
-            color: white;
-            border: none;
-            border-radius: 16px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-left: 16px;
-            transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
-        }
+        .sidebar-menu-item:hover { background-color: #343541; border-bottom-color: var(--button-primary-color); padding-left: 30px; }
+        .sidebar-menu-item.has-submenu > .menu-link::after {content: '>'; float: right; margin-left: 12px; font-size: 0.9em; display: inline-block; color: #aaa; }
+        .submenu { list-style: none; padding-left: 0; margin: 0; border-radius: 16px; overflow: hidden; box-shadow: 0 5px 10px rgba(0,0,0,0.45); background-color: #2c2c2c;
+            margin-top: 12px; max-height: 0; opacity: 0; transition: max-height 0.4s ease-out, opacity 0.3s ease-out, background-color 0.3s ease, margin-top 0.3s ease; overflow-y: hidden; padding-top: 0; padding-bottom: 0;}
+        .submenu.open { display: block; max-height: 600px; opacity: 1; overflow-y: auto; padding-top: 12px; padding-bottom: 16px; margin-top: 16px; }
 
-        .input-area button:hover {
-            background-color: var(--button-primary-hover-color);
-            transform: scale(1.03);
-        }
+       .submenu-item { padding: 16px 24px; cursor: pointer; transition: background-color 0.2s ease, color 0.3s ease, padding-left 0.2s ease; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #333; }
+        .submenu-item:active {background-color: #3a3b47;}
+        .submenu-item:last-child { border-bottom: none; }
+        .submenu-item:hover { background-color: #343541; padding-left: 30px;}
 
-        .file-upload-button {
-            background-color: #555;
-            color: white;
-            border: none;
-            border-radius: 16px;
-            cursor: pointer;
-            font-size: 1em;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 16px;
-            opacity: 0.9;
-            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
-        }
+        .history-name {flex-grow: 1; transition: color 0.3s ease; opacity: 0.9; }
+        .delete-history-btn { background: transparent; border: none; color: #aaa; cursor: pointer; font-size: 1em; padding: 0 10px; opacity: 0.7; transition: opacity 0.2s ease, color 0.2s ease; }
+        .delete-history-btn:hover { opacity: 1; color: #fff; }
+        .sidebar-toggle-button { position: fixed; top: 30px; left: 30px; background: var(--button-primary-color); color: white; border: none; border-radius: 50%; width: 50px;
+            height: 50px; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 300; box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35); transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;}
 
-        .file-upload-button:hover {
-            opacity: 1;
-            background-color: #666;
-             transform: scale(1.03);
-        }
+        .sidebar-toggle-button:hover { background-color: var(--button-primary-hover-color); transform: scale(1.05); }
+        .sidebar-toggle-button:active { transform: scale(0.98); opacity: 0.95; }
+        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 150; display: none; opacity: 0; transition: opacity 0.3s ease, background-color 0.3s ease; }
+        .sidebar-overlay.sidebar--open { display: block; opacity: 1; }
+        .close-history-menu-btn, .close-settings-menu-btn, .modal-button { padding: 14px 24px; background-color: var(--button-primary-color); color: white; border: none;
+        border-radius: 16px; cursor: pointer; margin-top: 20px; display: block; margin-left: auto; margin-right: auto; transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease; }
 
+         .close-history-menu-btn:hover, .close-settings-menu-btn:hover, .modal-button.confirm:hover {background-color: var(--button-primary-hover-color); transform: scale(1.03);}
+        .close-history-menu-btn:active, .close-settings-menu-btn:active, .modal-button.confirm:active { transform: scale(0.98); opacity: 0.95; }
+        .modal-button.cancel { background-color: #555; color: white; }
+        .modal-button.cancel:hover { background-color: #666; transform: scale(1.03);}
+        .modal-button.cancel:active { transform: scale(0.98); opacity: 0.95; }
 
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 250px;
-            height: 100%;
-            background-color: var(--sidebar-background-color);
-            color: var(--sidebar-text-color);
-            transform: translateX(-100%);
-            transition: transform 0.3s ease, background-color 0.3s ease;
-            z-index: 200;
-            padding-top: 70px;
-            box-shadow: 6px 0 12px rgba(0,0,0,0.4);
-            overflow-y: auto;
-            touch-action: manipulation;
-            border-right: 1px solid #444;
-             backdrop-filter: blur(12px);
-        }
+       .custom-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 400; justify-content: center;
+            align-items: center; pointer-events: none; opacity: 0; transition: opacity 0.3s ease, background-color 0.3s ease; backdrop-filter: blur(10px);}
+        .custom-modal-overlay.show-modal { display: flex; opacity: 1; pointer-events: auto; }
 
-        .sidebar.sidebar--open {
-            transform: translateX(0);
-        }
+        .custom-modal { background-color: var(--modal-background-color); color: #fff; padding: 35px; border-radius: 24px; box-shadow: 0 16px 32px rgba(0, 0, 0, 0.7); width: 85%;
+            max-width: 500px; text-align: center; border: none; transform: scale(0.97); opacity: 0; transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, border-radius 0.3s ease;}
+       .custom-modal-overlay.show-modal .custom-modal {transform: scale(1); opacity: 1;}
+        .modal-message { margin-bottom: 25px; font-size: 1.2em; transition: color 0.3s ease; font-weight: 500; opacity: 0.95;}
+        .modal-input {width: calc(100% - 24px); padding: 14px 16px; margin-bottom: 25px; border-radius: 12px; border: none; background-color: var(--input-text-background-color); color: #fff; box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.35); transition: background-color 0.3s ease, color 0.3s ease; }
+        .modal-buttons { display: flex; justify-content: center; gap: 25px; margin-top: 10px;}
+        .modal-button { padding: 14px 28px; border: none; border-radius: 16px; cursor: pointer; font-size: 16px;
+        transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease; border: none; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);}
 
-        .sidebar-header {
-            padding: 28px 24px;
-            text-align: center;
-            border-bottom: 1px solid #555;
-            margin-bottom: 30px;
-            border-bottom: 1px solid #444;
-            transition: background-color 0.3s ease, border-bottom-color 0.3s ease;
-        }
-
-        .sidebar-menu {
-            padding: 0;
-            list-style: none;
-        }
-
-        .sidebar-menu-item {
-            padding: 18px 24px;
-            cursor: pointer;
-            transition: background-color 0.2s ease, border-bottom-color 0.3s ease, color 0.3s ease, padding-left 0.2s ease;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid transparent;
-        }
-         .sidebar-menu-item:active {
-             background-color: #3a3b47;
-         }
-
-
-        .sidebar-menu-item:hover {
-            background-color: #343541;
-             border-bottom-color: var(--button-primary-color);
-             padding-left: 30px;
-        }
-
-        .sidebar-menu-item.has-submenu > .menu-link::after {
-            content: '>';
-            float: right;
-            margin-left: 12px;
-            font-size: 0.9em;
-            display: inline-block;
-            color: #aaa;
-        }
-
-        .submenu {
-            list-style: none;
-            padding-left: 0;
-            margin: 0;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.45);
-            background-color: #2c2c2c;
-            margin-top: 12px;
-            max-height: 0;
-            opacity: 0;
-            transition: max-height 0.4s ease-out, opacity 0.3s ease-out, background-color 0.3s ease, margin-top 0.3s ease;
-            overflow-y: hidden;
-            padding-top: 0;
-            padding-bottom: 0;
-        }
-
-        .submenu.open {
-            display: block;
-            max-height: 600px;
-            opacity: 1;
-            overflow-y: auto;
-            padding-top: 12px;
-            padding-bottom: 16px;
-            margin-top: 16px;
-        }
-
-
-        .submenu-item {
-            padding: 16px 24px;
-            cursor: pointer;
-            transition: background-color 0.2s ease, color 0.3s ease, padding-left 0.2s ease;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #333;
-        }
-         .submenu-item:active {
-             background-color: #3a3b47;
-         }
-
-
-        .submenu-item:last-child {
-            border-bottom: none;
-        }
-
-
-        .submenu-item:hover {
-            background-color: #343541;
-            padding-left: 30px;
-        }
-
-        .history-name {
-            flex-grow: 1;
-             transition: color 0.3s ease;
-             opacity: 0.9;
-        }
-
-        .delete-history-btn {
-            background: transparent;
-            border: none;
-            color: #aaa;
-            cursor: pointer;
-            font-size: 1em;
-            padding: 0 10px;
-            opacity: 0.7;
-            transition: opacity 0.2s ease, color 0.2s ease;
-        }
-
-        .delete-history-btn:hover {
-            opacity: 1;
-            color: #fff;
-        }
-
-        .sidebar-toggle-button {
-            position: fixed;
-            top: 30px;
-            left: 30px;
-            background: var(--button-primary-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            z-index: 300;
-             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35);
-             transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
-        }
-
-        .sidebar-toggle-button:hover {
-            background-color: var(--button-primary-hover-color);
-             transform: scale(1.05);
-        }
-        .sidebar-toggle-button:active {
-             transform: scale(0.98);
-             opacity: 0.95;
-         }
-
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            z-index: 150;
-            display: none;
-            opacity: 0;
-            transition: opacity 0.3s ease, background-color 0.3s ease;
-
-        }
-
-        .sidebar-overlay.sidebar--open {
-            display: block;
-            opacity: 1;
-        }
-
-        .close-history-menu-btn, .close-settings-menu-btn, .modal-button {
-            padding: 14px 24px;
-            background-color: var(--button-primary-color);
-            color: white;
-            border: none;
-            border-radius: 16px;
-            cursor: pointer;
-            margin-top: 20px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
-        }
-
-        .close-history-menu-btn:hover, .close-settings-menu-btn:hover, .modal-button.confirm:hover {
-            background-color: var(--button-primary-hover-color);
-             transform: scale(1.03);
-        }
-         .close-history-menu-btn:active, .close-settings-menu-btn:active,  .modal-button.confirm:active {
-             transform: scale(0.98);
-             opacity: 0.95;
-         }
-
-
-         .modal-button.cancel {
-            background-color: #555;
-            color: white;
-        }
-
-        .modal-button.cancel:hover {
-            background-color: #666;
-             transform: scale(1.03);
-        }
-         .modal-button.cancel:active {
-             transform: scale(0.98);
-             opacity: 0.95;
-         }
-
-
-        .custom-modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 400;
-            justify-content: center;
-            align-items: center;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s ease, background-color 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .custom-modal-overlay.show-modal {
-            display: flex;
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-
-        .custom-modal {
-            background-color: var(--modal-background-color);
-            color: #fff;
-            padding: 35px;
-            border-radius: 24px;
-            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.7);
-            width: 85%;
-            max-width: 500px;
-            text-align: center;
-            border: none;
-            transform: scale(0.97);
-            opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, border-radius 0.3s ease;
-        }
-
-        .custom-modal-overlay.show-modal .custom-modal {
-            transform: scale(1);
-            opacity: 1;
-        }
-
-
-        .modal-message {
-            margin-bottom: 25px;
-            font-size: 1.2em;
-             transition: color 0.3s ease;
-             font-weight: 500;
-             opacity: 0.95;
-        }
-
-        .modal-input {
-            width: calc(100% - 24px);
-            padding: 14px 16px;
-            margin-bottom: 25px;
-            border-radius: 12px;
-            border: none;
-            background-color: var(--input-text-background-color);
-            color: #fff;
-             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.35);
-             transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .modal-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            margin-top: 10px;
-        }
-
-        .modal-button {
-            padding: 14px 28px;
-            border: none;
-            border-radius: 16px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
-            border: none;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
-        }
-
-        code[class*="language-"],
-        pre[class*="language-"] {
+       code[class*="language-"], pre[class*="language-"] {
             color: black;
-            background: transparent;
+            background: var(--code-block-bg);
             position: relative;
             overflow-x: auto;
-             padding: 1em;
-             border-radius: 8px;
-             margin-bottom: 18px;
-             z-index: 1;
-             white-space: pre-wrap; /* Important: Allows line breaks in code blocks */
-        }
+            padding: 1em;
+            border-radius: 8px;
+            border: 1px solid var(--code-block-border); /* Add border */
+            margin-bottom: 18px;
+            z-index: 1;
+            white-space: pre-wrap; /* Preserve line breaks and spacing */
+       }
 
-       .copy-code-button {
+        .copy-code-button {
             position: absolute;
             bottom: 8px;
             left: 8px;
-            background-color: #ddd;
-            color: black;
-            border: 1px solid #bbb;
+            background-color: var(--copy-button-bg);
+            color: var(--copy-button-color);
+            border: none;
             border-radius: 6px;
             padding: 6px 10px;
             font-size: 0.85em;
             cursor: pointer;
             opacity: 0.8;
-            transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+            transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease;
             z-index: 2;
         }
         .copy-code-button:hover {
             opacity: 1;
             background-color: var(--button-primary-color);
-            color: white;
-            border-color:  var(--button-primary-color);
         }
-        pre[class*="language-"] {
+
+        /* Ensure pre tag is relative for absolute positioning of copy button */
+         pre[class*="language-"] {
             position: relative;
-            z-index: 0;
+              z-index: 0;
         }
 
-        /* Success Notification Styles */
-        .copy-success-notification {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 8px;
-            opacity: 0;
-            visibility: hidden;
-            z-index: 500;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
 
-        .copy-success-notification.show {
-            opacity: 1;
-            visibility: visible;
-        }
+        .copy-success-notification {position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: #4CAF50; color: white; padding: 15px 25px; border-radius: 8px; opacity: 0; visibility: hidden; z-index: 500; transition: opacity 0.3s ease, visibility 0.3s ease;}
+        .copy-success-notification.show {opacity: 1; visibility: visible;}
 
-        .setting-item .toggle-switch .slider {
-            background-color: #ccc;
+        .setting-item .toggle-switch .slider { background-color: #ccc;}
+        .setting-item .toggle-switch input:checked + .slider { background-color: var(--button-primary-color); }
+        .setting-item {
+            padding: 18px 24px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+             transition: background-color 0.3s ease, border-bottom-color 0.3s ease, padding-left 0.2s ease;
         }
-        .setting-item .toggle-switch input:checked + .slider {
-            background-color: var(--button-primary-color);
-        }
+         .setting-item:last-child { border-bottom: none; }
+        .setting-item:active { background-color: #3a3b47;}
+       .setting-item:hover { background-color: #343541; padding-left: 30px; }
+        .setting-label { flex-grow: 1; transition: color 0.3s ease; opacity: 0.9; font-weight: 400;}
+        .toggle-switch {position: relative; display: inline-block; width: 50px; height: 24px; }
+        .toggle-switch input[type="checkbox"] {opacity: 0; width: 0; height: 0;}
 
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px;}
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+
+        input:checked + .slider { background-color: var(--button-primary-color); }
+       input:focus + .slider {box-shadow: 0 0 1px var(--button-primary-color); }
+        input:checked + .slider:before {transform: translateX(26px); }
+        .color-picker-input { padding: 0; border: none; width: 30px; height: 24px; -webkit-appearance: none; -moz-appearance: none; appearance: none;
+            background-color: transparent; cursor: pointer; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        .color-picker-input:hover, .color-picker-input:focus { border-color: var(--button-primary-color); box-shadow: 0 0 5px rgba(0, 188, 212, 0.5); outline: none; }
+
+      .color-picker-input::-webkit-color-swatch-wrapper { padding: 0; }
+        .color-picker-input::-webkit-color-swatch { border: 1px solid #555; border-radius: 6px; }
+        .color-picker-input::-moz-color-swatch-wrapper { padding: 0; }
+       .color-picker-input::-moz-color-swatch { border: 1px solid #555; border-radius: 6px; }
 
     </style>
 
@@ -659,7 +300,7 @@
                 </li>
             <li class="sidebar-menu-item has-submenu" onclick="toggleSettingsMenu()">
                 <span class="menu-link">Cài đặt</span>
-                </li>
+            </li>
         </ul>
 
         <ul class="submenu" id="saved-histories-menu">
@@ -764,8 +405,7 @@
     <script>
         const apiKey = 'AIzaSyAd9p1hXhUcRx4Pz7EmbUKC-V8ULN8L61Q';
         const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
-        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\n\nhoặc:\n\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\n\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
-
+        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
 
         let conversationHistory = [];
         let savedHistories = {};
@@ -808,12 +448,14 @@
         }
 
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
+           const sidebar = document.getElementById('sidebar');
             const container = document.getElementById('container');
             const overlay = document.getElementById('sidebar-overlay');
+
             sidebar.classList.toggle('sidebar--open');
-            container.classList.toggle('container.sidebar-open');
+            container.classList.toggle('container.sidebar-open', sidebar.classList.contains('sidebar--open'));
             overlay.classList.toggle('sidebar--open');
+
             if (sidebar.classList.contains('sidebar--open')) {
                  loadSavedHistoriesList();
             } else {
@@ -826,7 +468,7 @@
             if (autoSaveHistorySetting()) {
                 const storedHistory = localStorage.getItem('chatHistory');
                 if (storedHistory) {
-                    conversationHistory = JSON.parse(storedHistory);
+                                        conversationHistory = JSON.parse(storedHistory);
                     renderMessages();
                 }
             }
@@ -845,26 +487,21 @@
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
                 let messageText = message.parts[0].text;
+
                 if (message.role === 'ai') {
-                    // Replace markdown code blocks with <pre><code>...</code></pre>
-                    messageText = messageText.replace(/```([\s\S]*?)```/g, '<pre><code class="language-javascript">$1</code></pre>');
-
                     messageDiv.innerHTML = `<span class="ai-message-text">${messageText}</span>`;
-
-                    messageDiv.querySelectorAll('pre').forEach(codeBlock => {
-                      let buttonExists =  codeBlock.querySelector('.copy-code-button') !== null;
-                         if(!buttonExists ) {
-                             codeBlock.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>');
-                         }
+                    // Process markdown for code blocks
+                    messageDiv.innerHTML = messageDiv.innerHTML.replace(/```(\w+)?\n?([\s\S]+?)\n?```/g, (match, language, code) => {
+                        const languageClass = language ? `language-${language}` : '';
+                        return `<pre class="${languageClass}"><code class="${languageClass}">${code.trim()}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button></pre>`;
                     });
                 } else {
-                    messageDiv.innerHTML = messageText;
+                    messageDiv.innerHTML = messageText; // Directly use messageText for user messages
                 }
                 messagesContainer.appendChild(messageDiv);
             });
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
-
 
         function startNewChat() {
              if (currentHistoryName) {
@@ -877,7 +514,6 @@
             currentHistoryName = null;
             toggleSidebar();
         }
-
 
         function openSaveHistoryModal() {
             document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
@@ -911,7 +547,6 @@
              currentHistoryName = historyName;
 
         }
-
         function openDeleteHistoryModal(name) {
             historyNameToDelete = name;
             document.getElementById('historyNameToDelete').textContent = name;
@@ -930,7 +565,6 @@
             closeDeleteHistoryModal();
         }
 
-
         function deleteSavedHistory(historyName) {
             delete savedHistories[historyName];
             localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
@@ -939,9 +573,7 @@
             if (currentHistoryName === historyName) {
                 currentHistoryName = null;
             }
-
         }
-
 
         function loadChatHistoryByName(historyName) {
             if (savedHistories[historyName]) {
@@ -951,34 +583,29 @@
                 toggleHistoryMenu();
                 toggleSidebar();
                 currentHistoryName = historyName;
-
             } else {
                 alert("Không tìm thấy lịch sử chat đã lưu.");
             }
         }
-
 
         function toggleHistoryMenu() {
             const submenu = document.getElementById('saved-histories-menu');
             submenu.classList.toggle('open');
              hideSettingsMenu();
         }
-
         function hideHistoryMenu() {
             const submenu = document.getElementById('saved-histories-menu');
             submenu.classList.remove('open');
         }
-
         function toggleSettingsMenu() {
             const submenu = document.getElementById('settings-menu');
             submenu.classList.toggle('open');
             hideHistoryMenu();
         }
-         function hideSettingsMenu() {
+        function hideSettingsMenu() {
             const submenu = document.getElementById('settings-menu');
             submenu.classList.remove('open');
         }
-
 
         function loadSavedHistoriesList() {
             const historiesMenu = document.getElementById('saved-histories-menu');
@@ -1002,12 +629,10 @@
             for (const historyName in savedHistories) {
                 const historyItem = document.createElement('li');
                 historyItem.classList.add('submenu-item');
-
                 const nameSpan = document.createElement('span');
                 nameSpan.classList.add('history-name');
                 nameSpan.textContent = historyName;
                 nameSpan.onclick = () => loadChatHistoryByName(historyName);
-
                 const deleteButton = document.createElement('button');
                 deleteButton.classList.add('delete-history-btn');
                 deleteButton.textContent = '...';
@@ -1015,19 +640,16 @@
                     event.stopPropagation();
                     openDeleteHistoryModal(historyName);
                 };
-
                 historyItem.appendChild(nameSpan);
                 historyItem.appendChild(deleteButton);
                 historiesMenu.appendChild(historyItem);
             }
         }
 
-
         loadChatHistory();
         loadSavedHistoriesList();
         loadSettings();
         applyTheme();
-
 
         function triggerFileUpload() {
             document.getElementById('file-upload').click();
@@ -1041,10 +663,8 @@
                 aiMessageDiv.innerHTML = `<span class="ai-message-text">Đang tải tệp...</span>`;
                 messagesContainer.appendChild(aiMessageDiv);
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
                 let fileNames = Array.from(files).map(file => file.name).join(', ');
                 const userMessage = `Tệp đã tải lên: ${fileNames}. Đang chờ AI xử lý...`;
-
                 const userMessageDiv = document.createElement('div');
                 userMessageDiv.classList.add('message', 'user-message');
                 userMessageDiv.textContent = userMessage;
@@ -1055,10 +675,8 @@
                 conversationHistory.push(userMessageObject);
                 saveChatHistory();
                 renderMessages();
-
                 setTimeout(() => {
                     aiMessageDiv.remove();
-
                     const aiResponseDiv = document.createElement('div');
                     aiResponseDiv.classList.add('message', 'ai-message');
                     aiResponseDiv.innerHTML = `<span class="ai-message-text">Đã nhận được tệp: ${fileNames}. Vui lòng cho biết bạn muốn AI làm gì với tệp này.</span>`;
@@ -1069,11 +687,9 @@
                     conversationHistory.push(aiMessageObject);
                     saveChatHistory();
                     renderMessages();
-
                 }, 1500);
             }
         }
-
 
         async function getGeminiResponse() {
             const userPrompt = document.getElementById('user-prompt').value.trim();
@@ -1090,13 +706,11 @@
                 localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
             }
 
-
             const userMessageObject = { role: 'user', parts: [{ text: userPrompt }] };
             conversationHistory.push(userMessageObject);
             saveChatHistory();
             renderMessages();
             document.getElementById('user-prompt').value = '';
-
 
             aiMessageDiv.classList.add('message', 'ai-message');
             aiMessageDiv.innerHTML = '<span class="ai-message-text">Đang suy nghĩ...</span>';
@@ -1109,11 +723,9 @@
             }));
             promptContents.unshift({ role: 'user', parts: [{ text: systemPrompt }] });
 
-
             const payload = {
                 contents: promptContents
             };
-
 
             try {
                 const response = await fetch(geminiAPIUrl, {
@@ -1132,46 +744,44 @@
                     return;
                 }
 
-
                 const data = await response.json();
                 console.log("Dữ liệu phản hồi từ API:", data);
 
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
-                    aiMessageDiv.innerHTML = '';
-
-                      // Replace markdown code blocks
-                      aiResponseText = aiResponseText.replace(/```([\s\S]*?)```/g, '<pre><code class="language-javascript">$1</code></pre>');
-                      aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
-
-
-                    const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
+                    aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`; //Removed .innerHTML clear.
+                    const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] }; //store current HTML content.
                     conversationHistory.push(aiMessageObject);
 
+                    if (currentHistoryName) {
+                       savedHistories[currentHistoryName] = [...conversationHistory];
+                       localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
+                   } else {
+                        saveChatHistory();
+                   }
 
-                     if (currentHistoryName) {
-                        savedHistories[currentHistoryName] = [...conversationHistory];
-                        localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-                    } else {
-                         saveChatHistory();
-                    }
+                  messagesContainer.appendChild(aiMessageDiv);
+                  messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-                   messagesContainer.appendChild(aiMessageDiv);
+                  //Manually Parse to Find and Create elements inside.
+                  aiMessageDiv.querySelectorAll('pre').forEach( codeBlock => {
+                        let buttonExists =  codeBlock.querySelector('.copy-code-button') !== null;//Prevent Readd
 
-                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                         if(!buttonExists )
+                            codeBlock.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>');
+                    })
+
                  }
                 else
                    aiMessageDiv.innerHTML = `<span class="ai-message-text">Không nhận được phản hồi hợp lệ từ AI.</span>`;
-
 
             } catch (error) {
                 console.error("Lỗi fetch:", error);
                 aiMessageDiv.innerHTML = `<span class="ai-message-text">Đã xảy ra lỗi khi kết nối đến API: ${error}</span>`;
             }
-
         }
 
-        function loadSettings() {
+       function loadSettings() {
             const storedSettings = localStorage.getItem('chatSettings');
             if (storedSettings) {
                 const settings = JSON.parse(storedSettings);
@@ -1181,37 +791,24 @@
                 currentTextColor = settings.textColor || defaultTextColor;
                 currentContainerColor = settings.containerColor || defaultContainerColor;
 
-
                 document.getElementById('autoSaveHistoryToggle').checked = autoSaveHistory;
                 document.getElementById('useFirstMessageAsNameToggle').checked = useFirstMessageAsName;
                 document.getElementById('backgroundColorPicker').value = currentBackgroundColor;
                 document.getElementById('textColorPicker').value = currentTextColor;
                 document.getElementById('containerColorPicker').value = currentContainerColor;
-
             } else {
                  document.getElementById('autoSaveHistoryToggle').checked = true;
                  document.getElementById('useFirstMessageAsNameToggle').checked = false;
                  currentBackgroundColor = defaultBackgroundColor;
                  currentTextColor = defaultTextColor;
                  currentContainerColor = defaultContainerColor;
-
             }
 
-            document.getElementById('autoSaveHistoryToggle').addEventListener('change', function() {
-                autoSaveHistory = this.checked;
-            });
-            document.getElementById('useFirstMessageAsNameToggle').addEventListener('change', function() {
-                useFirstMessageAsName = this.checked;
-            });
-            document.getElementById('backgroundColorPicker').addEventListener('change', function() {
-                currentBackgroundColor = this.value;
-            });
-             document.getElementById('textColorPicker').addEventListener('change', function() {
-                currentTextColor = this.value;
-            });
-            document.getElementById('containerColorPicker').addEventListener('change', function() {
-                currentContainerColor = this.value;
-            });
+            document.getElementById('autoSaveHistoryToggle').addEventListener('change', function() { autoSaveHistory = this.checked; });
+            document.getElementById('useFirstMessageAsNameToggle').addEventListener('change', function() { useFirstMessageAsName = this.checked; });
+            document.getElementById('backgroundColorPicker').addEventListener('change', function() { currentBackgroundColor = this.value; });
+            document.getElementById('textColorPicker').addEventListener('change', function() { currentTextColor = this.value; });
+            document.getElementById('containerColorPicker').addEventListener('change', function() { currentContainerColor = this.value;});
         }
 
         function saveSetting(key, value) {
@@ -1219,14 +816,8 @@
             settings[key] = value;
             localStorage.setItem('chatSettings', JSON.stringify(settings));
         }
-
-        function autoSaveHistorySetting() {
-            return autoSaveHistory;
-        }
-        function useFirstMessageAsNameSetting() {
-            return useFirstMessageAsName;
-        }
-
+        function autoSaveHistorySetting() { return autoSaveHistory; }
+        function useFirstMessageAsNameSetting() { return useFirstMessageAsName; }
 
         function applyTheme() {
             document.documentElement.style.setProperty('--background-color', currentBackgroundColor);
@@ -1257,8 +848,6 @@
             applyTheme();
             alert('Giao diện đã hoàn tác về mặc định. Nhấn "Lưu cài đặt" để lưu thay đổi.');
         }
-
-
     </script>
 </body>
 </html>
