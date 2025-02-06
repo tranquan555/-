@@ -579,33 +579,33 @@
              padding: 1em;
              border-radius: 8px;
              margin-bottom: 18px;
-             z-index: 1; /* Added z-index */
+             z-index: 1;
         }
 
        .copy-code-button {
             position: absolute;
             bottom: 8px;
             left: 8px;
-            background-color: #ddd; /* Light grey background */
-            color: black;        /* Black text */
-            border: 1px solid #bbb; /* Slightly darker border to stand out more */
+            background-color: #ddd;
+            color: black;
+            border: 1px solid #bbb;
             border-radius: 6px;
             padding: 6px 10px;
             font-size: 0.85em;
             cursor: pointer;
-            opacity: 0.8;       /* Slightly higher initial opacity */
-            transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; /* Added transitions for more properties */
-            z-index: 2;         /* Higher z-index than code */
+            opacity: 0.8;
+            transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+            z-index: 2;
         }
         .copy-code-button:hover {
             opacity: 1;
             background-color: var(--button-primary-color);
-            color: white;         /* White text on hover */
-            border-color:  var(--button-primary-color); /* Matching border color on hover */
+            color: white;
+            border-color:  var(--button-primary-color);
         }
         pre[class*="language-"] {
             position: relative;
-            z-index: 0; /* Ensure pre is below button */
+            z-index: 0;
         }
 
         /* Success Notification Styles */
@@ -631,120 +631,11 @@
 
 
         /* Settings Styles */
-        .setting-item {
-            padding: 18px 24px;
-            border-bottom: 1px solid #333;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-             transition: background-color 0.3s ease, border-bottom-color 0.3s ease, padding-left 0.2s ease;
+        .setting-item .toggle-switch .slider {
+            background-color: #ccc; /* Default grey color when OFF */
         }
-
-        .setting-item:last-child {
-            border-bottom: none;
-        }
-         .setting-item:active {
-             background-color: #3a3b47;
-         }
-
-
-        .setting-item:hover {
-            background-color: #343541;
-            padding-left: 30px;
-        }
-
-
-        .setting-label {
-            flex-grow: 1;
-             transition: color 0.3s ease;
-             opacity: 0.9;
-             font-weight: 400;
-        }
-
-        .setting-control {
-            /* Style for controls like toggle or color picker */
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-
-        .toggle-switch input[type="checkbox"] {
-            opacity: 0;
-            width: 0;
-            height: 0;
-                }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: var(--button-primary-color);
-        }
-
-        input:focus + .slider {
-            box-shadow: 0 0 1px var(--button-primary-color);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-        .color-picker-input {
-            padding: 0;
-            border: none;
-            width: 30px;
-            height: 24px;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            background-color: transparent;
-            cursor: pointer;
-             transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-         .color-picker-input:hover, .color-picker-input:focus {
-             border-color: var(--button-primary-color);
-             box-shadow: 0 0 5px rgba(0, 188, 212, 0.5);
-             outline: none;
-         }
-
-
-        .color-picker-input::-webkit-color-swatch-wrapper {
-            padding: 0;
-        }
-        .color-picker-input::-webkit-color-swatch {
-            border: 1px solid #555;
-            border-radius: 6px;
-        }
-        .color-picker-input::-moz-color-swatch-wrapper {
-            padding: 0;
-        }
-        .color-picker-input::-moz-color-swatch {
-            border: 1px solid #555;
-            border-radius: 6px;
+        .setting-item .toggle-switch input:checked + .slider {
+            background-color: var(--button-primary-color); /* Primary color when ON */
         }
 
 
@@ -872,7 +763,7 @@
 
 
     <script>
-        const apiKey = 'AIzaSyCGd-w96-bJENQ9pGnLBcUg6pH1srsud20';
+        const apiKey = 'AIzaSyAd9p1hXhUcRx4Pz7EmbUKC-V8ULN8L61Q';
         const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
         const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
 
@@ -1253,9 +1144,9 @@
                     const aiTextContentSpan = document.createElement('span');
                     aiTextContentSpan.classList.add('ai-message-text');
 
-                      messageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
+                      aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
 
-                    const aiMessageObject = { role: 'model', parts: [{ text: messageDiv.innerHTML }] };
+                    const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
 
                     conversationHistory.push(aiMessageObject);
 
@@ -1268,7 +1159,7 @@
                     }
 
 
-                   messagesContainer.appendChild(messageDiv);
+                   messagesContainer.appendChild(aiMessageDiv); // Use aiMessageDiv here, not messageDiv
 
                  messagesContainer.scrollTop = messagesContainer.scrollHeight;
                  }
