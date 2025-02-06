@@ -1,3 +1,5 @@
+--- START OF FILE vip4ganhoanchinh 3.html ---
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -573,16 +575,17 @@
         code[class*="language-"],
         pre[class*="language-"] {
             color: black; /* Ensure text color is in the foreground */
-            background-color: transparent; /* Removed background color */
+            background-color: #f0f0f0; /* Gemini-like background */
             position: relative;
             overflow-x: auto;
              padding: 1em;
              border-radius: 8px;
              margin-bottom: 18px;
-             border: 1px solid black; /* Added black border */
+             border: none; /* Removed the inner border to match Gemini */
              font-family: monospace, monospace;
              white-space: pre-wrap; /* Keep white-space: pre-wrap for text wrap */
              z-index: 0; /* Ensure code block background is behind the text if layering issues occur */
+             text-decoration: none; /* Remove underlines */
         }
 
        .copy-code-button {
@@ -608,7 +611,7 @@
         }
         pre[class*="language-"] {
             position: relative;
-            z-index: 0;
+            z-index: 0; /* Ensure pre element itself also has correct stacking if needed */
         }
 
         /* Success Notification Styles */
@@ -763,9 +766,7 @@
         </div>
          <input type="file" id="file-upload" style="display:none" multiple onchange="handleFileUpload(this.files)">
     </div>
-
-
-    <script>
+        <script>
         const apiKey = 'AIzaSyAd9p1hXhUcRx4Pz7EmbUKC-V8ULN8L61Q';
         const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
         const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
@@ -1148,8 +1149,23 @@
                     let aiResponseText = data.candidates[0].content.parts[0].text;
                     aiMessageDiv.innerHTML = '';
 
+                    // Safely encode the aiResponseText for HTML insertion, addressing special characters
+                    const encodedAiResponseText = aiResponseText
+                        .replace(/</g, "<")  // Escape less-than characters
+                        .replace(/>/g, ">")  // Escape greater-than characters
+                        .replace(/&/g, "&")   // Escape ampersands
+                        .replace(/"/g, """)  // Escape double quotes
+                        .replace(/'/g, "'");  // Escape single quotes
 
-                      aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
+                    // Re-insert code blocks after HTML encoding. Assumes the original API text already used markdown style `` backticks to enclose blocks properly which would also help to auto insert "language-javascript" etc
+                   let formattedAiResponseText = encodedAiResponseText.replace(/```([\w-]*)\s*([\s\S]*?)```/g, (match, language, code) => {
+                        // HTML-encode code inside code blocks for safe injection and escaping html character within codes such angle brackets too for parsing codes
+                        const encodedCode = code.replace(/</g, "<").replace(/>/g, ">").trim();
+
+                        return `<pre class="language-${language}"><code class="language-${language}">${encodedCode}</code></pre>`;
+                    });
+
+                    aiMessageDiv.innerHTML = `<span class="ai-message-text">${formattedAiResponseText}</span>`;
 
                     const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
 
