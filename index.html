@@ -225,7 +225,7 @@
             padding-right: 20px;
             z-index: 100;
             border-bottom-left-radius: 16px;
-            border-bottom-right-radius: 16px;
+             border-bottom-right-radius: 16px;
              border-top: 1px solid #444;
         }
 
@@ -632,7 +632,7 @@
         </ul>
 
         <div class="custom-modal-overlay" id="saveHistoryModalOverlay">
-            <div class="custom-modal">
+            <div class="custom-modal" id="saveHistoryModalContent">  <!-- ADDED ID HERE-->
                 <p class="modal-message">Nhập tên cho lịch sử chat này:</p>
                 <input type="text" id="historyNameInput" class="modal-input" placeholder="Tên lịch sử">
                 <div class="modal-buttons">
@@ -689,7 +689,6 @@
         let savedHistories = {};
         let historyNameToDelete = null;
         let isAutoSaveEnabled = localStorage.getItem('autoSaveEnabled') === 'true';
-        let isSaveHistoryModalOpen = false; // Flag to track modal state
 
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -733,29 +732,18 @@
             const sidebar = document.getElementById('sidebar');
             const container = document.getElementById('container');
             const overlay = document.getElementById('sidebar-overlay');
-            const body = document.querySelector('body');
-
-            // Toggle the sidebar's open state
             sidebar.classList.toggle('sidebar--open');
-            body.classList.toggle('sidebar--open'); // Toggle body class
-
-            // Now handle the overlay more explicitly
+            body = document.querySelector('body');
+            body.classList.toggle('sidebar--open');
+            container.classList.toggle('container.sidebar-open');
+            overlay.classList.toggle('sidebar--open');
             if (sidebar.classList.contains('sidebar--open')) {
-                overlay.classList.add('sidebar--open'); // Ensure overlay is shown
-                loadSavedHistoriesList();
+                 loadSavedHistoriesList();
             } else {
-                overlay.classList.remove('sidebar--open'); // Ensure overlay is hidden
                 hideHistoryMenu();
                 hideSettingsMenu();
             }
-
-            // Debugging logs (remove after testing)
-            console.log("Sidebar state:", sidebar.classList.contains('sidebar--open') ? "Open" : "Closed");
-            console.log("Overlay state:", overlay.classList.contains('sidebar--open') ? "Visible" : "Hidden");
-
-            container.classList.toggle('container.sidebar-open');
         }
-
 
         function loadChatHistory() {
             const storedHistory = localStorage.getItem('chatHistory');
@@ -805,18 +793,34 @@
         }
 
 
-        function openSaveHistoryModal() {
-            if (!isSaveHistoryModalOpen) { // Check if modal is already open
-                document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
-                document.getElementById('historyNameInput').value = '';
-                isSaveHistoryModalOpen = true; // Set modal state to open
-            }
+       function openSaveHistoryModal() {
+            const modalOverlay = document.getElementById('saveHistoryModalOverlay');
+            const modalContent = document.getElementById('saveHistoryModalContent');
+
+            // Clone the modal content
+            const clonedModalContent = modalContent.cloneNode(true);
+
+            // Clear the input field in the cloned modal
+            clonedModalContent.querySelector('#historyNameInput').value = '';
+
+            // Replace the existing modal content with the cloned content
+            modalOverlay.innerHTML = '';
+            modalOverlay.appendChild(clonedModalContent);
+
+            // Add event listeners to the cloned modal buttons
+            clonedModalContent.querySelector('.modal-button.confirm').onclick = saveHistoryWithInputName;
+            clonedModalContent.querySelector('.modal-button.cancel').onclick = closeSaveHistoryModal;
+
+            // Show the modal overlay
+            modalOverlay.classList.add('show-modal');
         }
 
+
         function closeSaveHistoryModal() {
-            document.getElementById('saveHistoryModalOverlay').classList.remove('show-modal');
-            isSaveHistoryModalOpen = false; // Set modal state to closed
-        }
+             const modalOverlay = document.getElementById('saveHistoryModalOverlay');
+             modalOverlay.classList.remove('show-modal');
+         }
+
 
         function saveHistoryWithInputName() {
             const historyName = document.getElementById('historyNameInput').value.trim();
@@ -824,7 +828,7 @@
                 savedHistories[historyName] = [...conversationHistory];
                 localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
                 alert(`Lịch sử chat đã được lưu với tên: ${historyName}`);
-                loadSavedHistoriesList();
+                loadSavedHistoriesList                loadSavedHistoriesList();
                 closeSaveHistoryModal();
             } else {
                 alert("Vui lòng nhập tên cho lịch sử chat.");
