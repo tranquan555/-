@@ -570,28 +570,21 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
         }
 
-        .code-block {
-            background-color: #2d2d2d;
-            color: #f8f8f2;
+        /* NEW CODE BLOCK STYLES */
+        pre {
+            background-color: #333; /* Darker background for code blocks */
+            color: #f8f8f2; /* Light text for code */
+            padding: 1em;
             border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 10px;
-            overflow-x: auto;
-            font-family: monospace;
-            white-space: pre;
-            position: relative;
+            overflow-x: auto; /* Enable horizontal scrolling for long code lines */
+            margin-bottom: 18px; /* Consistent margin */
+            font-family: 'Courier New', monospace; /* Monospace font for code */
+            font-size: 14px; /* Adjust font size if needed */
         }
 
-        .code-block::before {
-            content: attr(data-lang);
-            position: absolute;
-            top: 0;
-            left: 0;
-            padding: 5px 10px;
-            background-color: #3e3e3e;
-            color: #fff;
-            font-size: 0.8em;
-            border-radius: 8px 0 8px 0;
+        code {
+            background-color: transparent; /* Ensure code background is transparent */
+            padding: 0; /* Remove padding from inline code if any */
         }
 
 
@@ -712,6 +705,9 @@
         <div id="messages-container">
             <!-- Messages will be appended here -->
         </div>
+         <div class="copy-success-notification" id="copyNotification">
+            Đã sao chép vào clipboard!
+        </div>
 
         <div class="input-area">
             <button class="file-upload-button" onclick="triggerFileUpload()">
@@ -727,7 +723,7 @@
     <script>
         const apiKey = 'AIzaSyAd9p1hXhUcRx4Pz7EmbUKC-V8ULN8L61Q';
         const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
-        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác.";
+        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
 
         let conversationHistory = [];
         let savedHistories = {};
@@ -744,6 +740,12 @@
         const defaultContainerColor = '#25272b';
 
         let currentHistoryName = null;
+
+
+        document.body.removeEventListener('click', async (event) => {}); // Remove old event listener to prevent errors
+
+        function showCopyNotification() { // remove old function, not used anymore
+        }
 
 
         function toggleSidebar() {
@@ -784,14 +786,11 @@
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
                 let messageText = message.parts[0].text;
-
                 if (message.role === 'ai') {
-                    // Handle code blocks
-                    const codeBlockRegex = /```(\w+)?\n([\s\S]*?)\n```/g;
-                    messageText = messageText.replace(codeBlockRegex, (match, lang, code) => {
-                        return `<div class="code-block" data-lang="${lang || 'code'}">${code}</div>`;
-                    });
+
                     messageDiv.innerHTML = `<span class="ai-message-text">${messageText}</span>`;
+
+
                 } else {
                     messageDiv.innerHTML = messageText;
                 }
@@ -1013,7 +1012,7 @@
         async function getGeminiResponse() {
             const userPrompt = document.getElementById('user-prompt').value.trim();
             const messagesContainer = document.getElementById('messages-container');
-            let aiMessageDiv = document.createElement('div');
+            let aiMessageDiv = document.createElement('div'); // Declare aiMessageDiv here
 
             if (!userPrompt) {
                 alert("Vui lòng nhập tin nhắn.");
@@ -1073,17 +1072,14 @@
 
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
+                    aiMessageDiv.innerHTML = ''; // Clear "Đang suy nghĩ..." message before adding response
 
-                    // Handle code blocks
-                    const codeBlockRegex = /```(\w+)?\n([\s\S]*?)\n```/g;
-                    aiResponseText = aiResponseText.replace(codeBlockRegex, (match, lang, code) => {
-                        return `<div class="code-block" data-lang="${lang || 'code'}">${code}</div>`;
-                    });
-
-                    aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
+                      aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
 
                     const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
+
                     conversationHistory.push(aiMessageObject);
+
 
                      if (currentHistoryName) {
                         savedHistories[currentHistoryName] = [...conversationHistory];
@@ -1093,10 +1089,12 @@
                     }
 
                    messagesContainer.appendChild(aiMessageDiv);
+
                  messagesContainer.scrollTop = messagesContainer.scrollHeight;
                  }
                 else
                    aiMessageDiv.innerHTML = `<span class="ai-message-text">Không nhận được phản hồi hợp lệ từ AI.</span>`;
+
 
             } catch (error) {
                 console.error("Lỗi fetch:", error);
