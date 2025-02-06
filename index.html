@@ -591,18 +591,18 @@
             font-size: 0.9em;
             cursor: pointer;
             opacity: 0.7; /* slightly lower opacity for copy button */
-            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease; /* Copy button transitions - also borderRadius */
+            /* transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;  Copy button transitions - also borderRadius */ /* REMOVED TRANSITION */
         }
 
-        .copy-code-button:hover {
+        /*.copy-code-button:hover {  REMOVED HOVER EFFECT
             opacity: 1;
             background-color: var(--button-primary-color);
-             transform: scale(1.05); /* Subtle scale up on hover */
-        }
-         .copy-code-button:active {
-             transform: scale(0.98); /* subtle scale down on active click for feedback */
-             opacity: 0.9; /* slight opacity reduction for feedback */
-         }
+             transform: scale(1.05);  Subtle scale up on hover
+        }*/
+         /*.copy-code-button:active {  REMOVED ACTIVE EFFECT
+             transform: scale(0.98);  subtle scale down on active click for feedback
+             opacity: 0.9;  slight opacity reduction for feedback
+         }*/
 
 
         /* Settings Styles */
@@ -721,6 +721,27 @@
             border: 1px solid #555;
             border-radius: 6px;
         }
+
+        /* REMOVE ALL TRANSITIONS AND EFFECTS ON CODE BLOCK*/
+        code[class*="language-"],
+        pre[class*="language-"] {
+            /*transition: background-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease;*/ /* REMOVED TRANSITION */
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); /* Shadow for code blocks */
+        }
+
+        /*.copy-code-button { REMOVED TRANSITION FROM COPY BUTTON ALREADY*/
+        /*    transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;  Copy button transitions - also borderRadius */
+        /*}*/
+
+        /*.copy-code-button:hover { REMOVED HOVER EFFECT FROM COPY BUTTON ALREADY*/
+        /*    opacity: 1;
+        /*    background-color: var(--button-primary-color);
+        /*     transform: scale(1.05);  Subtle scale up on hover
+        /*}*/
+         /*.copy-code-button:active { REMOVED ACTIVE EFFECT FROM COPY BUTTON ALREADY*/
+         /*    transform: scale(0.98);  subtle scale down on active click for feedback
+         /*    opacity: 0.9;  slight opacity reduction for feedback
+         /*}*/
 
 
     </style>
@@ -844,6 +865,8 @@
         </div>
          <input type="file" id="file-upload" style="display:none" multiple onchange="handleFileUpload(this.files)">
     </div>
+
+    <div id="copy-notification" style="position: fixed; top: 10px; right: 10px; background-color: #343541; color: white; padding: 10px 15px; border-radius: 8px; opacity: 0; transition: opacity 0.3s ease; z-index: 500;">Đã sao chép vào clipboard!</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
@@ -1233,15 +1256,18 @@
                         const copyButton = document.createElement('button');
                         copyButton.classList.add('copy-code-button');
                         copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+                        codePre.appendChild(copyButton);
+
+                        // Modified copy button onclick
                         copyButton.onclick = () => {
                             navigator.clipboard.writeText(codeContent).then(() => {
-                                alert('Đã sao chép code vào clipboard!');
+                                showCopyNotification(); // Show in-page notification
                             }).catch(err => {
                                 console.error('Lỗi khi sao chép: ', err);
                                 alert('Lỗi khi sao chép code.');
                             });
                         };
-                        codePre.appendChild(copyButton);
+
 
                         aiTextContentSpan.appendChild(codePre);
 
@@ -1287,6 +1313,16 @@
                 aiMessageDiv.innerHTML = `<span class="ai-message-text">Đã xảy ra lỗi khi kết nối đến API.</span>`;
             }
         }
+
+        // Function to show in-page copy notification
+        function showCopyNotification() {
+            const notification = document.getElementById('copy-notification');
+            notification.style.opacity = '1';
+            setTimeout(() => {
+                notification.style.opacity = '0';
+            }, 2000); // Fade out after 2 seconds
+        }
+
 
         // Settings Functions
         function loadSettings() {
