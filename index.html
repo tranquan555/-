@@ -1,3 +1,4 @@
+--- START OF FILE vip1 2.html ---
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -53,7 +54,7 @@
             touch-action: manipulation;
             -webkit-text-size-adjust: 100%;
             font-size: 16px;
-            overflow-y: scroll;
+            overflow-y: scroll; /* Allow vertical scroll always for smoother experience */
             scrollbar-width: thin;
             scrollbar-color: #555 #2a2a2a;
             -webkit-font-smoothing: antialiased;
@@ -62,7 +63,7 @@
         }
 
         body.sidebar--open {
-            overflow: hidden;
+            overflow: hidden; /* Prevent body scroll when sidebar is open */
         }
 
 
@@ -129,6 +130,7 @@
             box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.4);
             opacity: 0;
             animation: fadeIn 0.5s ease-out 0.1s forwards;
+            will-change: opacity; /* For smoother animation */
         }
 
         @keyframes fadeIn {
@@ -165,6 +167,7 @@
             opacity: 0;
             animation: slideUpFadeIn 0.4s ease-out forwards;
              margin-top: 5px;
+             will-change: opacity, transform; /* For smoother animation */
         }
 
         @keyframes slideUpFadeIn {
@@ -263,6 +266,7 @@
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
             font-weight: 500;
+            will-change: transform, box-shadow; /* For smoother animation */
         }
 
         .input-area button:hover {
@@ -287,6 +291,7 @@
             opacity: 0.95;
             transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+            will-change: transform, box-shadow, opacity; /* For smoother animation */
         }
 
         .file-upload-button:hover {
@@ -314,6 +319,7 @@
             touch-action: manipulation;
             border-right: none;
              backdrop-filter: blur(12px);
+             will-change: transform, box-shadow; /* For smoother animation */
         }
 
         .sidebar.sidebar--open {
@@ -344,6 +350,7 @@
             border-bottom: 3px solid transparent;
              font-size: 17px;
             font-weight: 400;
+            will-change: background-color, border-bottom-color, padding-left; /* For smoother animation */
         }
 
         .sidebar-menu-item:hover {
@@ -376,6 +383,7 @@
             overflow-y: hidden;
             padding-top: 0;
             padding-bottom: 0;
+            will-change: max-height, opacity; /* For smoother animation */
         }
 
         .submenu.open {
@@ -397,6 +405,7 @@
             align-items: center;
             border-bottom: 1px solid #333;
              font-size: 16px;
+             will-change: background-color, padding-left; /* For smoother animation */
         }
 
         .submenu-item:last-child {
@@ -422,6 +431,7 @@
             padding: 0 12px;
             opacity: 0.9;
             transition: opacity 0.2s ease, color 0.2s ease, transform 0.2s ease;
+            will-change: opacity, color, transform; /* For smoother animation */
         }
 
         .delete-history-btn:hover {
@@ -447,6 +457,7 @@
             z-index: 300;
              box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
              transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+             will-change: transform, box-shadow, background-color; /* For smoother animation */
         }
 
         .sidebar-toggle-button:hover {
@@ -465,6 +476,7 @@
             z-index: 150;
             display: none;
             animation: fadeInOverlay 0.2s ease-out forwards;
+            will-change: background-color; /* For smoother animation */
         }
 
          @keyframes fadeInOverlay {
@@ -491,6 +503,7 @@
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
             font-weight: 500;
+            will-change: transform, box-shadow, background-color; /* For smoother animation */
         }
 
         .close-history-menu-btn:hover, .close-settings-menu-btn:hover, .modal-button.confirm:hover, .modal-button.cancel:hover {
@@ -513,6 +526,7 @@
             align-items: center;
             pointer-events: none;
              animation: fadeInModalOverlay 0.3s ease-out forwards;
+             will-change: background-color; /* For smoother animation */
         }
 
          @keyframes fadeInModalOverlay {
@@ -539,6 +553,7 @@
             transform: translateY(-30px);
             opacity: 0;
             animation: slideInModal 0.4s ease-out 0.15s forwards;
+            will-change: transform, opacity; /* For smoother animation */
         }
 
         @keyframes slideInModal {
@@ -587,6 +602,37 @@
             color: white;
         }
 
+         /* Improved Save History Modal Styling */
+        #saveHistoryModalOverlay .custom-modal {
+            padding: 40px 30px;
+            max-width: 450px;
+        }
+
+        #saveHistoryModalOverlay .modal-message {
+            font-size: 1.15em;
+            margin-bottom: 25px;
+            color: #f0f0f0;
+        }
+
+        #saveHistoryModalOverlay .modal-input {
+            padding: 12px 15px;
+            font-size: 16px;
+        }
+
+        #saveHistoryModalOverlay .modal-buttons {
+            margin-top: 25px;
+        }
+
+        /* Improved Toggle Switch Style - Minor adjustment for visual clarity if needed
+        .switch .slider.round {
+            border-radius: 34px;
+        }
+
+        .switch .slider.round:before {
+            border-radius: 50%;
+        }
+        */
+
 
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
@@ -598,15 +644,25 @@
 
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h3>Menu</h3>
+            <h3>Lịch sử Chat</h3>
         </div>
         <ul class="sidebar-menu">
             <li class="sidebar-menu-item" onclick="startNewChat()">
                 <span class="menu-link">Đoạn chat mới</span>
             </li>
-            <li class="sidebar-menu-item has-submenu" onclick="toggleSettingsMenu()">
+            <li class="sidebar-menu-item" onclick="openSaveHistoryModal()">
+                <span class="menu-link">Lưu lịch sử này</span>
+            </li>
+            <li class="sidebar-menu-item has-submenu" onclick="toggleHistoryMenu()">
+                <span class="menu-link">Lịch sử đã lưu</span>
+            </li>
+             <li class="sidebar-menu-item has-submenu" onclick="toggleSettingsMenu()">
                 <span class="menu-link">Cài đặt</span>
             </li>
+        </ul>
+
+        <ul class="submenu" id="saved-histories-menu">
+            <button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>
         </ul>
 
          <ul class="submenu" id="settings-menu">
@@ -620,6 +676,26 @@
             <button class="close-settings-menu-btn" onclick="toggleSettingsMenu()">Đóng</button>
         </ul>
 
+        <div class="custom-modal-overlay" id="saveHistoryModalOverlay">
+            <div class="custom-modal">
+                <p class="modal-message">Nhập tên cho lịch sử chat này:</p>
+                <input type="text" id="historyNameInput" class="modal-input" placeholder="Tên lịch sử">
+                <div class="modal-buttons">
+                    <button class="modal-button confirm" onclick="saveHistoryWithInputName()">Lưu</button>
+                    <button class="modal-button cancel" onclick="closeSaveHistoryModal()">Huỷ</button>
+                </div>
+            </div>
+        </div>
+
+         <div class="custom-modal-overlay" id="deleteHistoryModalOverlay">
+            <div class="custom-modal">
+                <p class="modal-message" id="deleteConfirmationMessage">Bạn có chắc chắn muốn xóa lịch sử chat "<span id="historyNameToDelete"></span>" không?</p>
+                <div class="modal-buttons">
+                    <button class="modal-button confirm" onclick="confirmDeleteHistory()">Xóa</button>
+                    <button class="modal-button cancel" onclick="closeDeleteHistoryModal()">Huỷ</button>
+                </div>
+            </div>
+        </div>
 
     </aside>
 
@@ -655,12 +731,14 @@
         const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
 
         let conversationHistory = [];
+        let savedHistories = {};
+        let historyNameToDelete = null;
         let isAutoSaveEnabled = localStorage.getItem('autoSaveEnabled') === 'true';
+        let isSaveHistoryModalOpen = false; // Flag to track modal state - **ADDITION**
 
 
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('autoSaveToggle').checked = isAutoSaveEnabled;
-            loadChatHistory(); // Still load existing chat on page load even without history feature.
         });
 
 
@@ -668,7 +746,7 @@
             isAutoSaveEnabled = !isAutoSaveEnabled;
             localStorage.setItem('autoSaveEnabled', isAutoSaveEnabled);
              if (isAutoSaveEnabled) {
-                alert("Tự động lưu đoạn chat đã được bật. Lịch sử chat sẽ tự động được lưu khi bạn bắt đầu đoạn chat mới."); // Consider updating this message if auto-save still applies to the current session, just not across sessions. Or remove auto save toggle completely. For now keeping message but user functionality may change after history removal
+                alert("Tự động lưu đoạn chat đã được bật. Lịch sử chat sẽ tự động được lưu khi bạn bắt đầu đoạn chat mới.");
             } else {
                 alert("Tự động lưu đoạn chat đã được tắt.");
             }
@@ -677,9 +755,21 @@
 
         function autoSaveConversation() {
             if (conversationHistory.length > 0) {
-                // Removed saving history details to savedHistories and localStorage since feature is removed.
-                localStorage.setItem('chatHistory', JSON.stringify(conversationHistory)); // Just save the current conversation for current session if auto-save is enabled
-                console.log(`Đoạn chat đã được tự động lưu cho phiên hiện tại.`);
+                let historyName = "Đoạn chat mới";
+
+                const firstUserMessage = conversationHistory.find(msg => msg.role === 'user');
+                if (firstUserMessage) {
+                    const firstMessageText = firstUserMessage.parts[0].text;
+                    historyName = firstMessageText.length > 20 ? firstMessageText.substring(0, 20) + "..." : firstMessageText;
+                } else {
+                     historyName = `autosave-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+                }
+
+
+                savedHistories[historyName] = [...conversationHistory];
+                localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
+                loadSavedHistoriesList();
+                console.log(`Đoạn chat đã được tự động lưu: ${historyName}`);
             }
         }
 
@@ -694,9 +784,10 @@
             container.classList.toggle('container.sidebar-open');
             overlay.classList.toggle('sidebar--open');
             if (sidebar.classList.contains('sidebar--open')) {
-                 // Removed loadSavedHistoriesList as history menu is gone.
+                 loadSavedHistoriesList();
             } else {
-                hideSettingsMenu(); // Keep settings menu closed on sidebar close.
+                hideHistoryMenu();
+                hideSettingsMenu();
             }
         }
 
@@ -739,7 +830,7 @@
 
         function startNewChat() {
             if (conversationHistory.length > 0 && isAutoSaveEnabled) {
-                autoSaveConversation(); // Still autosave if enabled. Function now just saves current session.
+                autoSaveConversation();
             }
             conversationHistory = [];
             saveChatHistory();
@@ -748,9 +839,88 @@
         }
 
 
+        function openSaveHistoryModal() {
+            if (!isSaveHistoryModalOpen) { // Check if modal is already open - **ADDITION**
+                document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
+                document.getElementById('historyNameInput').value = '';
+                isSaveHistoryModalOpen = true; // Set modal state to open - **ADDITION**
+            }
+        }
+
+        function closeSaveHistoryModal() {
+            document.getElementById('saveHistoryModalOverlay').classList.remove('show-modal');
+            isSaveHistoryModalOpen = false; // Set modal state to closed - **ADDITION**
+        }
+
+        function saveHistoryWithInputName() {
+            const historyName = document.getElementById('historyNameInput').value.trim();
+            if (historyName) {
+                savedHistories[historyName] = [...conversationHistory];
+                localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
+                alert(`Lịch sử chat đã được lưu với tên: ${historyName}`);
+                loadSavedHistoriesList();
+                closeSaveHistoryModal();
+            } else {
+                alert("Vui lòng nhập tên cho lịch sử chat.");
+            }
+        }
+
+        function openDeleteHistoryModal(name) {
+            historyNameToDelete = name;
+            document.getElementById('historyNameToDelete').textContent = name;
+            document.getElementById('deleteHistoryModalOverlay').classList.add('show-modal');
+        }
+
+        function closeDeleteHistoryModal() {
+            document.getElementById('deleteHistoryModalOverlay').classList.remove('show-modal');
+            historyNameToDelete = null;
+        }
+
+        function confirmDeleteHistory() {
+            if (historyNameToDelete) {
+                deleteSavedHistory(historyNameToDelete);
+            }
+            closeDeleteHistoryModal();
+        }
+
+
+        function deleteSavedHistory(historyName) {
+            delete savedHistories[historyName];
+            localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
+            loadSavedHistoriesList();
+            alert(`Lịch sử chat "${historyName}" đã bị xóa.`);
+
+        }
+
+
+        function loadChatHistoryByName(historyName) {
+            if (savedHistories[historyName]) {
+                conversationHistory = [...savedHistories[historyName]];
+                saveChatHistory();
+                renderMessages();
+                toggleHistoryMenu();
+                toggleSidebar();
+            } else {
+                alert("Không tìm thấy lịch sử chat đã lưu.");
+            }
+        }
+
+
+        function toggleHistoryMenu() {
+            const submenu = document.getElementById('saved-histories-menu');
+            submenu.classList.toggle('open');
+            hideSettingsMenu();
+        }
+
+        function hideHistoryMenu() {
+            const submenu = document.getElementById('saved-histories-menu');
+            submenu.classList.remove('open');
+        }
+
         function toggleSettingsMenu() {
             const submenu = document.getElementById('settings-menu');
             submenu.classList.toggle('open');
+            hideHistoryMenu();
         }
 
          function hideSettingsMenu() {
@@ -759,7 +929,51 @@
         }
 
 
-        loadChatHistory(); // Load on start still valid
+        function loadSavedHistoriesList() {
+            const historiesMenu = document.getElementById('saved-histories-menu');
+            historiesMenu.innerHTML = '<button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>';
+
+            const storedSavedHistories = localStorage.getItem('savedHistories');
+            if (storedSavedHistories) {
+                savedHistories = JSON.parse(storedSavedHistories);
+            } else {
+                savedHistories = {};
+            }
+
+            if (Object.keys(savedHistories).length === 0) {
+                const noHistoryItem = document.createElement('li');
+                noHistoryItem.classList.add('submenu-item');
+                noHistoryItem.textContent = "Chưa có lịch sử nào được lưu.";
+                historiesMenu.appendChild(noHistoryItem);
+                return;
+            }
+
+            for (const historyName in savedHistories) {
+                const historyItem = document.createElement('li');
+                historyItem.classList.add('submenu-item');
+
+                const nameSpan = document.createElement('span');
+                nameSpan.classList.add('history-name');
+                nameSpan.textContent = historyName;
+                nameSpan.onclick = () => loadChatHistoryByName(historyName);
+
+                const deleteButton = document.createElement('button');
+                deleteButton.classList.add('delete-history-btn');
+                deleteButton.textContent = '...';
+                deleteButton.onclick = (event) => {
+                    event.stopPropagation();
+                    openDeleteHistoryModal(historyName);
+                };
+
+                historyItem.appendChild(nameSpan);
+                historyItem.appendChild(deleteButton);
+                historiesMenu.appendChild(historyItem);
+            }
+        }
+
+
+        loadChatHistory();
+        loadSavedHistoriesList();
 
         function triggerFileUpload() {
             document.getElementById('file-upload').click();
