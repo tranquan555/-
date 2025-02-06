@@ -91,11 +91,13 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 50px);
             flex-grow: 1;
             margin-left: auto;
             transition: margin-left 0.3s ease, background-color 0.3s ease;
             border: none;
+            overflow: hidden; /* Ensure container doesn't scroll, messages-container will scroll */
+            display: flex; /* Ensure flexbox is still active */
+            flex-direction: column; /* Keep vertical layout */
         }
 
         .container.sidebar-open {
@@ -105,11 +107,11 @@
         h1 {
             text-align: center;
             color: #fff;
-            margin-bottom: 25px;
-            font-size: 2.5em;
+            margin-bottom: 15px; /* Reduced margin-bottom */
+            font-size: 2.0em; /* Reduced font-size */
             letter-spacing: 0.5px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #444;
+            padding-bottom: 15px; /* Reduced padding-bottom */
+            border-bottom: 1px solid #444; /* Thinner border */
             font-weight: 500;
             text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
         }
