@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
 
     <style>
         :root {
@@ -153,25 +153,24 @@
              transition: background-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease;
              font-size: 0.95em; /* Slightly smaller message text */
              line-height: 1.6; /* Adjusted line height for better readability */
-             border: 1px solid #444; /* Added border as in vip1.html */
         }
 
         .user-message {
-            background-color: #343541;
+            background-color: var(--message-user-background-color);
             color: #fff;
             align-self: flex-end;
             float: right;
-            border-top-right-radius: 3px; /* As in vip1.html */
+            border-top-right-radius: 8px;
             border-bottom-right-radius: 18px; /* Match general message borderRadius */
             border-bottom-left-radius: 18px; /* Gemini-like borderRadius */
         }
 
         .ai-message {
-            background-color: #444654;
+            background-color: var(--message-ai-background-color);
             color: var(--text-color);
             align-self: flex-start;
             float: left;
-            border-top-left-radius: 3px; /* As in vip1.html */
+            border-top-left-radius: 8px;
             border-bottom-left-radius: 18px; /* Match general message borderRadius */
             border-bottom-right-radius: 18px; /* Gemini-like borderRadius */
         }
@@ -218,8 +217,8 @@
         .input-area textarea {
             flex-grow: 1;
             padding: 10px 14px; /* Slightly reduced padding */
-            border: 1px solid #555; /* Added border as in vip1.html */
-            border-radius: 8px; /* As in vip1.html */
+            border: none;
+            border-radius: 14px; /* Slightly less rounded input */
             font-size: 1em;
             background-color: var(--input-text-background-color);
             color: #fff;
@@ -241,13 +240,12 @@
             background-color: var(--button-primary-color);
             color: white;
             border: none;
-            border-radius: 8px; /* As in vip1.html */
+            border-radius: 14px; /* Slightly less rounded button */
             cursor: pointer;
             font-size: 1em;
             margin-left: 14px; /* Slightly reduced margin */
             transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Added button shadow */
-             border: 1px solid #444; /* Added border as in vip1.html */
         }
 
         .input-area button:hover {
@@ -293,8 +291,8 @@
             transform: translateX(-100%);
             transition: transform 0.3s ease, background-color 0.3s ease;
             z-index: 200;
-            padding-top: 60px; /* Adjusted sidebar padding top to be like vip1.html */
-            box-shadow: 2px 0 5px rgba(0,0,0,0.2); /* Adjusted sidebar shadow to be like vip1.html */
+            padding-top: 70px;
+            box-shadow: 6px 0 12px rgba(0,0,0,0.4);
             overflow-y: auto;
             touch-action: manipulation;
             border-right: 1px solid #444;
@@ -306,10 +304,10 @@
         }
 
         .sidebar-header {
-            padding: 20px; /* Adjusted sidebar header padding to be like vip1.html */
+            padding: 26px 24px; /* Slightly reduced padding */
             text-align: center;
             border-bottom: 1px solid #555;
-            margin-bottom: 20px; /* Adjusted sidebar header margin bottom to be like vip1.html */
+            margin-bottom: 26px; /* Slightly reduced margin */
             border-bottom: 1px solid #444;
             transition: background-color 0.3s ease, border-bottom-color 0.3s ease;
         }
@@ -320,15 +318,14 @@
         }
 
         .sidebar-menu-item {
-            padding: 15px 20px; /* Adjusted sidebar menu item padding to be like vip1.html */
+            padding: 16px 24px; /* Reduced padding */
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.2s ease, border-bottom-color 0.3s ease, color 0.3s ease, padding-left 0.2s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid transparent;
-            transition: border-bottom-color 0.3s ease;
-            font-size: 1em; /* Adjusted sidebar font size to be like vip1.html */
+            font-size: 0.95em; /* Slightly smaller sidebar font */
         }
          .sidebar-menu-item:active {
              background-color: #3a3b47;
@@ -338,29 +335,30 @@
         .sidebar-menu-item:hover {
             background-color: #343541;
              border-bottom-color: var(--button-primary-color);
+             padding-left: 28px; /* Adjusted hover padding */
         }
 
         .sidebar-menu-item.has-submenu > .menu-link::after {
             content: '>';
             float: right;
-            margin-left: 10px; /* Adjusted sidebar submenu arrow margin to be like vip1.html */
-            font-size: 0.8em; /* Adjusted sidebar submenu arrow font size to be like vip1.html */
+            margin-left: 12px;
+            font-size: 0.9em;
             display: inline-block;
-            color: #aaa; /* Keep color for arrow */
+            color: #aaa;
         }
 
         .submenu {
             list-style: none;
             padding-left: 0;
             margin: 0;
-            border-radius: 8px; /* As in vip1.html */
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* Adjusted submenu shadow to be like vip1.html */
+            box-shadow: 0 5px 10px rgba(0,0,0,0.45);
             background-color: #2c2c2c;
-            margin-top: 5px; /* Adjusted submenu margin top to be like vip1.html */
+            margin-top: 12px;
             max-height: 0;
             opacity: 0;
-            transition: max-height 0.3s ease-out, opacity 0.2s ease-out;
+            transition: max-height 0.4s ease-out, opacity 0.3s ease-out, background-color 0.3s ease, margin-top 0.3s ease;
             overflow-y: hidden;
             padding-top: 0;
             padding-bottom: 0;
@@ -368,24 +366,24 @@
 
         .submenu.open {
             display: block;
-            max-height: 500px; /* Adjusted submenu max height to be like vip1.html */
+            max-height: 600px;
             opacity: 1;
             overflow-y: auto;
-            padding-top: 5px; /* Adjusted submenu padding top to be like vip1.html */
-            padding-bottom: 10px; /* Adjusted submenu padding bottom to be like vip1.html */
-            margin-top: 5px; /* Adjusted submenu margin top when open to be like vip1.html */
+            padding-top: 12px;
+            padding-bottom: 14px; /* Reduced submenu bottom padding */
+            margin-top: 14px; /* Reduced submenu top margin */
         }
 
 
         .submenu-item {
-            padding: 12px 20px; /* Adjusted submenu item padding to be like vip1.html */
+            padding: 14px 24px; /* Reduced submenu item padding */
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.2s ease, color 0.3s ease, padding-left 0.2s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #333;
-            font-size: 1em; /* Adjusted submenu font size to be like vip1.html */
+            font-size: 0.95em; /* Slightly smaller submenu font */
         }
          .submenu-item:active {
              background-color: #3a3b47;
@@ -399,6 +397,7 @@
 
         .submenu-item:hover {
             background-color: #343541;
+            padding-left: 28px; /* Adjusted submenu hover padding */
         }
 
         .history-name {
@@ -413,7 +412,7 @@
             color: #aaa;
             cursor: pointer;
             font-size: 1em;
-            padding: 0 8px; /* Adjusted delete button padding to be like vip1.html */
+            padding: 0 10px;
             opacity: 0.7;
             transition: opacity 0.2s ease, color 0.2s ease;
         }
@@ -425,25 +424,26 @@
 
         .sidebar-toggle-button {
             position: fixed;
-            top: 20px; /* Adjusted sidebar toggle button top to be like vip1.html */
-            left: 20px; /* Adjusted sidebar toggle button left to be like vip1.html */
+            top: 30px;
+            left: 30px;
             background: var(--button-primary-color);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 40px; /* Adjusted sidebar toggle button width to be like vip1.html */
-            height: 40px; /* Adjusted sidebar toggle button height to be like vip1.html */
+            width: 46px; /* Slightly smaller toggle button */
+            height: 46px; /* Slightly smaller toggle button */
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             z-index: 300;
-             box-shadow: 0 0px 0px rgba(0, 0, 0, 0.3); /* Removed toggle button shadow for vip1.html like appearance */
+             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Reduced toggle button shadow */
              transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
         }
 
         .sidebar-toggle-button:hover {
             background-color: var(--button-primary-hover-color);
+             transform: scale(1.04); /* Reduced scale on hover */
         }
         .sidebar-toggle-button:active {
              transform: scale(0.98);
@@ -456,7 +456,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Adjusted sidebar overlay background to be like vip1.html */
+            background-color: rgba(0, 0, 0, 0.6);
             z-index: 150;
             display: none;
             opacity: 0;
@@ -466,28 +466,29 @@
 
         .sidebar-overlay.sidebar--open {
             display: block;
-            opacity: 1; /* Make sure overlay is visible when sidebar is open */
+            opacity: 1;
         }
 
         .close-history-menu-btn, .close-settings-menu-btn, .modal-button {
-            padding: 10px 15px; /* Adjusted modal button padding to be like vip1.html */
+            padding: 12px 22px; /* Slightly reduced padding */
             background-color: var(--button-primary-color);
             color: white;
             border: none;
-            border-radius: 8px; /* Adjusted modal button border radius to be like vip1.html */
+            border-radius: 14px; /* Slightly less rounded modal buttons */
             cursor: pointer;
-            margin-top: 10px; /* Adjusted modal button margin top to be like vip1.html */
+            margin-top: 18px; /* Slightly reduced margin */
             display: block;
             margin-left: auto;
             margin-right: auto;
             transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
-             box-shadow: 0 0px 0px rgba(0, 0, 0, 0.2); /* Removed modal button shadow for vip1.html like appearance */
-             border: 1px solid #444; /* Added border for modal buttons like in vip1.html */
-             font-size: 1em; /* Adjusted modal button font size to be like vip1.html */
+             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Added modal button shadow */
+             font-size: 0.95em; /* Slightly smaller modal button font */
         }
 
         .close-history-menu-btn:hover, .close-settings-menu-btn:hover, .modal-button.confirm:hover {
             background-color: var(--button-primary-hover-color);
+             transform: scale(1.02); /* Reduced scale on hover */
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25); /* Slightly increased shadow on hover */
         }
          .close-history-menu-btn:active, .close-settings-menu-btn:active,  .modal-button.confirm:active {
              transform: scale(0.98);
@@ -502,6 +503,8 @@
 
         .modal-button.cancel:hover {
             background-color: #666;
+             transform: scale(1.02); /* Reduced scale on hover */
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25); /* Slightly increased shadow on hover */
         }
          .modal-button.cancel:active {
              transform: scale(0.98);
@@ -516,14 +519,14 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); /* Adjusted modal overlay background to be like vip1.html */
+            background-color: rgba(0, 0, 0, 0.7);
             z-index: 400;
             justify-content: center;
             align-items: center;
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.3s ease, background-color 0.3s ease;
-            backdrop-filter: blur(10px); /* Kept blur effect as it was in vip4, if you don't want, remove this line */
+            backdrop-filter: blur(10px);
         }
 
         .custom-modal-overlay.show-modal {
@@ -534,15 +537,15 @@
 
 
         .custom-modal {
-            background-color: #343541;
+            background-color: var(--modal-background-color);
             color: #fff;
-            padding: 20px; /* Adjusted modal padding to be like vip1.html */
-            border-radius: 10px; /* Adjusted modal border radius to be like vip1.html */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Adjusted modal shadow to be like vip1.html */
-            width: 80%;
-            max-width: 400px; /* Adjusted modal max width to be like vip1.html */
+            padding: 30px; /* Reduced modal padding */
+            border-radius: 20px; /* Slightly less rounded modal */
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6); /* Reduced modal shadow */
+            width: 85%;
+            max-width: 500px;
             text-align: center;
-            border: 1px solid #444; /* Added border for modal as in vip1.html */
+            border: none;
             transform: scale(0.97);
             opacity: 0;
             transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, border-radius 0.3s ease;
@@ -555,65 +558,67 @@
 
 
         .modal-message {
-            margin-bottom: 15px; /* Adjusted modal message margin bottom to be like vip1.html */
-            font-size: 1em; /* Adjusted modal message font size to be like vip1.html */
+            margin-bottom: 20px; /* Reduced modal message margin */
+            font-size: 1.1em; /* Slightly smaller modal message font */
              transition: color 0.3s ease;
-             font-weight: normal; /* Removed strong font weight for vip1.html like appearance */
-             opacity: 1; /* Reset opacity if it was changed before */
+             font-weight: 500;
+             opacity: 0.95;
         }
 
         .modal-input {
-            width: calc(100% - 20px); /* Adjusted modal input width based on padding */
-            padding: 10px; /* Adjusted modal input padding to be like vip1.html */
-            margin-bottom: 15px; /* Adjusted modal input margin bottom to be like vip1.html */
-            border-radius: 8px; /* Adjusted modal input border radius to be like vip1.html */
-            border: 1px solid #555; /* Added border for modal input as in vip1.html */
+            width: calc(100% - 20px); /* Adjusted modal input width */
+            padding: 12px 14px; /* Reduced modal input padding */
+            margin-bottom: 20px; /* Reduced modal input margin */
+            border-radius: 10px; /* Slightly less rounded modal input */
+            border: none;
             background-color: var(--input-text-background-color);
             color: #fff;
-             box-shadow: none; /* Removed input shadow to match vip1.html style */
+             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.25); /* Reduced modal input shadow */
              transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .modal-buttons {
             display: flex;
             justify-content: center;
-            gap: 15px; /* Adjusted modal button gap to be like vip1.html */
-            margin-top: 0px; /* Adjusted modal button margin top to be like vip1.html */
+            gap: 20px; /* Reduced modal buttons gap */
+            margin-top: 8px; /* Reduced modal buttons margin top */
         }
 
         .modal-button {
-            padding: 10px 20px; /* Adjusted modal buttons padding to be like vip1.html */
+            padding: 12px 24px; /* Reduced padding on modal button */
             border: none;
-            border-radius: 8px; /* Adjusted modal buttons border radius to be like vip1.html */
+            border-radius: 14px; /* Slightly less rounded modal buttons */
             cursor: pointer;
-            font-size: 1em; /* Adjusted modal buttons font size to be like vip1.html */
+            font-size: 1em;
             transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
-            border: 1px solid #444; /* Added border to modal buttons as in vip1.html */
-            box-shadow: none; /* Removed modal button shadow to match vip1.html style */
+            border: none;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Reduced modal button shadow */
         }
 
         code[class*="language-"],
         pre[class*="language-"] {
-            color: #f8f8f2;
-            background: #272822;
-            position: relative; /* for download link positioning */
+            color: var(--code-block-text);
+            background-color: var(--code-block-background);
+            position: relative;
             overflow-x: auto;
-             padding: 1em;
-             border-radius: 8px;
-             margin-bottom: 18px;
+             padding: 1.2em 1.4em; /* Adjusted code block padding */
+             border-radius: 12px; /* Slightly less rounded code blocks */
+             margin-bottom: 16px; /* Reduced code block margin-bottom */
              z-index: 1;
+             font-size: 0.9em; /* Slightly smaller code font */
+             line-height: 1.5; /* Adjusted code line height */
         }
 
        .copy-code-button {
-            position: absolute; /* Changed to absolute */
-            top: 0.5em;  /* Position from top */
-            right: 0.5em; /* Position from right */
+            position: absolute;
+            top: 8px; /* Adjusted button position */
+            right: 8px; /* Adjusted button position */
             background-color: #ddd;
             color: black;
             border: 1px solid #bbb;
             border-radius: 6px;
-            padding: 5px 8px;
-            font-size: 0.75em;
+            padding: 5px 8px; /* Reduced button padding */
+            font-size: 0.75em; /* Smaller button font */
             cursor: pointer;
             opacity: 0.7;
             transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
@@ -630,13 +635,31 @@
             z-index: 0;
         }
 
-        /* Success Notification Styles - not used in vip1.html style code block*/
+        /* Success Notification Styles */
         .copy-success-notification {
-            display: none; /* hide success notification for vip1.html style code block */
+            position: absolute; /* Changed to absolute for button-relative positioning */
+            top: 8px; /* Position near the copy button */
+            right: 40px; /* Position to the left of the button */
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 12px; /* Smaller notification padding */
+            border-radius: 6px;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 500;
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+            transform: translateY(-10px); /* Slide up slightly */
+            font-size: 0.8em; /* Smaller notification font */
+        }
+
+        .copy-success-notification.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0); /* Slide to original position */
         }
 
 
-        /* Settings Styles - kept as is */
+        /* Settings Styles */
         .setting-item .toggle-switch .slider {
             background-color: #ccc;
         }
@@ -775,7 +798,7 @@
     <script>
         const apiKey = 'AIzaSyAd9p1hXhUcRx4Pz7EmbUKC-V8ULN8L61Q';
         const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
-        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
+        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Bạn có thể sử dụng cả dấu ``` hoặc ''' để bao quanh code blocks, và nhớ ghi rõ tên ngôn ngữ lập trình ngay sau dấu ``` hoặc ''' để làm nổi bật cú pháp. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nhoặc:\n'''html\n<!-- Mã HTML ở đây -->\n<div>Ví dụ HTML</div>\n'''\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
 
         let conversationHistory = [];
         let savedHistories = {};
@@ -1115,7 +1138,7 @@
 
 
             aiMessageDiv.classList.add('message', 'ai-message');
-            aiMessageDiv.textContent = "Đang suy nghĩ...";
+            aiMessageDiv.innerHTML = '<span class="ai-message-text">Đang suy nghĩ...</span>';
             messagesContainer.appendChild(aiMessageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
@@ -1142,8 +1165,9 @@
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    console.error("Lỗi API:", errorData);
-                    aiMessageDiv.textContent = `Lỗi API: ${response.status} - ${errorData.error.message || 'Không rõ nguyên nhân'}`;
+                    const errorMsg = `Lỗi API: ${response.status} - ${response.statusText} - ${errorData?.error?.message || 'No details provided'}`;
+                    console.error("Lỗi API:", errorMsg);
+                    aiMessageDiv.innerHTML = `<span class="ai-message-text">${errorMsg}</span>`;
                     return;
                 }
 
@@ -1152,17 +1176,18 @@
 
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
+                    aiMessageDiv.innerHTML = '';
                     let codeContent = null;
                     let language = 'text';
                     const codeBlockRegex = /```([\w]*)\n([\s\S]*?)```/gm;
                     const matches = [...aiResponseText.matchAll(codeBlockRegex)];
 
-                    aiMessageDiv.innerHTML = ''; // Clear "Đang suy nghĩ..." before adding content.
-
                     if (matches.length > 0) {
                         let textContent = aiResponseText.split(codeBlockRegex)[0];
                         if (textContent.trim()) {
-                             aiMessageDiv.innerHTML += `<span class="ai-message-text">${textContent.trim()}</span>`; // Add non-code text part first
+                             aiMessageDiv.innerHTML = `<span class="ai-message-text">${textContent.trim()}</span>`;
+                        } else {
+                             aiMessageDiv.innerHTML = `<span class="ai-message-text">Đoạn code được tạo:</span>`;
                         }
 
 
@@ -1170,20 +1195,19 @@
                             language = match[1] || 'text';
                             codeContent = match[2].trim();
 
-                            aiMessageDiv.innerHTML += `<pre class="language-${language}"><code class="language-${language}">${codeContent}</code></pre>`; // Append code block
-                            const pre = aiMessageDiv.querySelector(`pre.language-${language}:last-child`); // Get just added pre element.
+                            const codePre = document.createElement('pre');
+                            codePre.className = `language-${language}`;
+                            codePre.innerHTML = `<code class="language-${language}">${Prism.highlight(codeContent, Prism.languages[language] || Prism.languages.plaintext, language)}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button>`;
+                            aiMessageDiv.appendChild(codePre);
 
-                            if (pre) {
-                                 const blob = new Blob([codeContent], { type: 'text/plain' });
-                                const url = URL.createObjectURL(blob);
-                                const downloadLink = document.createElement('a');
-                                downloadLink.href = url;
-                                downloadLink.download = `code.${language}`;
-                                downloadLink.textContent = `Tải xuống code ${language}`;
-                                downloadLink.style.display = 'block';
-                                downloadLink.style.marginTop = '10px';
-                                pre.appendChild(downloadLink); // append download link to pre tag.
-                            }
+
+                             codePre.querySelectorAll('pre').forEach(codeBlock => {
+                                let buttonExists =  codeBlock.querySelector('.copy-code-button') !== null;
+                                 if(!buttonExists ) {
+                                     codeBlock.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>');
+                                 }
+                            });
+
                         });
 
                     } else {
@@ -1193,19 +1217,29 @@
 
                     const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
                     conversationHistory.push(aiMessageObject);
-                    saveChatHistory();
-                    renderMessages(); // Re-render messages to apply Prism and download links
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
 
-                } else {
-                    aiMessageDiv.textContent = `<span class="ai-message-text">Không nhận được phản hồi hợp lệ từ AI.</span>`;
-                }
+                     if (currentHistoryName) {
+                        savedHistories[currentHistoryName] = [...conversationHistory];
+                        localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
+                    } else {
+                         saveChatHistory();
+                    }
+
+                   messagesContainer.appendChild(aiMessageDiv);
+
+
+                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                 }
+                else
+                   aiMessageDiv.innerHTML = `<span class="ai-message-text">Không nhận được phản hồi hợp lệ từ AI.</span>`;
+
 
             } catch (error) {
                 console.error("Lỗi fetch:", error);
-                aiMessageDiv.textContent = `<span class="ai-message-text">Đã xảy ra lỗi khi kết nối đến API: ${error}</span>`;
+                aiMessageDiv.innerHTML = `<span class="ai-message-text">Đã xảy ra lỗi khi kết nối đến API: ${error}</span>`;
             }
+
         }
 
         function loadSettings() {
