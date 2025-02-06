@@ -6,36 +6,12 @@
     <title>AI Hiện Đại với Gemini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        /* CSS Variables for theming */
-        :root {
-            --body-bg-color: #1e2124;
-            --container-bg-color: #25272b;
-            --text-color: #d1d5db;
-            --heading-color: #fff;
-            --message-user-bg-color: #343541;
-            --message-ai-bg-color: #444654;
-            --input-area-bg-color: #343541;
-            --input-border-top-color: #555;
-            --textarea-bg-color: #40414f;
-            --button-primary-color: #00bcd4;
-            --button-primary-hover-color: #0097a7;
-            --button-secondary-color: #555;
-            --button-secondary-hover-color: #666;
-            --sidebar-bg-color: #252525;
-            --sidebar-header-border-bottom-color: #444;
-            --sidebar-item-hover-color: #343541;
-            --sidebar-submenu-bg-color: #2c2c2c;
-            --modal-overlay-bg-color: rgba(0, 0, 0, 0.7);
-            --modal-bg-color: #343541;
-            --code-bg-color: #272822;
-        }
-
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--body-bg-color);
-            color: var(--text-color);
+            background-color: #1e2124;
+            color: #d1d5db;
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
@@ -48,11 +24,12 @@
             touch-action: manipulation;
             -webkit-text-size-adjust: 100%;
             font-size: 16px;
-            overflow-y: scroll;
-            scrollbar-width: thin;
-            scrollbar-color: #444 #252525;
+            overflow-y: scroll; /* Ensure scrollbar for very long content */
+            scrollbar-width: thin; /* For Firefox */
+            scrollbar-color: #444 #252525; /* For Firefox */
         }
 
+        /* Chrome, Safari and Opera scrollbar styling */
         body::-webkit-scrollbar {
             width: 8px;
         }
@@ -71,13 +48,13 @@
             width: 95%;
             max-width: 1200px;
             margin: 20px auto;
-            padding: 30px;
-            background-color: var(--container-bg-color);
-            border-radius: 16px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+            padding: 30px; /* Increased padding */
+            background-color: #25272b;
+            border-radius: 16px; /* More rounded corners */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* Deeper shadow */
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 40px);
+            height: calc(100vh - 40px); /* Adjusted height with margin */
             flex-grow: 1;
             margin-left: auto;
             transition: margin-left 0.3s ease;
@@ -90,27 +67,27 @@
 
         h1 {
             text-align: center;
-            color: var(--heading-color);
-            margin-bottom: 25px;
-            font-size: 2.5em;
+            color: #fff;
+            margin-bottom: 25px; /* Increased margin bottom */
+            font-size: 2.5em; /* Slightly larger title */
             letter-spacing: 0.5px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #444;
+            border-bottom: 2px solid #444; /* Thicker border */
         }
 
         #messages-container {
             flex-grow: 1;
-            padding: 25px;
+            padding: 25px; /* Increased padding */
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             scrollbar-width: thin;
             scrollbar-color: #555 #252525;
             padding-bottom: 80px;
-            border: none;
+            border: none; /* Removed border */
             border-radius: 12px;
-            background-color: var(--body-bg-color);
-             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            background-color: #1e2124;
+             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3); /* Inner shadow for depth */
         }
 
         #messages-container::-webkit-scrollbar {
@@ -127,27 +104,27 @@
         }
 
         .message {
-            margin-bottom: 15px;
-            padding: 12px 18px;
-            border-radius: 20px;
+            margin-bottom: 15px; /* Increased margin */
+            padding: 12px 18px; /* Adjusted padding */
+            border-radius: 20px; /* More rounded message bubbles */
             clear: both;
             word-wrap: break-word;
             max-width: 80%;
             display: inline-block;
-             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Subtle message shadow */
         }
 
         .user-message {
-            background-color: var(--message-user-bg-color);
-            color: var(--text-color); /* User message text color same as default text */
+            background-color: #343541;
+            color: #fff;
             align-self: flex-end;
             float: right;
             border-top-right-radius: 5px;
         }
 
         .ai-message {
-            background-color: var(--message-ai-bg-color);
-            color: var(--text-color);
+            background-color: #444654;
+            color: #d1d5db;
             align-self: flex-start;
             float: left;
             border-top-left-radius: 5px;
@@ -156,7 +133,7 @@
         .ai-message .ai-message-text {
             font-family: 'Arial', sans-serif;
             font-weight: normal;
-            line-height: 1.7;
+            line-height: 1.7; /* Further improved line height */
             white-space: pre-line;
             font-size: 16px;
         }
@@ -164,14 +141,14 @@
         .markdown-bold-uppercase {
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 0.6px;
-            color: #f0f0f0;
+            letter-spacing: 0.6px; /* Adjusted letter spacing */
+            color: #f0f0f0; /* Slightly lighter color for emphasis */
         }
 
         .input-area {
-            padding: 12px 20px;
-            background-color: var(--input-area-bg-color);
-            border-top: 2px solid var(--input-border-top-color);
+            padding: 12px 20px; /* Adjusted input area padding */
+            background-color: #343541;
+            border-top: 2px solid #555; /* Thicker border */
             display: flex;
             align-items: center;
             position: fixed;
@@ -182,7 +159,7 @@
             padding-left: 20px;
             padding-right: 20px;
             z-index: 100;
-            border-bottom-left-radius: 16px;
+            border-bottom-left-radius: 16px; /* More rounded input area */
             border-bottom-right-radius: 16px;
              border-top: 1px solid #444;
         }
@@ -191,45 +168,45 @@
             flex-grow: 1;
             padding: 10px;
             border: 1px solid #555;
-            border-radius: 12px;
+            border-radius: 12px; /* More rounded textarea */
             font-size: 16px;
-            background-color: var(--textarea-bg-color);
-            color: var(--text-color);
+            background-color: #40414f;
+            color: #fff;
             resize: none;
-            min-height: 38px;
+            min-height: 38px; /* Slightly increased min-height */
             overflow-y: auto;
             border: 1px solid #444;
-             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3); /* Inner shadow for textarea */
         }
 
         .input-area textarea:focus {
             border-color: #00bcd4;
             outline: none;
-            box-shadow: 0 0 6px rgba(0, 188, 212, 0.6);
+            box-shadow: 0 0 6px rgba(0, 188, 212, 0.6); /* More pronounced focus shadow */
         }
 
         .input-area button {
-            padding: 12px 22px;
-            background-color: var(--button-primary-color);
+            padding: 12px 22px; /* Adjusted button padding */
+            background-color: #00bcd4;
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 12px; /* Rounded button */
             cursor: pointer;
             font-size: 16px;
             margin-left: 12px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Added transform transition */
         }
 
         .input-area button:hover {
-            background-color: var(--button-primary-hover-color);
-            transform: scale(1.03);
+            background-color: #0097a7;
+            transform: scale(1.03); /* Subtle scale up on hover */
         }
 
         .file-upload-button {
-            background-color: var(--button-secondary-color);
+            background-color: #555;
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 12px; /* Rounded file button */
             cursor: pointer;
             font-size: 1em;
             width: 40px;
@@ -238,14 +215,14 @@
             justify-content: center;
             align-items: center;
             margin-right: 12px;
-            opacity: 0.9;
+            opacity: 0.9; /* Increased opacity */
             transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
         }
 
         .file-upload-button:hover {
             opacity: 1;
-            background-color: var(--button-secondary-hover-color);
-             transform: scale(1.03);
+            background-color: #666;
+             transform: scale(1.03); /* Subtle scale up on hover */
         }
 
 
@@ -255,17 +232,17 @@
             left: 0;
             width: 250px;
             height: 100%;
-            background-color: var(--sidebar-bg-color);
+            background-color: #252525;
             color: #fff;
             transform: translateX(-100%);
             transition: transform 0.3s ease;
             z-index: 200;
-            padding-top: 70px;
-            box-shadow: 4px 0 8px rgba(0,0,0,0.3);
+            padding-top: 70px; /* Increased sidebar top padding */
+            box-shadow: 4px 0 8px rgba(0,0,0,0.3); /* More pronounced sidebar shadow */
             overflow-y: auto;
             touch-action: manipulation;
             border-right: 1px solid #444;
-             backdrop-filter: blur(10px);
+             backdrop-filter: blur(10px); /* Frosted glass effect (may impact performance on low-end devices) */
         }
 
         .sidebar.sidebar--open {
@@ -273,9 +250,9 @@
         }
 
         .sidebar-header {
-            padding: 25px 20px;
+            padding: 25px 20px; /* Adjusted header padding */
             text-align: center;
-            border-bottom: 2px solid var(--sidebar-header-border-bottom-color);
+            border-bottom: 2px solid #555; /* Thicker header border */
             margin-bottom: 25px;
             border-bottom: 1px solid #444;
         }
@@ -286,17 +263,17 @@
         }
 
         .sidebar-menu-item {
-            padding: 16px 20px;
+            padding: 16px 20px; /* Adjusted menu item padding */
             cursor: pointer;
             transition: background-color 0.2s ease, border-bottom-color 0.3s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid transparent;
+            border-bottom: 2px solid transparent; /* Thicker bottom border on hover */
         }
 
         .sidebar-menu-item:hover {
-            background-color: var(--sidebar-item-hover-color);
+            background-color: #343541;
              border-bottom-color: #00bcd4;
         }
 
@@ -306,21 +283,21 @@
             margin-left: 12px;
             font-size: 0.9em;
             display: inline-block;
-            color: #aaa;
+            color: #aaa; /* Lighter submenu indicator */
         }
 
         .submenu {
             list-style: none;
             padding-left: 0;
             margin: 0;
-            border-radius: 12px;
+            border-radius: 12px; /* Rounded submenu */
             overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-            background-color: var(--sidebar-submenu-bg-color);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4); /* Deeper submenu shadow */
+            background-color: #2c2c2c;
             margin-top: 8px;
             max-height: 0;
             opacity: 0;
-            transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
+            transition: max-height 0.4s ease-out, opacity 0.3s ease-out; /* Slightly smoother transitions */
             overflow-y: hidden;
             padding-top: 0;
             padding-bottom: 0;
@@ -328,7 +305,7 @@
 
         .submenu.open {
             display: block;
-            max-height: 600px;
+            max-height: 600px; /* Increased max-height for submenu */
             opacity: 1;
             overflow-y: auto;
             padding-top: 8px;
@@ -337,7 +314,7 @@
 
 
         .submenu-item {
-            padding: 14px 20px;
+            padding: 14px 20px; /* Adjusted submenu item padding */
             cursor: pointer;
             transition: background-color 0.2s ease;
             display: flex;
@@ -352,7 +329,7 @@
 
 
         .submenu-item:hover {
-            background-color: var(--sidebar-item-hover-color);
+            background-color: #343541;
         }
 
         .history-name {
@@ -365,8 +342,8 @@
             color: #aaa;
             cursor: pointer;
             font-size: 1em;
-            padding: 0 10px;
-            opacity: 0.8;
+            padding: 0 10px; /* Adjusted delete button padding */
+            opacity: 0.8; /* Increased opacity */
             transition: opacity 0.2s ease, color 0.2s ease;
         }
 
@@ -377,26 +354,26 @@
 
         .sidebar-toggle-button {
             position: fixed;
-            top: 25px;
+            top: 25px; /* Adjusted toggle button position */
             left: 25px;
-            background: var(--button-primary-color);
+            background: #00bcd4;
             color: white;
             border: none;
             border-radius: 50%;
-            width: 45px;
+            width: 45px; /* Slightly larger toggle button */
             height: 45px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             z-index: 300;
-             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Added shadow to toggle button */
              transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .sidebar-toggle-button:hover {
-            background-color: var(--button-primary-hover-color);
-             transform: scale(1.05);
+            background-color: #0097a7;
+             transform: scale(1.05); /* Subtle scale up on hover */
         }
 
         .sidebar-overlay {
@@ -405,7 +382,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgba(0, 0, 0, 0.6); /* Slightly darker overlay */
             z-index: 150;
             display: none;
         }
@@ -414,12 +391,12 @@
             display: block;
         }
 
-        .close-history-menu-btn, .close-settings-menu-btn {
-            background-color: var(--button-primary-color);
+        .close-history-menu-btn {
+            background-color: #00bcd4;
             color: white;
             border: none;
-            border-radius: 12px;
-            padding: 12px 20px;
+            border-radius: 12px; /* Rounded close button */
+            padding: 12px 20px; /* Adjusted close button padding */
             cursor: pointer;
             margin-top: 15px;
             display: block;
@@ -428,9 +405,9 @@
             transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
-        .close-history-menu-btn:hover, .close-settings-menu-btn:hover {
-            background-color: var(--button-primary-hover-color);
-             transform: scale(1.03);
+        .close-history-menu-btn:hover {
+            background-color: #0097a7;
+             transform: scale(1.03); /* Subtle scale up on hover */
         }
 
         .custom-modal-overlay {
@@ -440,7 +417,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: var(--modal-overlay-bg-color);
+            background-color: rgba(0, 0, 0, 0.7); /* Darker modal overlay */
             z-index: 400;
             justify-content: center;
             align-items: center;
@@ -454,41 +431,41 @@
 
 
         .custom-modal {
-            background-color: var(--modal-bg-color);
+            background-color: #343541;
             color: #fff;
-            padding: 30px;
+            padding: 30px; /* Increased modal padding */
             border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
-            width: 85%;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6); /* Deeper modal shadow */
+            width: 85%; /* Slightly wider modal */
             max-width: 450px;
             text-align: center;
             border: 1px solid #444;
         }
 
         .modal-message {
-            margin-bottom: 20px;
-            font-size: 1.1em;
+            margin-bottom: 20px; /* Increased modal message margin */
+            font-size: 1.1em; /* Slightly larger modal message font */
         }
 
         .modal-input {
             width: calc(100% - 24px);
-            padding: 12px;
+            padding: 12px; /* Adjusted modal input padding */
             margin-bottom: 20px;
             border-radius: 10px;
             border: 1px solid #555;
             background-color: #40414f;
             color: #fff;
-             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3); /* Inner shadow for modal input */
         }
 
         .modal-buttons {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 20px; /* Increased gap between modal buttons */
         }
 
         .modal-button {
-            padding: 12px 25px;
+            padding: 12px 25px; /* Adjusted modal button padding */
             border: none;
             border-radius: 10px;
             cursor: pointer;
@@ -498,169 +475,55 @@
         }
 
         .modal-button.confirm {
-            background-color: var(--button-primary-color);
+            background-color: #00bcd4;
             color: white;
         }
 
         .modal-button.confirm:hover {
-            background-color: var(--button-primary-hover-color);
-             transform: scale(1.03);
+            background-color: #0097a7;
+             transform: scale(1.03); /* Subtle scale up on hover */
         }
 
         .modal-button.cancel {
-            background-color: var(--button-secondary-color);
+            background-color: #555;
             color: white;
         }
 
         .modal-button.cancel:hover {
-            background-color: var(--button-secondary-hover-color);
-             transform: scale(1.03);
+            background-color: #666;
+             transform: scale(1.03); /* Subtle scale up on hover */
         }
 
         code[class*="language-"],
         pre[class*="language-"] {
             color: #f8f8f2;
-            background: var(--code-bg-color);
+            background: #272822;
             position: relative;
-            border-radius: 10px;
-            padding: 15px;
+            border-radius: 10px; /* Rounded code blocks */
+            padding: 15px; /* Increased code block padding */
             margin-bottom: 15px;
-            overflow-x: auto;
+            overflow-x: auto; /* Horizontal scroll if code is wide */
         }
 
         .copy-code-button {
             position: absolute;
-            top: 10px;
+            top: 10px; /* Adjusted copy button position */
             right: 10px;
             background-color: #444;
             color: white;
             border: none;
             border-radius: 8px;
-            padding: 6px 10px;
+            padding: 6px 10px; /* Adjusted copy button padding */
             font-size: 0.9em;
             cursor: pointer;
             opacity: 0.7;
-            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
+            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease; /* Added transform transition */
         }
 
         .copy-code-button:hover {
             opacity: 1;
-            background-color: var(--button-primary-color);
-             transform: scale(1.05);
-        }
-
-        /* Settings Submenu Styles */
-        .settings-submenu {
-            list-style: none;
-            padding-left: 0;
-            margin: 0;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-            background-color: var(--sidebar-submenu-bg-color);
-            margin-top: 8px;
-            max-height: 0;
-            opacity: 0;
-            transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
-            overflow-y: hidden;
-            padding-top: 0;
-            padding-bottom: 0;
-        }
-
-        .settings-submenu.open {
-            display: block;
-            max-height: 600px;
-            opacity: 1;
-            overflow-y: auto;
-            padding-top: 8px;
-            padding-bottom: 12px;
-        }
-
-        .settings-submenu-item {
-            padding: 14px 20px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #333;
-        }
-
-        .settings-submenu-item:last-child {
-            border-bottom: none;
-        }
-
-        .settings-submenu-item:hover {
-            background-color: var(--sidebar-item-hover-color);
-        }
-
-        .setting-label {
-            flex-grow: 1;
-        }
-
-        .setting-control {
-            /* Style for toggle/checkbox/color picker can be added here */
-        }
-        .theme-color-box {
-            width: 25px;
-            height: 25px;
-            border-radius: 5px;
-            cursor: pointer;
-            border: 1px solid #777;
-            margin-left: 10px;
-            transition: transform 0.2s ease;
-        }
-
-        .theme-color-box:hover {
-            transform: scale(1.1);
-        }
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 40px;
-            height: 20px;
-        }
-
-        .toggle-switch input[type="checkbox"] {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 2px;
-            bottom: 2px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: var(--button-primary-color);
-        }
-
-        input:focus + .slider {
-            box-shadow: 0 0 1px var(--button-primary-color);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(20px);
+            background-color: #00bcd4;
+             transform: scale(1.05); /* Subtle scale up on hover */
         }
 
 
@@ -685,40 +548,11 @@
             </li>
             <li class="sidebar-menu-item has-submenu" onclick="toggleHistoryMenu()">
                 <span class="menu-link">Lịch sử đã lưu</span>
-            </li>
-            <li class="sidebar-menu-item has-submenu" onclick="toggleSettingsMenu()">
-                <span class="menu-link">Cài đặt</span>
-            </li>
+                </li>
         </ul>
 
         <ul class="submenu" id="saved-histories-menu">
             <button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>
-        </ul>
-
-        <ul class="settings-submenu" id="settings-menu">
-            <button class="close-settings-menu-btn" onclick="toggleSettingsMenu()">Đóng</button>
-            <li class="settings-submenu-item">
-                <span class="setting-label">Tự động lưu lịch sử</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="autoSaveHistoryToggle" onchange="toggleAutoSaveHistory()">
-                    <span class="slider"></span>
-                </label>
-            </li>
-            <li class="settings-submenu-item">
-                <span class="setting-label">Tên lịch sử là câu hỏi đầu</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="firstQuestionNameToggle" onchange="toggleFirstQuestionName()">
-                    <span class="slider"></span>
-                </label>
-            </li>
-            <li class="settings-submenu-item">
-                <span class="setting-label">Màu nền web</span>
-                <div class="setting-control">
-                    <span class="theme-color-box" style="background-color: #1e2124;" onclick="setWebTheme('#1e2124')"></span>
-                    <span class="theme-color-box" style="background-color: #2a2a2a;" onclick="setWebTheme('#2a2a2a')"></span>
-                    <span class="theme-color-box" style="background-color: #0f172a;" onclick="setWebTheme('#0f172a')"></span>
-                </div>
-            </li>
         </ul>
 
         <div class="custom-modal-overlay" id="saveHistoryModalOverlay">
@@ -778,10 +612,6 @@
         let conversationHistory = [];
         let savedHistories = {};
         let historyNameToDelete = null;
-        let autoSaveHistory = true; // Default to auto save ON
-        let firstQuestionName = false; // Default to first question name OFF
-        let currentTheme = '#1e2124'; // Default theme
-
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -794,7 +624,6 @@
                  loadSavedHistoriesList();
             } else {
                 hideHistoryMenu();
-                hideSettingsMenu(); // Also close settings if sidebar closes
             }
         }
 
@@ -807,9 +636,7 @@
         }
 
         function saveChatHistory() {
-            if (autoSaveHistory) {
-                localStorage.setItem('chatHistory', JSON.stringify(conversationHistory));
-            }
+            localStorage.setItem('chatHistory', JSON.stringify(conversationHistory));
         }
 
         function renderMessages() {
@@ -844,9 +671,6 @@
         function openSaveHistoryModal() {
             document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
             document.getElementById('historyNameInput').value = '';
-            if (firstQuestionName && conversationHistory.length > 0 && conversationHistory[0].role === 'user') {
-                document.getElementById('historyNameInput').value = conversationHistory[0].parts[0].text.substring(0, 50); // Use first question as default name
-            }
         }
 
         function closeSaveHistoryModal() {
@@ -856,18 +680,14 @@
         function saveHistoryWithInputName() {
             const historyName = document.getElementById('historyNameInput').value.trim();
             if (historyName) {
-                saveHistory(historyName);
+                savedHistories[historyName] = [...conversationHistory];
+                localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
+                alert(`Lịch sử chat đã được lưu với tên: ${historyName}`);
+                loadSavedHistoriesList();
                 closeSaveHistoryModal();
             } else {
                 alert("Vui lòng nhập tên cho lịch sử chat.");
             }
-        }
-
-        function saveHistory(historyName) {
-            savedHistories[historyName] = [...conversationHistory];
-            localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-            loadSavedHistoriesList();
-            alert(`Lịch sử chat đã được lưu với tên: ${historyName}`);
         }
 
         function openDeleteHistoryModal(name) {
@@ -914,22 +734,10 @@
         function toggleHistoryMenu() {
             const submenu = document.getElementById('saved-histories-menu');
             submenu.classList.toggle('open');
-            hideSettingsMenu(); // Close settings menu when history is opened
         }
 
         function hideHistoryMenu() {
             const submenu = document.getElementById('saved-histories-menu');
-            submenu.classList.remove('open');
-        }
-
-        function toggleSettingsMenu() {
-            const submenu = document.getElementById('settings-menu');
-            submenu.classList.toggle('open');
-            hideHistoryMenu(); // Close history menu when settings is opened
-        }
-
-        function hideSettingsMenu() {
-            const submenu = document.getElementById('settings-menu');
             submenu.classList.remove('open');
         }
 
@@ -979,8 +787,6 @@
 
         loadChatHistory();
         loadSavedHistoriesList();
-        loadSettings(); // Load settings on page load
-
 
         function triggerFileUpload() {
             document.getElementById('file-upload').click();
@@ -1169,42 +975,6 @@
                 aiMessageDiv.innerHTML = `<span class="ai-message-text">Đã xảy ra lỗi khi kết nối đến API.</span>`;
             }
         }
-
-        function toggleAutoSaveHistory() {
-            autoSaveHistory = !autoSaveHistory;
-            localStorage.setItem('autoSaveHistory', JSON.stringify(autoSaveHistory));
-        }
-
-        function toggleFirstQuestionName() {
-            firstQuestionName = !firstQuestionName;
-            localStorage.setItem('firstQuestionName', JSON.stringify(firstQuestionName));
-        }
-
-        function setWebTheme(themeColor) {
-            currentTheme = themeColor;
-            localStorage.setItem('webTheme', currentTheme);
-            document.documentElement.style.setProperty('--body-bg-color', currentTheme);
-        }
-
-        function loadSettings() {
-            const storedAutoSave = localStorage.getItem('autoSaveHistory');
-            if (storedAutoSave !== null) {
-                autoSaveHistory = JSON.parse(storedAutoSave);
-                document.getElementById('autoSaveHistoryToggle').checked = autoSaveHistory;
-            }
-            const storedFirstQuestionName = localStorage.getItem('firstQuestionName');
-            if (storedFirstQuestionName !== null) {
-                firstQuestionName = JSON.parse(storedFirstQuestionName);
-                document.getElementById('firstQuestionNameToggle').checked = firstQuestionName;
-            }
-            const storedTheme = localStorage.getItem('webTheme');
-            if (storedTheme) {
-                currentTheme = storedTheme;
-                document.documentElement.style.setProperty('--body-bg-color', currentTheme);
-            }
-        }
-
-
     </script>
 </body>
 </html>
