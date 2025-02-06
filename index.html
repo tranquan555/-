@@ -30,6 +30,7 @@
             --code-border-radius: 8px;
             --copy-button-bg: #555;
             --copy-button-text-color: white;
+            --success-color: rgba(0, 188, 212, 0.8);
         }
 
         body {
@@ -587,6 +588,7 @@
             margin-bottom: 0;
             overflow-x: auto;
             box-shadow: none;
+            font-family: 'Arial', sans-serif;
         }
 
        .code-container {
@@ -653,7 +655,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(0, 188, 212, 0.8);
+            background-color: var(--success-color);
             color: white;
             padding: 8px 12px;
             border-radius: 4px;
@@ -840,7 +842,7 @@
             </li>
             <li class="setting-item" style="justify-content: center; border-bottom: none; padding-top: 25px;">
                 <button class="modal-button confirm" onclick="saveSettingsAndApplyTheme()">Lưu cài đặt</button>
-                <button class="modal-button cancel" onclick="resetTheme()">Hoàn tác</button>
+                <button class="modal-button cancel" onclick="closeSettingsMenu(); resetTheme()">Hoàn tác</button>
             </li>
         </ul>
 
@@ -916,31 +918,23 @@
 
         document.body.addEventListener('click', async (event) => {
             if (event.target.classList.contains('copy-code-button')) {
-                const codeContainer = event.target.closest('.code-container');
+                 const codeContainer = event.target.closest('.code-container');
                 const codeElement = codeContainer.querySelector('code');
                 const copyButton = event.target;
-                const successMessage = document.createElement('span');
-                successMessage.classList.add('copy-success');
-                successMessage.textContent = 'Đã sao chép!';
-                codeContainer.appendChild(successMessage);
-                setTimeout(() => successMessage.classList.add('show'), 10);
+                const successMessage = codeContainer.querySelector('.copy-success');
 
                 if (codeElement) {
                     try {
                         await navigator.clipboard.writeText(codeElement.textContent);
-                         setTimeout(() => {
-                            successMessage.classList.remove('show');
-                            setTimeout(() => successMessage.remove(), 300);
-                        }, 1500);
+
+                        successMessage.classList.add('show');
+                         setTimeout(() => successMessage.classList.remove('show'), 1500);
 
                     } catch (err) {
                         console.error('Failed to copy code: ', err);
                         successMessage.textContent = 'Sao chép thất bại!';
-                        setTimeout(() => successMessage.classList.add('show'), 10);
-                         setTimeout(() => {
-                            successMessage.classList.remove('show');
-                            setTimeout(() => successMessage.remove(), 300);
-                        }, 1500);
+                         successMessage.classList.add('show');
+                        setTimeout(() => successMessage.classList.remove('show'), 1500);
                     }
                 }
             }
@@ -976,68 +970,88 @@
                 localStorage.setItem('chatHistory', JSON.stringify(conversationHistory));
             }
         }
+          function escapeHtml(text) {
+                var map = {
+                  '&': '&',
+                  '<': '<',
+                  '>': '>',
+                  '"': '"',
+                  "'": '''
+                };
 
-        function renderMessages() {
+                return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+            }
+
+
+         function renderMessages() {
             const messagesContainer = document.getElementById('messages-container');
             messagesContainer.innerHTML = '';
+
             conversationHistory.forEach(message => {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
                 let messageText = message.parts[0].text;
 
                 if (message.role === 'ai') {
-                    const codeRegex = /(```(python|javascript)?\n[\s\S]*?\n```)/g;
-                    let parts = [];
-                    let lastIndex = 0;
-                    let match;
+                  const codeRegex = /(```(\w+)?\n([\s\S]*?)\n```)/g;
+                  let parts = [];
+                  let lastIndex = 0;
+                  let match;
 
-                    while ((match = codeRegex.exec(messageText)) !== null) {
-                        if (match.index > lastIndex) {
-                            parts.push({ type: 'text', content: messageText.substring(lastIndex, match.index) });
-                        }
-                        const language = match[2] || 'text';
-                        parts.push({ type: 'code', content: match[0], language: language });
-                        lastIndex = codeRegex.lastIndex;
-                    }
+                while ((match = codeRegex.exec(messageText)) !== null) {
+                  if (match.index > lastIndex) {
+                    parts.push({ type: 'text', content: messageText.substring(lastIndex, match.index) });
+                  }
+                const language = match[2] || 'text';
+                const codeContent = match[3];
 
-                    if (lastIndex < messageText.length) {
-                        parts.push({ type: 'text', content: messageText.substring(lastIndex) });
-                    }
+                  parts.push({ type: 'code', content: codeContent, language: language });
+                  lastIndex = codeRegex.lastIndex;
+                 }
 
-                    let messageContent = '';
+                 if (lastIndex < messageText.length) {
+                    parts.push({ type: 'text', content: messageText.substring(lastIndex) });
+                   }
+
+                let messageContent = '';
                     parts.forEach(part => {
-                        if (part.type === 'text') {
-                            messageContent += `<span class="ai-message-text">${part.content}</span>`;
+                      if (part.type === 'text') {
+                        messageContent += `<span class="ai-message-text">${part.content}</span>`;
                         } else if (part.type === 'code') {
                             const language = part.language;
-                            const codeContent = part.content.replace(/```(python|javascript)?\n/,'').replace(/```/,'');
-
-                            messageContent += `
-                                <div class="code-container">
-                                    <div class="code-header">
-                                        <span class="code-language">${language}</span>
-                                    </div>
-                                    <pre class="language-${language}">
-                                        <code class="language-${language}">${codeContent}</code>
-                                    </pre>
-                                    <button class="copy-code-button"><i class="fas fa-copy"></i></button>
+                            const escapedCodeContent = escapeHtml(part.content);
+                                 messageContent += `
+                                    <div class="code-container">
+                                       <div class="code-header">
+                                           <span class="code-language">${language}</span>
+                                        </div>
+                                      <pre class="language-${language}">
+                                        <code class="language-${language}">${escapedCodeContent}</code>
+                                      </pre>
+                                     <button class="copy-code-button"><i class="fas fa-copy"></i></button>
                                     <span class="copy-success">Đã sao chép!</span>
-                                </div>
-                            `;
-                        }
-                    });
-                    messageDiv.innerHTML = `<span class="ai-message-text">${messageContent}</span>`;
+                                 </div>
+                                `;
+                           }
+                     });
+
+                messageDiv.innerHTML = `<span class="ai-message-text">${messageContent}</span>`;
+
+               } else {
+                   messageDiv.innerHTML = messageText;
                  }
-                else
-                    messageDiv.innerHTML = messageText;
 
 
                 messagesContainer.appendChild(messageDiv);
-                Prism.highlightAllUnder(messageDiv);
+                   Prism.highlightAllUnder(messageDiv);
+
             });
 
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+             Prism.highlightAll();
+             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
+
+
 
 
         function startNewChat() {
@@ -1249,146 +1263,142 @@
         }
 
 
-        async function getGeminiResponse() {
-            const userPrompt = document.getElementById('user-prompt').value.trim();
-            const messagesContainer = document.getElementById('messages-container');
+       async function getGeminiResponse() {
+    const userPrompt = document.getElementById('user-prompt').value.trim();
+    const messagesContainer = document.getElementById('messages-container');
 
-            if (!userPrompt) {
-                alert("Vui lòng nhập tin nhắn.");
-                return;
-            }
+    if (!userPrompt) {
+        alert("Vui lòng nhập tin nhắn.");
+        return;
+    }
 
-             if (currentHistoryName) {
-                savedHistories[currentHistoryName] = [...conversationHistory, { role: 'user', parts: [{ text: userPrompt }] } ];
-                localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-            }
+    if (currentHistoryName) {
+        savedHistories[currentHistoryName] = [...conversationHistory, {role: 'user', parts: [{text: userPrompt}]}]
+        ;
+        localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
+    }
 
-
-            const userMessageObject = { role: 'user', parts: [{ text: userPrompt }] };
-            conversationHistory.push(userMessageObject);
-            saveChatHistory();
-            renderMessages();
-            document.getElementById('user-prompt').value = '';
-
-
-            const aiMessageDiv = document.createElement('div');
-            aiMessageDiv.classList.add('message', 'ai-message');
-            aiMessageDiv.innerHTML = '<span class="ai-message-text">Đang suy nghĩ...</span>';
-            messagesContainer.appendChild(aiMessageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-            let promptContents = conversationHistory.map(message => ({
-                role: message.role,
-                parts: message.parts
-            }));
-            promptContents.unshift({ role: 'user', parts: [{ text: systemPrompt }] });
+    const userMessageObject = {role: 'user', parts: [{text: userPrompt}]};
+    conversationHistory.push(userMessageObject);
+    saveChatHistory();
+    renderMessages();
+    document.getElementById('user-prompt').value = '';
 
 
-            const payload = {
-                contents: promptContents
-            };
+    const aiMessageDiv = document.createElement('div');
+    aiMessageDiv.classList.add('message', 'ai-message');
+    aiMessageDiv.innerHTML = '<span class="ai-message-text">Đang suy nghĩ...</span>';
+    messagesContainer.appendChild(aiMessageDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+    let promptContents = conversationHistory.map(message => ({
+        role: message.role,
+        parts: message.parts
+    }));
+    promptContents.unshift({role: 'user', parts: [{text: systemPrompt}]});
 
 
-            try {
-                const response = await fetch(geminiAPIUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error("Lỗi API:", errorData);
-                    aiMessageDiv.innerHTML = `<span class="ai-message-text">Lỗi API: ${response.status} - ${errorData.error.message || 'Không rõ nguyên nhân'}</span>`;
-                    return;
-                }
-
-                const data = await response.json();
-                console.log("Dữ liệu phản hồi từ API:", data);
-
-                if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
-                    let aiResponseText = data.candidates[0].content.parts[0].text;
-                    aiMessageDiv.innerHTML = '';
-                    const aiTextContentSpan = document.createElement('span');
-                    aiTextContentSpan.classList.add('ai-message-text');
-
-                      const codeRegex = /(```(python|javascript)?\n[\s\S]*?\n```)/g;
-                    let parts = [];
-                    let lastIndex = 0;
-                    let match;
-
-                    while ((match = codeRegex.exec(aiResponseText)) !== null) {
-                        if (match.index > lastIndex) {
-                            parts.push({ type: 'text', content: aiResponseText.substring(lastIndex, match.index) });
-                        }
-                        const language = match[2] || 'text';
-                        parts.push({ type: 'code', content: match[0], language: language });
-                        lastIndex = codeRegex.lastIndex;
-                    }
-
-                    if (lastIndex < aiResponseText.length) {
-                        parts.push({ type: 'text', content: aiResponseText.substring(lastIndex) });
-                    }
-
-                    let messageContent = '';
-                    parts.forEach(part => {
-                        if (part.type === 'text') {
-                            messageContent += `<span class="ai-message-text">${part.content}</span>`;
-                        } else if (part.type === 'code') {
-                            const language = part.language;
-                            const codeContent = part.content.replace(/```(python|javascript)?\n/,'').replace(/```/,'');
-
-                            messageContent += `
-                                <div class="code-container">
-                                    <div class="code-header">
-                                        <span class="code-language">${language}</span>
-                                    </div>
-                                    <pre class="language-${language}">
-                                        <code class="language-${language}">${codeContent}</code>
-                                    </pre>
-                                    <button class="copy-code-button"><i class="fas fa-copy"></i></button>
-                                     <span class="copy-success">Đã sao chép!</span>
-                                </div>
-                            `;
-                        }
-                    });
-
-                    aiMessageDiv.innerHTML = `<span class="ai-message-text">${messageContent}</span>`;
+    const payload = {
+        contents: promptContents
+    };
 
 
-                    const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
+    try {
+        const response = await fetch(geminiAPIUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
 
-                     Prism.highlightAllUnder(aiMessageDiv);
-                    conversationHistory.push(aiMessageObject);
-
-
-                     if (currentHistoryName) {
-                        savedHistories[currentHistoryName] = [...conversationHistory];
-                        localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-                    } else {
-                         saveChatHistory();
-                    }
-
-
-                   messagesContainer.appendChild(aiMessageDiv);
-
-                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                 }
-                else
-                   aiMessageDiv.innerHTML = `<span class="ai-message-text">Không nhận được phản hồi hợp lệ từ AI.</span>`;
-
-             Prism.highlightAll();
-
-
-            } catch (error) {
-                console.error("Lỗi fetch:", error);
-                aiMessageDiv.innerHTML = `<span class="ai-message-text">Đã xảy ra lỗi khi kết nối đến API.</span>`;
-            }
-
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Lỗi API:", errorData);
+            aiMessageDiv.innerHTML = `<span class="ai-message-text">Lỗi API: ${response.status} - ${errorData.error.message || 'Không rõ nguyên nhân'}</span>`;
+            return;
         }
 
+        const data = await response.json();
+        console.log("Dữ liệu phản hồi từ API:", data);
+
+        if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
+            let aiResponseText = data.candidates[0].content.parts[0].text;
+           aiMessageDiv.innerHTML = '';
+           const aiTextContentSpan = document.createElement('span');
+           aiTextContentSpan.classList.add('ai-message-text');
+
+        const codeRegex = /(```(\w+)?\n([\s\S]*?)\n```)/g;
+            let parts = [];
+            let lastIndex = 0;
+            let match;
+
+        while ((match = codeRegex.exec(aiResponseText)) !== null) {
+        if (match.index > lastIndex) {
+           parts.push({type: 'text', content: aiResponseText.substring(lastIndex, match.index)});
+            }
+                const language = match[2] || 'text';
+                 const codeContent = match[3];
+
+           parts.push({type: 'code', content: codeContent, language: language});
+                lastIndex = codeRegex.lastIndex;
+           }
+
+          if (lastIndex < aiResponseText.length) {
+               parts.push({type: 'text', content: aiResponseText.substring(lastIndex)});
+              }
+
+         let messageContent = '';
+            parts.forEach(part => {
+              if (part.type === 'text') {
+                messageContent += `<span class="ai-message-text">${part.content}</span>`;
+                } else if (part.type === 'code') {
+                         const language = part.language;
+                          const escapedCodeContent = escapeHtml(part.content);
+
+                         messageContent += `
+                                <div class="code-container">
+                                  <div class="code-header">
+                                       <span class="code-language">${language}</span>
+                                </div>
+                                     <pre class="language-${language}">
+                                         <code class="language-${language}">${escapedCodeContent}</code>
+                                         </pre>
+                                          <button class="copy-code-button"><i class="fas fa-copy"></i></button>
+                                             <span class="copy-success">Đã sao chép!</span>
+                              </div>
+                              `;
+                         }
+                 });
+
+                aiMessageDiv.innerHTML = `<span class="ai-message-text">${messageContent}</span>`;
+
+            const aiMessageObject = {role: 'model', parts: [{text: aiMessageDiv.innerHTML}]};
+                   Prism.highlightAllUnder(aiMessageDiv);
+
+               conversationHistory.push(aiMessageObject);
+
+            if (currentHistoryName) {
+             savedHistories[currentHistoryName] = [...conversationHistory];
+                localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
+                } else {
+                saveChatHistory();
+               }
+
+
+                 messagesContainer.appendChild(aiMessageDiv);
+
+           messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+                else
+                 aiMessageDiv.innerHTML = `<span class="ai-message-text">Không nhận được phản hồi hợp lệ từ AI.</span>`;
+
+                 Prism.highlightAll();
+          } catch (error) {
+             console.error("Lỗi fetch:", error);
+               aiMessageDiv.innerHTML = `<span class="ai-message-text">Đã xảy ra lỗi khi kết nối đến API.</span>`;
+           }
+ }
 
         function loadSettings() {
             const storedSettings = localStorage.getItem('chatSettings');
@@ -1480,7 +1490,7 @@
         }
 
 
-     Prism.highlightAll();
+        Prism.highlightAll();
 
     </script>
 </body>
