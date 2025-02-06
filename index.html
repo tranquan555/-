@@ -947,14 +947,18 @@
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
                 const messageTextSpan = document.createElement('span');
                 messageTextSpan.classList.add('ai-message-text');
-                messageTextSpan.innerHTML = message.parts[0].text;
+
+                // **Process Code Blocks and Text for Both User and AI messages**
+                let processedContentHTML = processContentWithCodeHighlighting(message.parts[0].text);
+                messageTextSpan.innerHTML = processedContentHTML;
+
                 if (message.role === 'ai') {
                     messageDiv.appendChild(messageTextSpan);
                 } else {
-                    messageDiv.innerHTML = message.parts[0].text;
+                    messageDiv.appendChild(messageTextSpan); // User message uses messageTextSpan now too.
                 }
                 messagesContainer.appendChild(messageDiv);
-                Prism.highlightAllUnder(messageDiv);
+                Prism.highlightAllUnder(messageDiv); // Re-highlight after rendering all messages.
             });
              messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
@@ -1141,7 +1145,7 @@
 
                 const userMessageDiv = document.createElement('div');
                 userMessageDiv.classList.add('message', 'user-message');
-                userMessageDiv.textContent = userMessage;
+                userMessageDiv.innerHTML = `<span class="ai-message-text">${userMessage}</span>`; // Use processContent... if you need markdown in user messages too
                 messagesContainer.appendChild(userMessageDiv);
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
@@ -1169,6 +1173,45 @@
             }
         }
 
+        // **Moved Code Processing to a Separate Function (for reusability)**
+        function processContentWithCodeHighlighting(text) {
+            let processedText = text;
+            processedText = processedText.replace(/\*\*([^*]+)\*\*/g, '<span class="markdown-bold-uppercase">$1</span>');
+
+            let textContent = '';
+            let codeContent = null;
+            let language = 'text';
+            const codeBlockRegex = /```([\w]*)\n([\s\S]*?)```/gm;
+            let lastIndex = 0;
+            let match;
+            let finalHTML = ''; // Accumulate HTML here
+
+            while ((match = codeBlockRegex.exec(processedText)) !== null) {
+                textContent = processedText.substring(lastIndex, match.index);
+                if (textContent.trim()) {
+                    finalHTML += `<p>${textContent.trim()}</p>`;
+                }
+
+                language = match[1] || 'text';
+                codeContent = match[2].trim();
+
+                finalHTML += `<pre class="language-${language}"><code class="language-${language}">${codeContent}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button></pre>`;
+
+                lastIndex = codeBlockRegex.lastIndex;
+            }
+
+            textContent = processedText.substring(lastIndex);
+            if (textContent.trim()) {
+                finalHTML += `<p>${textContent.trim()}</p>`;
+            }
+             if (!finalHTML && processedText.trim()) {
+                 finalHTML = processedText.trim(); // Plain text if no code and not empty
+             } else if (!finalHTML) {
+                 finalHTML = "Không có phản hồi nội dung từ AI."; // Default if completely empty response.
+             }
+            return finalHTML;
+        }
+
 
         async function getGeminiResponse() {
             const userPrompt = document.getElementById('user-prompt').value.trim();
@@ -1187,7 +1230,7 @@
             const userMessageObject = { role: 'user', parts: [{ text: userPrompt }] };
             conversationHistory.push(userMessageObject);
             saveChatHistory();
-            renderMessages();
+            renderMessages(); // Re-render messages after user message is added
             document.getElementById('user-prompt').value = '';
 
 
@@ -1234,73 +1277,10 @@
                     const aiTextContentSpan = document.createElement('span');
                     aiTextContentSpan.classList.add('ai-message-text');
 
-                    let processedText = aiResponseText;
-
-                    processedText = processedText.replace(/\*\*([^*]+)\*\*/g, '<span class="markdown-bold-uppercase">$1</span>');
-
-
-                    let textContent = '';
-                    let codeContent = null;
-                    let language = 'text';
-                    const codeBlockRegex = /```([\w]*)\n([\s\S]*?)```/gm;
-                    let lastIndex = 0;
-                    let match;
-
-                    while ((match = codeBlockRegex.exec(processedText)) !== null) {
-                        textContent = processedText.substring(lastIndex, match.index);
-                        if (textContent.trim()) {
-                            const textPara = document.createElement('p');
-                            textPara.innerHTML = textContent.trim();
-                            aiTextContentSpan.appendChild(textPara);
-                        }
-
-                        language = match[1] || 'text';
-                        codeContent = match[2].trim();
-
-                        const codePre = document.createElement('pre');
-                        codePre.classList.add('language-' + language);
-
-                        const codeElement = document.createElement('code');
-                        codeElement.classList.add('language-' + language);
-                        codeElement.textContent = codeContent;
-                        codePre.appendChild(codeElement);
-
-                        // **Cải tiến Sao chép Code - Sử dụng async clipboard API**
-                        const copyButton = document.createElement('button');
-                        copyButton.classList.add('copy-code-button');
-                        copyButton.innerHTML = '<i class="fas fa-copy"></i>';
-                        copyButton.addEventListener('click', async () => { // Sử dụng async function cho event listener
-                            try {
-                                await navigator.clipboard.writeText(codeContent);
-                                alert('Đã sao chép code vào clipboard!'); // Thay alert bằng thông báo trực quan hơn nếu muốn
-                            } catch (err) {
-                                console.error('Lỗi khi sao chép: ', err);
-                                alert('Lỗi khi sao chép code.');
-                            }
-                        });
-                        codePre.appendChild(copyButton);
-
-
-                        aiTextContentSpan.appendChild(codePre);
-
-                        lastIndex = codeBlockRegex.lastIndex;
-                    }
-
-                    textContent = processedText.substring(lastIndex);
-                    if (textContent.trim()) {
-                         const textPara = document.createElement('p');
-                         textPara.innerHTML = textContent.trim();
-                         aiTextContentSpan.appendChild(textPara);
-                    }
-
-                    if (!aiTextContentSpan.hasChildNodes() && processedText.trim()) {
-                         aiTextContentSpan.innerHTML = processedText.trim();
-                    } else if (!aiTextContentSpan.hasChildNodes()) {
-                         aiTextContentSpan.textContent = "Không có phản hồi nội dung từ AI.";
-                    }
-
+                    aiTextContentSpan.innerHTML = processContentWithCodeHighlighting(aiResponseText); // Use the function here
 
                     aiMessageDiv.appendChild(aiTextContentSpan);
+
 
                     const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
                     conversationHistory.push(aiMessageObject);
@@ -1312,9 +1292,27 @@
                          saveChatHistory(); // only save to 'chatHistory' if not a named saved history.
                     }
 
+                    // **Re-attach Copy Button Listeners After Rendering New Message**
+                    aiMessageDiv.querySelectorAll('.copy-code-button').forEach(button => {
+                         button.addEventListener('click', async (event) => {
+                             const codeElement = event.target.closest('pre').querySelector('code');
+                             const codeContent = codeElement ? codeElement.textContent : null;
+                             if (codeContent) {
+                                 try {
+                                     await navigator.clipboard.writeText(codeContent);
+                                     alert('Đã sao chép code vào clipboard!');
+                                 } catch (err) {
+                                     console.error('Lỗi khi sao chép: ', err);
+                                     alert('Lỗi khi sao chép code.');
+                                 }
+                             }
+                         });
+                     });
 
-                    Prism.highlightAllUnder(aiMessageDiv);
+
+                    Prism.highlightAllUnder(aiMessageDiv); // Re-highlight this new message only.
                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
 
                 } else {
                     aiMessageDiv.innerHTML = `<span class="ai-message-text">Không nhận được phản hồi hợp lệ từ AI.</span>`;
@@ -1326,8 +1324,9 @@
             }
         }
 
-        // Settings Functions
+        // Settings Functions - (No changes here from last version)
         function loadSettings() {
+            // ... (rest of settings functions are same as last updated version)
             const storedSettings = localStorage.getItem('chatSettings');
             if (storedSettings) {
                 const settings = JSON.parse(storedSettings);
