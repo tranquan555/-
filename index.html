@@ -577,6 +577,9 @@
             background: white; /* White background for code blocks */
             position: relative;
             overflow-x: auto;      /* Scroll only Horizontally */
+             padding: 1em; /* add padding back for readability */
+             border-radius: 8px; /* add border radius back for visual */
+             margin-bottom: 18px; /* added back default margin */
         }
 
        .copy-code-button {
@@ -679,7 +682,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #ccc;
+            background-color: #ccc; /* Default grey color when OFF */
             transition: .4s;
             border-radius: 34px;
         }
@@ -697,7 +700,7 @@
         }
 
         input:checked + .slider {
-            background-color: var(--button-primary-color);
+            background-color: var(--button-primary-color); /* Primary color when ON */
         }
 
         input:focus + .slider {
@@ -863,8 +866,7 @@
         </div>
          <input type="file" id="file-upload" style="display:none" multiple onchange="handleFileUpload(this.files)">
     </div>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" integrity="sha512-kFkP9V0CjKCpYF9C1xY8qg1rF67j5n048JdZTJ9zDPE70QPH/X0K5eS9fB+/TqHwHk5fL6CgD0pDap6f0gHj7Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 
     <script>
         const apiKey = 'AIzaSyAd9p1hXhUcRx4Pz7EmbUKC-V8ULN8L61Q';
@@ -970,11 +972,9 @@
 
 
                 messagesContainer.appendChild(messageDiv);
-              //Prism.highlightAllUnder(messageDiv);  // remove highlight
             });
 
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
-          // Prism.highlightAll(); // remove highlight
 
 
         }
@@ -1259,7 +1259,6 @@
 
                     const aiMessageObject = { role: 'model', parts: [{ text: messageDiv.innerHTML }] };//Only Save Html Code result for speed/clean.   NO need all prior parts ever.  Make SMALL JSON too
 
-                    //Prism.highlightAllUnder(messageDiv); // remove highlight
                     conversationHistory.push(aiMessageObject);
 
 
@@ -1279,7 +1278,6 @@
                 else
                    aiMessageDiv.innerHTML = `<span class="ai-message-text">Không nhận được phản hồi hợp lệ từ AI.</span>`;
 
-             //Prism.highlightAll();// remove highlight
 
 
             } catch (error) {
@@ -1380,8 +1378,6 @@
             alert('Giao diện đã hoàn tác về mặc định. Nhấn "Lưu cài đặt" để lưu thay đổi.');
         }
 
-
-     //Prism.highlightAll();// remove highlight
 
     </script>
 </body>
