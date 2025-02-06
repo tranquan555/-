@@ -95,13 +95,14 @@
             opacity: 0.95; /* Slightly less opaque text */
             font-weight: 500; /* Medium font weight */
             transition: color 0.3s ease;
-            font-family: 'Arial Black', sans-serif; /* Changed Font for Web Title */
+            font-family: 'Kanit', sans-serif; /* Changed Font for Web Title to Kanit */
             border: 2px solid #fff; /* Added Border to Web Title */
             border-radius: 12px;
-            padding: 10px 20px;
+            padding: 8px 16px; /* Adjusted padding for title box */
             display: inline-block; /* To make border wrap text */
             margin-left: auto;
             margin-right: auto; /* Center title */
+            line-height: 1.2; /* Improved line height for title box */
         }
 
         #messages-container {
@@ -798,46 +799,6 @@
 
         <ul class="submenu" id="settings-menu">
             <button class="close-settings-menu-btn" onclick="toggleSettingsMenu()">Đóng</button>
-            <li class="setting-item">
-                <span class="setting-label">Tự động lưu lịch sử</span>
-                <span class="setting-control">
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="autoSaveHistoryToggle">
-                        <span class="slider"></span>
-                    </label>
-                </span>
-            </li>
-             <li class="setting-item">
-                <span class="setting-label">Tên lịch sử là câu hỏi đầu tiên</span>
-                <span class="setting-control">
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="useFirstMessageAsNameToggle">
-                        <span class="slider"></span>
-                    </label>
-                </span>
-            </li>
-             <li class="setting-item">
-                <span class="setting-label">Màu nền</span>
-                <span class="setting-control">
-                    <input type="color" id="backgroundColorPicker" class="color-picker-input" value="#1e2124">
-                </span>
-            </li>
-             <li class="setting-item">
-                <span class="setting-label">Màu chữ</span>
-                <span class="setting-control">
-                    <input type="color" id="textColorPicker" class="color-picker-input" value="#d1d5db">
-                </span>
-            </li>
-             <li class="setting-item">
-                <span class="setting-label">Màu nền hộp chat</span>
-                <span class="setting-control">
-                    <input type="color" id="containerColorPicker" class="color-picker-input" value="#25272b">
-                </span>
-            </li>
-            <li class="setting-item" style="justify-content: center; border-bottom: none; padding-top: 25px;">
-                <button class="modal-button confirm" onclick="saveSettingsAndApplyTheme()">Lưu cài đặt</button>
-                <button class="modal-button cancel" onclick="resetTheme()">Hoàn tác</button>
-            </li>
         </ul>
 
 
@@ -1425,7 +1386,7 @@
              const messagesContainer = document.getElementById('messages-container');
              const inputArea = document.querySelector('.input-area');
              if (messagesContainer) {
-                messagesContainer.scrollIntoView(false); // or inputArea.scrollIntoView(false);
+                messagesContainer.scrollIntoView(true); // or inputArea.scrollIntoView(false);
              }
         });
 
