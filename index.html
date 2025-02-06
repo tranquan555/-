@@ -168,46 +168,6 @@
             font-size: 16px;
              transition: color 0.3s ease;
         }
-        .ai-message .ai-code-block {
-            background-color: #333;
-            color: #eee;
-            padding: 14px 20px;
-            border-radius: 12px;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            overflow-x: auto;
-            font-family: monospace;
-            font-size: 14px;
-            white-space: pre-wrap;
-            position: relative;
-        }
-        .ai-message .ai-code-block::before {
-            content: attr(data-lang);
-            position: absolute;
-            top: -10px;
-            left: 10px;
-            padding: 2px 8px;
-            background-color: var(--button-primary-color);
-            color: white;
-            border-radius: 8px 8px 0 0;
-            font-size: 0.9em;
-        }
-        .ai-message .ai-code-block:empty::before {
-            content: "Code Block"; /* Default label if no language */
-        }
-        .ai-message .ai-text-block {
-            background-color: #333;
-            color: #eee;
-            padding: 14px 20px;
-            border-radius: 12px;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            overflow-x: auto;
-            font-family: sans-serif;
-            font-size: 16px;
-            white-space: pre-wrap; /* or 'pre-line' */
-        }
-
 
         .markdown-bold-uppercase {
             font-weight: 600;
@@ -610,6 +570,30 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
         }
 
+        .code-block {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            overflow-x: auto;
+            font-family: monospace;
+            white-space: pre;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: attr(data-lang);
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 5px 10px;
+            background-color: #3e3e3e;
+            color: #fff;
+            font-size: 0.8em;
+            border-radius: 8px 0 8px 0;
+        }
+
 
         /* Settings Styles */
         .setting-item .toggle-switch .slider {
@@ -743,7 +727,7 @@
     <script>
         const apiKey = 'AIzaSyAd9p1hXhUcRx4Pz7EmbUKC-V8ULN8L61Q';
         const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
-        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
+        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác.";
 
         let conversationHistory = [];
         let savedHistories = {};
@@ -800,30 +784,14 @@
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
                 let messageText = message.parts[0].text;
+
                 if (message.role === 'ai') {
-                    let formattedText = '';
-                    let parts = messageText.split("'''");
-                    for (let i = 0; i < parts.length; i++) {
-                        if (i % 2 === 0) {
-                            formattedText += parts[i];
-                        } else {
-                            let blockContent = parts[i];
-                            let lang = '';
-                            const langMatch = blockContent.match(/^([a-zA-Z]+)\n([\s\S]*)$/);
-                            if (langMatch) {
-                                lang = langMatch[1];
-                                blockContent = langMatch[2];
-                            }
-
-                            if (lang) {
-                                formattedText += `<div class="ai-code-block" data-lang="${lang}">${blockContent}</div>`;
-                            } else {
-                                formattedText += `<div class="ai-text-block">${blockContent}</div>`;
-                            }
-                        }
-                    }
-                    messageDiv.innerHTML = `<span class="ai-message-text">${formattedText}</span>`;
-
+                    // Handle code blocks
+                    const codeBlockRegex = /```(\w+)?\n([\s\S]*?)\n```/g;
+                    messageText = messageText.replace(codeBlockRegex, (match, lang, code) => {
+                        return `<div class="code-block" data-lang="${lang || 'code'}">${code}</div>`;
+                    });
+                    messageDiv.innerHTML = `<span class="ai-message-text">${messageText}</span>`;
                 } else {
                     messageDiv.innerHTML = messageText;
                 }
@@ -1045,7 +1013,7 @@
         async function getGeminiResponse() {
             const userPrompt = document.getElementById('user-prompt').value.trim();
             const messagesContainer = document.getElementById('messages-container');
-            let aiMessageDiv = document.createElement('div'); // Declare aiMessageDiv here
+            let aiMessageDiv = document.createElement('div');
 
             if (!userPrompt) {
                 alert("Vui lòng nhập tin nhắn.");
@@ -1105,37 +1073,17 @@
 
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
-                    aiMessageDiv.innerHTML = ''; // Clear "Đang suy nghĩ..." message before adding response
 
+                    // Handle code blocks
+                    const codeBlockRegex = /```(\w+)?\n([\s\S]*?)\n```/g;
+                    aiResponseText = aiResponseText.replace(codeBlockRegex, (match, lang, code) => {
+                        return `<div class="code-block" data-lang="${lang || 'code'}">${code}</div>`;
+                    });
 
-                    let formattedText = '';
-                    let parts = aiResponseText.split("'''");
-                    for (let i = 0; i < parts.length; i++) {
-                        if (i % 2 === 0) {
-                            formattedText += parts[i];
-                        } else {
-                            let blockContent = parts[i];
-                            let lang = '';
-                            const langMatch = blockContent.match(/^([a-zA-Z]+)\n([\s\S]*)$/);
-                            if (langMatch) {
-                                lang = langMatch[1];
-                                blockContent = langMatch[2];
-                            }
-
-                            if (lang) {
-                                formattedText += `<div class="ai-code-block" data-lang="${lang}">${blockContent}</div>`;
-                            } else {
-                                formattedText += `<div class="ai-text-block">${blockContent}</div>`;
-                            }
-                        }
-                    }
-                     aiMessageDiv.innerHTML = `<span class="ai-message-text">${formattedText}</span>`;
-
+                    aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
 
                     const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
-
                     conversationHistory.push(aiMessageObject);
-
 
                      if (currentHistoryName) {
                         savedHistories[currentHistoryName] = [...conversationHistory];
@@ -1145,12 +1093,10 @@
                     }
 
                    messagesContainer.appendChild(aiMessageDiv);
-
                  messagesContainer.scrollTop = messagesContainer.scrollHeight;
                  }
                 else
                    aiMessageDiv.innerHTML = `<span class="ai-message-text">Không nhận được phản hồi hợp lệ từ AI.</span>`;
-
 
             } catch (error) {
                 console.error("Lỗi fetch:", error);
