@@ -66,7 +66,7 @@
 
         .container {
             width: 95%;
-            max-width: 1400px; /* Increased container max width */
+            max-width: 1400px;
             margin: 20px auto;
             padding: 30px;
             background-color: var(--container-background-color);
@@ -136,7 +136,7 @@
             border-radius: 24px;
             clear: both;
             word-wrap: break-word;
-            max-width: 95%; /* Increased message max width */
+            max-width: 95%;
             display: inline-block;
              box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
              transition: background-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease;
@@ -570,16 +570,27 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
         }
 
+        .ai-code-box { /* New code block box style */
+            background-color: #f0f0f0; /* Light grey background for code box */
+            color: black;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 18px;
+            overflow-x: auto;
+            position: relative; /* For copy button positioning */
+        }
+
+
         code[class*="language-"],
         pre[class*="language-"] {
-            color: black;
-            background: transparent; /* Transparent background for code blocks */
+            color: inherit; /* Inherit text color from ai-code-box */
+            background: transparent; /* No background from pre/code anymore */
             position: relative;
             overflow-x: auto;
-             padding: 1em;
-             border-radius: 8px;
-             margin-bottom: 18px;
-             z-index: 1;
+            padding: 0; /* No padding from pre/code anymore - padding is on ai-code-box */
+            border-radius: 0; /* No border-radius from pre/code anymore */
+            margin-bottom: 0; /* No margin from pre/code anymore */
+            display: block; /* Make code fill ai-code-box width */
         }
 
        .copy-code-button {
@@ -606,6 +617,10 @@
         pre[class*="language-"] {
             position: relative;
             z-index: 0;
+             background: transparent; /* Ensure pre is also transparent */
+             border: none;        /* Ensure no border */
+             padding: 0;          /* Ensure no padding which may interfere with parent box padding*/
+             margin: 0;            /* Reset margins */
         }
 
         /* Success Notification Styles */
@@ -628,7 +643,6 @@
             opacity: 1;
             visibility: visible;
         }
-
 
         /* Settings Styles */
         .setting-item .toggle-switch .slider {
@@ -762,7 +776,7 @@
     </div>
 
 
-    <script>
+     <script>
         const apiKey = 'AIzaSyAd9p1hXhUcRx4Pz7EmbUKC-V8ULN8L61Q';
         const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
         const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
@@ -783,10 +797,9 @@
 
         let currentHistoryName = null;
 
-
         document.body.addEventListener('click', async (event) => {
             if (event.target.classList.contains('copy-code-button')) {
-                const codeElement = event.target.closest('pre').querySelector('code');
+                const codeElement = event.target.closest('.ai-code-box').querySelector('code'); // Select code within ai-code-box
                 if (codeElement) {
                     try {
                         await navigator.clipboard.writeText(codeElement.textContent);
@@ -838,7 +851,7 @@
             }
         }
 
-        function renderMessages() {
+       function renderMessages() {
             const messagesContainer = document.getElementById('messages-container');
             messagesContainer.innerHTML = '';
             conversationHistory.forEach(message => {
@@ -846,15 +859,20 @@
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
                 let messageText = message.parts[0].text;
                 if (message.role === 'ai') {
-
                     messageDiv.innerHTML = `<span class="ai-message-text">${messageText}</span>`;
+                     messageDiv.querySelectorAll('pre').forEach(codeBlock => {
+                        const aiCodeBox = document.createElement('div'); // Create code box
+                        aiCodeBox.classList.add('ai-code-box');       // Add class for styling
+                        codeBlock.parentNode.insertBefore(aiCodeBox, codeBlock); // Insert before pre
+                        aiCodeBox.appendChild(codeBlock);                     // Move pre into code box
 
-                    messageDiv.querySelectorAll('pre').forEach(codeBlock => {
-                      let buttonExists =  codeBlock.querySelector('.copy-code-button') !== null;
+                        let buttonExists =  aiCodeBox.querySelector('.copy-code-button') !== null;
                          if(!buttonExists ) {
-                             codeBlock.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>');
+                             aiCodeBox.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>');
                          }
                     });
+
+
                 } else {
                     messageDiv.innerHTML = messageText;
                 }
@@ -1076,7 +1094,7 @@
         async function getGeminiResponse() {
             const userPrompt = document.getElementById('user-prompt').value.trim();
             const messagesContainer = document.getElementById('messages-container');
-            let aiMessageDiv = document.createElement('div'); // Declare aiMessageDiv here
+             let aiMessageDiv = document.createElement('div');
 
             if (!userPrompt) {
                 alert("Vui lòng nhập tin nhắn.");
@@ -1136,12 +1154,12 @@
 
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
-                    aiMessageDiv.innerHTML = ''; // Clear "Đang suy nghĩ..." message before adding response
+                    aiMessageDiv.innerHTML = '';
 
                       aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
 
-                    const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
 
+                    const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
                     conversationHistory.push(aiMessageObject);
 
 
@@ -1152,7 +1170,9 @@
                          saveChatHistory();
                     }
 
+
                    messagesContainer.appendChild(aiMessageDiv);
+
 
                  messagesContainer.scrollTop = messagesContainer.scrollHeight;
                  }
@@ -1166,6 +1186,7 @@
             }
 
         }
+
 
         function loadSettings() {
             const storedSettings = localStorage.getItem('chatSettings');
