@@ -1,4 +1,4 @@
---- START OF FILE vip1 2.html ---
+--- START OF FILE vip1.html ---
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -54,7 +54,7 @@
             touch-action: manipulation;
             -webkit-text-size-adjust: 100%;
             font-size: 16px;
-            overflow-y: scroll; /* Allow vertical scroll always for smoother experience */
+            overflow-y: scroll;
             scrollbar-width: thin;
             scrollbar-color: #555 #2a2a2a;
             -webkit-font-smoothing: antialiased;
@@ -63,7 +63,7 @@
         }
 
         body.sidebar--open {
-            overflow: hidden; /* Prevent body scroll when sidebar is open */
+            overflow: hidden;
         }
 
 
@@ -106,10 +106,10 @@
         h1 {
             text-align: center;
             color: #fff;
-            margin-bottom: 20px; /* Reduced margin-bottom */
-            font-size: 2.0em; /* Reduced font-size */
+            margin-bottom: 25px;
+            font-size: 2.5em;
             letter-spacing: 0.5px;
-            padding-bottom: 15px; /* Reduced padding-bottom */
+            padding-bottom: 20px;
             border-bottom: 2px solid #444;
             font-weight: 500;
             text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
@@ -130,7 +130,6 @@
             box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.4);
             opacity: 0;
             animation: fadeIn 0.5s ease-out 0.1s forwards;
-            will-change: opacity; /* For smoother animation */
         }
 
         @keyframes fadeIn {
@@ -167,7 +166,6 @@
             opacity: 0;
             animation: slideUpFadeIn 0.4s ease-out forwards;
              margin-top: 5px;
-             will-change: opacity, transform; /* For smoother animation */
         }
 
         @keyframes slideUpFadeIn {
@@ -266,7 +264,6 @@
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
             font-weight: 500;
-            will-change: transform, box-shadow; /* For smoother animation */
         }
 
         .input-area button:hover {
@@ -291,7 +288,6 @@
             opacity: 0.95;
             transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-            will-change: transform, box-shadow, opacity; /* For smoother animation */
         }
 
         .file-upload-button:hover {
@@ -319,7 +315,6 @@
             touch-action: manipulation;
             border-right: none;
              backdrop-filter: blur(12px);
-             will-change: transform, box-shadow; /* For smoother animation */
         }
 
         .sidebar.sidebar--open {
@@ -350,7 +345,6 @@
             border-bottom: 3px solid transparent;
              font-size: 17px;
             font-weight: 400;
-            will-change: background-color, border-bottom-color, padding-left; /* For smoother animation */
         }
 
         .sidebar-menu-item:hover {
@@ -360,7 +354,7 @@
         }
 
         .sidebar-menu-item.has-submenu > .menu-link::after {
-            content: '>',
+            content: '>';
             float: right;
             margin-left: 14px;
             font-size: 0.95em;
@@ -383,7 +377,6 @@
             overflow-y: hidden;
             padding-top: 0;
             padding-bottom: 0;
-            will-change: max-height, opacity; /* For smoother animation */
         }
 
         .submenu.open {
@@ -405,7 +398,6 @@
             align-items: center;
             border-bottom: 1px solid #333;
              font-size: 16px;
-             will-change: background-color, padding-left; /* For smoother animation */
         }
 
         .submenu-item:last-child {
@@ -431,7 +423,6 @@
             padding: 0 12px;
             opacity: 0.9;
             transition: opacity 0.2s ease, color 0.2s ease, transform 0.2s ease;
-            will-change: opacity, color, transform; /* For smoother animation */
         }
 
         .delete-history-btn:hover {
@@ -457,7 +448,6 @@
             z-index: 300;
              box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
              transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-             will-change: transform, box-shadow, background-color; /* For smoother animation */
         }
 
         .sidebar-toggle-button:hover {
@@ -476,7 +466,6 @@
             z-index: 150;
             display: none;
             animation: fadeInOverlay 0.2s ease-out forwards;
-            will-change: background-color; /* For smoother animation */
         }
 
          @keyframes fadeInOverlay {
@@ -503,7 +492,6 @@
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
             font-weight: 500;
-            will-change: transform, box-shadow, background-color; /* For smoother animation */
         }
 
         .close-history-menu-btn:hover, .close-settings-menu-btn:hover, .modal-button.confirm:hover, .modal-button.cancel:hover {
@@ -526,7 +514,6 @@
             align-items: center;
             pointer-events: none;
              animation: fadeInModalOverlay 0.3s ease-out forwards;
-             will-change: background-color; /* For smoother animation */
         }
 
          @keyframes fadeInModalOverlay {
@@ -553,7 +540,6 @@
             transform: translateY(-30px);
             opacity: 0;
             animation: slideInModal 0.4s ease-out 0.15s forwards;
-            will-change: transform, opacity; /* For smoother animation */
         }
 
         @keyframes slideInModal {
@@ -601,37 +587,6 @@
             background-color: #5a5a5a;
             color: white;
         }
-
-         /* Improved Save History Modal Styling */
-        #saveHistoryModalOverlay .custom-modal {
-            padding: 40px 30px;
-            max-width: 450px;
-        }
-
-        #saveHistoryModalOverlay .modal-message {
-            font-size: 1.15em;
-            margin-bottom: 25px;
-            color: #f0f0f0;
-        }
-
-        #saveHistoryModalOverlay .modal-input {
-            padding: 12px 15px;
-            font-size: 16px;
-        }
-
-        #saveHistoryModalOverlay .modal-buttons {
-            margin-top: 25px;
-        }
-
-        /* Improved Toggle Switch Style - Minor adjustment for visual clarity if needed
-        .switch .slider.round {
-            border-radius: 34px;
-        }
-
-        .switch .slider.round:before {
-            border-radius: 50%;
-        }
-        */
 
 
     </style>
@@ -706,7 +661,7 @@
     </button>
 
     <div class="container" id="container">
-        <h1>AI với Gemini</h1> <!-- Shortened header text -->
+        <h1>AI Hiện Đại với Gemini</h1>
 
         <div id="messages-container">
             <!-- Messages will be appended here -->
@@ -734,7 +689,6 @@
         let savedHistories = {};
         let historyNameToDelete = null;
         let isAutoSaveEnabled = localStorage.getItem('autoSaveEnabled') === 'true';
-        let isSaveHistoryModalOpen = false; // Flag to track modal state - **ADDITION**
 
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -840,16 +794,12 @@
 
 
         function openSaveHistoryModal() {
-            if (!isSaveHistoryModalOpen) { // Check if modal is already open - **ADDITION**
-                document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
-                document.getElementById('historyNameInput').value = '';
-                isSaveHistoryModalOpen = true; // Set modal state to open - **ADDITION**
-            }
+            document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
+            document.getElementById('historyNameInput').value = '';
         }
 
         function closeSaveHistoryModal() {
             document.getElementById('saveHistoryModalOverlay').classList.remove('show-modal');
-            isSaveHistoryModalOpen = false; // Set modal state to closed - **ADDITION**
         }
 
         function saveHistoryWithInputName() {
@@ -1114,13 +1064,19 @@
 
                         const copyButton = document.createElement('button');
                         copyButton.classList.add('copy-code-button');
-                        copyButton.innerHTML = '<i class="fas fa-copy"></i>'; // Using Font Awesome icon
+                        copyButton.innerHTML = '<i class="fas fa-copy"></i>';
                         copyButton.onclick = () => {
+                            const originalButtonText = copyButton.innerHTML;
+                            copyButton.innerHTML = 'Đã sao chép!'; // Change button text to confirmation
+
                             navigator.clipboard.writeText(codeContent).then(() => {
-                                alert('Đã sao chép code vào clipboard!');
+                                 setTimeout(() => { // Revert after delay
+                                    copyButton.innerHTML = originalButtonText;
+                                }, 1500); // 1.5 seconds delay
                             }).catch(err => {
                                 console.error('Lỗi khi sao chép: ', err);
                                 alert('Lỗi khi sao chép code.');
+                                copyButton.innerHTML = originalButtonText; // Revert on error too
                             });
                         };
                         codePre.appendChild(copyButton);
