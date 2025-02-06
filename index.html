@@ -615,7 +615,7 @@
         /* Success Notification Styles */
         .copy-success-notification {
             position: absolute; /* Changed to absolute positioning */
-            top: 0;      /* Position at the top of the message */
+            top: 0px;      /* Position at the top of the message, trying with 0px initially */
             left: 0;
             width: 100%;
             padding: 10px 15px;
@@ -623,18 +623,17 @@
             opacity: 0;
             visibility: hidden;
             z-index: 500;
-            transition: opacity 0.3s ease, visibility 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+            transition: opacity 0.3s ease, visibility 0.3s ease, background-color 0.3s ease; /* Removed transform property */
             background-color: #4CAF50; /* Green background */
             color: white;
             text-align: center;
             font-size: 0.9em;
-            transform: translateY(-10px); /* Slide down animation */
         }
 
         .copy-success-notification.show {
             opacity: 1;
             visibility: visible;
-            transform: translateY(0); /* Slide in animation */
+            /* removed transform: translateY(0); as we removed from the initial state */
         }
 
 
