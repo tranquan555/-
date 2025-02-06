@@ -574,28 +574,30 @@
 
         code[class*="language-"],
         pre[class*="language-"] {
-            color: #abb2bf; /* Adjusted code color */
-            background: #282c34; /* Dark background for code blocks, like Gemini */
+            color: #abb2bf; /* Adjusted code color - Màu code giống Gemini */
+            background: #282c34; /* Dark background for code blocks, like Gemini - Màu nền code block giống Gemini */
             position: relative;
             overflow-x: auto;
-             padding: 1.2em 1.5em; /* Increased padding */
-             border-radius: 12px; /* More rounded corners */
+             padding: 1.2em 1.5em; /* Increased padding - Tăng padding */
+             border-radius: 12px; /* More rounded corners - Bo tròn góc hơn */
              margin-bottom: 18px;
              z-index: 1;
-             font-size: 0.9rem; /* Slightly smaller font size in code blocks */
-             border: 1px solid #383e49; /* Subtle border for code blocks */
+             font-size: 0.9rem; /* Slightly smaller font size in code blocks - Font chữ nhỏ hơn chút */
+             border: 1px solid #383e49; /* Subtle border for code blocks - Viền nhẹ cho code blocks */
+             white-space: pre; /* Ensure spaces and line breaks are respected */
+             word-wrap: normal; /* Prevent line breaks within words in code */
         }
 
        .copy-code-button {
             position: absolute;
-            top: 8px; /* Positioned at the top right */
+            top: 8px; /* Positioned at the top right - Đặt ở góc trên bên phải */
             right: 8px;
-            background-color: #383e49; /* Darker background for copy button */
-            color: #fff; /* White copy icon */
-            border: none; /* No border */
-            border-radius: 8px; /* Rounded copy button */
-            padding: 8px 10px; /* Adjusted padding */
-            font-size: 0.75em; /* Smaller font in button */
+            background-color: #383e49; /* Darker background for copy button - Nền tối hơn cho nút copy */
+            color: #fff; /* White copy icon - Icon copy màu trắng */
+            border: none; /* No border - Không viền */
+            border-radius: 8px; /* Rounded copy button - Nút copy bo tròn */
+            padding: 8px 10px; /* Adjusted padding - Chỉnh padding nút copy */
+            font-size: 0.75em; /* Smaller font in button - Font chữ nhỏ hơn trong nút copy */
             cursor: pointer;
             opacity: 0.7;
             transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
@@ -614,26 +616,27 @@
 
         /* Success Notification Styles */
         .copy-success-notification {
-            position: absolute; /* Changed to absolute positioning */
-            top: 0px;      /* Position at the top of the message, trying with 0px initially */
+            position: absolute; /* Changed to absolute positioning - Đặt vị trí tuyệt đối */
+            top: 0;      /* Position at the top of the message - Đặt ở trên cùng tin nhắn */
             left: 0;
             width: 100%;
             padding: 10px 15px;
-            border-radius: 8px 8px 0 0; /* Rounded at top */
+            border-radius: 8px 8px 0 0; /* Rounded at top - Bo tròn ở trên */
             opacity: 0;
             visibility: hidden;
             z-index: 500;
-            transition: opacity 0.3s ease, visibility 0.3s ease, background-color 0.3s ease; /* Removed transform property */
-            background-color: #4CAF50; /* Green background */
+            transition: opacity 0.3s ease, visibility 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+            background-color: #4CAF50; /* Green background - Nền xanh lá */
             color: white;
             text-align: center;
             font-size: 0.9em;
+            transform: translateY(-10px); /* Slide down animation - Hiệu ứng trượt xuống */
         }
 
         .copy-success-notification.show {
             opacity: 1;
             visibility: visible;
-            /* removed transform: translateY(0); as we removed from the initial state */
+            transform: translateY(0); /* Slide in animation - Hiệu ứng trượt lên */
         }
 
 
