@@ -66,7 +66,7 @@
 
         .container {
             width: 95%;
-            max-width: 1400px;
+            max-width: 1400px; /* Increased container max width */
             margin: 20px auto;
             padding: 30px;
             background-color: var(--container-background-color);
@@ -136,7 +136,7 @@
             border-radius: 24px;
             clear: both;
             word-wrap: break-word;
-            max-width: 95%;
+            max-width: 95%; /* Increased message max width */
             display: inline-block;
              box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
              transition: background-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease;
@@ -569,21 +569,24 @@
             border: none;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
         }
-
-        code[class*="language-"],
-        pre[class*="language-"] {
-            color: black;
-            background-color: #f0f0f0; /* Light grey background for code blocks */
-            border: 1px solid #ccc;       /* Light border for frame effect */
-            position: relative;
-            overflow-x: auto;
-             padding: 1em;
-             border-radius: 8px;
-             margin-bottom: 18px;
-             z-index: 1;
-             white-space: pre; /* important to keep code formatting */
+          /* Code block styles */
+        .code-block {
+            background-color: #f0f0f0; /* Light grey background */
+            border: 1px solid #ccc;  /* Light grey border */
+            padding: 1em;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            overflow-x: auto; /* Horizontal scrolling for long lines */
+            position: relative; /* For absolute positioning of copy button */
+            font-family: 'Courier New', Courier, monospace; /* Monospaced font for code */
         }
 
+        /* Style for the code text */
+        .code-block pre {
+            margin: 0; /* Remove default pre margins */
+            white-space: pre-wrap; /* Wrap long lines */
+            word-break: break-all; /* Break words to prevent overflow */
+        }
        .copy-code-button {
             position: absolute;
             bottom: 8px;
@@ -605,11 +608,11 @@
             color: white;
             border-color:  var(--button-primary-color);
         }
-        pre[class*="language-"] {
+        /* Ensure the code block has relative positioning */
+         .code-block {
             position: relative;
-            z-index: 0;
+            z-index: 1;
         }
-
         /* Success Notification Styles */
         .copy-success-notification {
             position: fixed;
@@ -788,7 +791,7 @@
 
         document.body.addEventListener('click', async (event) => {
             if (event.target.classList.contains('copy-code-button')) {
-                const codeElement = event.target.closest('pre').querySelector('code');
+                const codeElement = event.target.closest('.code-block').querySelector('pre');
                 if (codeElement) {
                     try {
                         await navigator.clipboard.writeText(codeElement.textContent);
@@ -824,7 +827,7 @@
             }
         }
 
-        function loadChatHistory() {
+                function loadChatHistory() {
             if (autoSaveHistorySetting()) {
                 const storedHistory = localStorage.getItem('chatHistory');
                 if (storedHistory) {
@@ -840,26 +843,38 @@
             }
         }
 
-        function renderMessages() {
+       function renderMessages() {
             const messagesContainer = document.getElementById('messages-container');
             messagesContainer.innerHTML = '';
             conversationHistory.forEach(message => {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
-                let messageText = message.parts[0].text;
+
                 if (message.role === 'ai') {
+                    let messageText = message.parts[0].text;
+
+                    // Regular expression to find markdown code blocks
+                    const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
+
+                    // Replace markdown code blocks with styled code blocks
+                    messageText = messageText.replace(codeBlockRegex, (match, language, code) => {
+                        const pre = document.createElement('pre');
+                        pre.textContent = code;
+                        const codeBlockHTML = `
+                            <div class="code-block">
+                                <pre>${code.trim()}</pre>
+                                <button class="copy-code-button"><i class="fas fa-copy"></i></button>
+                            </div>
+                        `;
+                        return codeBlockHTML;
+                    });
 
                     messageDiv.innerHTML = `<span class="ai-message-text">${messageText}</span>`;
 
-                    messageDiv.querySelectorAll('pre').forEach(codeBlock => {
-                      let buttonExists =  codeBlock.querySelector('.copy-code-button') !== null;
-                         if(!buttonExists ) {
-                             codeBlock.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>');
-                         }
-                    });
                 } else {
-                    messageDiv.innerHTML = messageText;
+                  messageDiv.textContent = message.parts[0].text;
                 }
+
                 messagesContainer.appendChild(messageDiv);
             });
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -1138,9 +1153,25 @@
 
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
-                    aiMessageDiv.innerHTML = '';
+                    aiMessageDiv.innerHTML = ''; // Clear the "thinking" message.
 
-                      aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
+                    // Process the response to find and format Markdown code blocks:
+                    const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
+
+                    aiResponseText = aiResponseText.replace(codeBlockRegex, (match, language, code) =>
+                    {
+                        const pre = document.createElement('pre');
+                        pre.textContent = code;
+
+                      return  `
+                            <div class="code-block">
+                                <pre>${code.trim()}</pre>
+                                <button class="copy-code-button"><i class="fas fa-copy"></i></button>
+                            </div>
+                        `;
+                    });
+
+                     aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`; // Add the response
 
                     const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
 
@@ -1154,9 +1185,10 @@
                          saveChatHistory();
                     }
 
-                   messagesContainer.appendChild(aiMessageDiv);
+                   messagesContainer.appendChild(aiMessageDiv); // Now correctly defined
+                   messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
                  }
                 else
                    aiMessageDiv.innerHTML = `<span class="ai-message-text">Không nhận được phản hồi hợp lệ từ AI.</span>`;
