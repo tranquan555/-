@@ -587,20 +587,19 @@
             background-color: transparent; /* Ensure code background is transparent */
             padding: 0; /* Remove padding from inline code if any */
         }
-
         .copy-code-button {
             position: absolute;
             top: 0.5em;
             right: 0.5em;
-            background-color: rgba(255, 255, 255, 0.1); /* Slightly visible button background */
-            color: #fff;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
             border: none;
             border-radius: 6px;
-            padding: 5px 8px;
-            font-size: 0.8em;
+            padding: 5px 10px;
+            font-size: 0.75em;
             cursor: pointer;
             opacity: 0.7;
-            transition: opacity 0.2s ease, background-color 0.2s ease;
+            transition: opacity 0.3s ease, background-color 0.3s ease;
         }
 
         .copy-code-button:hover {
@@ -608,23 +607,23 @@
             background-color: rgba(255, 255, 255, 0.2);
         }
 
-        .copy-code-button i {
-            margin-right: 0; /* No margin for icon if only icon is used */
-        }
-
-        .copy-success-message {
+        .copy-success-notification-inline {
             position: absolute;
             top: 0.5em;
-            right: 3.5em; /* Adjust to position to the left of the copy button */
-            color: #4CAF50; /* Green color for success */
-            font-size: 0.8em;
+            right: 3.5em; /* Adjust to position next to the copy button */
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.75em;
             opacity: 0;
-            transition: opacity 0.3s ease;
-            padding: 5px;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
-        .copy-success-message.show {
+        .copy-success-notification-inline.show {
             opacity: 1;
+            visibility: visible;
         }
 
 
@@ -782,7 +781,36 @@
         let currentHistoryName = null;
 
 
-        document.body.removeEventListener('click', async (event) => {}); // Clean up old listener
+        document.body.addEventListener('click', async (event) => {
+            if (event.target.classList.contains('copy-code-button')) {
+                const codeElement = event.target.closest('pre').querySelector('code');
+                const copyButton = event.target;
+                if (codeElement) {
+                    try {
+                        await navigator.clipboard.writeText(codeElement.textContent);
+                        showCopyNotificationInline(copyButton);
+                    } catch (err) {
+                        console.error('Failed to copy code: ', err);
+                        alert('Failed to copy code.');
+                    }
+                }
+            }
+        });
+
+        function showCopyNotificationInline(button) {
+            let notification = button.nextElementSibling;
+            if (!notification || !notification.classList.contains('copy-success-notification-inline')) {
+                notification = document.createElement('span');
+                notification.classList.add('copy-success-notification-inline');
+                notification.textContent = 'Đã sao chép!';
+                button.parentNode.insertBefore(notification, button.nextSibling); // Insert after button
+            }
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -824,39 +852,15 @@
                 let messageText = message.parts[0].text;
                 if (message.role === 'ai') {
 
-                    messageDiv.innerHTML = `<span class="ai-message-text">${messageText}</span>`;
-
-                    messageDiv.querySelectorAll('pre').forEach(codeBlock => {
-                        if (!codeBlock.querySelector('.copy-code-button')) { // Prevent duplicate buttons
-                            const copyButton = document.createElement('button');
-                            copyButton.classList.add('copy-code-button');
-                            copyButton.innerHTML = '<i class="fas fa-copy"></i>';
-
-                            const successMessage = document.createElement('span');
-                            successMessage.classList.add('copy-success-message');
-                            successMessage.textContent = 'Đã sao chép!';
-
-                            codeBlock.appendChild(copyButton);
-                            codeBlock.appendChild(successMessage);
-
-                            copyButton.addEventListener('click', async (event) => {
-                                event.stopPropagation(); // Stop event bubbling
-                                const codeElement = codeBlock.querySelector('code');
-                                if (codeElement) {
-                                    try {
-                                        await navigator.clipboard.writeText(codeElement.textContent);
-                                        successMessage.classList.add('show');
-                                        setTimeout(() => {
-                                            successMessage.classList.remove('show');
-                                        }, 1500); // Hide message after 1.5 seconds
-                                    } catch (err) {
-                                        console.error('Failed to copy code: ', err);
-                                        alert('Không thể sao chép mã.');
-                                    }
-                                }
-                            });
-                        }
+                    // Convert markdown code blocks to <pre><code>...</code></pre> and add copy button
+                    const codeBlockRegex = /```([a-zA-Z0-9]*)\n([\s\S]*?)\n```/g;
+                    messageText = messageText.replace(codeBlockRegex, (match, language, code) => {
+                        const escapedCode = code.trim().replace(/</g, '<').replace(/>/g, '>'); // escape HTML
+                        return `<pre><code class="${language}">${escapedCode}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button><span class="copy-success-notification-inline"></span></pre>`;
                     });
+
+
+                    messageDiv.innerHTML = `<span class="ai-message-text">${messageText}</span>`;
 
 
                 } else {
@@ -1142,19 +1146,20 @@
                     let aiResponseText = data.candidates[0].content.parts[0].text;
                     aiMessageDiv.innerHTML = ''; // Clear "Đang suy nghĩ..." message before adding response
 
+                    // Convert markdown code blocks to <pre><code>...</code></pre> and add copy button
+                    const codeBlockRegex = /```([a-zA-Z0-9]*)\n([\s\S]*?)\n```/g;
+                    aiResponseText = aiResponseText.replace(codeBlockRegex, (match, language, code) => {
+                        const escapedCode = code.trim().replace(/</g, '<').replace(/>/g, '>'); // escape HTML
+                        return `<pre><code class="${language}">${escapedCode}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button><span class="copy-success-notification-inline"></span></pre>`;
+                    });
+
+
                       aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
 
                     const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
 
                     conversationHistory.push(aiMessageObject);
-
-
-                     if (currentHistoryName) {
-                        savedHistories[currentHistoryName] = [...conversationHistory];
-                        localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-                    } else {
-                         saveChatHistory();
-                    }
+                    saveChatHistory(); // Save history after AI response
 
                    messagesContainer.appendChild(aiMessageDiv);
 
@@ -1199,9 +1204,11 @@
 
             document.getElementById('autoSaveHistoryToggle').addEventListener('change', function() {
                 autoSaveHistory = this.checked;
+                saveSetting('autoSaveHistory', autoSaveHistory); // Save immediately when changed
             });
             document.getElementById('useFirstMessageAsNameToggle').addEventListener('change', function() {
                 useFirstMessageAsName = this.checked;
+                saveSetting('useFirstMessageAsName', useFirstMessageAsName); // Save immediately when changed
             });
             document.getElementById('backgroundColorPicker').addEventListener('change', function() {
                 currentBackgroundColor = this.value;
