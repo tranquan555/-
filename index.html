@@ -95,6 +95,13 @@
             opacity: 0.95; /* Slightly less opaque text */
             font-weight: 500; /* Medium font weight */
             transition: color 0.3s ease;
+            font-family: 'Arial Black', sans-serif; /* Changed Font for Web Title */
+            border: 2px solid #fff; /* Added Border to Web Title */
+            border-radius: 12px;
+            padding: 10px 20px;
+            display: inline-block; /* To make border wrap text */
+            margin-left: auto;
+            margin-right: auto; /* Center title */
         }
 
         #messages-container {
@@ -352,6 +359,7 @@
             opacity: 0;
             transition: max-height 0.4s ease-out, opacity 0.3s ease-out, background-color 0.3s ease, margin-top 0.3s ease; /* Submenu transitions and background transition & marginTop */
             overflow-y: hidden; /* keep submenu hidden by default */
+            padding-bottom: 20px; /* added padding bottom to allow deeper scroll in submenu */
         }
 
         .submenu.open {
@@ -639,10 +647,13 @@
             align-items: center;
              transition: background-color 0.3s ease, border-bottom-color 0.3s ease, padding-left 0.2s ease; /* Setting item transitions - also padding-left */
              overflow: hidden; /* To contain content and scroll if necessary */
+             padding-bottom: 20px; /* Increased padding bottom for settings items */
+             margin-bottom: 10px; /* Added margin bottom to settings items */
         }
 
         .setting-item:last-child {
             border-bottom: none;
+            margin-bottom: 0; /* remove margin bottom for last setting item */
         }
          .setting-item:active {
              background-color: #3a3b47; /* slightly darker on active click for feedback */
@@ -754,6 +765,8 @@
 
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500&display=swap" rel="stylesheet"> <!-- Added Kanit Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Arial+Black&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -906,7 +919,7 @@
             const container = document.getElementById('container');
             const overlay = document.getElementById('sidebar-overlay');
             sidebar.classList.toggle('sidebar--open');
-            container.classList.toggle('container.sidebar-open');
+            container.classList.toggle('container.sidebar.sidebar-open');
             overlay.classList.toggle('sidebar--open');
             if (sidebar.classList.contains('sidebar--open')) {
                  loadSavedHistoriesList();
