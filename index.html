@@ -4,94 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Hiện Đại với Gemini</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit: cover;">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        :root {
-            --background-color: #1e2124;
-            --container-background-color: #25272b;
-            --text-color: #d1d5db;
-            --message-user-background-color: #343541;
-            --message-ai-background-color: #444654;
-            --input-area-background-color: #343541;
-            --input-text-background-color: #40414f;
-            --button-primary-color: #00bcd4;
-            --button-primary-hover-color: #0097a7;
-            --sidebar-background-color: #252525;
-            --sidebar-text-color: #fff;
-            --modal-background-color: #343541;
-            --code-block-background: #282a36; /* Okaidia theme background */
-            --code-block-text: #f8f8f2; /* Okaidia theme text */
-            --code-block-comment: #6272a4; /* Okaidia theme comment */
-            --code-block-keyword: #ff79c6; /* Okaidia theme keyword */
-            --code-block-operator: #ffb86c; /* Okaidia theme operator */
-            --code-block-punctuation: #f8f8f2; /* Okaidia theme punctuation */
-            --code-block-string: #f1fa8c; /* Okaidia theme string */
-            --code-block-number: #bd93f9; /* Okaidia theme number */
-            --code-block-function: #50fa7b; /* Okaidia theme function */
-            --code-block-class-name: #ffb86c; /* Okaidia theme class-name */
-        }
-
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--background-color);
-            color: var(--text-color);
+            background-color: #1e2124;
+            color: #d1d5db;
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
             -webkit-touch-callout: none;
-            -webkit-user-select: text;
-            -khtml-user-select: text;
-            -moz-user-select: text;
-            -ms-user-select: text;
-            user-select: text;
-            touch-action: manipulation;
-            -webkit-text-size-adjust: 100%;
-            font-size: 16px;
-            overflow-y: scroll;
-            scrollbar-width: thin;
-            scrollbar-color: #444 #252525;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            overscroll-behavior-y: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
-
-        body::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        body::-webkit-scrollbar-track {
-            background: #252525;
-        }
-
-        body::-webkit-scrollbar::-webkit-scrollbar-thumb {
-            background-color: #444;
-            border-radius: 4px;
-        }
-
 
         .container {
             width: 95%;
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 20px auto;
-            padding: 30px;
-            background-color: var(--container-background-color);
-            border-radius: 24px;
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
+            padding: 25px;
+            background-color: #25272b;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 40px);
+            height: 100vh;
             flex-grow: 1;
             margin-left: auto;
-            transition: margin-left 0.3s ease, background-color 0.3s ease;
-            border: none;
-            padding-top: max(30px, env(safe-area-inset-top));
-            padding-bottom: max(30px, env(safe-area-inset-bottom));
+            transition: margin-left 0.3s ease;
+            border: 1px solid #333;
         }
 
         .container.sidebar-open {
@@ -101,101 +47,70 @@
         h1 {
             text-align: center;
             color: #fff;
-            margin-bottom: 30px;
-            font-size: 2.8em;
-            letter-spacing: -0.8px;
-            padding-bottom: 25px;
+            margin-bottom: 20px;
+            font-size: 2.2em;
+            letter-spacing: 0.3px;
+            padding-bottom: 15px;
             border-bottom: 1px solid #444;
-            opacity: 0.95;
-            font-weight: 500;
-            transition: color 0.3s ease;
         }
 
         #messages-container {
             flex-grow: 1;
-            padding: 25px;
+            padding: 20px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             scrollbar-width: thin;
             scrollbar-color: #555 #252525;
-            padding-bottom: 80px;
-            border: none;
-            border-radius: 16px;
+            padding-bottom: 70px;
+            border: 1px solid #333;
+            border-radius: 8px;
             background-color: #1e2124;
-             box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.4);
-             transition: background-color 0.3s ease;
-             padding-top: 30px;
         }
 
         #messages-container::-webkit-scrollbar {
             width: 8px;
         }
 
-        #messages-container::-webkit-scrollbar::-webkit-scrollbar-track {
+        #messages-container::-webkit-scrollbar-track {
             background: #252525;
         }
 
-        #messages-container::-webkit-scrollbar::-webkit-scrollbar-thumb {
+        #messages-container::-webkit-scrollbar-thumb {
             background-color: #555;
             border-radius: 4px;
         }
 
         .message {
-            margin-bottom: 18px; /* Reduced margin-bottom for message spacing */
-            padding: 14px 20px;
-            border-radius: 18px; /* Slightly less rounded */
+            margin-bottom: 12px;
+            padding: 10px 14px;
+            border-radius: 15px;
             clear: both;
             word-wrap: break-word;
-            max-width: 95%;
+            max-width: 80%;
             display: inline-block;
-             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Reduced shadow */
-             transition: background-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease;
-             font-size: 0.95em; /* Slightly smaller message text */
-             line-height: 1.6; /* Adjusted line height for better readability */
+            border: 1px solid #444;
         }
 
         .user-message {
-            background-color: var(--message-user-background-color);
+            background-color: #343541;
             color: #fff;
             align-self: flex-end;
             float: right;
-            border-top-right-radius: 8px;
-            border-bottom-right-radius: 18px; /* Match general message borderRadius */
-            border-bottom-left-radius: 18px; /* Gemini-like borderRadius */
+            border-top-right-radius: 3px;
         }
 
         .ai-message {
-            background-color: var(--message-ai-background-color);
-            color: var(--text-color);
+            background-color: #444654;
+            color: #d1d5db;
             align-self: flex-start;
             float: left;
-            border-top-left-radius: 8px;
-            border-bottom-left-radius: 18px; /* Match general message borderRadius */
-            border-bottom-right-radius: 18px; /* Gemini-like borderRadius */
-        }
-
-        .ai-message .ai-message-text {
-            font-family: 'Arial', sans-serif;
-            font-weight: 400;
-            line-height: 1.7; /* Adjusted line-height */
-            white-space: pre-line;
-            font-size: 1em;
-             transition: color 0.3s ease;
-        }
-
-        .markdown-bold-uppercase {
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: #f0f0f0;
-            opacity: 1;
-             transition: color 0.3s ease;
+            border-top-left-radius: 3px;
         }
 
         .input-area {
-            padding: 14px 24px; /* Slightly reduced vertical padding */
-            background-color: var(--input-area-background-color);
+            padding: 15px 20px;
+            background-color: #343541;
             border-top: 1px solid #555;
             display: flex;
             align-items: center;
@@ -207,78 +122,46 @@
             padding-left: 20px;
             padding-right: 20px;
             z-index: 100;
-            border-bottom-left-radius: 24px;
-            border-bottom-right-radius: 24px;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
              border-top: 1px solid #444;
-             transition: background-color 0.3s ease;
-             padding-bottom: max(14px, env(safe-area-inset-bottom)); /* Slightly reduced bottom padding */
         }
 
         .input-area textarea {
             flex-grow: 1;
-            padding: 10px 14px; /* Slightly reduced padding */
-            border: none;
-            border-radius: 14px; /* Slightly less rounded input */
-            font-size: 1em;
-            background-color: var(--input-text-background-color);
+            padding: 10px;
+            border: 1px solid #555;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #40414f;
             color: #fff;
             resize: none;
-            min-height: 40px; /* Slightly smaller input height */
+            min-height: 40px;
             overflow-y: auto;
-             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.25); /* Reduced shadow */
-             transition: background-color 0.3s ease, color 0.3s ease;
+            border: 1px solid #444;
         }
 
         .input-area textarea:focus {
-            border-color: var(--button-primary-color);
+            border-color: #00bcd4;
             outline: none;
-            box-shadow: 0 0 6px rgba(0, 188, 212, 0.6); /* Reduced focus shadow */
+            box-shadow: 0 0 5px rgba(0, 188, 212, 0.5);
         }
 
         .input-area button {
-            padding: 12px 22px; /* Slightly reduced padding */
-            background-color: var(--button-primary-color);
+            padding: 10px 20px;
+            background-color: #00bcd4;
             color: white;
             border: none;
-            border-radius: 14px; /* Slightly less rounded button */
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1em;
-            margin-left: 14px; /* Slightly reduced margin */
-            transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
-             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Added button shadow */
+            font-size: 16px;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
         }
 
         .input-area button:hover {
-            background-color: var(--button-primary-hover-color);
-            transform: scale(1.02); /* Reduced scale on hover */
-             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25); /* Slightly increased shadow on hover */
+            background-color: #0097a7;
         }
-
-        .file-upload-button {
-            background-color: #555;
-            color: white;
-            border: none;
-            border-radius: 14px; /* Slightly less rounded file button */
-            cursor: pointer;
-            font-size: 1em;
-            width: 42px; /* Slightly smaller file button */
-            height: 42px; /* Slightly smaller file button */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 14px; /* Slightly reduced margin */
-            opacity: 0.9;
-            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
-             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Added file button shadow */
-        }
-
-        .file-upload-button:hover {
-            opacity: 1;
-            background-color: #666;
-             transform: scale(1.02); /* Reduced scale on hover */
-              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25); /* Slightly increased shadow on hover */
-        }
-
 
         .sidebar {
             position: fixed;
@@ -286,17 +169,16 @@
             left: 0;
             width: 250px;
             height: 100%;
-            background-color: var(--sidebar-background-color);
-            color: var(--sidebar-text-color);
+            background-color: #252525;
+            color: #fff;
             transform: translateX(-100%);
-            transition: transform 0.3s ease, background-color 0.3s ease;
+            transition: transform 0.3s ease;
             z-index: 200;
-            padding-top: 70px;
-            box-shadow: 6px 0 12px rgba(0,0,0,0.4);
+            padding-top: 60px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
             overflow-y: auto;
             touch-action: manipulation;
             border-right: 1px solid #444;
-             backdrop-filter: blur(12px);
         }
 
         .sidebar.sidebar--open {
@@ -304,12 +186,11 @@
         }
 
         .sidebar-header {
-            padding: 26px 24px; /* Slightly reduced padding */
+            padding: 20px;
             text-align: center;
             border-bottom: 1px solid #555;
-            margin-bottom: 26px; /* Slightly reduced margin */
+            margin-bottom: 20px;
             border-bottom: 1px solid #444;
-            transition: background-color 0.3s ease, border-bottom-color 0.3s ease;
         }
 
         .sidebar-menu {
@@ -318,47 +199,41 @@
         }
 
         .sidebar-menu-item {
-            padding: 16px 24px; /* Reduced padding */
+            padding: 15px 20px;
             cursor: pointer;
-            transition: background-color 0.2s ease, border-bottom-color 0.3s ease, color 0.3s ease, padding-left 0.2s ease;
+            transition: background-color 0.2s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid transparent;
-            font-size: 0.95em; /* Slightly smaller sidebar font */
+            transition: border-bottom-color 0.3s ease;
         }
-         .sidebar-menu-item:active {
-             background-color: #3a3b47;
-         }
-
 
         .sidebar-menu-item:hover {
             background-color: #343541;
-             border-bottom-color: var(--button-primary-color);
-             padding-left: 28px; /* Adjusted hover padding */
+             border-bottom-color: #00bcd4;
         }
 
         .sidebar-menu-item.has-submenu > .menu-link::after {
             content: '>';
             float: right;
-            margin-left: 12px;
-            font-size: 0.9em;
+            margin-left: 10px;
+            font-size: 0.8em;
             display: inline-block;
-            color: #aaa;
         }
 
         .submenu {
             list-style: none;
             padding-left: 0;
             margin: 0;
-            border-radius: 16px;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.45);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
             background-color: #2c2c2c;
-            margin-top: 12px;
+            margin-top: 5px;
             max-height: 0;
             opacity: 0;
-            transition: max-height 0.4s ease-out, opacity 0.3s ease-out, background-color 0.3s ease, margin-top 0.3s ease;
+            transition: max-height 0.3s ease-out, opacity 0.2s ease-out;
             overflow-y: hidden;
             padding-top: 0;
             padding-bottom: 0;
@@ -366,29 +241,23 @@
 
         .submenu.open {
             display: block;
-            max-height: 600px;
+            max-height: 500px;
             opacity: 1;
             overflow-y: auto;
-            padding-top: 12px;
-            padding-bottom: 14px; /* Reduced submenu bottom padding */
-            margin-top: 14px; /* Reduced submenu top margin */
+            padding-top: 5px;
+            padding-bottom: 10px;
         }
 
 
         .submenu-item {
-            padding: 14px 24px; /* Reduced submenu item padding */
+            padding: 12px 20px;
             cursor: pointer;
-            transition: background-color 0.2s ease, color 0.3s ease, padding-left 0.2s ease;
+            transition: background-color 0.2s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #333;
-            font-size: 0.95em; /* Slightly smaller submenu font */
         }
-         .submenu-item:active {
-             background-color: #3a3b47;
-         }
-
 
         .submenu-item:last-child {
             border-bottom: none;
@@ -397,13 +266,10 @@
 
         .submenu-item:hover {
             background-color: #343541;
-            padding-left: 28px; /* Adjusted submenu hover padding */
         }
 
         .history-name {
             flex-grow: 1;
-             transition: color 0.3s ease;
-             opacity: 0.9;
         }
 
         .delete-history-btn {
@@ -412,7 +278,7 @@
             color: #aaa;
             cursor: pointer;
             font-size: 1em;
-            padding: 0 10px;
+            padding: 0 8px;
             opacity: 0.7;
             transition: opacity 0.2s ease, color 0.2s ease;
         }
@@ -424,31 +290,24 @@
 
         .sidebar-toggle-button {
             position: fixed;
-            top: 30px;
-            left: 30px;
-            background: var(--button-primary-color);
+            top: 20px;
+            left: 20px;
+            background: #00bcd4;
             color: white;
             border: none;
             border-radius: 50%;
-            width: 46px; /* Slightly smaller toggle button */
-            height: 46px; /* Slightly smaller toggle button */
+            width: 40px;
+            height: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             z-index: 300;
-             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Reduced toggle button shadow */
-             transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
         }
 
         .sidebar-toggle-button:hover {
-            background-color: var(--button-primary-hover-color);
-             transform: scale(1.04); /* Reduced scale on hover */
+            background-color: #0097a7;
         }
-        .sidebar-toggle-button:active {
-             transform: scale(0.98);
-             opacity: 0.95;
-         }
 
         .sidebar-overlay {
             position: fixed;
@@ -456,61 +315,32 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgba(0, 0, 0, 0.5);
             z-index: 150;
             display: none;
-            opacity: 0;
-            transition: opacity 0.3s ease, background-color 0.3s ease;
-
         }
 
         .sidebar-overlay.sidebar--open {
             display: block;
-            opacity: 1;
         }
 
-        .close-history-menu-btn, .close-settings-menu-btn, .modal-button {
-            padding: 12px 22px; /* Slightly reduced padding */
-            background-color: var(--button-primary-color);
+        .close-history-menu-btn {
+            background-color: #00bcd4;
             color: white;
             border: none;
-            border-radius: 14px; /* Slightly less rounded modal buttons */
+            border-radius: 8px;
+            padding: 10px 15px;
             cursor: pointer;
-            margin-top: 18px; /* Slightly reduced margin */
+            margin-top: 10px;
             display: block;
             margin-left: auto;
             margin-right: auto;
-            transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
-             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Added modal button shadow */
-             font-size: 0.95em; /* Slightly smaller modal button font */
+            transition: background-color 0.3s ease;
         }
 
-        .close-history-menu-btn:hover, .close-settings-menu-btn:hover, .modal-button.confirm:hover {
-            background-color: var(--button-primary-hover-color);
-             transform: scale(1.02); /* Reduced scale on hover */
-              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25); /* Slightly increased shadow on hover */
+        .close-history-menu-btn:hover {
+            background-color: #0097a7;
         }
-         .close-history-menu-btn:active, .close-settings-menu-btn:active,  .modal-button.confirm:active {
-             transform: scale(0.98);
-             opacity: 0.95;
-         }
-
-
-         .modal-button.cancel {
-            background-color: #555;
-            color: white;
-        }
-
-        .modal-button.cancel:hover {
-            background-color: #666;
-             transform: scale(1.02); /* Reduced scale on hover */
-              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25); /* Slightly increased shadow on hover */
-        }
-         .modal-button.cancel:active {
-             transform: scale(0.98);
-             opacity: 0.95;
-         }
-
 
         .custom-modal-overlay {
             display: none;
@@ -519,227 +349,123 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.6);
             z-index: 400;
             justify-content: center;
             align-items: center;
             pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s ease, background-color 0.3s ease;
-            backdrop-filter: blur(10px);
         }
 
         .custom-modal-overlay.show-modal {
             display: flex;
-            opacity: 1;
             pointer-events: auto;
         }
 
 
         .custom-modal {
-            background-color: var(--modal-background-color);
+            background-color: #343541;
             color: #fff;
-            padding: 30px; /* Reduced modal padding */
-            border-radius: 20px; /* Slightly less rounded modal */
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6); /* Reduced modal shadow */
-            width: 85%;
-            max-width: 500px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            width: 80%;
+            max-width: 400px;
             text-align: center;
-            border: none;
-            transform: scale(0.97);
-            opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, border-radius 0.3s ease;
+            border: 1px solid #444;
         }
-
-        .custom-modal-overlay.show-modal .custom-modal {
-            transform: scale(1);
-            opacity: 1;
-        }
-
 
         .modal-message {
-            margin-bottom: 20px; /* Reduced modal message margin */
-            font-size: 1.1em; /* Slightly smaller modal message font */
-             transition: color 0.3s ease;
-             font-weight: 500;
-             opacity: 0.95;
+            margin-bottom: 15px;
         }
 
         .modal-input {
-            width: calc(100% - 20px); /* Adjusted modal input width */
-            padding: 12px 14px; /* Reduced modal input padding */
-            margin-bottom: 20px; /* Reduced modal input margin */
-            border-radius: 10px; /* Slightly less rounded modal input */
-            border: none;
-            background-color: var(--input-text-background-color);
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #555;
+            background-color: #40414f;
             color: #fff;
-             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.25); /* Reduced modal input shadow */
-             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .modal-buttons {
             display: flex;
             justify-content: center;
-            gap: 20px; /* Reduced modal buttons gap */
-            margin-top: 8px; /* Reduced modal buttons margin top */
+            gap: 15px;
         }
 
         .modal-button {
-            padding: 12px 24px; /* Reduced padding on modal button */
+            padding: 10px 20px;
             border: none;
-            border-radius: 14px; /* Slightly less rounded modal buttons */
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
-            border: none;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Reduced modal button shadow */
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            border: 1px solid #444;
         }
+
+        .modal-button.confirm {
+            background-color: #00bcd4;
+            color: white;
+        }
+
+        .modal-button.confirm:hover {
+            background-color: #0097a7;
+        }
+
+        .modal-button.cancel {
+            background-color: #555;
+            color: white;
+        }
+
+        .modal-button.cancel:hover {
+            background-color: #666;
+        }
+
 
         code[class*="language-"],
         pre[class*="language-"] {
-            color: var(--code-block-text);
-            background-color: var(--code-block-background);
-            position: relative;
-            overflow-x: auto;
-             padding: 1.2em 1.4em; /* Adjusted code block padding */
-             border-radius: 12px; /* Slightly less rounded code blocks */
-             margin-bottom: 16px; /* Reduced code block margin-bottom */
-             z-index: 1;
-             font-size: 0.9em; /* Slightly smaller code font */
-             line-height: 1.5; /* Adjusted code line height */
+            color: #f8f8f2;
+            background: #272822;
         }
-
-       .copy-code-button {
-            position: absolute;
-            top: 8px; /* Adjusted button position */
-            right: 8px; /* Adjusted button position */
-            background-color: #ddd;
-            color: black;
-            border: 1px solid #bbb;
-            border-radius: 6px;
-            padding: 5px 8px; /* Reduced button padding */
-            font-size: 0.75em; /* Smaller button font */
-            cursor: pointer;
-            opacity: 0.7;
-            transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-            z-index: 2;
-        }
-        .copy-code-button:hover {
-            opacity: 1;
-            background-color: var(--button-primary-color);
-            color: white;
-            border-color:  var(--button-primary-color);
-        }
-        pre[class*="language-"] {
-            position: relative;
-            z-index: 0;
-        }
-
-        /* Success Notification Styles */
-        .copy-success-notification {
-            position: absolute; /* Changed to absolute for button-relative positioning */
-            top: 8px; /* Position near the copy button */
-            right: 40px; /* Position to the left of the button */
-            background-color: #4CAF50;
-            color: white;
-            padding: 8px 12px; /* Smaller notification padding */
-            border-radius: 6px;
-            opacity: 0;
-            visibility: hidden;
-            z-index: 500;
-            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-            transform: translateY(-10px); /* Slide up slightly */
-            font-size: 0.8em; /* Smaller notification font */
-        }
-
-        .copy-success-notification.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0); /* Slide to original position */
-        }
-
-
-        /* Settings Styles */
-        .setting-item .toggle-switch .slider {
-            background-color: #ccc;
-        }
-        .setting-item .toggle-switch input:checked + .slider {
-            background-color: var(--button-primary-color);
-        }
+        .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #6c6767; }
+        .token.punctuation { color: #f8f8f2; }
+        .token.namespace { opacity: .7; }
+        .token.property, .token.tag, .token.constant, .token.symbol, .token.deleted { color: #f92672; }
+        .token.boolean, .token.number { color: #ae81ff; }
+        .token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted { color: #a6e22e; }
+        .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string { color: #f8f8f2; background: none; }
+        .token.atrule, .token.attr-value, .token.keyword { color: #00bcd4; }
+        .token.function, .token.class-name { color: #e6db74; }
+        .token.regex, .token.important, .token.variable { color: #fd971f; }
+        .token.important, .token.bold { font-weight: bold; }
+        .token.italic { font-style: italic; }
+        .token.entity { cursor: help; }
 
 
     </style>
-
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
 
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h3>Lịch sử Chat & Cài đặt</h3>
+            <h3>Lịch sử Chat</h3>
         </div>
         <ul class="sidebar-menu">
-            <li class="sidebar-menu-item" onclick="startNewChat()">
-                <span class="menu-link">Đoạn chat mới</span>
-            </li>
             <li class="sidebar-menu-item" onclick="openSaveHistoryModal()">
                 <span class="menu-link">Lưu lịch sử này</span>
             </li>
             <li class="sidebar-menu-item has-submenu" onclick="toggleHistoryMenu()">
                 <span class="menu-link">Lịch sử đã lưu</span>
                 </li>
-            <li class="sidebar-menu-item has-submenu" onclick="toggleSettingsMenu()">
-                <span class="menu-link">Cài đặt</span>
-                </li>
         </ul>
 
         <ul class="submenu" id="saved-histories-menu">
             <button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>
         </ul>
-
-        <ul class="submenu" id="settings-menu">
-            <button class="close-settings-menu-btn" onclick="toggleSettingsMenu()">Đóng</button>
-            <li class="setting-item">
-                <span class="setting-label">Tự động lưu lịch sử</span>
-                <span class="setting-control">
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="autoSaveHistoryToggle">
-                        <span class="slider"></span>
-                    </label>
-                </span>
-            </li>
-             <li class="setting-item">
-                <span class="setting-label">Tên lịch sử là câu hỏi đầu</span>
-                <span class="setting-control">
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="useFirstMessageAsNameToggle">
-                        <span class="slider"></span>
-                    </label>
-                </span>
-            </li>
-             <li class="setting-item">
-                <span class="setting-label">Màu nền</span>
-                <span class="setting-control">
-                    <input type="color" id="backgroundColorPicker" class="color-picker-input" value="#1e2124">
-                </span>
-            </li>
-             <li class="setting-item">
-                <span class="setting-label">Màu chữ</span>
-                <span class="setting-control">
-                    <input type="color" id="textColorPicker" class="color-picker-input" value="#d1d5db">
-                </span>
-            </li>
-             <li class="setting-item">
-                <span class="setting-label">Màu nền hộp chat</span>
-                <span class="setting-control">
-                    <input type="color" id="containerColorPicker" class="color-picker-input" value="#25272b">
-                </span>
-            </li>
-            <li class="setting-item" style="justify-content: center; border-bottom: none; padding-top: 25px;">
-                <button class="modal-button confirm" onclick="saveSettingsAndApplyTheme()">Lưu cài đặt</button>
-                <button class="modal-button cancel" onclick="resetTheme()">Hoàn tác</button>
-            </li>
-        </ul>
-
 
         <div class="custom-modal-overlay" id="saveHistoryModalOverlay">
             <div class="custom-modal">
@@ -776,89 +502,24 @@
         <div id="messages-container">
             <!-- Messages will be appended here -->
         </div>
-         <div class="copy-success-notification" id="copyNotification">
-            Đã sao chép vào clipboard!
-        </div>
 
         <div class="input-area">
-            <button class="file-upload-button" onclick="triggerFileUpload()">
-                <i class="fas fa-paperclip"></i>
-            </button>
             <textarea id="user-prompt" placeholder="Nhập tin nhắn"></textarea>
             <button onclick="getGeminiResponse()">Gửi</button>
         </div>
-         <input type="file" id="file-upload" style="display:none" multiple onchange="handleFileUpload(this.files)">
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
     <script>
-        const apiKey = 'AIzaSyAd9p1hXhUcRx4Pz7EmbUKC-V8ULN8L61Q';
+        const apiKey = 'AIzaSyCl21Ku_prQnyMHFs_dJRL8-pgjg9hrc2w';
         const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
-        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Bạn có thể sử dụng cả dấu ``` hoặc ''' để bao quanh code blocks, và nhớ ghi rõ tên ngôn ngữ lập trình ngay sau dấu ``` hoặc ''' để làm nổi bật cú pháp. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nhoặc:\n'''html\n<!-- Mã HTML ở đây -->\n<div>Ví dụ HTML</div>\n'''\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
+        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
 
         let conversationHistory = [];
         let savedHistories = {};
         let historyNameToDelete = null;
-        let autoSaveHistory = true;
-        let useFirstMessageAsName = false;
-
-        let currentBackgroundColor = '#1e2124';
-        let currentTextColor = '#d1d5db';
-        let currentContainerColor = '#25272b';
-
-        const defaultBackgroundColor = '#1e2124';
-        const defaultTextColor = '#d1d5db';
-        const defaultContainerColor = '#25272b';
-
-        let currentHistoryName = null;
-
-
-        document.body.addEventListener('click', async (event) => {
-            if (event.target.classList.contains('copy-code-button')) {
-                const codeElement = event.target.closest('pre').querySelector('code');
-                const copyButton = event.target; // Get the button element
-                if (codeElement) {
-                    try {
-                        await navigator.clipboard.writeText(codeElement.textContent);
-                        showCopyNotification(copyButton); // Pass the button to the notification function
-                    } catch (err) {
-                        console.error('Failed to copy code: ', err);
-                        alert('Failed to copy code.');
-                    }
-                }
-            }
-        });
-
-        function showCopyNotification(buttonElement) {
-            const notification = buttonElement.querySelector('.copy-success-notification');
-            if (!notification) {
-                buttonElement.insertAdjacentHTML('beforeend', '<span class="copy-success-notification">Đã sao chép!</span>');
-                const newNotification = buttonElement.querySelector('.copy-success-notification');
-                setTimeout(() => {
-                    newNotification.classList.add('show');
-                    setTimeout(() => {
-                        newNotification.classList.remove('show');
-                        setTimeout(() => {
-                            newNotification.remove(); // Remove notification element after fade out
-                        }, 300); // Wait for fade-out transition
-                    }, 1500); // Duration notification is visible
-                }, 10); // Small delay for animation to start properly
-            } else {
-                // Notification already exists (shouldn't happen in normal flow, but handling just in case)
-                notification.classList.add('show');
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                     setTimeout(() => {
-                            notification.remove(); // Remove notification element after fade out
-                        }, 300); // Wait for fade-out transition
-                }, 1500);
-            }
-        }
-
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -871,24 +532,19 @@
                  loadSavedHistoriesList();
             } else {
                 hideHistoryMenu();
-                hideSettingsMenu();
             }
         }
 
         function loadChatHistory() {
-            if (autoSaveHistorySetting()) {
-                const storedHistory = localStorage.getItem('chatHistory');
-                if (storedHistory) {
-                    conversationHistory = JSON.parse(storedHistory);
-                    renderMessages();
-                }
+            const storedHistory = localStorage.getItem('chatHistory');
+            if (storedHistory) {
+                conversationHistory = JSON.parse(storedHistory);
+                renderMessages();
             }
         }
 
         function saveChatHistory() {
-            if (autoSaveHistorySetting()) {
-                localStorage.setItem('chatHistory', JSON.stringify(conversationHistory));
-            }
+            localStorage.setItem('chatHistory', JSON.stringify(conversationHistory));
         }
 
         function renderMessages() {
@@ -897,48 +553,17 @@
             conversationHistory.forEach(message => {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
-                let messageText = message.parts[0].text;
-                if (message.role === 'ai') {
-
-                    // Handle code blocks with ``` or '''
-                    const codeBlockRegex = /(```|''')(\w+)?\n([\s\S]*?)\n\1/g;
-                    messageText = messageText.replace(codeBlockRegex, (match, backticksOrSingleQuotes, language, code) => {
-                        const langClass = language ? `language-${language.toLowerCase()}` : 'language-plaintext';
-                        return `<pre class="${langClass}"><code class="${langClass}">${Prism.highlight(code, Prism.languages[language] || Prism.languages.plaintext, language)}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button></pre>`;
-                    });
-
-                    messageDiv.innerHTML = `<span class="ai-message-text">${messageText}</span>`;
-                } else {
-                    messageDiv.innerHTML = messageText;
-                }
+                messageDiv.innerHTML = message.parts[0].text;
                 messagesContainer.appendChild(messageDiv);
+                Prism.highlightAllUnder(messageDiv);
             });
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-             // Re-apply Prism syntax highlighting after rendering new messages.
-             Prism.highlightAll();
-        }
-
-
-        function startNewChat() {
-             if (currentHistoryName) {
-                savedHistories[currentHistoryName] = [...conversationHistory];
-                localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-            }
-            conversationHistory = [];
-            saveChatHistory();
-            renderMessages();
-            currentHistoryName = null;
-            toggleSidebar();
+             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
 
 
         function openSaveHistoryModal() {
             document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
             document.getElementById('historyNameInput').value = '';
-
-            if (useFirstMessageAsNameSetting() && conversationHistory.length > 0 && conversationHistory[0].role === 'user') {
-                document.getElementById('historyNameInput').value = conversationHistory[0].parts[0].text.substring(0, 50);
-            }
         }
 
         function closeSaveHistoryModal() {
@@ -946,23 +571,16 @@
         }
 
         function saveHistoryWithInputName() {
-            let historyName = document.getElementById('historyNameInput').value.trim();
-            if (!historyName) {
-                if (useFirstMessageAsNameSetting() && conversationHistory.length > 0 && conversationHistory[0].role === 'user') {
-                    historyName = conversationHistory[0].parts[0].text.substring(0, 50) || 'No Title';
-                } else {
-                    alert("Vui lòng nhập tên cho lịch sử chat.");
-                    return;
-                }
+            const historyName = document.getElementById('historyNameInput').value.trim();
+            if (historyName) {
+                savedHistories[historyName] = [...conversationHistory];
+                localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
+                alert(`Lịch sử chat đã được lưu với tên: ${historyName}`);
+                loadSavedHistoriesList();
+                closeSaveHistoryModal();
+            } else {
+                alert("Vui lòng nhập tên cho lịch sử chat.");
             }
-
-            savedHistories[historyName] = [...conversationHistory];
-            localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-            alert(`Lịch sử chat đã được lưu với tên: ${historyName}`);
-            loadSavedHistoriesList();
-            closeSaveHistoryModal();
-             currentHistoryName = historyName;
-
         }
 
         function openDeleteHistoryModal(name) {
@@ -989,9 +607,6 @@
             localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
             loadSavedHistoriesList();
             alert(`Lịch sử chat "${historyName}" đã bị xóa.`);
-            if (currentHistoryName === historyName) {
-                currentHistoryName = null;
-            }
 
         }
 
@@ -1003,8 +618,6 @@
                 renderMessages();
                 toggleHistoryMenu();
                 toggleSidebar();
-                currentHistoryName = historyName;
-
             } else {
                 alert("Không tìm thấy lịch sử chat đã lưu.");
             }
@@ -1014,21 +627,10 @@
         function toggleHistoryMenu() {
             const submenu = document.getElementById('saved-histories-menu');
             submenu.classList.toggle('open');
-             hideSettingsMenu();
         }
 
         function hideHistoryMenu() {
             const submenu = document.getElementById('saved-histories-menu');
-            submenu.classList.remove('open');
-        }
-
-        function toggleSettingsMenu() {
-            const submenu = document.getElementById('settings-menu');
-            submenu.classList.toggle('open');
-            hideHistoryMenu();
-        }
-         function hideSettingsMenu() {
-            const submenu = document.getElementById('settings-menu');
             submenu.classList.remove('open');
         }
 
@@ -1078,71 +680,16 @@
 
         loadChatHistory();
         loadSavedHistoriesList();
-        loadSettings();
-        applyTheme();
-
-
-        function triggerFileUpload() {
-            document.getElementById('file-upload').click();
-        }
-
-        function handleFileUpload(files) {
-            if (files && files.length > 0) {
-                const messagesContainer = document.getElementById('messages-container');
-                const aiMessageDiv = document.createElement('div');
-                aiMessageDiv.classList.add('message', 'ai-message');
-                aiMessageDiv.innerHTML = `<span class="ai-message-text">Đang tải tệp...</span>`;
-                messagesContainer.appendChild(aiMessageDiv);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-                let fileNames = Array.from(files).map(file => file.name).join(', ');
-                const userMessage = `Tệp đã tải lên: ${fileNames}. Đang chờ AI xử lý...`;
-
-                const userMessageDiv = document.createElement('div');
-                userMessageDiv.classList.add('message', 'user-message');
-                userMessageDiv.textContent = userMessage;
-                messagesContainer.appendChild(userMessageDiv);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-                const userMessageObject = { role: 'user', parts: [{ text: userMessage }] };
-                conversationHistory.push(userMessageObject);
-                saveChatHistory();
-                renderMessages();
-
-                setTimeout(() => {
-                    aiMessageDiv.remove();
-
-                    const aiResponseDiv = document.createElement('div');
-                    aiResponseDiv.classList.add('message', 'ai-message');
-                    aiResponseDiv.innerHTML = `<span class="ai-message-text">Đã nhận được tệp: ${fileNames}. Vui lòng cho biết bạn muốn AI làm gì với tệp này.</span>`;
-                    messagesContainer.appendChild(aiResponseDiv);
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-                     const aiMessageObject = { role: 'model', parts: [{ text: aiResponseDiv.innerHTML }] };
-                    conversationHistory.push(aiMessageObject);
-                    saveChatHistory();
-                    renderMessages();
-
-                }, 1500);
-            }
-        }
 
 
         async function getGeminiResponse() {
             const userPrompt = document.getElementById('user-prompt').value.trim();
             const messagesContainer = document.getElementById('messages-container');
-            let aiMessageDiv = document.createElement('div'); // Declare aiMessageDiv here
 
             if (!userPrompt) {
                 alert("Vui lòng nhập tin nhắn.");
                 return;
             }
-
-             if (currentHistoryName) {
-                savedHistories[currentHistoryName] = [...conversationHistory, { role: 'user', parts: [{ text: userPrompt }] } ];
-                localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-            }
-
 
             const userMessageObject = { role: 'user', parts: [{ text: userPrompt }] };
             conversationHistory.push(userMessageObject);
@@ -1151,8 +698,9 @@
             document.getElementById('user-prompt').value = '';
 
 
+            const aiMessageDiv = document.createElement('div');
             aiMessageDiv.classList.add('message', 'ai-message');
-            aiMessageDiv.innerHTML = '<span class="ai-message-text">Đang suy nghĩ...</span>';
+            aiMessageDiv.textContent = "Đang suy nghĩ...";
             messagesContainer.appendChild(aiMessageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
@@ -1179,140 +727,66 @@
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    const errorMsg = `Lỗi API: ${response.status} - ${response.statusText} - ${errorData?.error?.message || 'No details provided'}`;
-                    console.error("Lỗi API:", errorMsg);
-                    aiMessageDiv.innerHTML = `<span class="ai-message-text">${errorMsg}</span>`;
+                    console.error("Lỗi API:", errorData);
+                    aiMessageDiv.textContent = `Lỗi API: ${response.status} - ${errorData.error.message || 'Không rõ nguyên nhân'}`;
                     return;
                 }
-
 
                 const data = await response.json();
                 console.log("Dữ liệu phản hồi từ API:", data);
 
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
-                    aiMessageDiv.innerHTML = ''; // Clear "Đang suy nghĩ..." message before adding response
+                    let codeContent = null;
+                    let language = 'text';
+                    const codeBlockRegex = /```([\w]*)\n([\s\S]*?)```/gm;
+                    const matches = [...aiResponseText.matchAll(codeBlockRegex)];
 
-                      // Handle code blocks with ``` or ''' in AI response - important to call renderMessages AFTER this change is made to aiMessageDiv.innerHTML and before appending
-                      aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
+                    if (matches.length > 0) {
+                        let textContent = aiResponseText.split(codeBlockRegex)[0];
+                        if (textContent.trim()) {
+                             aiMessageDiv.innerHTML = textContent.trim();
+                        } else {
+                             aiMessageDiv.textContent = "Đoạn code được tạo:";
+                        }
+
+
+                        matches.forEach(match => {
+                            language = match[1] || 'text';
+                            codeContent = match[2].trim();
+
+                            const blob = new Blob([codeContent], { type: 'text/plain' });
+                            const url = URL.createObjectURL(blob);
+                            const downloadLink = document.createElement('a');
+                            downloadLink.href = url;
+                            downloadLink.download = `code.${language}`;
+                            downloadLink.textContent = `Tải xuống code ${language}`;
+                            downloadLink.style.display = 'block';
+                            downloadLink.style.marginTop = '10px';
+                            aiMessageDiv.appendChild(downloadLink);
+                        });
+
+                    } else {
+                        aiMessageDiv.innerHTML = aiResponseText;
+                    }
 
 
                     const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
-
                     conversationHistory.push(aiMessageObject);
+                    saveChatHistory();
+                    Prism.highlightAllUnder(aiMessageDiv);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
 
-                     if (currentHistoryName) {
-                        savedHistories[currentHistoryName] = [...conversationHistory];
-                        localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-                    } else {
-                         saveChatHistory();
-                    }
-
-                   messagesContainer.appendChild(aiMessageDiv);
-
-
-                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                 }
-                else
-                   aiMessageDiv.innerHTML = `<span class="ai-message-text">Không nhận được phản hồi hợp lệ từ AI.</span>`;
-
+                } else {
+                    aiMessageDiv.textContent = "Không nhận được phản hồi hợp lệ từ AI.";
+                }
 
             } catch (error) {
                 console.error("Lỗi fetch:", error);
-                aiMessageDiv.innerHTML = `<span class="ai-message-text">Đã xảy ra lỗi khi kết nối đến API: ${error}</span>`;
+                aiMessageDiv.textContent = "Đã xảy ra lỗi khi kết nối đến API.";
             }
-
         }
-
-        function loadSettings() {
-            const storedSettings = localStorage.getItem('chatSettings');
-            if (storedSettings) {
-                const settings = JSON.parse(storedSettings);
-                autoSaveHistory = settings.autoSaveHistory !== undefined ? settings.autoSaveHistory : true;
-                useFirstMessageAsName = settings.useFirstMessageAsName !== undefined ? settings.useFirstMessageAsName : false;
-                currentBackgroundColor = settings.backgroundColor || defaultBackgroundColor;
-                currentTextColor = settings.textColor || defaultTextColor;
-                currentContainerColor = settings.containerColor || defaultContainerColor;
-
-
-                document.getElementById('autoSaveHistoryToggle').checked = autoSaveHistory;
-                document.getElementById('useFirstMessageAsNameToggle').checked = useFirstMessageAsName;
-                document.getElementById('backgroundColorPicker').value = currentBackgroundColor;
-                document.getElementById('textColorPicker').value = currentTextColor;
-                document.getElementById('containerColorPicker').value = currentContainerColor;
-
-            } else {
-                 document.getElementById('autoSaveHistoryToggle').checked = true;
-                 document.getElementById('useFirstMessageAsNameToggle').checked = false;
-                 currentBackgroundColor = defaultBackgroundColor;
-                 currentTextColor = defaultTextColor;
-                 currentContainerColor = defaultContainerColor;
-
-            }
-
-            document.getElementById('autoSaveHistoryToggle').addEventListener('change', function() {
-                autoSaveHistory = this.checked;
-            });
-            document.getElementById('useFirstMessageAsNameToggle').addEventListener('change', function() {
-                useFirstMessageAsName = this.checked;
-            });
-            document.getElementById('backgroundColorPicker').addEventListener('change', function() {
-                currentBackgroundColor = this.value;
-            });
-             document.getElementById('textColorPicker').addEventListener('change', function() {
-                currentTextColor = this.value;
-            });
-            document.getElementById('containerColorPicker').addEventListener('change', function() {
-                currentContainerColor = this.value;
-            });
-        }
-
-        function saveSetting(key, value) {
-            let settings = JSON.parse(localStorage.getItem('chatSettings')) || {};
-            settings[key] = value;
-            localStorage.setItem('chatSettings', JSON.stringify(settings));
-        }
-
-        function autoSaveHistorySetting() {
-            return autoSaveHistory;
-        }
-        function useFirstMessageAsNameSetting() {
-            return useFirstMessageAsName;
-        }
-
-
-        function applyTheme() {
-            document.documentElement.style.setProperty('--background-color', currentBackgroundColor);
-            document.documentElement.style.setProperty('--text-color', currentTextColor);
-            document.documentElement.style.setProperty('--container-background-color', currentContainerColor);
-        }
-
-        function saveSettingsAndApplyTheme() {
-            saveSetting('autoSaveHistory', autoSaveHistory);
-            saveSetting('useFirstMessageAsName', useFirstMessageAsName);
-            saveSetting('backgroundColor', currentBackgroundColor);
-            saveSetting('textColor', currentTextColor);
-            saveSetting('containerColor', currentContainerColor);
-            applyTheme();
-            toggleSettingsMenu();
-            alert('Cài đặt đã được lưu và áp dụng!');
-        }
-
-        function resetTheme() {
-            currentBackgroundColor = defaultBackgroundColor;
-            currentTextColor = defaultTextColor;
-            currentContainerColor = defaultContainerColor;
-
-            document.getElementById('backgroundColorPicker').value = currentBackgroundColor;
-            document.getElementById('textColorPicker').value = currentTextColor;
-            document.getElementById('containerColorPicker').value = currentContainerColor;
-
-            applyTheme();
-            alert('Giao diện đã hoàn tác về mặc định. Nhấn "Lưu cài đặt" để lưu thay đổi.');
-        }
-
-
     </script>
 </body>
 </html>
