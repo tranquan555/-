@@ -71,13 +71,13 @@
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6); /* Deeper shadow, more modern */
             display: flex;
             flex-direction: column;
-            height: 100vh; /* Full viewport height */
+            height: calc(100vh - 40px); /* Adjusted height with margin */
             flex-grow: 1;
             margin-left: auto;
             transition: margin-left 0.3s ease, background-color 0.3s ease; /* Container background transition */
             border: none; /* Remove default border */
-            padding-top: max(20px, env(safe-area-inset-top)); /* Reduced top safe area padding */
-            padding-bottom: max(60px, env(safe-area-inset-bottom)); /* Increased bottom safe area padding */
+            padding-top: max(30px, env(safe-area-inset-top)); /* iOS safe area padding */
+            padding-bottom: max(30px, env(safe-area-inset-bottom));
         }
 
         .container.sidebar-open {
@@ -95,7 +95,6 @@
             opacity: 0.95; /* Slightly less opaque text */
             font-weight: 500; /* Medium font weight */
             transition: color 0.3s ease;
-            line-height: 1.2; /* Tighter line height for title */
         }
 
         #messages-container {
@@ -112,9 +111,9 @@
             background-color: #1e2124; /* Consistent background */
              box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.4); /* Deeper inner shadow for depth */
              transition: background-color 0.3s ease; /* Messages container background transition */
-             padding-top: 20px; /* Reduced padding at top of messages */
+             padding-top: 30px; /* Increased padding at top of messages */
+             overflow-y: scroll; /* Ensure scrollable for long content */
         }
-
         #messages-container::-webkit-scrollbar {
             width: 8px;
         }
@@ -129,7 +128,7 @@
         }
 
         .message {
-            margin-bottom: 18px; /* Slightly Reduced margin between messages */
+            margin-bottom: 20px; /* Further Increased margin between messages */
             padding: 14px 20px; /* Adjusted padding */
             border-radius: 24px; /* Even More rounded message bubbles */
             clear: both;
@@ -161,23 +160,23 @@
         .ai-message .ai-message-text {
             font-family: 'Arial', sans-serif;
             font-weight: 400; /* Regular font weight */
-            line-height: 1.7; /* Adjusted line height */
+            line-height: 1.8; /* Further improved line height */
             white-space: pre-line;
-            font-size: 15px; /* Slightly smaller text in messages */
+            font-size: 16px;
              transition: color 0.3s ease; /* AI message text color transition */
         }
 
         .markdown-bold-uppercase {
             font-weight: 600; /* Slightly bolder uppercase text */
             text-transform: uppercase;
-            letter-spacing: 0.6px; /* Adjusted letter spacing */
+            letter-spacing: 0.8px; /* Adjusted letter spacing */
             color: #f0f0f0; /* Slightly lighter color for emphasis */
             opacity: 1; /* Full opacity for emphasized text */
              transition: color 0.3s ease;
         }
 
         .input-area {
-            padding: 14px 24px; /* Adjusted input area padding - more horizontal padding */
+            padding: 16px 24px; /* Adjusted input area padding - more horizontal padding */
             background-color: var(--input-area-background-color);
             border-top: 1px solid #555; /* Thinner border */
             display: flex;
@@ -194,19 +193,19 @@
             border-bottom-right-radius: 24px;
              border-top: 1px solid #444;
              transition: background-color 0.3s ease; /* Input area background transition */
-             padding-bottom: max(20px, env(safe-area-inset-bottom)); /* Increased iOS safe area padding */
+             padding-bottom: max(16px, env(safe-area-inset-bottom)); /* iOS safe area padding */
         }
 
         .input-area textarea {
             flex-grow: 1;
-            padding: 10px 14px; /* Adjusted textarea padding */
+            padding: 12px 16px; /* Adjusted textarea padding */
             border: none; /* Remove textarea border */
             border-radius: 16px; /* More rounded textarea */
-            font-size: 15px; /* Slightly smaller text in textarea */
+            font-size: 16px;
             background-color: var(--input-text-background-color);
             color: #fff;
             resize: none;
-            min-height: 40px; /* Slightly decreased min-height */
+            min-height: 42px; /* Slightly increased min-height */
             overflow-y: auto;
              box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.35); /* Deeper inner shadow for textarea */
              transition: background-color 0.3s ease, color 0.3s ease; /* Textarea background and text color transition */
@@ -219,14 +218,14 @@
         }
 
         .input-area button {
-            padding: 12px 24px; /* Adjusted button padding */
+            padding: 14px 24px; /* Adjusted button padding */
             background-color: var(--button-primary-color);
             color: white;
             border: none;
             border-radius: 16px; /* Rounded button */
             cursor: pointer;
-            font-size: 15px; /* Slightly smaller button text */
-            margin-left: 14px; /* Slightly Reduced button margin */
+            font-size: 16px;
+            margin-left: 16px; /* Increased button margin */
             transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease; /* Button transitions - also borderRadius */
         }
 
@@ -242,12 +241,12 @@
             border-radius: 16px; /* Rounded file button */
             cursor: pointer;
             font-size: 1em;
-            width: 42px; /* Slightly reduced file button width */
-            height: 42px; /* Slightly reduced file button height */
+            width: 44px; /* Slightly wider file button */
+            height: 44px; /* Slightly taller file button */
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-right: 14px; /* Slightly Reduced margin */
+            margin-right: 16px; /* Increased margin */
             opacity: 0.9; /* Increased opacity */
             transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease; /* File button transitions - also borderRadius */
         }
@@ -270,9 +269,9 @@
             transform: translateX(-100%);
             transition: transform 0.3s ease, background-color 0.3s ease; /* Sidebar background transition */
             z-index: 200;
-            padding-top: 60px; /* Reduced sidebar top padding */
+            padding-top: 70px; /* Increased sidebar top padding */
             box-shadow: 6px 0 12px rgba(0,0,0,0.4); /* More pronounced sidebar shadow */
-            overflow-y: auto;
+            overflow-y: auto; /* Enable scroll for sidebar content */
             touch-action: manipulation;
             border-right: 1px solid #444;
              backdrop-filter: blur(12px); /* Stronger frosted glass effect */
@@ -283,10 +282,10 @@
         }
 
         .sidebar-header {
-            padding: 24px 24px; /* Adjusted header padding */
+            padding: 28px 24px; /* Adjusted header padding */
             text-align: center;
             border-bottom: 1px solid #555; /* Thinner header border */
-            margin-bottom: 25px; /* Reduced margin below header */
+            margin-bottom: 30px;
             border-bottom: 1px solid #444;
             transition: background-color 0.3s ease, border-bottom-color 0.3s ease; /* Sidebar header background & border transition */
         }
@@ -294,17 +293,31 @@
         .sidebar-menu {
             padding: 0;
             list-style: none;
+             overflow-y: scroll; /* Make sidebar menu scrollable internally */
+             max-height: calc(100vh - 150px); /* Limit max height for internal scroll */
+        }
+        .sidebar-menu::-webkit-scrollbar {
+            width: 6px; /* Thinner scrollbar for sidebar menu */
         }
 
+        .sidebar-menu::-webkit-scrollbar-track {
+            background: #252525;
+        }
+
+        .sidebar-menu::-webkit-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #444;
+            border-radius: 3px;
+        }
+
+
         .sidebar-menu-item {
-            padding: 16px 24px; /* Adjusted menu item padding */
+            padding: 18px 24px; /* Adjusted menu item padding */
             cursor: pointer;
             transition: background-color 0.2s ease, border-bottom-color 0.3s ease, color 0.3s ease, padding-left 0.2s ease; /* Menu item transitions - also padding-left */
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid transparent; /* Thinner bottom border on hover */
-            font-size: 15px; /* Slightly smaller menu font */
         }
          .sidebar-menu-item:active {
              background-color: #3a3b47; /* slightly darker on active click for feedback */
@@ -320,7 +333,7 @@
         .sidebar-menu-item.has-submenu > .menu-link::after {
             content: '>';
             float: right;
-            margin-left: 10px; /* Reduced margin for submenu indicator */
+            margin-left: 12px;
             font-size: 0.9em;
             display: inline-block;
             color: #aaa; /* Lighter submenu indicator */
@@ -334,35 +347,44 @@
             overflow: hidden;
             box-shadow: 0 5px 10px rgba(0,0,0,0.45); /* Deeper submenu shadow */
             background-color: #2c2c2c;
-            margin-top: 10px; /* Reduced margin top */
+            margin-top: 12px; /* Increased margin top */
             max-height: 0;
             opacity: 0;
             transition: max-height 0.4s ease-out, opacity 0.3s ease-out, background-color 0.3s ease, margin-top 0.3s ease; /* Submenu transitions and background transition & marginTop */
-            overflow-y: hidden;
-            padding-top: 0;
-            padding-bottom: 0;
+            overflow-y: hidden; /* keep submenu hidden by default */
         }
 
         .submenu.open {
             display: block;
             max-height: 600px; /* Increased max-height for submenu */
             opacity: 1;
-            overflow-y: auto;
-            padding-top: 10px; /* Reduced padding top for submenu */
-            padding-bottom: 14px; /* Reduced padding bottom for submenu */
-            margin-top: 14px; /* slightly reduced marginTop when opened */
+            overflow-y: auto; /* Enable scroll for submenu content */
+            padding-top: 12px;
+            padding-bottom: 16px;
+            margin-top: 16px; /* increased marginTop when opened */
+        }
+        .submenu::-webkit-scrollbar {
+            width: 6px; /* Thinner scrollbar for submenu */
+        }
+
+        .submenu::-webkit-scrollbar-track {
+            background: #2c2c2c;
+        }
+
+        .submenu::-webkit-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #444;
+            border-radius: 3px;
         }
 
 
         .submenu-item {
-            padding: 14px 24px; /* Adjusted submenu item padding */
+            padding: 16px 24px; /* Adjusted submenu item padding */
             cursor: pointer;
             transition: background-color 0.2s ease, color 0.3s ease, padding-left 0.2s ease; /* Submenu item transitions - also padding-left */
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #333;
-            font-size: 15px; /* Slightly smaller submenu font */
         }
          .submenu-item:active {
              background-color: #3a3b47; /* slightly darker on active click for feedback */
@@ -390,8 +412,8 @@
             border: none;
             color: #aaa;
             cursor: pointer;
-            font-size: 0.9em; /* Slightly smaller delete button text */
-            padding: 0 8px; /* Adjusted delete button padding */
+            font-size: 1em;
+            padding: 0 10px; /* Adjusted delete button padding */
             opacity: 0.7; /* Lower opacity initially */
             transition: opacity 0.2s ease, color 0.2s ease;
         }
@@ -403,14 +425,14 @@
 
         .sidebar-toggle-button {
             position: fixed;
-            top: 25px; /* Adjusted toggle button position */
-            left: 25px;
+            top: 30px; /* Adjusted toggle button position */
+            left: 30px;
             background: var(--button-primary-color);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 46px; /* Slightly smaller toggle button */
-            height: 46px; /* Slightly smaller toggle button */
+            width: 50px; /* Slightly larger toggle button */
+            height: 50px; /* Slightly larger toggle button */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -440,7 +462,7 @@
             display: none;
             opacity: 0; /* Hidden initially */
             transition: opacity 0.3s ease, background-color 0.3s ease; /* Modal overlay transitions */
-
+            backdrop-filter: blur(10px); /* Apply blur to modal overlay */
         }
 
         .sidebar-overlay.sidebar--open {
@@ -449,18 +471,17 @@
         }
 
         .close-history-menu-btn, .close-settings-menu-btn, .modal-button {
-            padding: 12px 24px; /* Adjusted close button padding */
+            padding: 14px 24px; /* Adjusted close button padding */
             background-color: var(--button-primary-color);
             color: white;
             border: none;
             border-radius: 16px; /* Rounded close button */
             cursor: pointer;
-            margin-top: 18px; /* Slightly reduced marginTop for close buttons */
+            margin-top: 20px; /* Increased marginTop for close buttons */
             display: block;
             margin-left: auto;
             margin-right: auto;
             transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease; /* Close button transitions - also borderRadius */
-            font-size: 15px; /* Slightly smaller close button font */
         }
 
         .close-history-menu-btn:hover, .close-settings-menu-btn:hover, .modal-button.confirm:hover {
@@ -515,11 +536,11 @@
         .custom-modal {
             background-color: var(--modal-background-color);
             color: #fff;
-            padding: 30px; /* Reduced modal padding */
+            padding: 35px; /* Increased modal padding */
             border-radius: 24px; /* More rounded modal */
             box-shadow: 0 16px 32px rgba(0, 0, 0, 0.7); /* Deeper modal shadow */
             width: 85%; /* Slightly wider modal */
-            max-width: 480px; /* Slightly reduced max width for modal */
+            max-width: 500px; /* Increased max width for modal */
             text-align: center;
             border: none; /* Remove default border */
             transform: scale(0.97); /* Start slightly smaller */
@@ -534,8 +555,8 @@
 
 
         .modal-message {
-            margin-bottom: 20px; /* Reduced modal message margin */
-            font-size: 1.1em; /* Slightly smaller modal message font */
+            margin-bottom: 25px; /* Increased modal message margin */
+            font-size: 1.2em; /* Slightly larger modal message font */
              transition: color 0.3s ease; /* Modal message text color transition */
              font-weight: 500; /* Medium font weight for modal message */
              opacity: 0.95;
@@ -543,30 +564,29 @@
 
         .modal-input {
             width: calc(100% - 24px);
-            padding: 12px 14px; /* Adjusted modal input padding */
-            margin-bottom: 20px; /* Reduced margin for modal input */
+            padding: 14px 16px; /* Adjusted modal input padding */
+            margin-bottom: 25px; /* Increased margin for modal input */
             border-radius: 12px;
             border: none; /* Remove modal input border */
             background-color: var(--input-text-background-color);
             color: #fff;
              box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.35); /* Deeper inner shadow for modal input */
              transition: background-color 0.3s ease, color 0.3s ease; /* Modal input background & text transition */
-             font-size: 15px; /* Slightly smaller font for modal input */
         }
 
         .modal-buttons {
             display: flex;
             justify-content: center;
-            gap: 20px; /* Reduced gap between modal buttons */
+            gap: 25px; /* Increased gap between modal buttons */
             margin-top: 10px; /* added margin to the modal buttons group */
         }
 
         .modal-button {
-            padding: 12px 24px; /* Adjusted modal button padding */
+            padding: 14px 28px; /* Adjusted modal button padding */
             border: none;
             border-radius: 16px;
             cursor: pointer;
-            font-size: 15px; /* Slightly smaller modal button font */
+            font-size: 16px;
             transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease; /* Modal buttons transitions - also borderRadius */
             border: none; /* Remove modal button border */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25); /* Add shadow to modal buttons */
@@ -578,22 +598,22 @@
             background: #272822;
             position: relative;
             border-radius: 12px; /* Rounded code blocks */
-            padding: 18px; /* Slightly reduced code block padding */
-            margin-bottom: 18px; /* Slightly reduced margin below code blocks */
+            padding: 20px; /* Increased code block padding */
+            margin-bottom: 20px; /* Increased margin below code blocks */
             overflow-x: auto; /* Horizontal scroll if code is wide */
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); /* Shadow for code blocks */
         }
 
         .copy-code-button {
             position: absolute;
-            top: 10px; /* Adjusted copy button position */
-            right: 10px;
+            top: 12px; /* Adjusted copy button position */
+            right: 12px;
             background-color: #444;
             color: white;
             border: none;
             border-radius: 12px;
-            padding: 7px 11px; /* Adjusted copy button padding */
-            font-size: 0.85em; /* Slightly smaller copy button font */
+            padding: 8px 12px; /* Adjusted copy button padding */
+            font-size: 0.9em;
             cursor: pointer;
             opacity: 0.7; /* slightly lower opacity for copy button */
             transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease; /* Copy button transitions - also borderRadius */
@@ -612,13 +632,13 @@
 
         /* Settings Styles */
         .setting-item {
-            padding: 16px 24px; /* Adjusted setting-item padding */
+            padding: 18px 24px; /* Adjusted setting-item padding */
             border-bottom: 1px solid #333;
             display: flex;
             justify-content: space-between;
             align-items: center;
              transition: background-color 0.3s ease, border-bottom-color 0.3s ease, padding-left 0.2s ease; /* Setting item transitions - also padding-left */
-             font-size: 15px; /* Slightly smaller setting item font */
+             overflow: hidden; /* To contain content and scroll if necessary */
         }
 
         .setting-item:last-child {
@@ -640,6 +660,9 @@
              transition: color 0.3s ease; /* Setting label text color transition */
              opacity: 0.9; /* slightly less opaque setting label */
              font-weight: 400; /* regular font weight for setting labels */
+             overflow: hidden; /* in case label is long */
+             text-overflow: ellipsis; /* add ellipsis if text overflows */
+             white-space: nowrap; /* prevent label from wrapping */
         }
 
         .setting-control {
@@ -649,8 +672,8 @@
         .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 45px; /* Slightly smaller toggle switch */
-            height: 22px; /* Slightly smaller toggle switch */
+            width: 50px;
+            height: 24px;
         }
 
         .toggle-switch input[type="checkbox"] {
@@ -674,8 +697,8 @@
         .slider:before {
             position: absolute;
             content: "";
-            height: 16px; /* Slightly smaller slider handle */
-            width: 16px; /* Slightly smaller slider handle */
+            height: 18px;
+            width: 18px;
             left: 3px;
             bottom: 3px;
             background-color: white;
@@ -692,13 +715,13 @@
         }
 
         input:checked + .slider:before {
-            transform: translateX(23px); /* Adjusted translateX for smaller switch */
+            transform: translateX(26px);
         }
         .color-picker-input {
             padding: 0;
             border: none;
-            width: 28px; /* Slightly smaller color picker */
-            height: 22px; /* Slightly smaller color picker */
+            width: 30px;
+            height: 24px;
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
@@ -718,14 +741,14 @@
         }
         .color-picker-input::-webkit-color-swatch {
             border: 1px solid #555;
-            border-radius: 5px;
+            border-radius: 6px;
         }
         .color-picker-input::-moz-color-swatch-wrapper {
             padding: 0;
         }
         .color-picker-input::-moz-color-swatch {
             border: 1px solid #555;
-            border-radius: 5px;
+            border-radius: 6px;
         }
 
 
@@ -741,7 +764,7 @@
         <div class="sidebar-header">
             <h3>Lịch sử Chat & Cài đặt</h3>
         </div>
-        <ul class="sidebar-menu">
+        <ul class="sidebar-menu" id="sidebar-main-menu"> <!-- Added ID for JS scrolling -->
             <li class="sidebar-menu-item" onclick="startNewChat()">
                 <span class="menu-link">Đoạn chat mới</span>
             </li>
@@ -772,7 +795,7 @@
                 </span>
             </li>
              <li class="setting-item">
-                <span class="setting-label">Tên lịch sử là câu hỏi đầu</span>
+                <span class="setting-label">Tên lịch sử là câu hỏi đầu tiên</span>
                 <span class="setting-control">
                     <label class="toggle-switch">
                         <input type="checkbox" id="useFirstMessageAsNameToggle">
@@ -1384,6 +1407,14 @@
             applyTheme();
             alert('Giao diện đã hoàn tác về mặc định. Nhấn "Lưu cài đặt" để lưu thay đổi.');
         }
+
+        document.getElementById('user-prompt').addEventListener('focus', function() {
+             const messagesContainer = document.getElementById('messages-container');
+             const inputArea = document.querySelector('.input-area');
+             if (messagesContainer) {
+                messagesContainer.scrollIntoView(false); // or inputArea.scrollIntoView(false);
+             }
+        });
 
 
     </script>
