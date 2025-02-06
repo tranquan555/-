@@ -4,27 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Hiện Đại với Gemini</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale: 1.0, user-scalable=no, viewport-fit=cover">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css">
 
-
     <style>
         :root {
-            --background-color: #1e1e1e; /* Darker background */
-            --container-background-color: #282828; /* Darker container */
-            --text-color: #e0e0e0; /* Lighter text */
-            --message-user-background-color: #353535; /* Darker user message */
-            --message-ai-background-color: #424242; /* Darker AI message */
-            --input-area-background-color: #2d2d2d; /* Darker input area */
-            --input-text-background-color: #383838; /* Darker input text */
-            --button-primary-color: #1e88e5; /* Gemini blue */
-            --button-primary-hover-color: #1565c0; /* Darker blue hover */
-            --sidebar-background-color: #202020; /* Darker sidebar */
+            --background-color: #1e1e1e;
+            --container-background-color: #282828;
+            --text-color: #e0e0e0;
+            --message-user-background-color: #353535;
+            --message-ai-background-color: #424242;
+            --input-area-background-color: #2d2d2d;
+            --input-text-background-color: #383838;
+            --button-primary-color: #1e88e5;
+            --button-primary-hover-color: #1565c0;
+            --sidebar-background-color: #202020;
             --sidebar-text-color: #fff;
-            --modal-background-color: #333; /* Darker modal */
+            --modal-background-color: #333;
         }
 
         body {
@@ -47,33 +46,32 @@
             font-size: 16px;
             overflow-y: scroll;
             scrollbar-width: thin;
-            scrollbar-color: #555 #202020; /* Adjusted scrollbar colors */
+            scrollbar-color: #555 #202020;
             transition: background-color 0.3s ease, color 0.3s ease;
             overscroll-behavior-y: none;
         }
 
         body::-webkit-scrollbar {
-            width: 6px; /* Thinner scrollbar */
+            width: 6px;
         }
 
         body::-webkit-scrollbar-track {
-            background: #202020; /* Darker scrollbar track */
+            background: #202020;
         }
 
         body::-webkit-scrollbar-thumb {
             background-color: #555;
-            border-radius: 3px; /* Rounded scrollbar thumb */
+            border-radius: 3px;
         }
-
 
         .container {
             width: 95%;
-            max-width: 1200px; /* Slightly reduced max width */
+            max-width: 1200px;
             margin: 20px auto;
-            padding: 25px; /* Slightly reduced padding */
+            padding: 25px;
             background-color: var(--container-background-color);
-            border-radius: 18px; /* Less rounded corners */
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* Reduced shadow intensity */
+            border-radius: 18px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
             height: calc(100vh - 40px);
@@ -86,17 +84,17 @@
         }
 
         .container.sidebar-open {
-            margin-left: 240px; /* Adjusted sidebar width */
+            margin-left: 240px;
         }
 
         h1 {
             text-align: center;
             color: #fff;
-            margin-bottom: 25px; /* Reduced margin */
-            font-size: 2.4em; /* Slightly smaller font size */
-            letter-spacing: -0.5px; /* Reduced letter spacing */
-            padding-bottom: 20px; /* Reduced padding */
-            border-bottom: 1px solid #555; /* Lighter border */
+            margin-bottom: 25px;
+            font-size: 2.4em;
+            letter-spacing: -0.5px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #555;
             opacity: 0.9;
             font-weight: 500;
             transition: color 0.3s ease;
@@ -104,44 +102,45 @@
 
         #messages-container {
             flex-grow: 1;
-            padding: 20px; /* Reduced padding */
+            padding: 20px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             scrollbar-width: thin;
-            scrollbar-color: #666 #202020; /* Adjusted scrollbar colors */
-            padding-bottom: 70px; /* Reduced padding */
+            scrollbar-color: #666 #202020;
+            padding-bottom: 70px;
             border: none;
-            border-radius: 12px; /* Less rounded corners */
-            background-color: #252525; /* Slightly darker messages container */
-             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3); /* Reduced shadow */
-             transition: background-color 0.3s ease;
-             padding-top: 25px; /* Reduced padding */
+            border-radius: 12px;
+            background-color: #252525;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease;
+            padding-top: 25px;
+            position: relative; /* For copy notification positioning */
         }
 
         #messages-container::-webkit-scrollbar {
-            width: 6px; /* Thinner scrollbar */
+            width: 6px;
         }
 
         #messages-container::-webkit-scrollbar::-webkit-scrollbar-track {
-            background: #202020; /* Darker scrollbar track */
+            background: #202020;
         }
 
         #messages-container::-webkit-scrollbar::-webkit-scrollbar-thumb {
             background-color: #666;
-            border-radius: 3px; /* Rounded scrollbar thumb */
+            border-radius: 3px;
         }
 
         .message {
-            margin-bottom: 15px; /* Reduced margin */
-            padding: 12px 18px; /* Reduced padding */
-            border-radius: 18px; /* Less rounded corners */
+            margin-bottom: 15px;
+            padding: 12px 18px;
+            border-radius: 18px;
             clear: both;
             word-wrap: break-word;
-            max-width: 90%; /* Slightly reduced message max width */
+            max-width: 90%;
             display: inline-block;
-             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Reduced shadow */
-             transition: background-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease;
         }
 
         .user-message {
@@ -149,8 +148,8 @@
             color: #fff;
             align-self: flex-end;
             float: right;
-            border-top-right-radius: 6px; /* Less rounded corners */
-            border-bottom-right-radius: 18px; /* Less rounded corners */
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 18px;
         }
 
         .ai-message {
@@ -158,32 +157,51 @@
             color: var(--text-color);
             align-self: flex-start;
             float: left;
-            border-top-left-radius: 6px; /* Less rounded corners */
-            border-bottom-left-radius: 18px; /* Less rounded corners */
+            border-top-left-radius: 6px;
+            border-bottom-left-radius: 18px;
         }
 
         .ai-message .ai-message-text {
             font-family: 'Arial', sans-serif;
             font-weight: 400;
-            line-height: 1.7; /* Slightly tighter line height */
+            line-height: 1.7;
             white-space: pre-line;
-            font-size: 15px; /* Slightly smaller font size */
-             transition: color 0.3s ease;
+            font-size: 15px;
+            transition: color 0.3s ease;
+            display: block; /* Ensure proper spacing for nested elements */
+        }
+
+        .ai-message ul, .ai-message ol {
+            padding-left: 20px; /* Add list indentation */
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .ai-message blockquote {
+            border-left: 2px solid #777;
+            padding-left: 10px;
+            margin: 10px 0;
+            color: #ccc; /* Lighter quote color */
+        }
+
+        .ai-message strong, .ai-message b {
+            font-weight: bold;
+            opacity: 0.95; /* Slightly emphasized bold text */
         }
 
         .markdown-bold-uppercase {
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.6px; /* Reduced letter spacing */
+            letter-spacing: 0.6px;
             color: #f0f0f0;
             opacity: 1;
-             transition: color 0.3s ease;
+            transition: color 0.3s ease;
         }
 
         .input-area {
-            padding: 14px 20px; /* Reduced padding */
+            padding: 14px 20px;
             background-color: var(--input-area-background-color);
-            border-top: 1px solid #444; /* Lighter border */
+            border-top: 1px solid #444;
             display: flex;
             align-items: center;
             position: fixed;
@@ -194,92 +212,91 @@
             padding-left: 20px;
             padding-right: 20px;
             z-index: 100;
-            border-bottom-left-radius: 18px; /* Less rounded corners */
-            border-bottom-right-radius: 18px; /* Less rounded corners */
-             border-top: 1px solid #444; /* Lighter border */
-             transition: background-color 0.3s ease;
-             padding-bottom: max(14px, env(safe-area-inset-bottom)); /* Reduced padding */
+            border-bottom-left-radius: 18px;
+            border-bottom-right-radius: 18px;
+            border-top: 1px solid #444;
+            transition: background-color 0.3s ease;
+            padding-bottom: max(14px, env(safe-area-inset-bottom));
         }
 
         .input-area textarea {
             flex-grow: 1;
-            padding: 10px 14px; /* Reduced padding */
+            padding: 10px 14px;
             border: none;
-            border-radius: 12px; /* Less rounded corners */
-            font-size: 15px; /* Slightly smaller font size */
+            border-radius: 12px;
+            font-size: 15px;
             background-color: var(--input-text-background-color);
             color: #fff;
             resize: none;
-            min-height: 40px; /* Slightly reduced height */
+            min-height: 40px;
             overflow-y: auto;
-             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3); /* Reduced shadow */
-             transition: background-color 0.3s ease, color 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .input-area textarea:focus {
             border-color: var(--button-primary-color);
             outline: none;
-            box-shadow: 0 0 6px rgba(30, 136, 229, 0.7); /* Gemini blue shadow */
+            box-shadow: 0 0 6px rgba(30, 136, 229, 0.7);
         }
 
         .input-area button {
-            padding: 12px 20px; /* Reduced padding */
+            padding: 12px 20px;
             background-color: var(--button-primary-color);
             color: white;
             border: none;
-            border-radius: 12px; /* Less rounded corners */
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 15px; /* Slightly smaller font size */
-            margin-left: 14px; /* Reduced margin */
+            font-size: 15px;
+            margin-left: 14px;
             transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
         }
 
         .input-area button:hover {
             background-color: var(--button-primary-hover-color);
-            transform: scale(1.02); /* Reduced scale on hover */
+            transform: scale(1.02);
         }
 
         .file-upload-button {
-            background-color: #444; /* Darker button */
+            background-color: #444;
             color: white;
             border: none;
-            border-radius: 12px; /* Less rounded corners */
+            border-radius: 12px;
             cursor: pointer;
             font-size: 1em;
-            width: 40px; /* Reduced size */
-            height: 40px; /* Reduced size */
+            width: 40px;
+            height: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-right: 14px; /* Reduced margin */
-            opacity: 0.8; /* Reduced opacity */
+            margin-right: 14px;
+            opacity: 0.8;
             transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
         }
 
         .file-upload-button:hover {
             opacity: 1;
-            background-color: #555; /* Lighter hover background */
-             transform: scale(1.02); /* Reduced scale on hover */
+            background-color: #555;
+            transform: scale(1.02);
         }
-
 
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
-            width: 240px; /* Adjusted sidebar width */
+            width: 240px;
             height: 100%;
             background-color: var(--sidebar-background-color);
             color: var(--sidebar-text-color);
             transform: translateX(-100%);
             transition: transform 0.3s ease, background-color 0.3s ease;
             z-index: 200;
-            padding-top: 60px; /* Reduced padding */
-            box-shadow: 4px 0 8px rgba(0,0,0,0.3); /* Reduced shadow */
+            padding-top: 60px;
+            box-shadow: 4px 0 8px rgba(0, 0, 0, 0.3);
             overflow-y: auto;
             touch-action: manipulation;
-            border-right: 1px solid #444; /* Lighter border */
-             backdrop-filter: blur(8px); /* Reduced blur */
+            border-right: 1px solid #444;
+            backdrop-filter: blur(8px);
         }
 
         .sidebar.sidebar--open {
@@ -287,10 +304,10 @@
         }
 
         .sidebar-header {
-            padding: 24px 20px; /* Reduced padding */
+            padding: 24px 20px;
             text-align: center;
-            border-bottom: 1px solid #444; /* Lighter border */
-            margin-bottom: 25px; /* Reduced margin */
+            border-bottom: 1px solid #444;
+            margin-bottom: 25px;
             transition: background-color 0.3s ease, border-bottom-color 0.3s ease;
         }
 
@@ -300,7 +317,7 @@
         }
 
         .sidebar-menu-item {
-            padding: 16px 20px; /* Reduced padding */
+            padding: 16px 20px;
             cursor: pointer;
             transition: background-color 0.2s ease, border-bottom-color 0.3s ease, color 0.3s ease, padding-left 0.2s ease;
             display: flex;
@@ -308,22 +325,22 @@
             align-items: center;
             border-bottom: 1px solid transparent;
         }
-         .sidebar-menu-item:active {
-             background-color: #333; /* Darker active background */
-         }
 
+        .sidebar-menu-item:active {
+            background-color: #333;
+        }
 
         .sidebar-menu-item:hover {
-            background-color: #303030; /* Darker hover background */
-             border-bottom-color: var(--button-primary-color);
-             padding-left: 26px; /* Reduced padding */
+            background-color: #303030;
+            border-bottom-color: var(--button-primary-color);
+            padding-left: 26px;
         }
 
         .sidebar-menu-item.has-submenu > .menu-link::after {
             content: '>';
             float: right;
-            margin-left: 10px; /* Reduced margin */
-            font-size: 0.85em; /* Slightly smaller font size */
+            margin-left: 10px;
+            font-size: 0.85em;
             display: inline-block;
             color: #aaa;
         }
@@ -332,14 +349,14 @@
             list-style: none;
             padding-left: 0;
             margin: 0;
-            border-radius: 12px; /* Less rounded corners */
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.35); /* Reduced shadow */
-            background-color: #282828; /* Darker submenu background */
-            margin-top: 10px; /* Reduced margin */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35);
+            background-color: #282828;
+            margin-top: 10px;
             max-height: 0;
             opacity: 0;
-            transition: max-height 0.3s ease-out, opacity 0.2s ease-out, background-color 0.3s ease, margin-top 0.2s ease; /* Adjusted transition speed */
+            transition: max-height 0.3s ease-out, opacity 0.2s ease-out, background-color 0.3s ease, margin-top 0.2s ease;
             overflow-y: hidden;
             padding-top: 0;
             padding-bottom: 0;
@@ -347,88 +364,87 @@
 
         .submenu.open {
             display: block;
-            max-height: 500px; /* Reduced max height */
+            max-height: 500px;
             opacity: 1;
             overflow-y: auto;
-            padding-top: 10px; /* Reduced padding */
-            padding-bottom: 14px; /* Reduced padding */
-            margin-top: 12px; /* Reduced margin */
+            padding-top: 10px;
+            padding-bottom: 14px;
+            margin-top: 12px;
         }
 
-
         .submenu-item {
-            padding: 14px 20px; /* Reduced padding */
+            padding: 14px 20px;
             cursor: pointer;
             transition: background-color 0.2s ease, color 0.3s ease, padding-left 0.2s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #333; /* Darker border */
+            border-bottom: 1px solid #333;
         }
-         .submenu-item:active {
-             background-color: #333; /* Darker active background */
-         }
 
+        .submenu-item:active {
+            background-color: #333;
+        }
 
         .submenu-item:last-child {
             border-bottom: none;
         }
 
-
         .submenu-item:hover {
-            background-color: #303030; /* Darker hover background */
-            padding-left: 26px; /* Reduced padding */
+            background-color: #303030;
+            padding-left: 26px;
         }
 
         .history-name {
             flex-grow: 1;
-             transition: color 0.3s ease;
-             opacity: 0.85; /* Reduced opacity */
+            transition: color 0.3s ease;
+            opacity: 0.85;
         }
 
         .delete-history-btn {
             background: transparent;
             border: none;
-            color: #999; /* Lighter color */
+            color: #999;
             cursor: pointer;
-            font-size: 0.9em; /* Slightly smaller font size */
-            padding: 0 8px; /* Reduced padding */
-            opacity: 0.6; /* Reduced opacity */
+            font-size: 0.9em;
+            padding: 0 8px;
+            opacity: 0.6;
             transition: opacity 0.2s ease, color 0.2s ease;
         }
 
         .delete-history-btn:hover {
             opacity: 1;
-            color: #ccc; /* Lighter hover color */
+            color: #ccc;
         }
 
         .sidebar-toggle-button {
             position: fixed;
-            top: 25px; /* Reduced top position */
-            left: 25px; /* Reduced left position */
+            top: 25px;
+            left: 25px;
             background: var(--button-primary-color);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 44px; /* Reduced size */
-            height: 44px; /* Reduced size */
+            width: 44px;
+            height: 44px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             z-index: 300;
-             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Reduced shadow */
-             transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
         }
 
         .sidebar-toggle-button:hover {
             background-color: var(--button-primary-hover-color);
-             transform: scale(1.03);
+            transform: scale(1.03);
         }
+
         .sidebar-toggle-button:active {
-             transform: scale(0.97);
-             opacity: 0.9; /* Reduced opacity on active */
-         }
+            transform: scale(0.97);
+            opacity: 0.9;
+        }
 
         .sidebar-overlay {
             position: fixed;
@@ -436,12 +452,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Slightly lighter overlay */
+            background-color: rgba(0, 0, 0, 0.5);
             z-index: 150;
             display: none;
             opacity: 0;
             transition: opacity 0.3s ease, background-color 0.3s ease;
-
         }
 
         .sidebar-overlay.sidebar--open {
@@ -450,13 +465,13 @@
         }
 
         .close-history-menu-btn, .close-settings-menu-btn, .modal-button {
-            padding: 12px 20px; /* Reduced padding */
+            padding: 12px 20px;
             background-color: var(--button-primary-color);
             color: white;
             border: none;
-            border-radius: 12px; /* Less rounded corners */
+            border-radius: 12px;
             cursor: pointer;
-            margin-top: 18px; /* Reduced margin */
+            margin-top: 18px;
             display: block;
             margin-left: auto;
             margin-right: auto;
@@ -465,28 +480,28 @@
 
         .close-history-menu-btn:hover, .close-settings-menu-btn:hover, .modal-button.confirm:hover {
             background-color: var(--button-primary-hover-color);
-             transform: scale(1.02); /* Reduced scale on hover */
+            transform: scale(1.02);
         }
-         .close-history-menu-btn:active, .close-settings-menu-btn:active,  .modal-button.confirm:active {
-             transform: scale(0.97);
-             opacity: 0.9; /* Reduced opacity on active */
-         }
 
+        .close-history-menu-btn:active, .close-settings-menu-btn:active, .modal-button.confirm:active {
+            transform: scale(0.97);
+            opacity: 0.9;
+        }
 
-         .modal-button.cancel {
-            background-color: #505050; /* Darker cancel button */
+        .modal-button.cancel {
+            background-color: #505050;
             color: white;
         }
 
         .modal-button.cancel:hover {
-            background-color: #606060; /* Lighter hover background */
-             transform: scale(1.02); /* Reduced scale on hover */
+            background-color: #606060;
+            transform: scale(1.02);
         }
-         .modal-button.cancel:active {
-             transform: scale(0.97);
-             opacity: 0.9; /* Reduced opacity on active */
-         }
 
+        .modal-button.cancel:active {
+            transform: scale(0.97);
+            opacity: 0.9;
+        }
 
         .custom-modal-overlay {
             display: none;
@@ -495,14 +510,14 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); /* Slightly lighter overlay */
+            background-color: rgba(0, 0, 0, 0.6);
             z-index: 400;
             justify-content: center;
             align-items: center;
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.3s ease, background-color 0.3s ease;
-            backdrop-filter: blur(8px); /* Reduced blur */
+            backdrop-filter: blur(8px);
         }
 
         .custom-modal-overlay.show-modal {
@@ -511,18 +526,17 @@
             pointer-events: auto;
         }
 
-
         .custom-modal {
             background-color: var(--modal-background-color);
             color: #fff;
-            padding: 30px; /* Reduced padding */
-            border-radius: 18px; /* Less rounded corners */
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6); /* Reduced shadow */
-            width: 80%; /* Reduced width */
-            max-width: 450px; /* Reduced max width */
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
+            width: 80%;
+            max-width: 450px;
             text-align: center;
             border: none;
-            transform: scale(0.96); /* Reduced scale */
+            transform: scale(0.96);
             opacity: 0;
             transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, border-radius 0.3s ease;
         }
@@ -532,126 +546,132 @@
             opacity: 1;
         }
 
-
         .modal-message {
-            margin-bottom: 20px; /* Reduced margin */
-            font-size: 1.1em; /* Slightly smaller font size */
-             transition: color 0.3s ease;
-             font-weight: 500;
-             opacity: 0.9; /* Reduced opacity */
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+            font-weight: 500;
+            opacity: 0.9;
         }
 
         .modal-input {
-            width: calc(100% - 20px); /* Reduced width */
-            padding: 12px 14px; /* Reduced padding */
-            margin-bottom: 20px; /* Reduced margin */
-            border-radius: 10px; /* Less rounded corners */
+            width: calc(100% - 20px);
+            padding: 12px 14px;
+            margin-bottom: 20px;
+            border-radius: 10px;
             border: none;
             background-color: var(--input-text-background-color);
             color: #fff;
-             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3); /* Reduced shadow */
-             transition: background-color 0.3s ease, color 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .modal-buttons {
             display: flex;
             justify-content: center;
-            gap: 20px; /* Reduced gap */
-            margin-top: 8px; /* Reduced margin */
+            gap: 20px;
+            margin-top: 8px;
         }
 
         .modal-button {
-            padding: 12px 24px; /* Reduced padding */
+            padding: 12px 24px;
             border: none;
-            border-radius: 12px; /* Less rounded corners */
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 15px; /* Slightly smaller font size */
+            font-size: 15px;
             transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
             border: none;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Reduced shadow */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
 
         code[class*="language-"],
         pre[class*="language-"] {
-            color: #abb2bf; /* Lighter code text color */
-            background-color: #2e3440; /* Gemini code block background */
+            color: #abb2bf;
+            background-color: #2e3440;
             position: relative;
             overflow-x: auto;
-             padding: 1.25em 1.5em; /* Adjusted padding for code blocks */
-             border-radius: 12px; /* Slightly more rounded code blocks */
-             margin-bottom: 18px;
-             z-index: 1;
-             font-size: 14px; /* Slightly smaller code font */
-             border: 1px solid #444; /* Subtle border for code blocks */
+            padding: 1.25em 1.5em;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            z-index: 1;
+            font-size: 14px;
+            border: 1px solid #444;
         }
 
-       .copy-code-button {
+        .copy-code-button {
             position: absolute;
-            top: 10px; /* Adjust button position */
-            right: 10px; /* Adjust button position */
-            background-color: rgba(255, 255, 255, 0.08); /* Semi-transparent button background */
-            color: #ddd; /* Lighter button text color */
-            border: 1px solid #666; /* Darker button border */
-            border-radius: 8px; /* More rounded button corners */
-            padding: 5px 8px; /* Reduced button padding */
-            font-size: 0.75em; /* Smaller button font size */
+            bottom: 10px; /* Move to bottom */
+            left: 10px; /* Move to left */
+            background-color: rgba(255, 255, 255, 0.08);
+            color: #ddd;
+            border: 1px solid #666;
+            border-radius: 8px;
+            padding: 5px 8px;
+            font-size: 0.75em;
             cursor: pointer;
-            opacity: 0.7; /* Reduced button opacity */
+            opacity: 0.7;
             transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
             z-index: 2;
+            display: flex; /* For aligning text and icon */
+            align-items: center;
         }
+
         .copy-code-button:hover {
             opacity: 1;
-            background-color: rgba(30, 136, 229, 0.2); /* Gemini blue hover */
+            background-color: rgba(30, 136, 229, 0.2);
             color: white;
             border-color: var(--button-primary-color);
         }
+
+        .copy-code-button .fa-copy {
+            margin-right: 5px; /* Space between icon and text */
+        }
+
+        .copy-success-message {
+            color: #4CAF50; /* Green color for success */
+            font-size: 0.85em;
+            margin-left: 5px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .copy-success-message.show {
+            opacity: 1;
+        }
+
+
         pre[class*="language-"] {
             position: relative;
             z-index: 0;
         }
 
-        /* Success Notification Styles */
+        /* Success Notification Styles (removed global notification, using in-block message now) */
         .copy-success-notification {
-            position: absolute; /* Changed to absolute positioning */
-            top: -45px; /* Positioned above messages container */
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px; /* Reduced padding */
-            border-radius: 6px; /* Less rounded corners */
-            opacity: 0;
-            visibility: hidden;
-            z-index: 500;
-            transition: opacity 0.3s ease, visibility 0.3s ease, top 0.3s ease; /* Added top transition */
-        }
-
-        .copy-success-notification.show {
-            opacity: 1;
-            visibility: visible;
-            top: -20px; /* Slide down slightly when shown */
+            display: none!important; /* Hide global notification */
         }
 
 
         /* Settings Styles */
         .setting-item .toggle-switch .slider {
-            background-color: #666; /* Darker slider background */
+            background-color: #666;
         }
+
         .setting-item .toggle-switch input:checked + .slider {
             background-color: var(--button-primary-color);
         }
+
         .setting-item {
             padding: 14px 20px;
         }
+
         .setting-item:hover {
-             background-color: #303030;
-             padding-left: 26px;
+            background-color: #303030;
+            padding-left: 26px;
         }
+
         .setting-label {
             opacity: 0.9;
         }
-
 
     </style>
 
@@ -671,10 +691,10 @@
             </li>
             <li class="sidebar-menu-item has-submenu" onclick="toggleHistoryMenu()">
                 <span class="menu-link">Lịch sử đã lưu</span>
-                </li>
+            </li>
             <li class="sidebar-menu-item has-submenu" onclick="toggleSettingsMenu()">
                 <span class="menu-link">Cài đặt</span>
-                </li>
+            </li>
         </ul>
 
         <ul class="submenu" id="saved-histories-menu">
@@ -692,7 +712,7 @@
                     </label>
                 </span>
             </li>
-             <li class="setting-item">
+            <li class="setting-item">
                 <span class="setting-label">Tên lịch sử là câu hỏi đầu</span>
                 <span class="setting-control">
                     <label class="toggle-switch">
@@ -701,19 +721,19 @@
                     </label>
                 </span>
             </li>
-             <li class="setting-item">
+            <li class="setting-item">
                 <span class="setting-label">Màu nền</span>
                 <span class="setting-control">
                     <input type="color" id="backgroundColorPicker" class="color-picker-input" value="#1e1e1e">
                 </span>
             </li>
-             <li class="setting-item">
+            <li class="setting-item">
                 <span class="setting-label">Màu chữ</span>
                 <span class="setting-control">
                     <input type="color" id="textColorPicker" class="color-picker-input" value="#e0e0e0">
                 </span>
             </li>
-             <li class="setting-item">
+            <li class="setting-item">
                 <span class="setting-label">Màu nền hộp chat</span>
                 <span class="setting-control">
                     <input type="color" id="containerColorPicker" class="color-picker-input" value="#282828">
@@ -724,7 +744,6 @@
                 <button class="modal-button cancel" onclick="resetTheme()">Hoàn tác</button>
             </li>
         </ul>
-
 
         <div class="custom-modal-overlay" id="saveHistoryModalOverlay">
             <div class="custom-modal">
@@ -737,7 +756,7 @@
             </div>
         </div>
 
-         <div class="custom-modal-overlay" id="deleteHistoryModalOverlay">
+        <div class="custom-modal-overlay" id="deleteHistoryModalOverlay">
             <div class="custom-modal">
                 <p class="modal-message" id="deleteConfirmationMessage">Bạn có chắc chắn muốn xóa lịch sử chat "<span id="historyNameToDelete"></span>" không?</p>
                 <div class="modal-buttons">
@@ -772,7 +791,7 @@
             <textarea id="user-prompt" placeholder="Nhập tin nhắn"></textarea>
             <button onclick="getGeminiResponse()">Gửi</button>
         </div>
-         <input type="file" id="file-upload" style="display:none" multiple onchange="handleFileUpload(this.files)">
+        <input type="file" id="file-upload" style="display:none" multiple onchange="handleFileUpload(this.files)">
     </div>
 
 
@@ -782,7 +801,7 @@
 
         const apiKey = 'AIzaSyAd9p1hXhUcRx4Pz7EmbUKC-V8ULN8L61Q';
         const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
-        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
+        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường. Định dạng văn bản theo phong cách markdown để dễ đọc, bao gồm danh sách, trích dẫn và in đậm khi cần thiết.";
 
         let conversationHistory = [];
         let savedHistories = {};
@@ -800,14 +819,20 @@
 
         let currentHistoryName = null;
 
-
         document.body.addEventListener('click', async (event) => {
             if (event.target.classList.contains('copy-code-button')) {
-                const codeElement = event.target.closest('pre').querySelector('code');
+                const codeBlock = event.target.closest('pre');
+                const codeElement = codeBlock.querySelector('code');
+                const successMessage = codeBlock.querySelector('.copy-success-message');
                 if (codeElement) {
                     try {
                         await navigator.clipboard.writeText(codeElement.textContent);
-                        showCopyNotification();
+                        if (successMessage) {
+                            successMessage.classList.add('show');
+                            setTimeout(() => {
+                                successMessage.classList.remove('show');
+                            }, 1500); // Shorter duration
+                        }
                     } catch (err) {
                         console.error('Failed to copy code: ', err);
                         alert('Failed to copy code.');
@@ -816,13 +841,6 @@
             }
         });
 
-        function showCopyNotification() {
-            const notification = document.getElementById('copyNotification');
-            notification.classList.add('show');
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 2000);
-        }
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -832,7 +850,7 @@
             container.classList.toggle('container.sidebar-open');
             overlay.classList.toggle('sidebar--open');
             if (sidebar.classList.contains('sidebar--open')) {
-                 loadSavedHistoriesList();
+                loadSavedHistoriesList();
             } else {
                 hideHistoryMenu();
                 hideSettingsMenu();
@@ -860,21 +878,20 @@
             messagesContainer.innerHTML = `
                 <div class="copy-success-notification" id="copyNotification">
                     Đã sao chép vào clipboard!
-                </div>`; // Reset notification within container
+                </div>`; // Reset notification - although it's hidden, keep in HTML
+
             conversationHistory.forEach(message => {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
                 let messageText = message.parts[0].text;
                 if (message.role === 'ai') {
                     messageDiv.innerHTML = `<span class="ai-message-text">${messageText}</span>`;
-
-                    messageDiv.querySelectorAll('pre').forEach(codeBlock => {
-                        let buttonExists =  codeBlock.querySelector('.copy-code-button') !== null;
-                         if(!buttonExists ) {
-                             codeBlock.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>');
-                         }
-                         hljs.highlightBlock(codeBlock); // Apply Highlight.js to code blocks
+                    messageDiv.querySelectorAll('pre code').forEach(codeBlock => {
+                         codeBlock.parentNode.insertAdjacentHTML('beforeend', `<button class="copy-code-button"><i class="fas fa-copy"></i><span class="copy-success-message">Đã sao chép!</span></button>`);
+                        hljs.highlightBlock(codeBlock);
                     });
+
+
                 } else {
                     messageDiv.innerHTML = messageText;
                 }
@@ -885,7 +902,7 @@
 
 
         function startNewChat() {
-             if (currentHistoryName) {
+            if (currentHistoryName) {
                 savedHistories[currentHistoryName] = [...conversationHistory];
                 localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
             }
@@ -895,7 +912,6 @@
             currentHistoryName = null;
             toggleSidebar();
         }
-
 
         function openSaveHistoryModal() {
             document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
@@ -926,7 +942,7 @@
             alert(`Lịch sử chat đã được lưu với tên: ${historyName}`);
             loadSavedHistoriesList();
             closeSaveHistoryModal();
-             currentHistoryName = historyName;
+            currentHistoryName = historyName;
 
         }
 
@@ -948,7 +964,6 @@
             closeDeleteHistoryModal();
         }
 
-
         function deleteSavedHistory(historyName) {
             delete savedHistories[historyName];
             localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
@@ -957,9 +972,7 @@
             if (currentHistoryName === historyName) {
                 currentHistoryName = null;
             }
-
         }
-
 
         function loadChatHistoryByName(historyName) {
             if (savedHistories[historyName]) {
@@ -975,11 +988,10 @@
             }
         }
 
-
         function toggleHistoryMenu() {
             const submenu = document.getElementById('saved-histories-menu');
             submenu.classList.toggle('open');
-             hideSettingsMenu();
+            hideSettingsMenu();
         }
 
         function hideHistoryMenu() {
@@ -992,11 +1004,11 @@
             submenu.classList.toggle('open');
             hideHistoryMenu();
         }
-         function hideSettingsMenu() {
+
+        function hideSettingsMenu() {
             const submenu = document.getElementById('settings-menu');
             submenu.classList.remove('open');
         }
-
 
         function loadSavedHistoriesList() {
             const historiesMenu = document.getElementById('saved-histories-menu');
@@ -1040,7 +1052,6 @@
             }
         }
 
-
         loadChatHistory();
         loadSavedHistoriesList();
         loadSettings();
@@ -1083,7 +1094,7 @@
                     messagesContainer.appendChild(aiResponseDiv);
                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-                     const aiMessageObject = { role: 'model', parts: [{ text: aiResponseDiv.innerHTML }] };
+                    const aiMessageObject = { role: 'model', parts: [{ text: aiResponseDiv.innerHTML }] };
                     conversationHistory.push(aiMessageObject);
                     saveChatHistory();
                     renderMessages();
@@ -1096,15 +1107,15 @@
         async function getGeminiResponse() {
             const userPrompt = document.getElementById('user-prompt').value.trim();
             const messagesContainer = document.getElementById('messages-container');
-            let aiMessageDiv = document.createElement('div'); // Declare aiMessageDiv here
+            let aiMessageDiv = document.createElement('div');
 
             if (!userPrompt) {
                 alert("Vui lòng nhập tin nhắn.");
                 return;
             }
 
-             if (currentHistoryName) {
-                savedHistories[currentHistoryName] = [...conversationHistory, { role: 'user', parts: [{ text: userPrompt }] } ];
+            if (currentHistoryName) {
+                savedHistories[currentHistoryName] = [...conversationHistory, { role: 'user', parts: [{ text: userPrompt }] }];
                 localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
             }
 
@@ -1156,28 +1167,30 @@
 
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
-                    aiMessageDiv.innerHTML = ''; // Clear "Đang suy nghĩ..." message before adding response
+                    aiMessageDiv.innerHTML = '';
 
-                      aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
+                    aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
 
                     const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
-
                     conversationHistory.push(aiMessageObject);
 
 
-                     if (currentHistoryName) {
+                    if (currentHistoryName) {
                         savedHistories[currentHistoryName] = [...conversationHistory];
                         localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
                     } else {
-                         saveChatHistory();
+                        saveChatHistory();
                     }
 
-                   messagesContainer.appendChild(aiMessageDiv);
+                    messagesContainer.appendChild(aiMessageDiv);
+                    renderMessages(); // Re-render messages to apply code highlighting and copy buttons
 
-                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                 }
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+
+                }
                 else
-                   aiMessageDiv.innerHTML = `<span class="ai-message-text">Không nhận được phản hồi hợp lệ từ AI.</span>`;
+                    aiMessageDiv.innerHTML = `<span class="ai-message-text">Không nhận được phản hồi hợp lệ từ AI.</span>`;
 
 
             } catch (error) {
@@ -1205,27 +1218,26 @@
                 document.getElementById('containerColorPicker').value = currentContainerColor;
 
             } else {
-                 document.getElementById('autoSaveHistoryToggle').checked = true;
-                 document.getElementById('useFirstMessageAsNameToggle').checked = false;
-                 currentBackgroundColor = defaultBackgroundColor;
-                 currentTextColor = defaultTextColor;
-                 currentContainerColor = defaultContainerColor;
-
+                document.getElementById('autoSaveHistoryToggle').checked = true;
+                document.getElementById('useFirstMessageAsNameToggle').checked = false;
+                currentBackgroundColor = defaultBackgroundColor;
+                currentTextColor = defaultTextColor;
+                currentContainerColor = defaultContainerColor;
             }
 
-            document.getElementById('autoSaveHistoryToggle').addEventListener('change', function() {
+            document.getElementById('autoSaveHistoryToggle').addEventListener('change', function () {
                 autoSaveHistory = this.checked;
             });
-            document.getElementById('useFirstMessageAsNameToggle').addEventListener('change', function() {
+            document.getElementById('useFirstMessageAsNameToggle').addEventListener('change', function () {
                 useFirstMessageAsName = this.checked;
             });
-            document.getElementById('backgroundColorPicker').addEventListener('change', function() {
+            document.getElementById('backgroundColorPicker').addEventListener('change', function () {
                 currentBackgroundColor = this.value;
             });
-             document.getElementById('textColorPicker').addEventListener('change', function() {
+            document.getElementById('textColorPicker').addEventListener('change', function () {
                 currentTextColor = this.value;
             });
-            document.getElementById('containerColorPicker').addEventListener('change', function() {
+            document.getElementById('containerColorPicker').addEventListener('change', function () {
                 currentContainerColor = this.value;
             });
         }
@@ -1242,7 +1254,6 @@
         function useFirstMessageAsNameSetting() {
             return useFirstMessageAsName;
         }
-
 
         function applyTheme() {
             document.documentElement.style.setProperty('--background-color', currentBackgroundColor);
@@ -1273,6 +1284,21 @@
             applyTheme();
             alert('Giao diện đã hoàn tác về mặc định. Nhấn "Lưu cài đặt" để lưu thay đổi.');
         }
+
+
+        document.getElementById('user-prompt').addEventListener('keydown', function(event) {
+            if ((event.ctrlKey || event.metaKey) && event.key === 'b') { // Ctrl+B or Cmd+B for bold
+                event.preventDefault();
+                const textarea = this;
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                const selectedText = textarea.value.substring(start, end);
+                const replacement = `**${selectedText}**`;
+                textarea.value = textarea.value.substring(0, start) + replacement + textarea.value.substring(end);
+                // Move cursor to end of bolded text
+                textarea.selectionStart = textarea.selectionEnd = start + replacement.length;
+            }
+        });
 
 
     </script>
