@@ -732,16 +732,23 @@
             const sidebar = document.getElementById('sidebar');
             const container = document.getElementById('container');
             const overlay = document.getElementById('sidebar-overlay');
-            sidebar.classList.toggle('sidebar--open');
-            body = document.querySelector('body');
-            body.classList.toggle('sidebar--open');
-            container.classList.toggle('container.sidebar-open');
-            overlay.classList.toggle('sidebar--open');
-            if (sidebar.classList.contains('sidebar--open')) {
-                 loadSavedHistoriesList();
-            } else {
-                hideHistoryMenu();
-                hideSettingsMenu();
+            const body = document.body;
+            
+        if (!sidebar.classList.contains('sidebar--open')) {
+            // Nếu sidebar đang đóng, thì mở nó ra
+            sidebar.classList.add('sidebar--open');
+            body.classList.add('sidebar--open');
+            container.classList.add('container.sidebar-open');
+            overlay.classList.add('sidebar--open');
+            loadSavedHistoriesList();
+        } else {
+            //Nếu sidebar đang mở, thì đóng nó lại
+            sidebar.classList.remove('sidebar--open');
+            container.classList.remove('sidebar-open');
+            container.classList.remove('container.sidebar-open');
+            overlay.classList.remove('sidebar--open');
+            hideHistoryMenu();
+            hideSettingsMenu();
             }
         }
 
