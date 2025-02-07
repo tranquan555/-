@@ -4,27 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Chat Hiện Đại</title>
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- Prism.js for code syntax highlighting - Tomorrow theme -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" integrity="sha512-vsweODo68mUuH+gxjNWzKWykValMhawjkZXtwiDAxPKi3MfSq+GlvM9m8xCkKMp9i6ZrmtYU3Nz+XYdxSX6rlg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        /* CSS Framework: Vanilla CSS được ưu tiên để tối ưu hóa kích thước và khả năng tùy chỉnh.
-           Không sử dụng CSS Framework như Bootstrap hoặc Tailwind CSS trong trường hợp này
-           để giữ cho codebase đơn giản, dễ hiểu và kiểm soát hoàn toàn giao diện.
-           CSS Variables được sử dụng để dễ dàng quản lý theme và màu sắc. */
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-color, #121212); /* Default dark background */
-            color: var(--text-color, #ffffff); /* Default light text */
-            display: flex;
-            transition: background-color 0.3s, color 0.3s; /* Smooth theme transitions */
-        }
-
-        /* Define CSS variables for theming - accessibility: đảm bảo độ tương phản màu sắc đủ theo WCAG */
         :root {
             --bg-color: #121212;
             --text-color: #ffffff;
@@ -46,7 +28,18 @@
             --error-color: #F44336;
         }
 
-        /* Sidebar - accessibility: ARIA roles có thể được thêm vào nếu sidebar trở nên phức tạp hơn */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            transition: background-color 0.3s, color 0.3s;
+            height: 100vh; /* Ensure full viewport height */
+            overflow: hidden; /* Prevent body scroll */
+        }
+
         .sidebar {
             width: 250px;
             background-color: var(--sidebar-bg-color);
@@ -57,14 +50,14 @@
             transform: translateX(0);
             z-index: 1000;
             height: 100vh;
-            overflow-y: auto; /* Allow vertical scrolling if content overflows */
-            position: fixed; /* Fixed position for sidebar */
+            overflow-y: auto;
+            position: fixed;
             top: 0;
             left: 0;
         }
 
         .sidebar.hidden {
-            transform: translateX(-250px); /* Hide sidebar off-screen */
+            transform: translateX(-250px);
         }
 
         .sidebar-header {
@@ -101,8 +94,8 @@
         }
 
         .sidebar-menu a {
-            display: flex; /* Flexbox for icon and text alignment */
-            align-items: center; /* Vertically align icon and text */
+            display: flex;
+            align-items: center;
             color: white;
             text-decoration: none;
             padding: 8px 15px;
@@ -115,35 +108,36 @@
         }
 
         .sidebar-menu a i {
-            margin-right: 8px; /* Space between icon and text */
+            margin-right: 8px;
         }
 
         .submenu {
-            margin-left: 15px;
+            margin-left: 25px; /* Increased indent */
             padding-left: 10px;
             border-left: 2px solid rgba(255, 255, 255, 0.2);
             display: none; /* Initially hidden */
+             list-style: none; /* Remove bullets */
         }
 
         .submenu.active {
-            display: block; /* Show submenu when active class is applied */
+            display: block;
         }
 
-        .submenu li {
-            padding: 5px 0;
+        .submenu li{
+             padding: 0;
+             border: none;
         }
 
         .submenu a {
             padding: 5px 15px;
             font-size: 0.9em;
-            display: block; /* Ensure full width for hover effect */
+            display: block;
         }
         .submenu a:hover, .submenu a.active {
             background-color: var(--sidebar-item-hover-bg);
         }
-
-        .history-search {
-            padding: 0 15px 10px;
+          .history-search {
+            padding: 0 0 10px; /* Reduced padding */
         }
 
         .history-search input[type="text"] {
@@ -154,14 +148,12 @@
             background-color: var(--input-bg-color);
             color: white;
         }
-
-
         .history-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 5px 15px;
-            /* accessibility: keyboard navigation có thể được cải thiện bằng tabindex nếu cần */
+            padding: 5px 0; /* Reduced padding */
+
         }
 
         .history-item:hover {
@@ -193,7 +185,7 @@
             margin-right: 10px;
         }
 
-        .settings-option select, .settings-option input[type="color"], .settings-option input[type="checkbox"] {
+        .settings-option select, .settings-option input[type="color"], .settings-option input[type="checkbox"], .settings-option input[type="text"] {
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
@@ -211,23 +203,10 @@
             cursor: pointer;
         }
 
-        .settings-option input[type="color"]::-webkit-color-swatch-wrapper {
-            padding: 0;
-        }
-
-        .settings-option input[type="color"]::-webkit-color-swatch {
-            border: 1px solid #555;
-            border-radius: 3px;
-        }
-
-        .settings-option input[type="color"]::-moz-color-swatch-wrapper {
-            padding: 0;
-        }
-
-        .settings-option input[type="color"]::-moz-color-swatch {
-            border: 1px solid #555;
-            border-radius: 3px;
-        }
+        .settings-option input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        .settings-option input[type="color"]::-webkit-color-swatch { border: 1px solid #555; border-radius: 3px; }
+        .settings-option input[type="color"]::-moz-color-swatch-wrapper { padding: 0; }
+        .settings-option input[type="color"]::-moz-color-swatch { border: 1px solid #555; border-radius: 3px; }
 
         .settings-buttons {
             margin-top: 20px;
@@ -235,7 +214,7 @@
         }
 
         .settings-buttons button {
-            background-color: var(--button-primary-bg-color);
+             background-color: var(--button-primary-bg-color);
             color: white;
             border: none;
             padding: 8px 15px;
@@ -249,20 +228,20 @@
             background-color: var(--button-primary-hover-bg-color);
         }
 
-        /* Chat Container - accessibility: main role để xác định nội dung chính */
         .chat-container {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
             height: 100vh;
-            overflow: hidden; /* Prevent container scroll, chat area will scroll */
+            overflow: hidden;
+            margin-left: 250px; /* Add margin to prevent overlap with sidebar */
         }
 
         .chat-header {
-            background-color: var(--chat-header-bg-color);
+             background-color: var(--chat-header-bg-color);
             padding: 15px 20px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            z-index: 999; /* Ensure header is above messages */
+            z-index: 999;
             transition: background-color 0.3s;
         }
 
@@ -271,20 +250,18 @@
             font-size: 1.3em;
         }
 
-        /* Message Area - accessibility: aria-live="polite" để thông báo tin nhắn mới cho screen reader */
         .message-area {
             flex-grow: 1;
             padding: 20px;
-            overflow-y: scroll; /* Enable vertical scrolling for messages */
+            overflow-y: auto;
             display: flex;
-            flex-direction: column; /* Stack messages vertically */
+            flex-direction: column;
             background-color: var(--chat-bg-color);
             transition: background-color 0.3s;
-            position: relative; /* Position relative for loading spinner */
-            aria-live="polite"; /* Announce new messages to screen readers politely */
+            position: relative;
+            aria-live="polite";
         }
 
-        /* Loading Spinner - animation for "Đang suy nghĩ..." */
         .loading-spinner {
             position: absolute;
             bottom: 10px;
@@ -295,15 +272,15 @@
             border-radius: 50%;
             width: 30px;
             height: 30px;
-            animation: spin 1s linear infinite; /* Spin animation */
+            animation: spin 1s linear infinite;
             opacity: 0;
-            visibility: hidden; /* Initially hidden */
+            visibility: hidden;
             transition: opacity 0.3s, visibility 0.3s;
         }
 
         .loading-spinner.show {
             opacity: 1;
-            visibility: visible; /* Show spinner when .show class is added */
+            visibility: visible;
         }
 
         @keyframes spin {
@@ -311,57 +288,56 @@
             100% { transform: rotate(360deg) translateX(-50%); }
         }
 
-
-        /* Message Bubble - style for user and AI messages */
         .message-bubble {
-            background-color: var(--message-bubble-ai-bg); /* Default AI bubble color */
+           background-color: var(--message-bubble-ai-bg);
             color: #ffffff;
             border-radius: 10px;
             padding: 10px 15px;
             margin-bottom: 10px;
-            max-width: 70%; /* Limit bubble width */
-            word-wrap: break-word; /* Wrap long words */
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+            max-width: 70%;
+            word-wrap: break-word;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            overflow-wrap: break-word; /* Handles long words */
+            hyphens: auto;  /*  hyphenation */
         }
 
         .message-bubble.user {
-            background-color: var(--message-bubble-user-bg); /* User bubble color */
+            background-color: var(--message-bubble-user-bg);
             color: white;
-            align-self: flex-end; /* Align user bubbles to the right */
+            align-self: flex-end;
         }
 
-        /* Input Area - container for textarea and send button - accessibility: form role */
         .input-area {
             background-color: var(--input-area-bg-color);
             padding: 15px 20px;
             border-top: 1px solid #333;
             display: flex;
-            align-items: center; /* Vertically center items */
+            align-items: center;
             transition: background-color 0.3s;
-            /* accessibility: form role for better structure */
+            position: sticky; /* Make input area sticky */
+            bottom: 0; /* Stick to the bottom */
+            z-index: 100; /* Ensure it's above messages */
         }
 
-        /* Textarea - for typing messages - accessibility: label liên kết với textarea */
         .input-area textarea {
-            flex-grow: 1; /* Take up available space */
+            flex-grow: 1;
             border: 1px solid var(--input-border-color);
             border-radius: 5px;
             padding: 10px;
-            resize: none; /* Prevent manual resizing */
+            resize: none;
             font-size: 1em;
-            height: 40px; /* Fixed height, adjust as needed */
-            overflow-y: auto; /* Enable vertical scroll for long input */
+            height: 40px;
+            overflow-y: auto;
             background-color: var(--input-bg-color);
             color: white;
             transition: border-color 0.3s, background-color 0.3s, color 0.3s;
         }
         .input-area textarea:hover, .input-area textarea:focus {
             border-color: #aaa;
-            outline: none; /* Remove default focus outline */
-            box-shadow: 0 0 5px rgba(170,170,170,0.3); /* Soft shadow on focus/hover */
+            outline: none;
+            box-shadow: 0 0 5px rgba(170,170,170,0.3);
         }
 
-        /* Send Button & Attach Button - accessibility: aria-label cho nút để mô tả chức năng */
         .input-area button, .input-area .attach-button {
             background-color: var(--button-primary-bg-color);
             color: white;
@@ -369,15 +345,15 @@
             padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
-            margin-left: 10px; /* Space between textarea/attach and send button */
+            margin-left: 10px;
             transition: background-color 0.3s ease;
             font-size: 1em;
-            height: auto; /* Reset height */
+            height: auto;
         }
 
         .input-area button:hover, .input-area button:focus, .input-area .attach-button:hover, .input-area .attach-button:focus {
             background-color: var(--button-primary-hover-bg-color);
-            outline: none; /* Remove focus outline */
+            outline: none;
         }
 
         .input-area .attach-button {
@@ -385,11 +361,14 @@
             color: #ccc;
             padding: 10px;
             margin-left: 5px;
-            border-radius: 50%; /* Circular button */
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            justify-content: center; /* Center icon in button */
+            justify-content: center;
             font-size: 1.2em;
+        }
+        .input-area .attach-button input[type="file"] {
+            display: none; /* Hide the actual file input */
         }
 
         .input-area .attach-button:hover {
@@ -397,30 +376,29 @@
             color: #ddd;
         }
 
-        /* Modals - for save history functionality - accessibility: role="dialog" and aria-modal="true" */
         .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
+            display: none;
+            position: fixed;
+            z-index: 1;
             left: 0;
             top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: var(--modal-backdrop-color); /* Black w/ opacity */
-            role="dialog"; /* Accessibility: dialog role */
-            aria-modal="true"; /* Accessibility: indicates modal */
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: var(--modal-backdrop-color);
+            role="dialog";
+            aria-modal="true";
         }
 
         .modal-content {
-            background-color: var(--modal-content-bg-color);
-            margin: 15% auto; /* 15% from the top and centered */
+             background-color: var(--modal-content-bg-color);
+            margin: 15% auto;
             padding: 20px;
             border: 1px solid var(--modal-border-color);
-            width: 80%; /* Could be more or less, depending on screen size */
-            max-width: 500px; /* Limit modal width */
+            width: 80%;
+            max-width: 500px;
             border-radius: 10px;
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4); /* Deeper shadow for modal */
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4);
         }
 
         .close-button {
@@ -482,7 +460,6 @@
             background-color: var(--button-primary-hover-bg-color);
         }
 
-        /* Utility classes for icons */
         .icon {
             display: inline-block;
             width: 1em;
@@ -492,24 +469,22 @@
             fill: currentColor;
         }
 
-        /* Code block styling for Prism.js */
         pre[class*="language-"] {
-            background-color: var(--code-block-bg-color) !important; /* Prism Tomorrow theme background */
-            color: #f8f8f2; /* Prism Tomorrow theme text color */
+            background-color: var(--code-block-bg-color) !important;
+            color: #f8f8f2;
             border-radius: 10px;
             padding: 15px;
             margin-bottom: 10px;
-            overflow-x: auto; /* Enable horizontal scroll for long code lines */
-            position: relative; /* For copy button positioning */
+            overflow-x: auto;
+            position: relative;
         }
 
         code[class*="language-"] {
-            color: inherit; /* Inherit text color from pre */
-            background: none; /* No background for inline code */
-            font-size: 0.9em; /* Slightly smaller font size for code */
+            color: inherit;
+            background: none;
+            font-size: 0.9em;
         }
 
-        /* Copy code button - positioned in code block */
         .copy-code-button {
             position: absolute;
             top: 0.5em;
@@ -529,7 +504,6 @@
             opacity: 1;
         }
 
-        /* Confirmation and Error Messages - fixed position at bottom - accessibility: aria-live="assertive" for important messages */
         .confirmation-message, .error-message {
             position: fixed;
             bottom: 20px;
@@ -540,8 +514,8 @@
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.5s, visibility 0.5s;
-            z-index: 1100; /* Ensure it's on top of everything */
-            aria-live="assertive"; /* Accessibility: announce immediately */
+            z-index: 1100;
+            aria-live="assertive";
         }
 
         .confirmation-message.show, .error-message.show {
@@ -550,19 +524,17 @@
         }
 
         .confirmation-message.show {
-            background-color: var(--confirmation-color); /* Green for success */
+            background-color: var(--confirmation-color);
         }
 
         .error-message.show {
-            background-color: var(--error-color); /* Red for error */
+            background-color: var(--error-color);
         }
 
-
-        /* Copied message - for code copy confirmation - accessibility: aria-live can be added if needed for screen readers */
         .copied-message {
-            position: absolute;
+             position: absolute;
             top: 0.5em;
-            right: 4em; /* Adjust to not overlap copy button */
+            right: 4em;
             background-color: rgba(0, 0, 0, 0.7);
             color: white;
             padding: 0.5em 0.8em;
@@ -578,18 +550,16 @@
             visibility: visible;
         }
 
-
-        /* Responsive Design - media queries for different screen sizes */
-        @media (max-width: 768px) { /* Tablets and smaller screens */
-            .sidebar {
+        @media (max-width: 768px) {
+           .sidebar {
                 width: 200px;
-                transform: translateX(-200px); /* Initially hidden on smaller screens */
+                transform: translateX(-200px);
             }
             .sidebar.hidden {
-                transform: translateX(0); /* Show sidebar when not hidden on small screens */
+                transform: translateX(0);
             }
             .chat-container {
-                margin-left: 0; /* Full width chat area */
+                margin-left: 0; /* Remove margin on smaller screens */
             }
             .chat-header h2 {
                 font-size: 1.1em;
@@ -606,18 +576,18 @@
             }
         }
 
-        @media (max-width: 480px) { /* Phones */
+        @media (max-width: 480px) {
             .chat-header h2 {
                 font-size: 1em;
             }
             .message-bubble {
-                max-width: 85%; /* Message bubbles take more width on small screens */
+                max-width: 85%;
                 padding: 8px 12px;
                 font-size: 0.95em;
             }
             .input-area textarea {
                 font-size: 0.95em;
-                height: 30px; /* Smaller textarea on phones */
+                height: 30px;
             }
             .sidebar-header h3 {
                 font-size: 1.3em;
@@ -627,15 +597,9 @@
                 font-size: 0.95em;
             }
         }
-
-
     </style>
-
 </head>
-<!-- accessibility: body role="document" if this is a standalone web app -->
 <body role="document" onclick="handleBodyClick(event)">
-
-    <!-- Sidebar - navigation menu -->
     <aside class="sidebar" aria-label="Navigation menu">
         <div class="sidebar-header">
             <h3>Menu</h3>
@@ -650,14 +614,17 @@
                     <li class="history-search">
                         <input type="text" id="historySearchInput" placeholder="Tìm kiếm lịch sử..." aria-label="Tìm kiếm lịch sử chat đã lưu">
                     </li>
-                    <!-- History items will be added here by JavaScript -->
                 </ul>
             </li>
             <li>
                 <a href="#" onclick="toggleSubmenu('settings-submenu', event)"><i class="fas fa-cog"></i>Cài đặt</a>
                 <ul class="submenu" id="settings-submenu">
                     <li class="settings-option">
-                        <label for="auto-save">Tự động lưu lịch sử</label>
+                        <label for="api-key">API Key</label>
+                        <input type="text" id="api-key" placeholder="Nhập API Key của bạn" aria-label="Nhập API Key">
+                    </li>
+                    <li class="settings-option">
+                        <label for="auto-save">Tự động lưu</label>
                         <input type="checkbox" id="auto-save">
                     </li>
                     <li class="settings-option">
@@ -676,18 +643,18 @@
                     </li>
                     <li class="settings-option">
                         <label for="bg-color">Màu nền</label>
-                        <input type="color" id="bg-color" value="#121212" aria-label="Chọn màu nền trang web">
+                        <input type="color" id="bg-color" value="#121212">
                     </li>
                     <li class="settings-option">
                         <label for="text-color">Màu chữ</label>
-                        <input type="color" id="text-color" value="#ffffff" aria-label="Chọn màu chữ trên trang web">
+                        <input type="color" id="text-color" value="#ffffff">
                     </li>
-                    <li class="settings-option">
+                     <li class="settings-option">
                         <label for="chat-bg-color">Màu nền hộp chat</label>
                         <input type="color" id="chat-bg-color" value="#212121" aria-label="Chọn màu nền khu vực chat">
                     </li>
                     <li class="settings-buttons">
-                        <button onclick="saveSettings()">Lưu cài đặt</button>
+                        <button onclick="saveSettings()">Lưu</button>
                         <button onclick="undoSettings()">Hoàn tác</button>
                     </li>
                 </ul>
@@ -695,34 +662,32 @@
         </ul>
     </aside>
 
-    <!-- Main chat container -->
     <div class="chat-container">
         <header class="chat-header">
             <i class="fas fa-bars menu-icon" onclick="toggleSidebar()" aria-label="Mở/đóng menu"></i>
             <h2>AI Chat</h2>
         </header>
-        <!-- Message display area -->
         <main id="message-area" class="message-area">
-            <div class="loading-spinner" id="loading-spinner"></div> <!-- Loading spinner element -->
-            <!-- Messages will be appended here by JavaScript -->
+            <div class="loading-spinner" id="loading-spinner"></div>
         </main>
-        <!-- Input area for typing messages -->
         <form class="input-area" role="form">
-            <i class="fas fa-paperclip attach-button" aria-label="Tải tệp đính kèm (chức năng chưa hoạt động)"></i>
+             <label for="file-upload" class="attach-button">
+                <i class="fas fa-paperclip"></i>
+                <input type="file" id="file-upload" accept="*" onchange="handleFileUpload(event)"/>
+            </label>
             <textarea id="message-input" placeholder="Nhập tin nhắn..." aria-label="Nhập tin nhắn"></textarea>
             <button type="button" onclick="sendMessage()" aria-label="Gửi tin nhắn">Gửi</button>
         </form>
     </div>
 
-    <!-- Save History Modal - dialog for saving chat history -->
     <div id="saveHistoryModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="close-button" onclick="closeSaveHistoryModal()">&times;</span>
-                <h2>Lưu lịch sử chat</h2>
+                <span class="close-button" onclick="closeSaveHistoryModal()">×</span>
+                <h2>Lưu lịch sử</h2>
             </div>
             <div class="modal-body">
-                <input type="text" id="historyNameInput" placeholder="Nhập tên lịch sử" aria-label="Nhập tên cho lịch sử chat">
+                <input type="text" id="historyNameInput" placeholder="Nhập tên lịch sử">
             </div>
             <div class="modal-footer">
                 <button type="button" onclick="saveHistory()">Lưu</button>
@@ -731,24 +696,14 @@
         </div>
     </div>
 
-    <!-- Confirmation messages (e.g., "Copied", "Saved") -->
-    <div class="copied-message" id="copied-confirmation">Đã sao chép vào clipboard!</div>
+    <div class="copied-message" id="copied-confirmation">Đã sao chép!</div>
     <div class="confirmation-message" id="action-confirmation"></div>
-    <!-- Error messages (e.g., API errors) -->
     <div class="error-message" id="api-error-message"></div>
 
-
-    <!-- Prism.js library for code syntax highlighting -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-NlKI+oQZ+gGt9ggTpO+LgQo9oWdO2h5p/8lr/VCdGDTvKXZMq+gIHv5voW9e8GlS/g5Wjyxm3CqjG7W7Vf6y+g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <!-- Prism.js JavaScript language component -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js" integrity="sha512-jLCHmr5IU189O2jGuQj+3Tyzu1xoJsOO3CcWueUMrRcJ9iWl2uV09Szwvjy9VyttAr6Q1l7Tqsj+z82FTz1zvg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
-        /* JavaScript Framework/Library: Vanilla JavaScript được sử dụng để đơn giản hóa dự án
-           và tối ưu hóa hiệu suất. Không sử dụng framework/library như React, Vue, Angular
-           hoặc các thư viện nhỏ như Alpine.js, HTMX trong trường hợp này để giảm thiểu
-           độ phức tạp và phụ thuộc bên ngoài. Vanilla JS đủ mạnh mẽ cho các tương tác hiện tại. */
-
         const sidebar = document.querySelector('.sidebar');
         const messageArea = document.getElementById('message-area');
         const messageInput = document.getElementById('message-input');
@@ -762,12 +717,12 @@
         const actionConfirmation = document.getElementById('action-confirmation');
         const apiErrorMessage = document.getElementById('api-error-message');
         const historySearchInput = document.getElementById('historySearchInput');
-        let activeSubmenu = null; // Track currently active submenu
 
-        // State variables to hold chat history, saved histories, and settings
+        let activeSubmenu = null;
         let chatHistory = [];
         let savedHistories = JSON.parse(localStorage.getItem('chatHistories')) || {};
         let settings = JSON.parse(localStorage.getItem('chatSettings')) || {
+            apiKey: '', // Initialize API key
             autoSaveHistory: false,
             historyNameFirstQuestion: false,
             theme: 'prism-tomorrow',
@@ -775,39 +730,31 @@
             textColor: '#ffffff',
             chatBgColor: '#212121'
         };
-        let filteredHistories = { ...savedHistories }; // For history search functionality
+        let filteredHistories = { ...savedHistories };
 
-        // Apply initial settings on page load
+        // Apply initial settings
         applySettings();
         loadSavedHistoryList();
-
-        // Auto-focus on textarea when page loads for better UX
         messageInput.focus();
 
-        // Function to toggle sidebar visibility (responsive menu)
-        function toggleSidebar() {
+       function toggleSidebar() {
             sidebar.classList.toggle('hidden');
         }
 
-        // Function to toggle submenu visibility (history, settings)
         function toggleSubmenu(submenuId, event) {
-            event.preventDefault(); // Prevent default anchor behavior
+            event.preventDefault();
             const submenu = document.getElementById(submenuId);
-
-            // Close any other open submenu before opening this one
             if (activeSubmenu && activeSubmenu !== submenu) {
                 activeSubmenu.classList.remove('active');
             }
-            submenu.classList.toggle('active'); // Toggle active class on current submenu
-            activeSubmenu = submenu.classList.contains('active') ? submenu : null; // Update active submenu
+            submenu.classList.toggle('active');
+            activeSubmenu = submenu.classList.contains('active') ? submenu : null;
 
-            // Focus on search input when history submenu opens
             if (submenuId === 'history-submenu' && submenu.classList.contains('active')) {
                 historySearchInput.focus();
             }
         }
 
-        // Function to handle clicks outside of submenus to close them
         function handleBodyClick(event) {
             if (activeSubmenu && !sidebar.contains(event.target) && !event.target.closest('.sidebar-menu li a')) {
                 activeSubmenu.classList.remove('active');
@@ -815,258 +762,248 @@
             }
         }
 
-
-        // Function to start a new chat - clears history and input
         function newChat() {
-            chatHistory = []; // Clear chat history
-            messageArea.innerHTML = `<div class="loading-spinner" id="loading-spinner"></div>`; // Keep spinner in new chat for consistent UI
-            loadingSpinner = document.getElementById('loading-spinner'); // Re-assign loadingSpinner after innerHTML change
-            messageInput.value = ''; // Clear input textarea
-            messageInput.focus(); // Focus back to textarea for new message
-            loadSavedHistoryList(); // Refresh history list
-
-            // Reset active menu item if needed (example, if you want to visually highlight current menu)
-            const activeMenuItem = document.querySelector('.sidebar-menu a.active');
-            if (activeMenuItem) {
-                activeMenuItem.classList.remove('active');
-            }
+            chatHistory = [];
+            messageArea.innerHTML = `<div class="loading-spinner" id="loading-spinner"></div>`;
+            loadingSpinner = document.getElementById('loading-spinner'); // Re-assign
+            messageInput.value = '';
+            messageInput.focus();
+            loadSavedHistoryList();
         }
 
-        // Function to send a message - user input to AI and display messages
+
         function sendMessage() {
-            const messageText = messageInput.value.trim(); // Get message text and trim whitespace
+            const messageText = messageInput.value.trim();
             if (messageText) {
-                addUserMessage(messageText); // Display user message
-                messageInput.value = ''; // Clear input textarea
-                messageInput.focus(); // Keep focus on textarea for next message
-                showLoading(); // Show loading spinner while waiting for AI response
-                // Simulate AI response (replace with actual API call to Gemini API or similar)
-                generateAIResponse(messageText)
+                addUserMessage(messageText);
+                messageInput.value = '';
+                messageInput.focus();
+                showLoading();
+                generateAIResponse                generateAIResponse(messageText)
                     .then(aiResponse => {
-                        addAIMessage(aiResponse); // Display AI response
+                        addAIMessage(aiResponse);
                     })
                     .catch(error => {
-                        console.error('Lỗi API: ', error);
-                        displayErrorMessage(error.message || 'Đã xảy ra lỗi khi giao tiếp với AI. Vui lòng thử lại.'); // Display error message to user
-                        addAIMessageBubbleOnError('Đã xảy ra lỗi khi nhận phản hồi từ AI.'); // Display error in chat
+                        console.error('Lỗi API:', error);
+                        displayErrorMessage(error.message || 'Đã xảy ra lỗi khi giao tiếp với AI. Vui lòng thử lại.');
+                        addAIMessageBubbleOnError('Đã xảy ra lỗi khi nhận phản hồi từ AI.');
                     })
                     .finally(() => {
-                        hideLoading(); // Hide loading spinner when response is received or error occurs
+                        hideLoading();
                     });
             }
         }
 
-        // Function to add a user message to the chat history and display
         function addUserMessage(message) {
-            chatHistory.push({ sender: 'user', text: message }); // Add message to chat history array
-            displayMessage('user', message); // Display message in chat area
+            chatHistory.push({ sender: 'user', text: message });
+            displayMessage('user', message);
         }
 
-        // Function to add an AI message to the chat history and display
         function addAIMessage(message) {
-            chatHistory.push({ sender: 'ai', text: message }); // Add message to chat history
-            displayMessage('ai', message); // Display message in chat area
+            chatHistory.push({ sender: 'ai', text: message });
+            displayMessage('ai', message);
             if (settings.autoSaveHistory) {
-                saveCurrentHistoryAuto(); // Auto-save history if setting is enabled
+                saveCurrentHistoryAuto();
             }
         }
 
-        // Function to display a message in the chat area (user or AI)
         function displayMessage(sender, message) {
             const messageBubble = document.createElement('div');
-            messageBubble.classList.add('message-bubble'); // Base style for all messages
-            messageBubble.classList.add(sender); // Add sender-specific class (user or ai)
+            messageBubble.classList.add('message-bubble', sender);
 
-            // Check if message is code and needs syntax highlighting
-            if (message.startsWith('<code>') && message.endsWith('</code>')) {
-                const codeContent = message.substring(6, message.length - 7); // Extract code content from <code> tags
+            if (typeof message === 'string' && message.startsWith('<code>') && message.endsWith('</code>')) {
+                const codeContent = message.substring(6, message.length - 7);
                 const pre = document.createElement('pre');
-                pre.classList.add('language-javascript'); // Assuming code is JavaScript, can be dynamically set
-                pre.innerHTML = `<code class="language-javascript">${Prism.highlight(codeContent, Prism.languages.javascript, 'javascript')}</code>`; // Highlight code using Prism.js
+                pre.classList.add('language-javascript');
+                const code = document.createElement('code'); // Create <code> element
+                code.classList.add('language-javascript');
+                code.textContent = codeContent; // Set textContent first for Prism to work correctly
+                pre.appendChild(code);
 
-                // Add "Copy Code" button to code blocks
+                Prism.highlightElement(code); // Highlight after appending
+
                 const copyButton = document.createElement('button');
                 copyButton.classList.add('copy-code-button');
-                copyButton.innerHTML = '<i class="fas fa-clipboard"></i>'; // Clipboard icon
-                copyButton.title = 'Sao chép mã'; // Tooltip for accessibility
+                copyButton.innerHTML = '<i class="fas fa-clipboard"></i>';
+                copyButton.title = 'Sao chép mã';
                 const copiedSpan = document.createElement('span');
                 copiedSpan.classList.add('copied-message');
                 copiedSpan.textContent = 'Đã sao chép!';
                 pre.appendChild(copiedSpan);
 
-                // Event listener for "Copy Code" button
                 copyButton.addEventListener('click', () => {
                     navigator.clipboard.writeText(codeContent).then(() => {
-                        copiedConfirmation.classList.add('show'); // Show confirmation message
+                        copiedSpan.classList.add('show'); // Show copied message *within* the code block
                         setTimeout(() => {
-                            copiedConfirmation.classList.remove('show'); // Hide after 2 seconds
+                            copiedSpan.classList.remove('show');
                         }, 2000);
                     }).catch(err => {
                         console.error('Không thể sao chép mã: ', err);
-                        displayErrorMessage('Lỗi khi sao chép mã.'); // Display error message if copy fails
+                        displayErrorMessage('Lỗi khi sao chép mã.');
                     });
                 });
                 pre.appendChild(copyButton);
-                messageBubble.appendChild(pre); // Append code block to message bubble
+                messageBubble.appendChild(pre);
+
+            } else if (typeof message === 'object' && message.type === 'file') {
+                // File message handling
+                const fileLink = document.createElement('a');
+                fileLink.href = message.url;
+                fileLink.textContent = message.name;
+                fileLink.target = '_blank'; // Open in new tab
+                fileLink.rel = 'noopener noreferrer'; // Security best practice
+                messageBubble.appendChild(fileLink);
 
             } else {
-                messageBubble.textContent = message; // Set message text content
+                // Regular text message
+              messageBubble.innerHTML = message; // Use innerHTML to handle potential line breaks
             }
 
-            messageArea.appendChild(messageBubble); // Append message bubble to chat area
-            messageArea.scrollTop = messageArea.scrollHeight; // Scroll to bottom to show latest message
-        }
-
-
-        // Function to simulate AI response - replace with actual API call
-        function generateAIResponse(userMessage) {
-            // Simulate AI response and potential API error using Promises for async handling
-            return new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    if (Math.random() < 0.8) { // Simulate 80% success rate, 20% chance of error
-                        if (userMessage.toLowerCase().includes('code')) {
-                            resolve(`Phản hồi từ AI (với code):\n<code>function helloWorld() {\n  console.log("Xin chào thế giới!");\n}\nhelloWorld();</code>\nĐây là một đoạn mã JavaScript đơn giản.`);
-                        } else {
-                            resolve(`Phản hồi từ AI cho: "${userMessage}"`);
-                        }
-                    } else {
-                        reject(new Error('Lỗi API không xác định. Vui lòng thử lại sau.')); // Simulate API error
-                    }
-                }, 800); // Simulate API delay of 800ms
-            });
-        }
-
-        // Function to display AI message bubble in case of API error
-        function addAIMessageBubbleOnError(errorMessage) {
-            const messageBubble = document.createElement('div');
-            messageBubble.classList.add('message-bubble');
-            messageBubble.classList.add('ai'); // Still 'ai' sender for styling
-            messageBubble.classList.add('error'); // Add error class for potential error styling if needed
-            messageBubble.textContent = errorMessage;
             messageArea.appendChild(messageBubble);
             messageArea.scrollTop = messageArea.scrollHeight;
         }
 
 
-        // History Management Functions
+        function generateAIResponse(userMessage) {
+            return new Promise((resolve, reject) => {
+                // Use the API key from settings
+                const apiKey = settings.apiKey;
 
-        // Function to open the "Save History" modal
+                if (!apiKey) {
+                    reject(new Error("Vui lòng nhập API Key trong phần Cài đặt.")); // Reject if no API key
+                    return;
+                }
+
+                //  Simulate API call (REPLACE with actual API call)
+                setTimeout(() => {
+                    if (Math.random() < 0.8) {
+                        if (userMessage.toLowerCase().includes('code')) {
+                             resolve(`Phản hồi từ AI (với code):\n<code>function helloWorld() {\n  console.log("Xin chào thế giới!");\n}\nhelloWorld();</code>\nĐây là một đoạn mã JavaScript đơn giản.`);
+                        } else {
+                            resolve(`Phản hồi từ AI cho: "${userMessage}"`);
+                        }
+
+                    } else {
+                        reject(new Error('Lỗi API không xác định. Vui lòng thử lại sau.'));
+                    }
+                }, 800);
+            });
+        }
+
+
+        function addAIMessageBubbleOnError(errorMessage) {
+            const messageBubble = document.createElement('div');
+            messageBubble.classList.add('message-bubble', 'ai', 'error');
+            messageBubble.textContent = errorMessage;
+            messageArea.appendChild(messageBubble);
+            messageArea.scrollTop = messageArea.scrollHeight;
+        }
+
         function openSaveHistoryModal() {
-            saveHistoryModal.style.display = "block"; // Show the modal
+            saveHistoryModal.style.display = "block";
             if (settings.historyNameFirstQuestion && chatHistory.length > 0 && chatHistory[0].sender === 'user') {
-                historyNameInput.value = chatHistory[0].text.substring(0, 50); // Default name from first user question
+                historyNameInput.value = chatHistory[0].text.substring(0, 50);
             } else {
-                historyNameInput.value = ''; // Clear input for custom name
+                historyNameInput.value = '';
             }
         }
 
-        // Function to close the "Save History" modal
         function closeSaveHistoryModal() {
-            saveHistoryModal.style.display = "none"; // Hide the modal
+            saveHistoryModal.style.display = "none";
         }
 
-        // Function to save the current chat history to local storage
         function saveHistory() {
-            const historyName = historyNameInput.value.trim(); // Get history name from input and trim whitespace
+            const historyName = historyNameInput.value.trim();
             if (historyName) {
-                savedHistories[historyName] = chatHistory; // Save chat history with given name
-                localStorage.setItem('chatHistories', JSON.stringify(savedHistories)); // Update local storage
-                loadSavedHistoryList(); // Refresh history list in sidebar
-                closeSaveHistoryModal(); // Close the modal
-                displayConfirmationMessage(`Lịch sử chat "${historyName}" đã được lưu.`); // Show confirmation message
+                savedHistories[historyName] = chatHistory;
+                localStorage.setItem('chatHistories', JSON.stringify(savedHistories));
+                loadSavedHistoryList();
+                closeSaveHistoryModal();
+                displayConfirmationMessage(`Lịch sử chat "${historyName}" đã được lưu.`);
             } else {
-                alert('Vui lòng nhập tên lịch sử.'); // Alert if history name is empty
+                alert('Vui lòng nhập tên lịch sử.');
             }
         }
 
-        // Function to load and display the list of saved chat histories in sidebar
         function loadSavedHistoryList() {
-            historySubmenu.innerHTML = `<li class="history-search">
+             historySubmenu.innerHTML = `<li class="history-search">
                         <input type="text" id="historySearchInput" placeholder="Tìm kiếm lịch sử...">
-                    </li>`; // Re-add search input - accessibility: aria-label added in HTML
+                    </li>`;
             const historySearchInputElem = document.getElementById('historySearchInput');
-            historySearchInputElem.addEventListener('input', handleHistorySearch); // Attach event listener for search
+            historySearchInputElem.addEventListener('input', handleHistorySearch);
 
-            filteredHistories = searchHistories(historySearchInputElem.value); // Initialize filtered histories based on current search term
+            filteredHistories = searchHistories(historySearchInputElem.value);
 
-            historySubmenu.innerHTML += Object.keys(filteredHistories).map(historyName => `
+              historySubmenu.innerHTML += Object.keys(filteredHistories).map(historyName => `
                 <li class="history-item">
                     <a href="#" onclick="loadHistory('${historyName}')">${historyName}</a>
                     <button onclick="deleteHistory('${historyName}')"><i class="fas fa-trash"></i></button>
                 </li>
-            `).join(''); // Dynamically create and append history items to submenu
+            `).join('');
         }
 
-        // Function to handle history search input and update displayed list
-        function handleHistorySearch(event) {
-            const searchTerm = event.target.value.toLowerCase(); // Get search term and convert to lowercase
-            filteredHistories = searchHistories(searchTerm); // Filter histories based on search term
+       function handleHistorySearch(event) {
+            const searchTerm = event.target.value.toLowerCase();
+            filteredHistories = searchHistories(searchTerm);
             historySubmenu.innerHTML = `<li class="history-search">
                         <input type="text" id="historySearchInput" placeholder="Tìm kiếm lịch sử...">
-                    </li>`; // Clear and re-add search input
-            const historySearchInputElem = document.getElementById('historySearchInput');
-            historySearchInputElem.addEventListener('input', handleHistorySearch); // Re-attach event listener
+                    </li>`; // Clear and re-add
+            const historySearchInputElem = document.getElementById('historySearchInput');  //Re-get
+            historySearchInputElem.addEventListener('input', handleHistorySearch); // Re-attach
 
              historySubmenu.innerHTML += Object.keys(filteredHistories).map(historyName => `
                 <li class="history-item">
                     <a href="#" onclick="loadHistory('${historyName}')">${historyName}</a>
                     <button onclick="deleteHistory('${historyName}')"><i class="fas fa-trash"></i></button>
                 </li>
-            `).join(''); // Dynamically create and append filtered history items
+            `).join('');
         }
 
-        // Function to search saved histories based on search term
         function searchHistories(searchTerm) {
             const results = {};
             for (const historyName in savedHistories) {
                 if (historyName.toLowerCase().includes(searchTerm)) {
-                    results[historyName] = savedHistories[historyName]; // Add matching histories to results
+                    results[historyName] = savedHistories[historyName];
                 }
             }
-            return results; // Return filtered histories
+            return results;
         }
 
-
-        // Function to load a specific chat history and display it
         function loadHistory(historyName) {
-            chatHistory = savedHistories[historyName]; // Retrieve chat history from saved histories
-            messageArea.innerHTML = `<div class="loading-spinner" id="loading-spinner"></div>`; // Keep spinner when loading history
-            loadingSpinner = document.getElementById('loading-spinner'); // Re-assign after innerHTML change
-            hideLoading(); // Hide loading spinner immediately as history is loaded from local storage
-            messageArea.innerHTML = ''; // Clear message area content to avoid flicker
+            chatHistory = savedHistories[historyName];
+            messageArea.innerHTML = `<div class="loading-spinner" id="loading-spinner"></div>`; // Keep spinner
+            loadingSpinner = document.getElementById('loading-spinner');
+            hideLoading();
+            messageArea.innerHTML = '';
             chatHistory.forEach(message => {
-                displayMessage(message.sender, message.text); // Display each message in the loaded history
+                displayMessage(message.sender, message.text);
             });
-            toggleSubmenu('history-submenu', { preventDefault: () => {} }); // Close history submenu after loading
+            toggleSubmenu('history-submenu', { preventDefault: () => {} });
         }
 
-        // Function to delete a saved chat history
         function deleteHistory(historyName) {
             if (confirm(`Bạn có chắc chắn muốn xóa lịch sử "${historyName}"?`)) {
-                delete savedHistories[historyName]; // Remove history from saved histories object
-                localStorage.setItem('chatHistories', JSON.stringify(savedHistories)); // Update local storage
-                loadSavedHistoryList(); // Refresh history list in sidebar
-                displayConfirmationMessage(`Lịch sử "${historyName}" đã được xóa.`); // Show confirmation message
+                delete savedHistories[historyName];
+                localStorage.setItem('chatHistories', JSON.stringify(savedHistories));
+                loadSavedHistoryList();
+                displayConfirmationMessage(`Lịch sử "${historyName}" đã được xóa.`);
             }
         }
 
-        // Function to automatically save current chat history (if enabled in settings)
         function saveCurrentHistoryAuto() {
             if (chatHistory.length > 0) {
-                let autoSaveName = 'Auto Save - ' + new Date().toLocaleString(); // Default auto-save name
+                let autoSaveName = 'Auto Save - ' + new Date().toLocaleString();
                 if (settings.historyNameFirstQuestion && chatHistory[0].sender === 'user') {
-                    autoSaveName = chatHistory[0].text.substring(0, 50) + ' (Auto Saved)'; // Name from first question if setting enabled
+                    autoSaveName = chatHistory[0].text.substring(0, 50) + ' (Auto Saved)';
                 }
-                savedHistories[autoSaveName] = chatHistory; // Save history with auto-generated name
-                localStorage.setItem('chatHistories', JSON.stringify(savedHistories)); // Update local storage
-                loadSavedHistoryList(); // Refresh history list in sidebar
+                savedHistories[autoSaveName] = chatHistory;
+                localStorage.setItem('chatHistories', JSON.stringify(savedHistories));
+                loadSavedHistoryList();
             }
         }
 
-
-        // Settings Management Functions
-
-        // Initialize settings inputs with saved settings or defaults
+        // Initialize settings inputs
+        document.getElementById('api-key').value = settings.apiKey;
         document.getElementById('auto-save').checked = settings.autoSaveHistory;
         document.getElementById('history-name-first-question').checked = settings.historyNameFirstQuestion;
         document.getElementById('theme-select').value = settings.theme;
@@ -1074,23 +1011,23 @@
         document.getElementById('text-color').value = settings.textColor;
         document.getElementById('chat-bg-color').value = settings.chatBgColor;
 
-        // Function to save settings to local storage and apply them
         function saveSettings() {
-            settings.autoSaveHistory = document.getElementById('auto-save').checked; // Get auto-save setting from checkbox
-            settings.historyNameFirstQuestion = document.getElementById('history-name-first-question').checked; // Get history name setting
-            settings.theme = document.getElementById('theme-select').value; // Get selected Prism.js theme
-            settings.bgColor = document.getElementById('bg-color').value; // Get background color
-            settings.textColor = document.getElementById('text-color').value; // Get text color
-            settings.chatBgColor = document.getElementById('chat-bg-color').value; // Get chat background color
-            localStorage.setItem('chatSettings', JSON.stringify(settings)); // Save settings to local storage
-            applySettings(); // Apply the new settings to the UI
-            toggleSubmenu('settings-submenu', { preventDefault: () => {} }); // Close settings submenu after saving
-            displayConfirmationMessage('Cài đặt đã được lưu.'); // Display confirmation message
+            settings.apiKey = document.getElementById('api-key').value;
+            settings.autoSaveHistory = document.getElementById('auto-save').checked;
+            settings.historyNameFirstQuestion = document.getElementById('history-name-first-question').checked;
+            settings.theme = document.getElementById('theme-select').value;
+            settings.bgColor = document.getElementById('bg-color').value;
+            settings.textColor = document.getElementById('text-color').value;
+            settings.chatBgColor = document.getElementById('chat-bg-color').value;
+            localStorage.setItem('chatSettings', JSON.stringify(settings));
+            applySettings();
+            toggleSubmenu('settings-submenu', { preventDefault: () => {} });
+            displayConfirmationMessage('Cài đặt đã được lưu.');
         }
 
-        // Function to undo settings and revert to last saved or default settings
         function undoSettings() {
-            settings = JSON.parse(localStorage.getItem('chatSettings')) || { // Reload settings from local storage or default
+            settings = JSON.parse(localStorage.getItem('chatSettings')) || {
+                apiKey: '', // Reset API key
                 autoSaveHistory: false,
                 historyNameFirstQuestion: false,
                 theme: 'prism-tomorrow',
@@ -1098,81 +1035,94 @@
                 textColor: '#ffffff',
                 chatBgColor: '#212121'
             };
-            // Reset settings inputs to loaded settings
+            document.getElementById('api-key').value = settings.apiKey;
             document.getElementById('auto-save').checked = settings.autoSaveHistory;
             document.getElementById('history-name-first-question').checked = settings.historyNameFirstQuestion;
             document.getElementById('theme-select').value = settings.theme;
             document.getElementById('bg-color').value = settings.bgColor;
             document.getElementById('text-color').value = settings.textColor;
             document.getElementById('chat-bg-color').value = settings.chatBgColor;
-            applySettings(); // Apply the reloaded settings to the UI
-            toggleSubmenu('settings-submenu', { preventDefault: () => {} }); // Close settings submenu after undo
-            displayConfirmationMessage('Cài đặt đã được hoàn tác về trạng thái trước đó.'); // Display confirmation message
+            applySettings();
+            toggleSubmenu('settings-submenu', { preventDefault: () => {} });
+            displayConfirmationMessage('Cài đặt đã được hoàn tác.');
         }
 
-
-        // Function to apply current settings to the UI (colors, theme)
         function applySettings() {
-            document.body.style.backgroundColor = settings.bgColor; // Set body background color
-            document.body.style.color = settings.textColor; // Set body text color
-            messageArea.style.backgroundColor = settings.chatBgColor; // Set message area background color
+            document.body.style.backgroundColor = settings.bgColor;
+            document.body.style.color = settings.textColor;
+            messageArea.style.backgroundColor = settings.chatBgColor;
 
-            // Apply Prism.js theme dynamically by changing CSS link href
             const prismThemeLink = document.querySelector('link[href*="prism"]');
             let newThemeHref = `https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/${settings.theme}.min.css`;
 
-            // Handle "default" theme and invalid theme names
             if (settings.theme === 'prism') {
-                newThemeHref = `https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.css`; // Default Prism CSS (no theme)
+                newThemeHref = `https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.css`;
             } else if (!settings.theme.startsWith('prism-')) {
-                newThemeHref = `https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css`; // Fallback to Tomorrow theme if invalid
+                newThemeHref = `https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css`;
                 console.warn(`Invalid Prism.js theme name: ${settings.theme}. Falling back to tomorrow theme.`);
             }
 
-            prismThemeLink.href = newThemeHref; // Update CSS link href to change Prism.js theme
+            prismThemeLink.href = newThemeHref;
 
-             // Update CSS variables for theme colors - for dynamic theme changes
-             document.documentElement.style.setProperty('--bg-color', settings.bgColor);
-             document.documentElement.style.setProperty('--text-color', settings.textColor);
-             document.documentElement.style.setProperty('--chat-bg-color', settings.chatBgColor);
+            document.documentElement.style.setProperty('--bg-color', settings.bgColor);
+            document.documentElement.style.setProperty('--text-color', settings.textColor);
+            document.documentElement.style.setProperty('--chat-bg-color', settings.chatBgColor);
              document.documentElement.style.setProperty('--sidebar-bg-color', settings.bgColor);
              document.documentElement.style.setProperty('--chat-header-bg-color', settings.bgColor);
              document.documentElement.style.setProperty('--input-area-bg-color', settings.bgColor);
              document.documentElement.style.setProperty('--modal-content-bg-color', settings.bgColor);
         }
 
-        // Function to show loading spinner
         function showLoading() {
             loadingSpinner.classList.add('show');
         }
 
-        // Function to hide loading spinner
         function hideLoading() {
             loadingSpinner.classList.remove('show');
         }
 
-        // Function to display a confirmation message (e.g., saved, deleted)
         function displayConfirmationMessage(message) {
             const confirmationElem = document.getElementById('action-confirmation');
             confirmationElem.textContent = message;
             confirmationElem.classList.add('show');
             setTimeout(() => {
-                confirmationElem.classList.remove('show'); // Hide after 3 seconds
+                confirmationElem.classList.remove('show');
             }, 3000);
         }
 
-        // Function to display an error message (e.g., API error)
         function displayErrorMessage(message) {
             const errorElem = document.getElementById('api-error-message');
             errorElem.textContent = message;
             errorElem.classList.add('show');
             setTimeout(() => {
-                errorElem.classList.remove('show'); // Hide after 5 seconds
+                errorElem.classList.remove('show');
             }, 5000);
         }
 
+        // File upload handler
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // In a real application, you'd upload the file to a server here.
+                // For this example, we'll just create a data URL.
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const fileMessage = {
+                        type: 'file',
+                        name: file.name,
+                        url: e.target.result, // Data URL or server URL
+                    };
+                    addUserMessage(fileMessage); // Treat file as a user message (for display)
+                    // You could also send the file to the AI, if your API supports it.
+                };
+                reader.readAsDataURL(file); // Read as Data URL for preview (images, small files)
+                // For larger files, upload to a server and send the link to the AI.
+            }
+            // Reset input so you can re-upload the same file
+             event.target.value = null;
+        }
 
-        // Close modal if clicked outside of it
+
         window.onclick = function(event) {
             if (event.target == saveHistoryModal) {
                 closeSaveHistoryModal();
