@@ -717,7 +717,7 @@
             padding: 0;
         }
         .color-picker-input::-moz-color-swatch {
-            border: 1px solid #555;
+                        border: 1px solid #555;
             border-radius: 6px;
         }
 
@@ -919,33 +919,31 @@
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
                 let messageText = message.parts[0].text;
-                if (message.role === 'ai') { //Now Handles Both to Add Code Button - Modern Design of Copying Function
-
-                    //Recreate
-                    messageDiv.innerHTML = `<span class="ai-message-text">${messageText}</span>`;
-
-                    messageDiv.querySelectorAll('pre').forEach(codeBlock => {
-
-                      let buttonExists =  codeBlock.querySelector('.copy-code-button') !== null
-
-                         if(!buttonExists )
-                            codeBlock.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>'); // Add copy-code buttons (Now ALWAYS and all new renders from code added.
-
-                        })
+                if (message.role === 'ai') {
+                    messageText = formatMarkdown(messageText);
                 }
-
-                 else
-                    messageDiv.innerHTML = messageText;
-
-
+                messageDiv.innerHTML = `<span class="ai-message-text">${messageText}</span>`;
                 messagesContainer.appendChild(messageDiv);
-              Prism.highlightAllUnder(messageDiv);  // Highlight Current message added. but NOT others, until called one other last time in  "Prism.highlightAll();".
+
+                Prism.highlightAllUnder(messageDiv);
             });
 
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
-          // Prism.highlightAll(); //  Highlight on ALL not just currently active and displayed text and tags.   Can cause errors still if missing tag from CDN!. Check if still the required one is here.
+        }
 
+         function formatMarkdown(text) {
+            // Regular expression to find code blocks
+            const codeBlockRegex = /```([a-zA-Z0-9]*)\n([\s\S]*?)```/g;
 
+            // Replace code blocks with pre and code tags, highlighting the code
+            const formattedText = text.replace(codeBlockRegex, (match, language, code) => {
+                const langClass = language ? `language-${language}` : 'language-plaintext';
+                const highlightedCode = Prism.highlight(code.trim(), Prism.languages[language] || Prism.languages.plaintext, language);
+
+                return `<pre class="${langClass}"><code class="${langClass}">${highlightedCode}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button></pre>`;
+            });
+
+            return formattedText;
         }
 
 
@@ -1220,25 +1218,9 @@
 
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
-                    aiMessageDiv.innerHTML = '';
-                    const aiTextContentSpan = document.createElement('span');
-                    aiTextContentSpan.classList.add('ai-message-text');
+                    aiMessageDiv.remove();
 
-                    //Replace markdown code blocks with Prism-highlighted code blocks
-                    aiResponseText = aiResponseText.replace(/```([a-zA-Z0-9\+\-]+)?\n([\s\S]*?)```/g, (match, language, code) => {
-                        const langClass = language ? `language-${language}` : 'language-plaintext';
-                        const escapedCode = code.replace(/&/g, '&')
-                                               .replace(/</g, '<')
-                                               .replace(/>/g, '>'); //Escape HTML entities for security
-                        return `<pre class="${langClass}"><code class="${langClass}">${escapedCode}</code></pre>`;
-                    });
-
-
-                      aiTextContentSpan.innerHTML = aiResponseText; //Set HTML content to enable rendering of code blocks
-                      aiMessageDiv.appendChild(aiTextContentSpan);
-
-                    const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };//Only Save Html Code result for speed/clean.   NO need all prior parts ever.  Make SMALL JSON too
-
+                    const aiMessageObject = { role: 'model', parts: [{ text: aiResponseText }] };
                     conversationHistory.push(aiMessageObject);
 
                      if (currentHistoryName) { // If in saved history, update it with AI response
@@ -1248,15 +1230,12 @@
                          saveChatHistory(); // only save to 'chatHistory' if not a named saved history.
                     }
 
-                  messagesContainer.appendChild(aiMessageDiv);
+                     renderMessages();
 
-                  // let scroll to  latest response:
-                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
                  }
                 else
                    aiMessageDiv.innerHTML = `<span class="ai-message-text">Không nhận được phản hồi hợp lệ từ AI.</span>`;
 
-             Prism.highlightAll();//Try FULL Load Always also since error reported here in code as to CSS broken after all the rendering etc occur (reported here!)
 
 
             } catch (error) {
