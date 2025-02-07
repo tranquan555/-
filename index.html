@@ -112,7 +112,7 @@
             display: inline-block;
             border: 1px solid var(--border-color);
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Thêm bóng đổ nhẹ */
-            position: relative; /* Để định vị nút copy code */
+            position: relative; /* Để định vị nút copy code và chỉnh sửa tại chỗ */
         }
 
         .user-message {
@@ -135,11 +135,67 @@
             border-top-right-radius: 20px;
         }
 
+        .message-content {
+            /* Nội dung tin nhắn, span này sẽ được thay thế bằng textarea khi chỉnh sửa */
+        }
+
+        .edit-textarea {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 18px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            resize: vertical; /* Cho phép resize dọc */
+            min-height: 45px;
+            overflow-y: auto;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+            width: 100%; /* Chiếm hết chiều rộng của message */
+            box-sizing: border-box; /* Đảm bảo padding và border không làm tăng kích thước */
+            margin-bottom: 10px; /* Khoảng cách với nút Save/Cancel */
+            display: block; /* Đảm bảo nó là block-level element để chiếm hết chiều rộng */
+        }
+
+        .edit-actions {
+            text-align: right; /* Căn phải nút Save/Cancel */
+            margin-top: -5px; /* Kéo lên gần textarea hơn */
+        }
+
+        .edit-button, .cancel-edit-button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+            margin-left: 5px;
+        }
+
+        .edit-button {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+        }
+
+        .edit-button:hover {
+            background-color: #008ac5;
+        }
+
+        .cancel-edit-button {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        .cancel-edit-button:hover {
+            background-color: #666;
+        }
+
+
         .message-options {
-            position: relative; /* Để định vị menu options */
-            display: inline-block; /* Cần thiết để menu options không chiếm hết chiều rộng */
-            margin-left: 5px; /* Khoảng cách với nội dung tin nhắn */
-            vertical-align: top; /* Căn chỉnh theo chiều dọc lên trên cùng */
+            position: absolute; /* Định vị tuyệt đối bên trong message */
+            top: 10px;
+            right: 10px;
+            display: inline-block;
         }
 
         .options-button {
@@ -519,16 +575,17 @@
         pre[class*="language-"] {
             color: #f8f8f2;
             background: #272822;
-            text-shadow: none; /* Loại bỏ text-shadow nếu có */
-            font-size: 0.9em; /* Giảm kích thước chữ trong code */
-            border-radius: 10px; /* Bo tròn góc code block */
-            padding: 15px; /* Tăng padding cho code block */
-            overflow-x: auto; /* Thêm scroll ngang nếu code quá dài */
-            white-space: pre-wrap; /* Cho phép xuống dòng trong code block */
-            word-break: break-word; /* Ngắt từ dài nếu cần */
-            line-height: 1.4; /* Tăng khoảng cách dòng trong code */
-            margin-bottom: 15px; /* Khoảng cách dưới code block */
-            position: relative; /* Để định vị nút copy code bên trong */
+            text-shadow: none;
+            font-size: 0.9em;
+            border-radius: 10px;
+            padding: 15px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1; /* Đảm bảo code block không bị che */
         }
         .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #6c6767; }
         .token.punctuation { color: #f8f8f2; }
@@ -537,7 +594,7 @@
         .token.boolean, .token.number { color: #ae81ff; }
         .token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted { color: #a6e22e; }
         .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string { color: #f8f8f2; background: none; }
-        .token.atrule, .token.attr-value, .token.keyword { color: var(--primary-color); } /* Sử dụng màu chủ đạo */
+        .token.atrule, .token.attr-value, .token.keyword { color: var(--primary-color); }
         .token.function, .token.class-name { color: #e6db74; }
         .token.regex, .token.important, .token.variable { color: #fd971f; }
         .token.important, .token.bold { font-weight: bold; }
@@ -557,6 +614,7 @@
             font-size: 0.8em;
             opacity: 0.7;
             transition: opacity 0.2s ease, background-color 0.2s ease;
+            z-index: 2; /* Đảm bảo nút copy nằm trên code block */
         }
 
         .copy-code-button:hover {
@@ -657,8 +715,8 @@
         let conversationHistory = [];
         let savedHistories = {};
         let historyNameToDelete = null;
-        let currentGeminiRequest = null; // Để theo dõi request hiện tại và có thể hủy
-        let messageBeingEdited = null;
+        let currentGeminiRequest = null;
+        let messageBeingEditedIndex = null; // Theo dõi tin nhắn đang được chỉnh sửa
 
 
         function toggleSidebar() {
@@ -693,39 +751,90 @@
             conversationHistory.forEach((message, index) => {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
+                messageDiv.dataset.messageIndex = index; // Lưu index vào dataset
 
-                const messageContentSpan = document.createElement('span');
-                messageContentSpan.innerHTML = message.parts[0].text;
-                messageContentSpan.classList.add('message-content'); // Để dễ dàng chỉnh sửa sau này
-                messageDiv.appendChild(messageContentSpan);
-
-                if (message.role === 'user') {
-                    const optionsButton = document.createElement('button');
-                    optionsButton.classList.add('options-button');
-                    optionsButton.innerHTML = '<i class="fas fa-ellipsis-v"></i>';
-                    const optionsMenu = document.createElement('ul');
-                    optionsMenu.classList.add('options-menu');
-                    optionsMenu.innerHTML = `
-                        <li onclick="openEditMessageModal(${index})">Chỉnh sửa</li>
-                        <li onclick="deleteMessage(${index})">Xóa</li>
-                    `;
-                    optionsButton.onclick = (event) => {
-                        event.stopPropagation(); // Ngăn chặn sự kiện click lan ra ngoài
-                        toggleOptionsMenu(optionsMenu, optionsButton);
-                    };
-                    messageDiv.appendChild(optionsButton);
-                    messageDiv.appendChild(optionsMenu);
+                if (messageBeingEditedIndex === index) {
+                    // Chế độ chỉnh sửa tại chỗ
+                    renderInPlaceEdit(messageDiv, message);
+                } else {
+                    // Chế độ xem tin nhắn thông thường
+                    renderMessageContent(messageDiv, message, index);
                 }
-
 
                 messagesContainer.appendChild(messageDiv);
                 Prism.highlightAllUnder(messageDiv);
-
-                // Thêm nút copy code sau khi highlight để đảm bảo Prism.js đã xử lý xong
                 addCopyCodeButtons(messageDiv);
             });
              messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
+
+        function renderMessageContent(messageDiv, message, index) {
+            const messageContentSpan = document.createElement('span');
+            messageContentSpan.innerHTML = message.parts[0].text;
+            messageContentSpan.classList.add('message-content');
+            messageDiv.appendChild(messageContentSpan);
+
+            if (message.role === 'user') {
+                const optionsButton = document.createElement('button');
+                optionsButton.classList.add('options-button');
+                optionsButton.innerHTML = '<i class="fas fa-ellipsis-v"></i>';
+                const optionsMenu = document.createElement('ul');
+                optionsMenu.classList.add('options-menu');
+                optionsMenu.innerHTML = `
+                    <li onclick="startInPlaceEdit(${index})">Chỉnh sửa</li>
+                    <li onclick="deleteMessage(${index})">Xóa</li>
+                `;
+                optionsButton.onclick = (event) => {
+                    event.stopPropagation();
+                    toggleOptionsMenu(optionsMenu, optionsButton);
+                };
+                messageDiv.appendChild(optionsButton);
+                messageDiv.appendChild(optionsMenu);
+            }
+        }
+
+        function renderInPlaceEdit(messageDiv, message) {
+            const editTextarea = document.createElement('textarea');
+            editTextarea.value = message.parts[0].text;
+            editTextarea.classList.add('edit-textarea');
+            messageDiv.appendChild(editTextarea);
+            editTextarea.focus(); // Focus vào textarea khi bắt đầu chỉnh sửa
+
+            const editActionsDiv = document.createElement('div');
+            editActionsDiv.classList.add('edit-actions');
+            editActionsDiv.innerHTML = `
+                <button class="edit-button" onclick="confirmInPlaceEdit(${messageDiv.dataset.messageIndex})">Lưu</button>
+                <button class="cancel-edit-button" onclick="cancelInPlaceEdit(${messageDiv.dataset.messageIndex})">Hủy</button>
+            `;
+            messageDiv.appendChild(editActionsDiv);
+        }
+
+
+        function startInPlaceEdit(messageIndex) {
+            messageBeingEditedIndex = messageIndex;
+            renderMessages(); // Gọi lại renderMessages để chuyển sang chế độ chỉnh sửa
+        }
+
+        function cancelInPlaceEdit(messageIndex) {
+            messageBeingEditedIndex = null; // Hủy chế độ chỉnh sửa
+            renderMessages(); // Gọi lại renderMessages để trở về chế độ xem
+        }
+
+        function confirmInPlaceEdit(messageIndex) {
+            const messageDiv = document.querySelector(`.message[data-message-index='${messageIndex}']`);
+            if (!messageDiv) return;
+            const editTextarea = messageDiv.querySelector('.edit-textarea');
+            if (!editTextarea) return;
+
+            const newMessageText = editTextarea.value.trim();
+            if (newMessageText) {
+                conversationHistory[messageIndex].parts[0].text = newMessageText;
+                saveChatHistory();
+            }
+            messageBeingEditedIndex = null; // Kết thúc chế độ chỉnh sửa
+            renderMessages(); // Render lại tin nhắn đã chỉnh sửa
+        }
+
 
         function addCopyCodeButtons(messageDiv) {
             messageDiv.querySelectorAll('pre code').forEach(codeBlock => {
@@ -906,9 +1015,9 @@
             const stopButton = document.getElementById('stop-button');
             const inputArea = document.querySelector('.input-area textarea');
 
-            sendButton.disabled = true; // Vô hiệu hóa nút gửi
-            stopButton.style.display = 'inline-block'; // Hiển thị nút dừng
-            inputArea.disabled = true; // Vô hiệu hóa input
+            sendButton.disabled = true;
+            stopButton.style.display = 'inline-block';
+            inputArea.disabled = true;
 
 
             const userMessageObject = { role: 'user', parts: [{ text: userPrompt }] };
@@ -916,7 +1025,7 @@
             saveChatHistory();
             renderMessages();
             document.getElementById('user-prompt').value = '';
-            adjustTextareaHeight(); // Reset chiều cao textarea
+            adjustTextareaHeight();
 
             const messagesContainer = document.getElementById('messages-container');
             const aiMessageDiv = document.createElement('div');
@@ -958,36 +1067,8 @@
 
                 if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
-                    let codeContent = null;
-                    let language = 'text';
-                    const codeBlockRegex = /```([\w]*)\n([\s\S]*?)```/gm;
-                    const matches = [...aiResponseText.matchAll(codeBlockRegex)];
-
-                    if (matches.length > 0) {
-                        let textContent = aiResponseText.split(codeBlockRegex)[0];
-                        if (textContent.trim()) {
-                             aiMessageDiv.innerHTML = textContent.trim();
-                        } else {
-                             aiMessageDiv.textContent = "Đoạn code được tạo:";
-                        }
-
-
-                        matches.forEach(match => {
-                            language = match[1] || 'text';
-                            codeContent = match[2].trim();
-
-                            const codeBlockHTML = `<pre class="language-${language}"><code class="language-${language}">${codeContent}</code></pre>`;
-                            aiMessageDiv.innerHTML += codeBlockHTML;
-
-
-                        });
-
-                    } else {
-                        aiMessageDiv.innerHTML = aiResponseText;
-                    }
-
-
-                    const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
+                    aiMessageDiv.innerHTML = aiResponseText; // Gán trực tiếp nội dung phản hồi
+                    const aiMessageObject = { role: 'model', parts: [{ text: aiResponseText }] };
                     conversationHistory.push(aiMessageObject);
                     saveChatHistory();
                     renderMessages(); // Gọi lại renderMessages để highlight code và thêm nút copy
@@ -1006,21 +1087,20 @@
                     aiMessageDiv.textContent = "Đã xảy ra lỗi khi kết nối đến API.";
                 }
             } finally {
-                sendButton.disabled = false; // Kích hoạt lại nút gửi
-                stopButton.style.display = 'none'; // Ẩn nút dừng
-                inputArea.disabled = false; // Kích hoạt lại input
-                currentGeminiRequest = null; // Reset request hiện tại
+                sendButton.disabled = false;
+                stopButton.style.display = 'none';
+                inputArea.disabled = false;
+                currentGeminiRequest = null;
             }
         }
 
         function stopGeneratingResponse() {
             if (currentGeminiRequest) {
-                currentGeminiRequest.controller.abort(); // Hủy request fetch
+                currentGeminiRequest.controller.abort();
                 currentGeminiRequest = null;
             }
         }
 
-        // Thêm AbortController vào fetch request để có thể hủy bỏ
         (function() {
             const originalFetch = window.fetch;
             window.fetch = function(url, options = {}) {
@@ -1028,7 +1108,7 @@
                 const signal = controller.signal;
                 options.signal = signal;
                 const promise = originalFetch(url, options);
-                promise.controller = controller; // Gán controller vào promise
+                promise.controller = controller;
                 return promise;
             };
         })();
@@ -1067,17 +1147,17 @@
         document.addEventListener('DOMContentLoaded', function() {
             const textarea = document.getElementById('user-prompt');
             textarea.addEventListener('input', adjustTextareaHeight);
-            adjustTextareaHeight(); // Thiết lập chiều cao ban đầu
+            adjustTextareaHeight();
         });
 
         function adjustTextareaHeight() {
             const textarea = document.getElementById('user-prompt');
-            textarea.style.height = 'auto'; // Reset chiều cao để tính toán lại
-            textarea.style.height = (textarea.scrollHeight) + 'px'; // Đặt chiều cao bằng scrollHeight
+            textarea.style.height = 'auto';
+            textarea.style.height = (textarea.scrollHeight) + 'px';
             if (parseInt(textarea.style.height) > 200) {
-                textarea.style.overflowY = 'scroll'; // Nếu cao quá thì thêm scroll
+                textarea.style.overflowY = 'scroll';
             } else {
-                textarea.style.overflowY = 'hidden'; // Nếu không thì ẩn scroll
+                textarea.style.overflowY = 'hidden';
             }
         }
 
