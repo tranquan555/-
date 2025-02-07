@@ -954,13 +954,14 @@
                 messageDiv.querySelectorAll('pre code').forEach(block => {
                     hljs.highlightBlock(block);
                 });
+
                  // Re-attach copy buttons after highlighting - but ONLY if they don't exist yet - to avoid duplicates
-                  messageDiv.querySelectorAll('pre').forEach(codeBlock => {
-                       let buttonExists = codeBlock.querySelector('.copy-code-button') !== null;
-                       if (!buttonExists) {
-                           codeBlock.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>');
-                       }
-                   });
+                   messageDiv.querySelectorAll('pre').forEach(codeBlock => {
+                        let buttonExists = codeBlock.querySelector('.copy-code-button') !== null;
+                        if (!buttonExists) {
+                            codeBlock.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>');
+                        }
+                    });
             });
 
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -1043,6 +1044,16 @@
         function loadChatHistoryByName(historyName) {
             if (savedHistories[historyName]) {
                 conversationHistory = [...savedHistories[historyName]];
+                 // After loading history:
+                conversationHistory.forEach(message => {
+                  if (message.role === 'model') {
+                      // Reformat code blocks to ensure correct highlighting and copy button
+                      message.parts[0].text = message.parts[0].text.replace(/```([\s\S]*?)```/g, (match, code) => {
+                          const escapedCode = code.replace(/</g, '<').replace(/>/g, '>');
+                          return `<pre><code class="language-javascript">${escapedCode}</code></pre>`;
+                      });
+                  }
+                });
                 saveChatHistory();
                 renderMessages();
                 toggleHistoryMenu();
@@ -1250,7 +1261,7 @@
                 console.error("Lỗi fetch:", error);
                 aiMessageDiv.innerHTML = `<span class="ai-message-text">Đã xảy ra lỗi khi kết nối đến API.</span>`;
             }
-             messagesContainer.appendChild(aiMessageDiv);
+            messagesContainer.appendChild(aiMessageDiv);
             renderMessages();
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
