@@ -320,7 +320,7 @@
         }
 
         .sidebar-menu-item.has-submenu>.menu-link::after {
-            content: '>';
+            content: '>',
             float: right;
             margin-left: 12px;
             font-size: 0.9em;
@@ -853,7 +853,7 @@
             <textarea id="user-prompt" placeholder="Nhập tin nhắn"></textarea>
             <button onclick="getGeminiResponse()">Gửi</button>
         </div>
-        <input type="file" id="file-upload" style="display:none" multiple
+        <input type="file" id="file-upload" style="display::none" multiple
             onchange="handleFileUpload(this.files)">
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"
@@ -881,6 +881,13 @@
         const defaultContainerColor = '#25272b';
 
         let currentHistoryName = null; // Track currently loaded history name
+
+          const escapeHTML = (html) => {
+            let text = document.createTextNode(html);
+            let p = document.createElement('p');
+            p.appendChild(text);
+            return p.innerHTML;
+        }
 
         document.body.addEventListener('click', async (event) => {  //Use One Click Event to Handle EVERY Dynamic New Block. This should remove stale old elements forever also!
             if (event.target.classList.contains('copy-code-button')) {
@@ -934,35 +941,32 @@
             conversationHistory.forEach(message => {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
+
                 let messageText = message.parts[0].text;
 
                 if (message.role === 'ai') {
                     // Find and replace all occurrences of code blocks marked by triple backticks
                     messageText = messageText.replace(/```([\s\S]*?)```/g, (match, code) => {
-                        const escapedCode = code.replace(/</g, '<').replace(/>/g, '>'); // Escape HTML entities
+                        const escapedCode = escapeHTML(code); // Prevent HTML execution.
                         return `<pre><code class="language-javascript">${escapedCode}</code></pre>`;
                     });
 
                     messageDiv.innerHTML = `<span class="ai-message-text">${messageText}</span>`;
                 } else {
+                     messageText = escapeHTML(messageText) //escape user messages
                     messageDiv.innerHTML = messageText;
                 }
 
                 messagesContainer.appendChild(messageDiv);
-
-                // Highlight code blocks after adding message
-                messageDiv.querySelectorAll('pre code').forEach(block => {
-                    hljs.highlightBlock(block);
-                });
-
-                 // Re-attach copy buttons after highlighting - but ONLY if they don't exist yet - to avoid duplicates
-                   messageDiv.querySelectorAll('pre').forEach(codeBlock => {
-                        let buttonExists = codeBlock.querySelector('.copy-code-button') !== null;
-                        if (!buttonExists) {
-                            codeBlock.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>');
-                        }
-                    });
             });
+            // After all messages are added to DOM run Highlighting.js and add buttons
+            messagesContainer.querySelectorAll('pre code').forEach(block => {
+                hljs.highlightBlock(block);
+                 const pre = block.parentNode; // Get the pre element
+                  if (!pre.querySelector('.copy-code-button')) { // add the button if its not yet already there.
+                      pre.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>');
+                   }
+             });
 
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
@@ -1042,18 +1046,8 @@
         }
 
         function loadChatHistoryByName(historyName) {
-            if (savedHistories[historyName]) {
-                conversationHistory = [...savedHistories[historyName]];
-                 // After loading history:
-                conversationHistory.forEach(message => {
-                  if (message.role === 'model') {
-                      // Reformat code blocks to ensure correct highlighting and copy button
-                      message.parts[0].text = message.parts[0].text.replace(/```([\s\S]*?)```/g, (match, code) => {
-                          const escapedCode = code.replace(/</g, '<').replace(/>/g, '>');
-                          return `<pre><code class="language-javascript">${escapedCode}</code></pre>`;
-                      });
-                  }
-                });
+           if (savedHistories[historyName]) {
+                conversationHistory = JSON.parse(localStorage.getItem('savedHistories'))[historyName];
                 saveChatHistory();
                 renderMessages();
                 toggleHistoryMenu();
@@ -1239,7 +1233,7 @@
 
                     // Find and replace all occurrences of code blocks marked by triple backticks
                     aiResponseText = aiResponseText.replace(/```([\s\S]*?)```/g, (match, code) => {
-                        const escapedCode = code.replace(/</g, '<').replace(/>/g, '>'); // Escape HTML entities
+                        const escapedCode = escapeHTML(code);
                         return `<pre><code class="language-javascript">${escapedCode}</code></pre>`;
                     });
 
@@ -1261,7 +1255,7 @@
                 console.error("Lỗi fetch:", error);
                 aiMessageDiv.innerHTML = `<span class="ai-message-text">Đã xảy ra lỗi khi kết nối đến API.</span>`;
             }
-            messagesContainer.appendChild(aiMessageDiv);
+             messagesContainer.appendChild(aiMessageDiv);
             renderMessages();
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
