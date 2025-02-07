@@ -358,56 +358,49 @@
             });
         }
 
+         function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.style.display = 'none';
+        }
+        window.closeModal = closeModal;
+
+        function showHistoryModal() {
+           let historyContent = "<h2>Chat History</h2>";
+            if (state.chatHistory.length === 0) {
+                historyContent += "<p>No history found.</p>";
+            } else {
+                historyContent += "<ul>";
+                state.chatHistory.forEach(item => {
+                    historyContent += `<li>${escapeHtml(item.content)}</li>`;
+                });
+                historyContent += "</ul>";
+            }
+            historyContent += '<button onclick="closeModal()">Close</button>';
+             showModal(historyContent);
+        }
+
+
+        function showSettingsModal() {
+          let settingsContent = `
+              <h2>Settings</h2>
+              <label>
+                  Auto Save History:
+                  <input type="checkbox" id="autoSaveToggle" ${state.autoSaveHistory ? 'checked' : ''} onchange="toggleAutoSave()">
+              </label>
+              <button onclick="closeModal()">Close</button>`;
+             showModal(settingsContent);
+        }
+
+        function toggleAutoSave() {
+            state.autoSaveHistory = !state.autoSaveHistory;
+            localStorage.setItem("autoSaveHistory", state.autoSaveHistory);
+        }
+
         function showModal(content) {
             const modal = document.getElementById('modal');
             const modalContent = document.getElementById('modal-content');
             modalContent.innerHTML = content;
             modal.style.display = 'flex';
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('modal');
-            modal.style.display = 'none';
-        }
-
-        function showHistoryModal() {
-            const history = JSON.parse(localStorage.getItem("chatHistory") || "[]");
-            let historyContent = "<h2>Chat History</h2>";
-            if (history.length === 0) {
-                historyContent += "<p>No history found.</p>";
-            } else {
-                 historyContent += "<ol>";
-                 history.forEach(item => {
-                      historyContent += `<li>${escapeHtml(item.content)}</li>`
-                 })
-                 historyContent += "</ol>";
-            }
-             historyContent += '<button onclick="closeModal()">Close</button>';
-            showModal(historyContent);
-        }
-
-
-        function showSettingsModal() {
-            let settingsContent = `
-                <h2>Settings</h2>
-                <label>
-                    Auto Save History:
-                    <input type="checkbox" id="autoSaveToggle" ${state.autoSaveHistory ? 'checked' : ''}>
-                </label>
-                <button onclick="saveSettings()">Save Settings</button>
-                <button onclick="closeModal()">Close</button>
-            `;
-            showModal(settingsContent);
-
-             document.getElementById('autoSaveToggle').addEventListener('change', function() {
-                  state.autoSaveHistory = this.checked;
-             });
-
-        }
-
-         function saveSettings() {
-            localStorage.setItem("autoSaveHistory", state.autoSaveHistory);
-             closeModal();
         }
 
 
@@ -419,20 +412,27 @@
             const sendButton = document.getElementById('send-button');
             const messageInput = document.getElementById('message-input');
 
-            sendButton.addEventListener('click', () => {
-                const messageText = messageInput.value.trim();
-                if (messageText) {
-                    messageInput.value = '';
-                    sendMessage(messageText);
-                }
-            });
+               if (!sendButton) console.error('sendButton not found!');
+            if (!messageInput) console.error('messageInput not found!');
 
-            messageInput.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter' && !event.shiftKey) {
-                    event.preventDefault();
-                    sendButton.click();
-                }
-            });
+            if (sendButton) {
+                sendButton.addEventListener('click', () => {
+                    const messageText = messageInput.value.trim();
+                    if (messageText) {
+                        messageInput.value = '';
+                        sendMessage(messageText);
+                    }
+                });
+            }
+
+             if (messageInput) {
+                messageInput.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter' && !event.shiftKey) {
+                        event.preventDefault();
+                        sendButton.click();
+                    }
+                });
+            }
 
 
             document.querySelectorAll('#sidebar li').forEach(item => {
@@ -472,36 +472,6 @@
             alert("Save chat history feature is not implemented yet");
 
         }
-        function showHistoryModal() {
-            let historyContent = "<h2>Chat History</h2>";
-            if (state.chatHistory.length === 0) {
-                historyContent += "<p>No history found.</p>";
-            } else {
-                historyContent += "<ul>";
-                state.chatHistory.forEach(item => {
-                    historyContent += `<li>${escapeHtml(item.content)}</li>`;
-                });
-                historyContent += "</ul>";
-            }
-            historyContent += '<button onclick="closeModal()">Close</button>';
-            showModal(historyContent);
-        }
-
-        function showSettingsModal() {
-          let settingsContent = `
-              <h2>Settings</h2>
-              <label>
-                  Auto Save History:
-                  <input type="checkbox" id="autoSaveToggle" ${state.autoSaveHistory ? 'checked' : ''} onchange="toggleAutoSave()">
-              </label>
-              <button onclick="closeModal()">Close</button>`;
-             showModal(settingsContent);
-        }
-         function toggleAutoSave() {
-            state.autoSaveHistory = !state.autoSaveHistory;
-            localStorage.setItem("autoSaveHistory", state.autoSaveHistory);
-        }
-
 
     </script>
 </body>
