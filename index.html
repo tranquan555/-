@@ -718,8 +718,8 @@
 
         .copy-code-button {
             position: absolute;
-            top: 8px;
-            right: 8px;
+            bottom: 8px;
+            left: 8px;
             background-color: var(--copy-button-bg);
             color: var(--copy-button-text-color);
             border: none;
@@ -944,14 +944,6 @@
                     });
 
                     messageDiv.innerHTML = `<span class="ai-message-text">${messageText}</span>`;
-
-                    messageDiv.querySelectorAll('pre').forEach(codeBlock => {
-                        let buttonExists = codeBlock.querySelector('.copy-code-button') !== null;
-
-                        if (!buttonExists) {
-                            codeBlock.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>');
-                        }
-                    });
                 } else {
                     messageDiv.innerHTML = messageText;
                 }
@@ -962,15 +954,13 @@
                 messageDiv.querySelectorAll('pre code').forEach(block => {
                     hljs.highlightBlock(block);
                 });
-
-                // Attach copy buttons after highlighting
-                messageDiv.querySelectorAll('pre').forEach(codeBlock => {
-                    let buttonExists = codeBlock.querySelector('.copy-code-button') !== null;
-
-                    if (!buttonExists) {
-                        codeBlock.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>');
-                    }
-                });
+                 // Re-attach copy buttons after highlighting - but ONLY if they don't exist yet - to avoid duplicates
+                  messageDiv.querySelectorAll('pre').forEach(codeBlock => {
+                       let buttonExists = codeBlock.querySelector('.copy-code-button') !== null;
+                       if (!buttonExists) {
+                           codeBlock.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button>');
+                       }
+                   });
             });
 
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -1241,7 +1231,6 @@
                         const escapedCode = code.replace(/</g, '<').replace(/>/g, '>'); // Escape HTML entities
                         return `<pre><code class="language-javascript">${escapedCode}</code></pre>`;
                     });
-
 
                     aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
                     const aiMessageObject = { role: 'model', parts: [{ text: aiResponseText }] };
