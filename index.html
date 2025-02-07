@@ -39,6 +39,7 @@
             -ms-user-select: none;
             user-select: none;
             line-height: 1.6; /* Tăng khoảng cách dòng */
+            user-scalable: no; /* Chặn zoom toàn trang */
         }
 
         .container {
@@ -111,6 +112,7 @@
             display: inline-block;
             border: 1px solid var(--border-color);
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Thêm bóng đổ nhẹ */
+            position: relative; /* Để định vị nút copy code */
         }
 
         .user-message {
@@ -526,6 +528,7 @@
             word-break: break-word; /* Ngắt từ dài nếu cần */
             line-height: 1.4; /* Tăng khoảng cách dòng trong code */
             margin-bottom: 15px; /* Khoảng cách dưới code block */
+            position: relative; /* Để định vị nút copy code bên trong */
         }
         .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #6c6767; }
         .token.punctuation { color: #f8f8f2; }
@@ -540,6 +543,31 @@
         .token.important, .token.bold { font-weight: bold; }
         .token.italic { font-style: italic; }
         .token.entity { cursor: help; }
+
+        .copy-code-button {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.8em;
+            opacity: 0.7;
+            transition: opacity 0.2s ease, background-color 0.2s ease;
+        }
+
+        .copy-code-button:hover {
+            opacity: 1;
+            background-color: #777;
+        }
+        .copy-code-button.copied {
+            background-color: var(--primary-color);
+            opacity: 1;
+            pointer-events: none; /* Ngăn chặn click sau khi đã copy */
+        }
 
 
     </style>
@@ -692,9 +720,38 @@
 
                 messagesContainer.appendChild(messageDiv);
                 Prism.highlightAllUnder(messageDiv);
+
+                // Thêm nút copy code sau khi highlight để đảm bảo Prism.js đã xử lý xong
+                addCopyCodeButtons(messageDiv);
             });
              messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
+
+        function addCopyCodeButtons(messageDiv) {
+            messageDiv.querySelectorAll('pre code').forEach(codeBlock => {
+                const preBlock = codeBlock.parentNode; // Lấy thẻ <pre>
+                const copyButton = document.createElement('button');
+                copyButton.classList.add('copy-code-button');
+                copyButton.textContent = 'Sao chép';
+
+                copyButton.addEventListener('click', function() {
+                    const codeText = codeBlock.textContent;
+                    navigator.clipboard.writeText(codeText).then(() => {
+                        copyButton.textContent = 'Đã sao chép!';
+                        copyButton.classList.add('copied');
+                        setTimeout(() => {
+                            copyButton.textContent = 'Sao chép';
+                            copyButton.classList.remove('copied');
+                        }, 2000); // Reset text sau 2 giây
+                    }).catch(err => {
+                        console.error('Không thể sao chép code: ', err);
+                        copyButton.textContent = 'Lỗi sao chép';
+                    });
+                });
+                preBlock.appendChild(copyButton); // Thêm nút vào <pre>
+            });
+        }
+
 
         function toggleOptionsMenu(menu, button) {
             // Đóng tất cả các menu options đang mở khác
@@ -919,15 +976,10 @@
                             language = match[1] || 'text';
                             codeContent = match[2].trim();
 
-                            const blob = new Blob([codeContent], { type: 'text/plain' });
-                            const url = URL.createObjectURL(blob);
-                            const downloadLink = document.createElement('a');
-                            downloadLink.href = url;
-                            downloadLink.download = `code.${language}`;
-                            downloadLink.textContent = `Tải xuống code ${language}`;
-                            downloadLink.style.display = 'block';
-                            downloadLink.style.marginTop = '10px';
-                            aiMessageDiv.appendChild(downloadLink);
+                            const codeBlockHTML = `<pre class="language-${language}"><code class="language-${language}">${codeContent}</code></pre>`;
+                            aiMessageDiv.innerHTML += codeBlockHTML;
+
+
                         });
 
                     } else {
@@ -938,7 +990,7 @@
                     const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
                     conversationHistory.push(aiMessageObject);
                     saveChatHistory();
-                    Prism.highlightAllUnder(aiMessageDiv);
+                    renderMessages(); // Gọi lại renderMessages để highlight code và thêm nút copy
                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
 
