@@ -784,7 +784,7 @@
     <script>
         hljs.highlightAll();
 
-        const apiKey = 'AIzaSyAd9p1hXhUcRx4Pz7EmbUKC-V8ULN8L61Q';
+        const apiKey = 'YOUR_API_KEY'; // Replace with your actual API key
         const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
         const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác.\n\nKhi bạn trả lời câu hỏi về code, hãy đảm bảo rằng code được đặt trong các khối code markdown, cú pháp ```[language]\n[code]\n```. Hãy tự động xác định ngôn ngữ lập trình nếu không được chỉ định rõ ràng.  Ví dụ:\n\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\n\nhoặc:\n\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\n\nĐối với văn bản thông thường, hãy sử dụng markdown để tăng cường cấu trúc và dễ đọc. Sử dụng các tiêu đề, danh sách, **in đậm**, *in nghiêng* khi phù hợp. Chú ý đến việc xuống dòng và tạo khoảng trống hợp lý để văn bản có cấu trúc tốt hơn.";
 
