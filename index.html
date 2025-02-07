@@ -35,7 +35,6 @@
             padding: 25px;
             background-color: #303134; /* Darker container */
             border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow */
             display: flex;
             flex-direction: column;
             height: 100vh;
@@ -99,12 +98,8 @@
             position: relative; /* For avatar positioning */
             padding-left: 50px; /* Space for avatar */
             min-height: 40px; /* Ensure enough height for the avatar */
-            transition: background-color 0.2s ease;
         }
 
-        .message:hover {
-             background-color: #3e3f42;
-        }
 
         .message .avatar {
             position: absolute;
@@ -163,7 +158,6 @@
             border-bottom-left-radius: 12px;
             border-bottom-right-radius: 12px;
             border-top: 1px solid #444;
-            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
         }
 
         .input-area textarea {
@@ -178,13 +172,11 @@
             min-height: 40px;
             overflow-y: auto;
             border: 1px solid #444;
-            transition: border-color 0.2s ease; /* Smooth transition */
         }
 
         .input-area textarea:focus {
             border-color: #8ab4f8; /* Google-like focus color */
             outline: none;
-            box-shadow: 0 0 5px rgba(138, 180, 248, 0.5);
         }
 
         .input-area button {
@@ -196,17 +188,12 @@
             cursor: pointer;
             font-size: 16px;
             margin-left: 10px;
-            transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition */
         }
 
         .input-area button:hover {
             background-color: #669df6;
-            transform: translateY(-1px); /* Slight lift on hover */
         }
 
-        .input-area button:active {
-            transform: translateY(0); /* Press effect */
-        }
 
         /* Sidebar Styles */
         .sidebar {
@@ -221,7 +208,6 @@
             transition: transform 0.3s ease;
             z-index: 200;
             padding-top: 60px;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
             overflow-y: auto;
             touch-action: manipulation;
             border-right: 1px solid #3e3f42;
@@ -246,7 +232,6 @@
         .sidebar-menu-item {
             padding: 15px 20px;
             cursor: pointer;
-            transition: background-color 0.2s ease, transform 0.2s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -255,7 +240,6 @@
 
         .sidebar-menu-item:hover {
             background-color: #3e3f42;
-            transform: translateX(2px); /* Slight slide on hover */
         }
 
         .sidebar-menu-item.has-submenu > .menu-link::after {
@@ -272,7 +256,6 @@
             margin: 0;
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
             background-color: #2a2b2d; /* Slightly lighter dark */
             margin-top: 5px;
             max-height: 0;
@@ -295,7 +278,6 @@
         .submenu-item {
             padding: 12px 20px;
             cursor: pointer;
-            transition: background-color 0.2s ease, transform 0.2s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -308,7 +290,6 @@
 
         .submenu-item:hover {
             background-color: #3e3f42;
-            transform: translateX(2px);
         }
 
         .history-name {
@@ -323,7 +304,6 @@
             font-size: 1em;
             padding: 0 8px;
             opacity: 0.7;
-            transition: opacity 0.2s ease, color 0.2s ease;
         }
 
         .delete-history-btn:hover {
@@ -346,13 +326,10 @@
             align-items: center;
             cursor: pointer;
             z-index: 300;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .sidebar-toggle-button:hover {
             background-color: #669df6;
-            transform: scale(1.1);
         }
 
         .sidebar-overlay {
@@ -381,12 +358,10 @@
             display: block;
             margin-left: auto;
             margin-right: auto;
-            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .close-history-menu-btn:hover {
             background-color: #669df6;
-            transform: translateY(-1px);
         }
 
         /* Modal Styles */
@@ -414,7 +389,6 @@
             color: #e8eaed; /* Light text */
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
             width: 80%;
             max-width: 400px;
             text-align: center;
@@ -447,7 +421,6 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
             border: 1px solid #3e3f42;
         }
 
@@ -458,7 +431,6 @@
 
         .modal-button.confirm:hover {
             background-color: #669df6;
-            transform: translateY(-1px);
         }
 
         .modal-button.cancel {
@@ -468,7 +440,6 @@
 
         .modal-button.cancel:hover {
             background-color: #666;
-            transform: translateY(-1px);
         }
 
         /* Code Highlighting Styles (Prism.js) */
@@ -476,6 +447,7 @@
         pre[class*="language-"] {
             color: #f8f8f2;
             background: #272822;
+            /* Removed shadows and effects from code blocks */
         }
         .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #6c6767; }
         .token.punctuation { color: #f8f8f2; }
@@ -509,7 +481,7 @@
             padding: 5px 10px;
             cursor: pointer;
             font-size: 0.8em;
-            transition: background-color 0.3s ease;
+             /* Removed effects from copy buttons */
         }
 
         .code-buttons button:hover {
@@ -583,7 +555,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
     <script>
     // Configuration
-    const apiKey = 'AIzaSyCl21Ku_prQnyMHFs_dJRL8-pgjg9hrc2w'; // API key
+    const apiKey = 'AIzaSyCl21Ku_prQnyMHFs_dJRL8-pgjg9hrc2w'; // API key - Using your provided key
     const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
     const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
     const userAvatar = "https://via.placeholder.com/32/007bff/FFFFFF?text=U"; // Default user avatar
@@ -766,7 +738,7 @@
 
         Prism.highlightAllUnder(messageDiv); // Highlight code
 
-        // Add code copy buttons
+        // Add code copy buttons - UPDATED LOGIC
         const codeBlocks = messageDiv.querySelectorAll('pre code');
         codeBlocks.forEach(codeBlock => {
             const preElement = codeBlock.parentNode; // Get the <pre> element
@@ -776,7 +748,7 @@
             const copyButton = document.createElement('button');
             copyButton.textContent = 'Sao chép';
             copyButton.addEventListener('click', () => {
-                copyToClipboard(codeBlock.textContent);
+                copyToClipboard(codeBlock.textContent); // Directly copy code text
             });
             codeButtons.appendChild(copyButton);
 
@@ -830,7 +802,8 @@
             if (!response.ok) {
                 const errorData = await response.json();
                 console.error("Lỗi API:", errorData);
-                const errorMessage = `Lỗi API: ${response.status} - ${errorData.error.message ||'Không rõ nguyên nhân'}`;
+                const errorMessage = `Lỗi API: ${response.status} - ${errorData.error.message ||
+'Không rõ nguyên nhân'}`;
                 const aiMessageObject = { role: 'model', parts: [{ text: errorMessage }] };
                 conversationHistory.push(aiMessageObject);
                 renderMessage(aiMessageObject);
@@ -881,4 +854,3 @@
     };
 </script>
 </body>
-</html>
