@@ -4,1164 +4,1180 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Chat Hiện Đại</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Prism.js for code syntax highlighting - Tomorrow theme -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" integrity="sha512-vsweODo68mUuH+gxjNWzKWykValMhawjkZXtwiDAxPKi3MfSq+GlvM9m8xCkKMp9i6ZrmtYU3Nz+XYdxSX6rlg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        /* CSS Reset và biến màu sắc */
-        :root {
-            --bg-color: #202123;
-            --container-bg: #343541;
-            --text-color: #fff;
-            --ai-bg: #444654;
-            --user-bg: #303030;
-            --primary-color: #00a8e8; /* Màu chủ đạo giống ChatGPT */
-            --secondary-color: #555;
-            --border-color: #444;
-            --scrollbar-thumb: #666;
-            --scrollbar-track: #2a2a2a;
-        }
+        /* CSS Framework: Vanilla CSS được ưu tiên để tối ưu hóa kích thước và khả năng tùy chỉnh.
+           Không sử dụng CSS Framework như Bootstrap hoặc Tailwind CSS trong trường hợp này
+           để giữ cho codebase đơn giản, dễ hiểu và kiểm soát hoàn toàn giao diện.
+           CSS Variables được sử dụng để dễ dàng quản lý theme và màu sắc. */
 
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: var(--bg-color, #121212); /* Default dark background */
+            color: var(--text-color, #ffffff); /* Default light text */
             display: flex;
-            min-height: 100vh;
-            overflow-x: hidden;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            line-height: 1.6; /* Tăng khoảng cách dòng */
-            user-scalable: no; /* Chặn zoom toàn trang */
+            transition: background-color 0.3s, color 0.3s; /* Smooth theme transitions */
         }
 
-        .container {
-            width: 95%;
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 25px;
-            background-color: var(--container-bg);
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-            display: flex;
-            flex-direction: column;
-            height: 100vh; /* Full height container */
-            flex-grow: 1;
-            margin-left: auto;
-            transition: margin-left 0.3s ease;
-            border: 1px solid var(--border-color);
+        /* Define CSS variables for theming - accessibility: đảm bảo độ tương phản màu sắc đủ theo WCAG */
+        :root {
+            --bg-color: #121212;
+            --text-color: #ffffff;
+            --sidebar-bg-color: #212121;
+            --sidebar-item-hover-bg: rgba(255, 255, 255, 0.1);
+            --chat-header-bg-color: #212121;
+            --message-bubble-ai-bg: #424242;
+            --message-bubble-user-bg: #3498db;
+            --input-area-bg-color: #212121;
+            --input-border-color: #555;
+            --input-bg-color: #333;
+            --modal-backdrop-color: rgba(0,0,0,0.8);
+            --modal-content-bg-color: #333;
+            --modal-border-color: #555;
+            --button-primary-bg-color: #3498db;
+            --button-primary-hover-bg-color: #2980b9;
+            --code-block-bg-color: #272822;
+            --confirmation-color: #4CAF50;
+            --error-color: #F44336;
         }
 
-        .container.sidebar-open {
-            margin-left: 250px; /* Khoảng trống khi sidebar mở */
-        }
-
-        h1 {
-            text-align: center;
-            color: var(--text-color);
-            margin-bottom: 20px;
-            font-size: 2.5em; /* Lớn hơn một chút */
-            letter-spacing: 0.5px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        #messages-container {
-            flex-grow: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            scrollbar-width: thin;
-            scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-            padding-bottom: 70px; /* Đủ chỗ cho input area */
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background-color: var(--bg-color);
-            margin-bottom: 15px; /* Khoảng cách với input area */
-            scroll-behavior: smooth; /* Thêm cuộn mượt */
-        }
-
-        #messages-container::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        #messages-container::-webkit-scrollbar-track {
-            background: var(--scrollbar-track);
-        }
-
-        #messages-container::-webkit-scrollbar-thumb {
-            background-color: var(--scrollbar-thumb);
-            border-radius: 4px;
-        }
-
-        .message {
-            margin-bottom: 12px;
-            padding: 12px 18px; /* Lớn hơn một chút */
-            border-radius: 20px; /* Bo tròn hơn */
-            clear: both;
-            word-wrap: break-word;
-            max-width: 85%; /* Tin nhắn rộng hơn một chút */
-            display: inline-block;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Thêm bóng đổ nhẹ */
-            position: relative; /* Để định vị nút copy code và chỉnh sửa tại chỗ */
-        }
-
-        .user-message {
-            background-color: var(--user-bg);
-            color: var(--text-color);
-            align-self: flex-end;
-            float: right;
-            border-top-right-radius: 4px;
-            border-bottom-right-radius: 20px; /* Bo tròn phải nhiều hơn */
-            border-top-left-radius: 20px;
-        }
-
-        .ai-message {
-            background-color: var(--ai-bg);
-            color: var(--text-color);
-            align-self: flex-start;
-            float: left;
-            border-top-left-radius: 4px;
-            border-bottom-left-radius: 20px; /* Bo tròn trái nhiều hơn */
-            border-top-right-radius: 20px;
-        }
-
-        .message-content {
-            /* Nội dung tin nhắn, span này sẽ được thay thế bằng textarea khi chỉnh sửa */
-        }
-
-        .edit-textarea {
-            flex-grow: 1;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 18px;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            resize: vertical; /* Cho phép resize dọc */
-            min-height: 45px;
-            overflow-y: auto;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
-            width: 100%; /* Chiếm hết chiều rộng của message */
-            box-sizing: border-box; /* Đảm bảo padding và border không làm tăng kích thước */
-            margin-bottom: 10px; /* Khoảng cách với nút Save/Cancel */
-            display: block; /* Đảm bảo nó là block-level element để chiếm hết chiều rộng */
-        }
-
-        .edit-actions {
-            text-align: right; /* Căn phải nút Save/Cancel */
-            margin-top: -5px; /* Kéo lên gần textarea hơn */
-        }
-
-        .edit-button, .cancel-edit-button {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: background-color 0.3s ease;
-            margin-left: 5px;
-        }
-
-        .edit-button {
-            background-color: var(--primary-color);
-            color: var(--text-color);
-        }
-
-        .edit-button:hover {
-            background-color: #008ac5;
-        }
-
-        .cancel-edit-button {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-        }
-
-        .cancel-edit-button:hover {
-            background-color: #666;
-        }
-
-
-        .message-options {
-            position: absolute; /* Định vị tuyệt đối bên trong message */
-            top: 10px;
-            right: 10px;
-            display: inline-block;
-        }
-
-        .options-button {
-            background: transparent;
-            border: none;
-            color: var(--secondary-color);
-            cursor: pointer;
-            font-size: 1em;
-            padding: 5px;
-            opacity: 0.7;
-            transition: opacity 0.2s ease, color 0.2s ease;
-        }
-
-        .options-button:hover {
-            opacity: 1;
-            color: var(--text-color);
-        }
-
-        .options-menu {
-            position: absolute;
-            top: 100%; /* Đặt menu xuống dưới nút */
-            right: 0;
-            background-color: var(--container-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 5px 0;
-            list-style: none;
-            margin: 0;
-            z-index: 10;
-            display: none; /* Ẩn mặc định */
-        }
-
-        .options-menu.show {
-            display: block; /* Hiển thị khi có class 'show' */
-        }
-
-        .options-menu li {
-            padding: 8px 15px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            color: var(--text-color);
-        }
-
-        .options-menu li:hover {
-            background-color: var(--ai-bg);
-        }
-
-
-        .input-area {
-            padding: 15px 20px;
-            background-color: var(--container-bg);
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            box-sizing: border-box;
-            padding-left: 20px;
-            padding-right: 20px;
-            z-index: 100;
-            border-bottom-left-radius: 12px;
-            border-bottom-right-radius: 12px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .input-area textarea {
-            flex-grow: 1;
-            padding: 12px; /* Lớn hơn một chút */
-            border: 1px solid var(--border-color);
-            border-radius: 10px; /* Bo tròn hơn */
-            font-size: 18px; /* Lớn hơn một chút */
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            resize: none;
-            min-height: 45px; /* Cao hơn một chút */
-            overflow-y: auto;
-            border: 1px solid var(--border-color);
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3); /* Thêm bóng đổ trong */
-        }
-
-        .input-area textarea:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 8px rgba(0, 168, 232, 0.5);
-        }
-
-        .input-area button {
-            padding: 12px 25px; /* Lớn hơn một chút */
-            background-color: var(--primary-color);
-            color: var(--text-color);
-            border: none;
-            border-radius: 10px; /* Bo tròn hơn */
-            cursor: pointer;
-            font-size: 18px; /* Lớn hơn một chút */
-            margin-left: 12px; /* Khoảng cách lớn hơn */
-            transition: background-color 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Thêm bóng đổ */
-        }
-
-        .input-area button:hover {
-            background-color: #008ac5; /* Màu tối hơn khi hover */
-        }
-
-        .input-area button:disabled {
-            background-color: var(--secondary-color); /* Màu xám khi disabled */
-            cursor: not-allowed;
-        }
-
-
+        /* Sidebar - accessibility: ARIA roles có thể được thêm vào nếu sidebar trở nên phức tạp hơn */
         .sidebar {
-            position: fixed;
+            width: 250px;
+            background-color: var(--sidebar-bg-color);
+            color: white;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease-in-out, background-color 0.3s;
+            transform: translateX(0);
+            z-index: 1000;
+            height: 100vh;
+            overflow-y: auto; /* Allow vertical scrolling if content overflows */
+            position: fixed; /* Fixed position for sidebar */
             top: 0;
             left: 0;
-            width: 250px;
-            height: 100%;
-            background-color: var(--container-bg);
-            color: var(--text-color);
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
-            z-index: 200;
-            padding-top: 60px;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
-            overflow-y: auto;
-            touch-action: manipulation;
-            border-right: 1px solid var(--border-color);
         }
 
-        .sidebar.sidebar--open {
-            transform: translateX(0);
+        .sidebar.hidden {
+            transform: translateX(-250px); /* Hide sidebar off-screen */
         }
 
         .sidebar-header {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-header h3 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .menu-icon {
+            font-size: 1.5em;
+            cursor: pointer;
+            color: white;
         }
 
         .sidebar-menu {
+            list-style: none;
             padding: 0;
-            list-style: none;
-        }
-
-        .sidebar-menu-item {
-            padding: 15px 20px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid transparent;
-            transition: border-bottom-color 0.3s ease;
-        }
-
-        .sidebar-menu-item:hover {
-            background-color: var(--ai-bg);
-            border-bottom-color: var(--primary-color);
-        }
-
-        .sidebar-menu-item.has-submenu > .menu-link::after {
-            content: '>';
-            float: right;
-            margin-left: 10px;
-            font-size: 0.8em;
-            display: inline-block;
-        }
-
-        .submenu {
-            list-style: none;
-            padding-left: 0;
             margin: 0;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            background-color: #2c2c2c;
-            margin-top: 5px;
-            max-height: 0;
-            opacity: 0;
-            transition: max-height 0.3s ease-out, opacity 0.2s ease-out;
-            overflow-y: hidden;
-            padding-top: 0;
-            padding-bottom: 0;
         }
 
-        .submenu.open {
-            display: block;
-            max-height: 500px;
-            opacity: 1;
-            overflow-y: auto;
-            padding-top: 5px;
-            padding-bottom: 10px;
+        .sidebar-menu li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-
-        .submenu-item {
-            padding: 12px 20px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #333;
-        }
-
-        .submenu-item:last-child {
+        .sidebar-menu li:last-child {
             border-bottom: none;
         }
 
-
-        .submenu-item:hover {
-            background-color: var(--ai-bg);
-        }
-
-        .history-name {
-            flex-grow: 1;
-        }
-
-        .delete-history-btn {
-            background: transparent;
-            border: none;
-            color: var(--secondary-color);
-            cursor: pointer;
-            font-size: 1em;
-            padding: 0 8px;
-            opacity: 0.7;
-            transition: opacity 0.2s ease, color 0.2s ease;
-        }
-
-        .delete-history-btn:hover {
-            opacity: 1;
-            color: var(--text-color);
-        }
-
-        .sidebar-toggle-button {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: var(--primary-color);
-            color: var(--text-color);
-            border: none;
-            border-radius: 50%;
-            width: 45px; /* Lớn hơn một chút */
-            height: 45px; /* Lớn hơn một chút */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            z-index: 300;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Thêm bóng đổ */
-        }
-
-        .sidebar-toggle-button:hover {
-            background-color: #008ac5; /* Màu tối hơn khi hover */
-        }
-
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 150;
-            display: none;
-        }
-
-        .sidebar-overlay.sidebar--open {
-            display: block;
-        }
-
-        .close-history-menu-btn {
-            background-color: var(--primary-color);
-            color: var(--text-color);
-            border: none;
-            border-radius: 8px;
-            padding: 10px 15px;
-            cursor: pointer;
-            margin-top: 10px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
+        .sidebar-menu a {
+            display: flex; /* Flexbox for icon and text alignment */
+            align-items: center; /* Vertically align icon and text */
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
             transition: background-color 0.3s ease;
         }
 
-        .close-history-menu-btn:hover {
-            background-color: #008ac5; /* Màu tối hơn khi hover */
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: var(--sidebar-item-hover-bg);
         }
 
-        .custom-modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            z-index: 400;
-            justify-content: center;
-            align-items: center;
-            pointer-events: none;
+        .sidebar-menu a i {
+            margin-right: 8px; /* Space between icon and text */
         }
 
-        .custom-modal-overlay.show-modal {
-            display: flex;
-            pointer-events: auto;
+        .submenu {
+            margin-left: 15px;
+            padding-left: 10px;
+            border-left: 2px solid rgba(255, 255, 255, 0.2);
+            display: none; /* Initially hidden */
         }
 
-
-        .custom-modal {
-            background-color: var(--container-bg);
-            color: var(--text-color);
-            padding: 25px; /* Lớn hơn một chút */
-            border-radius: 12px; /* Bo tròn hơn */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-            width: 85%; /* Rộng hơn một chút */
-            max-width: 450px; /* Max width lớn hơn */
-            text-align: center;
-            border: 1px solid var(--border-color);
+        .submenu.active {
+            display: block; /* Show submenu when active class is applied */
         }
 
-        .modal-message {
-            margin-bottom: 20px; /* Khoảng cách lớn hơn */
-            font-size: 1.1em; /* Lớn hơn một chút */
+        .submenu li {
+            padding: 5px 0;
         }
 
-        .modal-input {
-            width: calc(100% - 24px); /* Tính toán lại padding */
-            padding: 12px; /* Lớn hơn một chút */
-            margin-bottom: 20px; /* Khoảng cách lớn hơn */
-            border-radius: 10px; /* Bo tròn hơn */
-            border: 1px solid var(--border-color);
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-size: 1em;
-        }
-
-        .modal-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px; /* Khoảng cách lớn hơn */
-        }
-
-        .modal-button {
-            padding: 12px 25px; /* Lớn hơn một chút */
-            border: none;
-            border-radius: 10px; /* Bo tròn hơn */
-            cursor: pointer;
-            font-size: 18px; /* Lớn hơn một chút */
-            transition: background-color 0.3s ease;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Thêm bóng đổ */
-        }
-
-        .modal-button.confirm {
-            background-color: var(--primary-color);
-            color: var(--text-color);
-        }
-
-        .modal-button.confirm:hover {
-            background-color: #008ac5; /* Màu tối hơn khi hover */
-        }
-
-        .modal-button.cancel {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-        }
-
-        .modal-button.cancel:hover {
-            background-color: #666;
-        }
-
-
-        code[class*="language-"],
-        pre[class*="language-"] {
-            color: #f8f8f2;
-            background: #272822;
-            text-shadow: none;
+        .submenu a {
+            padding: 5px 15px;
             font-size: 0.9em;
+            display: block; /* Ensure full width for hover effect */
+        }
+        .submenu a:hover, .submenu a.active {
+            background-color: var(--sidebar-item-hover-bg);
+        }
+
+        .history-search {
+            padding: 0 15px 10px;
+        }
+
+        .history-search input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid var(--input-border-color);
+            background-color: var(--input-bg-color);
+            color: white;
+        }
+
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 15px;
+            /* accessibility: keyboard navigation có thể được cải thiện bằng tabindex nếu cần */
+        }
+
+        .history-item:hover {
+            background-color: var(--sidebar-item-hover-bg);
+        }
+
+        .history-item button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1em;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .history-item button:hover {
+            opacity: 1;
+        }
+
+        .settings-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .settings-option label {
+            margin-right: 10px;
+        }
+
+        .settings-option select, .settings-option input[type="color"], .settings-option input[type="checkbox"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid var(--input-border-color);
+            background-color: var(--input-bg-color);
+            color: white;
+        }
+
+        .settings-option input[type="color"] {
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .settings-option input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        .settings-option input[type="color"]::-webkit-color-swatch {
+            border: 1px solid #555;
+            border-radius: 3px;
+        }
+
+        .settings-option input[type="color"]::-moz-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        .settings-option input[type="color"]::-moz-color-swatch {
+            border: 1px solid #555;
+            border-radius: 3px;
+        }
+
+        .settings-buttons {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .settings-buttons button {
+            background-color: var(--button-primary-bg-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .settings-buttons button:hover {
+            background-color: var(--button-primary-hover-bg-color);
+        }
+
+        /* Chat Container - accessibility: main role để xác định nội dung chính */
+        .chat-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden; /* Prevent container scroll, chat area will scroll */
+        }
+
+        .chat-header {
+            background-color: var(--chat-header-bg-color);
+            padding: 15px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            z-index: 999; /* Ensure header is above messages */
+            transition: background-color 0.3s;
+        }
+
+        .chat-header h2 {
+            margin: 0;
+            font-size: 1.3em;
+        }
+
+        /* Message Area - accessibility: aria-live="polite" để thông báo tin nhắn mới cho screen reader */
+        .message-area {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: scroll; /* Enable vertical scrolling for messages */
+            display: flex;
+            flex-direction: column; /* Stack messages vertically */
+            background-color: var(--chat-bg-color);
+            transition: background-color 0.3s;
+            position: relative; /* Position relative for loading spinner */
+            aria-live="polite"; /* Announce new messages to screen readers politely */
+        }
+
+        /* Loading Spinner - animation for "Đang suy nghĩ..." */
+        .loading-spinner {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid var(--button-primary-bg-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite; /* Spin animation */
+            opacity: 0;
+            visibility: hidden; /* Initially hidden */
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .loading-spinner.show {
+            opacity: 1;
+            visibility: visible; /* Show spinner when .show class is added */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg) translateX(-50%); }
+            100% { transform: rotate(360deg) translateX(-50%); }
+        }
+
+
+        /* Message Bubble - style for user and AI messages */
+        .message-bubble {
+            background-color: var(--message-bubble-ai-bg); /* Default AI bubble color */
+            color: #ffffff;
+            border-radius: 10px;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            max-width: 70%; /* Limit bubble width */
+            word-wrap: break-word; /* Wrap long words */
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+        }
+
+        .message-bubble.user {
+            background-color: var(--message-bubble-user-bg); /* User bubble color */
+            color: white;
+            align-self: flex-end; /* Align user bubbles to the right */
+        }
+
+        /* Input Area - container for textarea and send button - accessibility: form role */
+        .input-area {
+            background-color: var(--input-area-bg-color);
+            padding: 15px 20px;
+            border-top: 1px solid #333;
+            display: flex;
+            align-items: center; /* Vertically center items */
+            transition: background-color 0.3s;
+            /* accessibility: form role for better structure */
+        }
+
+        /* Textarea - for typing messages - accessibility: label liên kết với textarea */
+        .input-area textarea {
+            flex-grow: 1; /* Take up available space */
+            border: 1px solid var(--input-border-color);
+            border-radius: 5px;
+            padding: 10px;
+            resize: none; /* Prevent manual resizing */
+            font-size: 1em;
+            height: 40px; /* Fixed height, adjust as needed */
+            overflow-y: auto; /* Enable vertical scroll for long input */
+            background-color: var(--input-bg-color);
+            color: white;
+            transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+        }
+        .input-area textarea:hover, .input-area textarea:focus {
+            border-color: #aaa;
+            outline: none; /* Remove default focus outline */
+            box-shadow: 0 0 5px rgba(170,170,170,0.3); /* Soft shadow on focus/hover */
+        }
+
+        /* Send Button & Attach Button - accessibility: aria-label cho nút để mô tả chức năng */
+        .input-area button, .input-area .attach-button {
+            background-color: var(--button-primary-bg-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px; /* Space between textarea/attach and send button */
+            transition: background-color 0.3s ease;
+            font-size: 1em;
+            height: auto; /* Reset height */
+        }
+
+        .input-area button:hover, .input-area button:focus, .input-area .attach-button:hover, .input-area .attach-button:focus {
+            background-color: var(--button-primary-hover-bg-color);
+            outline: none; /* Remove focus outline */
+        }
+
+        .input-area .attach-button {
+            background-color: transparent;
+            color: #ccc;
+            padding: 10px;
+            margin-left: 5px;
+            border-radius: 50%; /* Circular button */
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center icon in button */
+            font-size: 1.2em;
+        }
+
+        .input-area .attach-button:hover {
+            background-color: #444;
+            color: #ddd;
+        }
+
+        /* Modals - for save history functionality - accessibility: role="dialog" and aria-modal="true" */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: var(--modal-backdrop-color); /* Black w/ opacity */
+            role="dialog"; /* Accessibility: dialog role */
+            aria-modal="true"; /* Accessibility: indicates modal */
+        }
+
+        .modal-content {
+            background-color: var(--modal-content-bg-color);
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid var(--modal-border-color);
+            width: 80%; /* Could be more or less, depending on screen size */
+            max-width: 500px; /* Limit modal width */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4); /* Deeper shadow for modal */
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-header {
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--modal-border-color);
+            margin-bottom: 15px;
+        }
+
+        .modal-body {
+            padding: 10px 0;
+        }
+
+        .modal-body input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid var(--modal-border-color);
+            border-radius: 5px;
+            background-color: #444;
+            color: white;
+        }
+
+        .modal-body input[type="text"]:focus {
+            outline-color: var(--button-primary-bg-color);
+        }
+
+        .modal-footer {
+            padding-top: 15px;
+            border-top: 1px solid var(--modal-border-color);
+            text-align: right;
+        }
+
+        .modal-footer button {
+            background-color: var(--button-primary-bg-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-footer button:hover {
+            background-color: var(--button-primary-hover-bg-color);
+        }
+
+        /* Utility classes for icons */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            stroke-width: 0;
+            stroke: currentColor;
+            fill: currentColor;
+        }
+
+        /* Code block styling for Prism.js */
+        pre[class*="language-"] {
+            background-color: var(--code-block-bg-color) !important; /* Prism Tomorrow theme background */
+            color: #f8f8f2; /* Prism Tomorrow theme text color */
             border-radius: 10px;
             padding: 15px;
-            overflow-x: auto;
-            white-space: pre-wrap;
-            word-break: break-word;
-            line-height: 1.4;
-            margin-bottom: 15px;
-            position: relative;
-            z-index: 1; /* Đảm bảo code block không bị che */
+            margin-bottom: 10px;
+            overflow-x: auto; /* Enable horizontal scroll for long code lines */
+            position: relative; /* For copy button positioning */
         }
-        .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #6c6767; }
-        .token.punctuation { color: #f8f8f2; }
-        .token.namespace { opacity: .7; }
-        .token.property, .token.tag, .token.constant, .token.symbol, .token.deleted { color: #f92672; }
-        .token.boolean, .token.number { color: #ae81ff; }
-        .token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted { color: #a6e22e; }
-        .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string { color: #f8f8f2; background: none; }
-        .token.atrule, .token.attr-value, .token.keyword { color: var(--primary-color); }
-        .token.function, .token.class-name { color: #e6db74; }
-        .token.regex, .token.important, .token.variable { color: #fd971f; }
-        .token.important, .token.bold { font-weight: bold; }
-        .token.italic { font-style: italic; }
-        .token.entity { cursor: help; }
 
+        code[class*="language-"] {
+            color: inherit; /* Inherit text color from pre */
+            background: none; /* No background for inline code */
+            font-size: 0.9em; /* Slightly smaller font size for code */
+        }
+
+        /* Copy code button - positioned in code block */
         .copy-code-button {
             position: absolute;
-            top: 8px;
-            right: 8px;
-            background-color: var(--secondary-color);
-            color: var(--text-color);
+            top: 0.5em;
+            right: 0.5em;
+            padding: 0.5em;
+            background-color: var(--button-primary-bg-color);
+            color: white;
             border: none;
             border-radius: 5px;
-            padding: 5px 10px;
             cursor: pointer;
             font-size: 0.8em;
-            opacity: 0.7;
-            transition: opacity 0.2s ease, background-color 0.2s ease;
-            z-index: 2; /* Đảm bảo nút copy nằm trên code block */
+            opacity: 0.8;
+            transition: opacity 0.3s;
         }
 
         .copy-code-button:hover {
             opacity: 1;
-            background-color: #777;
         }
-        .copy-code-button.copied {
-            background-color: var(--primary-color);
+
+        /* Confirmation and Error Messages - fixed position at bottom - accessibility: aria-live="assertive" for important messages */
+        .confirmation-message, .error-message {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s, visibility 0.5s;
+            z-index: 1100; /* Ensure it's on top of everything */
+            aria-live="assertive"; /* Accessibility: announce immediately */
+        }
+
+        .confirmation-message.show, .error-message.show {
             opacity: 1;
-            pointer-events: none; /* Ngăn chặn click sau khi đã copy */
+            visibility: visible;
+        }
+
+        .confirmation-message.show {
+            background-color: var(--confirmation-color); /* Green for success */
+        }
+
+        .error-message.show {
+            background-color: var(--error-color); /* Red for error */
+        }
+
+
+        /* Copied message - for code copy confirmation - accessibility: aria-live can be added if needed for screen readers */
+        .copied-message {
+            position: absolute;
+            top: 0.5em;
+            right: 4em; /* Adjust to not overlap copy button */
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.5em 0.8em;
+            border-radius: 5px;
+            font-size: 0.8em;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .copied-message.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+
+        /* Responsive Design - media queries for different screen sizes */
+        @media (max-width: 768px) { /* Tablets and smaller screens */
+            .sidebar {
+                width: 200px;
+                transform: translateX(-200px); /* Initially hidden on smaller screens */
+            }
+            .sidebar.hidden {
+                transform: translateX(0); /* Show sidebar when not hidden on small screens */
+            }
+            .chat-container {
+                margin-left: 0; /* Full width chat area */
+            }
+            .chat-header h2 {
+                font-size: 1.1em;
+            }
+            .message-area {
+                padding: 15px;
+            }
+            .input-area {
+                padding: 10px 15px;
+            }
+            .input-area button, .input-area .attach-button {
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 480px) { /* Phones */
+            .chat-header h2 {
+                font-size: 1em;
+            }
+            .message-bubble {
+                max-width: 85%; /* Message bubbles take more width on small screens */
+                padding: 8px 12px;
+                font-size: 0.95em;
+            }
+            .input-area textarea {
+                font-size: 0.95em;
+                height: 30px; /* Smaller textarea on phones */
+            }
+            .sidebar-header h3 {
+                font-size: 1.3em;
+            }
+            .sidebar-menu a {
+                padding: 6px 10px;
+                font-size: 0.95em;
+            }
         }
 
 
     </style>
 
 </head>
-<body>
+<!-- accessibility: body role="document" if this is a standalone web app -->
+<body role="document" onclick="handleBodyClick(event)">
 
-    <aside class="sidebar" id="sidebar">
+    <!-- Sidebar - navigation menu -->
+    <aside class="sidebar" aria-label="Navigation menu">
         <div class="sidebar-header">
-            <h3>Lịch sử Chat</h3>
+            <h3>Menu</h3>
+            <i class="fas fa-times menu-icon" onclick="toggleSidebar()"></i>
         </div>
         <ul class="sidebar-menu">
-            <li class="sidebar-menu-item" onclick="openSaveHistoryModal()">
-                <span class="menu-link">Lưu hội thoại hiện tại</span>
+            <li><a href="#" onclick="newChat()"><i class="fas fa-plus"></i>Đoạn chat mới</a></li>
+            <li><a href="#" onclick="openSaveHistoryModal()"><i class="fas fa-save"></i>Lưu lịch sử này</a></li>
+            <li>
+                <a href="#" onclick="toggleSubmenu('history-submenu', event)"><i class="fas fa-history"></i>Lịch sử đã lưu</a>
+                <ul class="submenu" id="history-submenu">
+                    <li class="history-search">
+                        <input type="text" id="historySearchInput" placeholder="Tìm kiếm lịch sử..." aria-label="Tìm kiếm lịch sử chat đã lưu">
+                    </li>
+                    <!-- History items will be added here by JavaScript -->
+                </ul>
             </li>
-            <li class="sidebar-menu-item has-submenu" onclick="toggleHistoryMenu()">
-                <span class="menu-link">Lịch sử đã lưu</span>
-                </li>
+            <li>
+                <a href="#" onclick="toggleSubmenu('settings-submenu', event)"><i class="fas fa-cog"></i>Cài đặt</a>
+                <ul class="submenu" id="settings-submenu">
+                    <li class="settings-option">
+                        <label for="auto-save">Tự động lưu lịch sử</label>
+                        <input type="checkbox" id="auto-save">
+                    </li>
+                    <li class="settings-option">
+                        <label for="history-name-first-question">Tên lịch sử là câu hỏi đầu</label>
+                        <input type="checkbox" id="history-name-first-question">
+                    </li>
+                    <li class="settings-option">
+                        <label for="theme-select">Giao diện code</label>
+                        <select id="theme-select" aria-label="Chọn giao diện màu cho code">
+                            <option value="prism-tomorrow">Tomorrow</option>
+                            <option value="prism">Default</option>
+                            <option value="prism-okaidia">Okaidia</option>
+                            <option value="prism-solarizeddark">Solarized Dark</option>
+                            <option value="prism-twilight">Twilight</option>
+                        </select>
+                    </li>
+                    <li class="settings-option">
+                        <label for="bg-color">Màu nền</label>
+                        <input type="color" id="bg-color" value="#121212" aria-label="Chọn màu nền trang web">
+                    </li>
+                    <li class="settings-option">
+                        <label for="text-color">Màu chữ</label>
+                        <input type="color" id="text-color" value="#ffffff" aria-label="Chọn màu chữ trên trang web">
+                    </li>
+                    <li class="settings-option">
+                        <label for="chat-bg-color">Màu nền hộp chat</label>
+                        <input type="color" id="chat-bg-color" value="#212121" aria-label="Chọn màu nền khu vực chat">
+                    </li>
+                    <li class="settings-buttons">
+                        <button onclick="saveSettings()">Lưu cài đặt</button>
+                        <button onclick="undoSettings()">Hoàn tác</button>
+                    </li>
+                </ul>
+            </li>
         </ul>
-
-        <ul class="submenu" id="saved-histories-menu">
-            <button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>
-        </ul>
-
-        <div class="custom-modal-overlay" id="saveHistoryModalOverlay">
-            <div class="custom-modal">
-                <p class="modal-message">Nhập tên cho lịch sử chat này:</p>
-                <input type="text" id="historyNameInput" class="modal-input" placeholder="Tên lịch sử">
-                <div class="modal-buttons">
-                    <button class="modal-button confirm" onclick="saveHistoryWithInputName()">Lưu</button>
-                    <button class="modal-button cancel" onclick="closeSaveHistoryModal()">Huỷ</button>
-                </div>
-            </div>
-        </div>
-
-         <div class="custom-modal-overlay" id="deleteHistoryModalOverlay">
-            <div class="custom-modal">
-                <p class="modal-message" id="deleteConfirmationMessage">Bạn có chắc chắn muốn xóa lịch sử chat "<span id="historyNameToDelete"></span>" không?</p>
-                <div class="modal-buttons">
-                    <button class="modal-button confirm" onclick="confirmDeleteHistory()">Xóa</button>
-                    <button class="modal-button cancel" onclick="closeDeleteHistoryModal()">Huỷ</button>
-                </div>
-            </div>
-        </div>
-
-         <div class="custom-modal-overlay" id="editMessageModalOverlay">
-            <div class="custom-modal">
-                <p class="modal-message">Chỉnh sửa tin nhắn:</p>
-                <textarea id="editMessageInput" class="modal-input" rows="4"></textarea>
-                <div class="modal-buttons">
-                    <button class="modal-button confirm" onclick="confirmEditMessage()">Lưu</button>
-                    <button class="modal-button cancel" onclick="closeEditMessageModal()">Huỷ</button>
-                </div>
-            </div>
-        </div>
-
     </aside>
 
-    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <!-- Main chat container -->
+    <div class="chat-container">
+        <header class="chat-header">
+            <i class="fas fa-bars menu-icon" onclick="toggleSidebar()" aria-label="Mở/đóng menu"></i>
+            <h2>AI Chat</h2>
+        </header>
+        <!-- Message display area -->
+        <main id="message-area" class="message-area">
+            <div class="loading-spinner" id="loading-spinner"></div> <!-- Loading spinner element -->
+            <!-- Messages will be appended here by JavaScript -->
+        </main>
+        <!-- Input area for typing messages -->
+        <form class="input-area" role="form">
+            <i class="fas fa-paperclip attach-button" aria-label="Tải tệp đính kèm (chức năng chưa hoạt động)"></i>
+            <textarea id="message-input" placeholder="Nhập tin nhắn..." aria-label="Nhập tin nhắn"></textarea>
+            <button type="button" onclick="sendMessage()" aria-label="Gửi tin nhắn">Gửi</button>
+        </form>
+    </div>
 
-    <button class="sidebar-toggle-button" onclick="toggleSidebar()">
-        <i class="fas fa-bars"></i>
-    </button>
-
-    <div class="container" id="container">
-        <h1>AI Chat Hiện Đại</h1>
-
-        <div id="messages-container">
-            <!-- Messages will be appended here -->
-        </div>
-
-        <div class="input-area">
-            <textarea id="user-prompt" placeholder="Nhập tin nhắn" rows="1"></textarea>
-            <button id="send-button" onclick="getGeminiResponse()">Gửi</button>
-            <button id="stop-button" onclick="stopGeneratingResponse()" style="display: none; background-color: #f44336;">Dừng</button>
+    <!-- Save History Modal - dialog for saving chat history -->
+    <div id="saveHistoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close-button" onclick="closeSaveHistoryModal()">&times;</span>
+                <h2>Lưu lịch sử chat</h2>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="historyNameInput" placeholder="Nhập tên lịch sử" aria-label="Nhập tên cho lịch sử chat">
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="saveHistory()">Lưu</button>
+                <button type="button" onclick="closeSaveHistoryModal()">Hủy</button>
+            </div>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <!-- Confirmation messages (e.g., "Copied", "Saved") -->
+    <div class="copied-message" id="copied-confirmation">Đã sao chép vào clipboard!</div>
+    <div class="confirmation-message" id="action-confirmation"></div>
+    <!-- Error messages (e.g., API errors) -->
+    <div class="error-message" id="api-error-message"></div>
+
+
+    <!-- Prism.js library for code syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-NlKI+oQZ+gGt9ggTpO+LgQo9oWdO2h5p/8lr/VCdGDTvKXZMq+gIHv5voW9e8GlS/g5Wjyxm3CqjG7W7Vf6y+g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Prism.js JavaScript language component -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js" integrity="sha512-jLCHmr5IU189O2jGuQj+3Tyzu1xoJsOO3CcWueUMrRcJ9iWl2uV09Szwvjy9VyttAr6Q1l7Tqsj+z82FTz1zvg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <script>
-        const apiKey = 'AIzaSyCl21Ku_prQnyMHFs_dJRL8-pgjg9hrc2w'; // Thay API key của bạn vào đây
-        const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
-        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
+        /* JavaScript Framework/Library: Vanilla JavaScript được sử dụng để đơn giản hóa dự án
+           và tối ưu hóa hiệu suất. Không sử dụng framework/library như React, Vue, Angular
+           hoặc các thư viện nhỏ như Alpine.js, HTMX trong trường hợp này để giảm thiểu
+           độ phức tạp và phụ thuộc bên ngoài. Vanilla JS đủ mạnh mẽ cho các tương tác hiện tại. */
 
-        let conversationHistory = [];
-        let savedHistories = {};
-        let historyNameToDelete = null;
-        let currentGeminiRequest = null;
-        let messageBeingEditedIndex = null; // Theo dõi tin nhắn đang được chỉnh sửa
+        const sidebar = document.querySelector('.sidebar');
+        const messageArea = document.getElementById('message-area');
+        const messageInput = document.getElementById('message-input');
+        const historySubmenu = document.getElementById('history-submenu');
+        const settingsSubmenu = document.getElementById('settings-submenu');
+        const saveHistoryModal = document.getElementById('saveHistoryModal');
+        const historyNameInput = document.getElementById('historyNameInput');
+        const copiedConfirmation = document.getElementById('copied-confirmation');
+        const themeSelect = document.getElementById('theme-select');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const actionConfirmation = document.getElementById('action-confirmation');
+        const apiErrorMessage = document.getElementById('api-error-message');
+        const historySearchInput = document.getElementById('historySearchInput');
+        let activeSubmenu = null; // Track currently active submenu
 
+        // State variables to hold chat history, saved histories, and settings
+        let chatHistory = [];
+        let savedHistories = JSON.parse(localStorage.getItem('chatHistories')) || {};
+        let settings = JSON.parse(localStorage.getItem('chatSettings')) || {
+            autoSaveHistory: false,
+            historyNameFirstQuestion: false,
+            theme: 'prism-tomorrow',
+            bgColor: '#121212',
+            textColor: '#ffffff',
+            chatBgColor: '#212121'
+        };
+        let filteredHistories = { ...savedHistories }; // For history search functionality
 
+        // Apply initial settings on page load
+        applySettings();
+        loadSavedHistoryList();
+
+        // Auto-focus on textarea when page loads for better UX
+        messageInput.focus();
+
+        // Function to toggle sidebar visibility (responsive menu)
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const container = document.getElementById('container');
-            const overlay = document.getElementById('sidebar-overlay');
-            sidebar.classList.toggle('sidebar--open');
-            container.classList.toggle('container.sidebar-open');
-            overlay.classList.toggle('sidebar--open');
-            if (sidebar.classList.contains('sidebar--open')) {
-                 loadSavedHistoriesList();
-            } else {
-                hideHistoryMenu();
+            sidebar.classList.toggle('hidden');
+        }
+
+        // Function to toggle submenu visibility (history, settings)
+        function toggleSubmenu(submenuId, event) {
+            event.preventDefault(); // Prevent default anchor behavior
+            const submenu = document.getElementById(submenuId);
+
+            // Close any other open submenu before opening this one
+            if (activeSubmenu && activeSubmenu !== submenu) {
+                activeSubmenu.classList.remove('active');
+            }
+            submenu.classList.toggle('active'); // Toggle active class on current submenu
+            activeSubmenu = submenu.classList.contains('active') ? submenu : null; // Update active submenu
+
+            // Focus on search input when history submenu opens
+            if (submenuId === 'history-submenu' && submenu.classList.contains('active')) {
+                historySearchInput.focus();
             }
         }
 
-        function loadChatHistory() {
-            const storedHistory = localStorage.getItem('chatHistory');
-            if (storedHistory) {
-                conversationHistory = JSON.parse(storedHistory);
-                renderMessages();
+        // Function to handle clicks outside of submenus to close them
+        function handleBodyClick(event) {
+            if (activeSubmenu && !sidebar.contains(event.target) && !event.target.closest('.sidebar-menu li a')) {
+                activeSubmenu.classList.remove('active');
+                activeSubmenu = null;
             }
         }
 
-        function saveChatHistory() {
-            localStorage.setItem('chatHistory', JSON.stringify(conversationHistory));
-        }
 
-        function renderMessages() {
-            const messagesContainer = document.getElementById('messages-container');
-            messagesContainer.innerHTML = '';
-            conversationHistory.forEach((message, index) => {
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
-                messageDiv.dataset.messageIndex = index; // Lưu index vào dataset
+        // Function to start a new chat - clears history and input
+        function newChat() {
+            chatHistory = []; // Clear chat history
+            messageArea.innerHTML = `<div class="loading-spinner" id="loading-spinner"></div>`; // Keep spinner in new chat for consistent UI
+            loadingSpinner = document.getElementById('loading-spinner'); // Re-assign loadingSpinner after innerHTML change
+            messageInput.value = ''; // Clear input textarea
+            messageInput.focus(); // Focus back to textarea for new message
+            loadSavedHistoryList(); // Refresh history list
 
-                if (messageBeingEditedIndex === index) {
-                    // Chế độ chỉnh sửa tại chỗ
-                    renderInPlaceEdit(messageDiv, message);
-                } else {
-                    // Chế độ xem tin nhắn thông thường
-                    renderMessageContent(messageDiv, message, index);
-                }
-
-                messagesContainer.appendChild(messageDiv);
-                Prism.highlightAllUnder(messageDiv);
-                addCopyCodeButtons(messageDiv);
-            });
-             messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-
-        function renderMessageContent(messageDiv, message, index) {
-            const messageContentSpan = document.createElement('span');
-            messageContentSpan.innerHTML = message.parts[0].text;
-            messageContentSpan.classList.add('message-content');
-            messageDiv.appendChild(messageContentSpan);
-
-            if (message.role === 'user') {
-                const optionsButton = document.createElement('button');
-                optionsButton.classList.add('options-button');
-                optionsButton.innerHTML = '<i class="fas fa-ellipsis-v"></i>';
-                const optionsMenu = document.createElement('ul');
-                optionsMenu.classList.add('options-menu');
-                optionsMenu.innerHTML = `
-                    <li onclick="startInPlaceEdit(${index})">Chỉnh sửa</li>
-                    <li onclick="deleteMessage(${index})">Xóa</li>
-                `;
-                optionsButton.onclick = (event) => {
-                    event.stopPropagation();
-                    toggleOptionsMenu(optionsMenu, optionsButton);
-                };
-                messageDiv.appendChild(optionsButton);
-                messageDiv.appendChild(optionsMenu);
+            // Reset active menu item if needed (example, if you want to visually highlight current menu)
+            const activeMenuItem = document.querySelector('.sidebar-menu a.active');
+            if (activeMenuItem) {
+                activeMenuItem.classList.remove('active');
             }
         }
 
-        function renderInPlaceEdit(messageDiv, message) {
-            const editTextarea = document.createElement('textarea');
-            editTextarea.value = message.parts[0].text;
-            editTextarea.classList.add('edit-textarea');
-            messageDiv.appendChild(editTextarea);
-            editTextarea.focus(); // Focus vào textarea khi bắt đầu chỉnh sửa
-
-            const editActionsDiv = document.createElement('div');
-            editActionsDiv.classList.add('edit-actions');
-            editActionsDiv.innerHTML = `
-                <button class="edit-button" onclick="confirmInPlaceEdit(${messageDiv.dataset.messageIndex})">Lưu</button>
-                <button class="cancel-edit-button" onclick="cancelInPlaceEdit(${messageDiv.dataset.messageIndex})">Hủy</button>
-            `;
-            messageDiv.appendChild(editActionsDiv);
-        }
-
-
-        function startInPlaceEdit(messageIndex) {
-            messageBeingEditedIndex = messageIndex;
-            renderMessages(); // Gọi lại renderMessages để chuyển sang chế độ chỉnh sửa
-        }
-
-        function cancelInPlaceEdit(messageIndex) {
-            messageBeingEditedIndex = null; // Hủy chế độ chỉnh sửa
-            renderMessages(); // Gọi lại renderMessages để trở về chế độ xem
-        }
-
-        function confirmInPlaceEdit(messageIndex) {
-            const messageDiv = document.querySelector(`.message[data-message-index='${messageIndex}']`);
-            if (!messageDiv) return;
-            const editTextarea = messageDiv.querySelector('.edit-textarea');
-            if (!editTextarea) return;
-
-            const newMessageText = editTextarea.value.trim();
-            if (newMessageText) {
-                conversationHistory[messageIndex].parts[0].text = newMessageText;
-                saveChatHistory();
+        // Function to send a message - user input to AI and display messages
+        function sendMessage() {
+            const messageText = messageInput.value.trim(); // Get message text and trim whitespace
+            if (messageText) {
+                addUserMessage(messageText); // Display user message
+                messageInput.value = ''; // Clear input textarea
+                messageInput.focus(); // Keep focus on textarea for next message
+                showLoading(); // Show loading spinner while waiting for AI response
+                // Simulate AI response (replace with actual API call to Gemini API or similar)
+                generateAIResponse(messageText)
+                    .then(aiResponse => {
+                        addAIMessage(aiResponse); // Display AI response
+                    })
+                    .catch(error => {
+                        console.error('Lỗi API: ', error);
+                        displayErrorMessage(error.message || 'Đã xảy ra lỗi khi giao tiếp với AI. Vui lòng thử lại.'); // Display error message to user
+                        addAIMessageBubbleOnError('Đã xảy ra lỗi khi nhận phản hồi từ AI.'); // Display error in chat
+                    })
+                    .finally(() => {
+                        hideLoading(); // Hide loading spinner when response is received or error occurs
+                    });
             }
-            messageBeingEditedIndex = null; // Kết thúc chế độ chỉnh sửa
-            renderMessages(); // Render lại tin nhắn đã chỉnh sửa
         }
 
+        // Function to add a user message to the chat history and display
+        function addUserMessage(message) {
+            chatHistory.push({ sender: 'user', text: message }); // Add message to chat history array
+            displayMessage('user', message); // Display message in chat area
+        }
 
-        function addCopyCodeButtons(messageDiv) {
-            messageDiv.querySelectorAll('pre code').forEach(codeBlock => {
-                const preBlock = codeBlock.parentNode; // Lấy thẻ <pre>
+        // Function to add an AI message to the chat history and display
+        function addAIMessage(message) {
+            chatHistory.push({ sender: 'ai', text: message }); // Add message to chat history
+            displayMessage('ai', message); // Display message in chat area
+            if (settings.autoSaveHistory) {
+                saveCurrentHistoryAuto(); // Auto-save history if setting is enabled
+            }
+        }
+
+        // Function to display a message in the chat area (user or AI)
+        function displayMessage(sender, message) {
+            const messageBubble = document.createElement('div');
+            messageBubble.classList.add('message-bubble'); // Base style for all messages
+            messageBubble.classList.add(sender); // Add sender-specific class (user or ai)
+
+            // Check if message is code and needs syntax highlighting
+            if (message.startsWith('<code>') && message.endsWith('</code>')) {
+                const codeContent = message.substring(6, message.length - 7); // Extract code content from <code> tags
+                const pre = document.createElement('pre');
+                pre.classList.add('language-javascript'); // Assuming code is JavaScript, can be dynamically set
+                pre.innerHTML = `<code class="language-javascript">${Prism.highlight(codeContent, Prism.languages.javascript, 'javascript')}</code>`; // Highlight code using Prism.js
+
+                // Add "Copy Code" button to code blocks
                 const copyButton = document.createElement('button');
                 copyButton.classList.add('copy-code-button');
-                copyButton.textContent = 'Sao chép';
+                copyButton.innerHTML = '<i class="fas fa-clipboard"></i>'; // Clipboard icon
+                copyButton.title = 'Sao chép mã'; // Tooltip for accessibility
+                const copiedSpan = document.createElement('span');
+                copiedSpan.classList.add('copied-message');
+                copiedSpan.textContent = 'Đã sao chép!';
+                pre.appendChild(copiedSpan);
 
-                copyButton.addEventListener('click', function() {
-                    const codeText = codeBlock.textContent;
-                    navigator.clipboard.writeText(codeText).then(() => {
-                        copyButton.textContent = 'Đã sao chép!';
-                        copyButton.classList.add('copied');
+                // Event listener for "Copy Code" button
+                copyButton.addEventListener('click', () => {
+                    navigator.clipboard.writeText(codeContent).then(() => {
+                        copiedConfirmation.classList.add('show'); // Show confirmation message
                         setTimeout(() => {
-                            copyButton.textContent = 'Sao chép';
-                            copyButton.classList.remove('copied');
-                        }, 2000); // Reset text sau 2 giây
+                            copiedConfirmation.classList.remove('show'); // Hide after 2 seconds
+                        }, 2000);
                     }).catch(err => {
-                        console.error('Không thể sao chép code: ', err);
-                        copyButton.textContent = 'Lỗi sao chép';
+                        console.error('Không thể sao chép mã: ', err);
+                        displayErrorMessage('Lỗi khi sao chép mã.'); // Display error message if copy fails
                     });
                 });
-                preBlock.appendChild(copyButton); // Thêm nút vào <pre>
-            });
+                pre.appendChild(copyButton);
+                messageBubble.appendChild(pre); // Append code block to message bubble
+
+            } else {
+                messageBubble.textContent = message; // Set message text content
+            }
+
+            messageArea.appendChild(messageBubble); // Append message bubble to chat area
+            messageArea.scrollTop = messageArea.scrollHeight; // Scroll to bottom to show latest message
         }
 
 
-        function toggleOptionsMenu(menu, button) {
-            // Đóng tất cả các menu options đang mở khác
-            document.querySelectorAll('.options-menu.show').forEach(m => {
-                if (m !== menu) {
-                    m.classList.remove('show');
-                }
-            });
-            menu.classList.toggle('show');
-
-            // Đóng menu khi click ra ngoài
-            if (menu.classList.contains('show')) {
-                document.addEventListener('click', function closeMenu(event) {
-                    if (!menu.contains(event.target) && !button.contains(event.target)) {
-                        menu.classList.remove('show');
-                        document.removeEventListener('click', closeMenu);
+        // Function to simulate AI response - replace with actual API call
+        function generateAIResponse(userMessage) {
+            // Simulate AI response and potential API error using Promises for async handling
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    if (Math.random() < 0.8) { // Simulate 80% success rate, 20% chance of error
+                        if (userMessage.toLowerCase().includes('code')) {
+                            resolve(`Phản hồi từ AI (với code):\n<code>function helloWorld() {\n  console.log("Xin chào thế giới!");\n}\nhelloWorld();</code>\nĐây là một đoạn mã JavaScript đơn giản.`);
+                        } else {
+                            resolve(`Phản hồi từ AI cho: "${userMessage}"`);
+                        }
+                    } else {
+                        reject(new Error('Lỗi API không xác định. Vui lòng thử lại sau.')); // Simulate API error
                     }
-                });
-            }
+                }, 800); // Simulate API delay of 800ms
+            });
+        }
+
+        // Function to display AI message bubble in case of API error
+        function addAIMessageBubbleOnError(errorMessage) {
+            const messageBubble = document.createElement('div');
+            messageBubble.classList.add('message-bubble');
+            messageBubble.classList.add('ai'); // Still 'ai' sender for styling
+            messageBubble.classList.add('error'); // Add error class for potential error styling if needed
+            messageBubble.textContent = errorMessage;
+            messageArea.appendChild(messageBubble);
+            messageArea.scrollTop = messageArea.scrollHeight;
         }
 
 
+        // History Management Functions
+
+        // Function to open the "Save History" modal
         function openSaveHistoryModal() {
-            document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
-            document.getElementById('historyNameInput').value = '';
+            saveHistoryModal.style.display = "block"; // Show the modal
+            if (settings.historyNameFirstQuestion && chatHistory.length > 0 && chatHistory[0].sender === 'user') {
+                historyNameInput.value = chatHistory[0].text.substring(0, 50); // Default name from first user question
+            } else {
+                historyNameInput.value = ''; // Clear input for custom name
+            }
         }
 
+        // Function to close the "Save History" modal
         function closeSaveHistoryModal() {
-            document.getElementById('saveHistoryModalOverlay').classList.remove('show-modal');
+            saveHistoryModal.style.display = "none"; // Hide the modal
         }
 
-        function saveHistoryWithInputName() {
-            const historyName = document.getElementById('historyNameInput').value.trim();
+        // Function to save the current chat history to local storage
+        function saveHistory() {
+            const historyName = historyNameInput.value.trim(); // Get history name from input and trim whitespace
             if (historyName) {
-                savedHistories[historyName] = [...conversationHistory];
-                localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-                alert(`Lịch sử chat đã được lưu với tên: ${historyName}`);
-                loadSavedHistoriesList();
-                closeSaveHistoryModal();
+                savedHistories[historyName] = chatHistory; // Save chat history with given name
+                localStorage.setItem('chatHistories', JSON.stringify(savedHistories)); // Update local storage
+                loadSavedHistoryList(); // Refresh history list in sidebar
+                closeSaveHistoryModal(); // Close the modal
+                displayConfirmationMessage(`Lịch sử chat "${historyName}" đã được lưu.`); // Show confirmation message
             } else {
-                alert("Vui lòng nhập tên cho lịch sử chat.");
+                alert('Vui lòng nhập tên lịch sử.'); // Alert if history name is empty
             }
         }
 
-        function openDeleteHistoryModal(name) {
-            historyNameToDelete = name;
-            document.getElementById('historyNameToDelete').textContent = name;
-            document.getElementById('deleteHistoryModalOverlay').classList.add('show-modal');
+        // Function to load and display the list of saved chat histories in sidebar
+        function loadSavedHistoryList() {
+            historySubmenu.innerHTML = `<li class="history-search">
+                        <input type="text" id="historySearchInput" placeholder="Tìm kiếm lịch sử...">
+                    </li>`; // Re-add search input - accessibility: aria-label added in HTML
+            const historySearchInputElem = document.getElementById('historySearchInput');
+            historySearchInputElem.addEventListener('input', handleHistorySearch); // Attach event listener for search
+
+            filteredHistories = searchHistories(historySearchInputElem.value); // Initialize filtered histories based on current search term
+
+            historySubmenu.innerHTML += Object.keys(filteredHistories).map(historyName => `
+                <li class="history-item">
+                    <a href="#" onclick="loadHistory('${historyName}')">${historyName}</a>
+                    <button onclick="deleteHistory('${historyName}')"><i class="fas fa-trash"></i></button>
+                </li>
+            `).join(''); // Dynamically create and append history items to submenu
         }
 
-        function closeDeleteHistoryModal() {
-            document.getElementById('deleteHistoryModalOverlay').classList.remove('show-modal');
-            historyNameToDelete = null;
+        // Function to handle history search input and update displayed list
+        function handleHistorySearch(event) {
+            const searchTerm = event.target.value.toLowerCase(); // Get search term and convert to lowercase
+            filteredHistories = searchHistories(searchTerm); // Filter histories based on search term
+            historySubmenu.innerHTML = `<li class="history-search">
+                        <input type="text" id="historySearchInput" placeholder="Tìm kiếm lịch sử...">
+                    </li>`; // Clear and re-add search input
+            const historySearchInputElem = document.getElementById('historySearchInput');
+            historySearchInputElem.addEventListener('input', handleHistorySearch); // Re-attach event listener
+
+             historySubmenu.innerHTML += Object.keys(filteredHistories).map(historyName => `
+                <li class="history-item">
+                    <a href="#" onclick="loadHistory('${historyName}')">${historyName}</a>
+                    <button onclick="deleteHistory('${historyName}')"><i class="fas fa-trash"></i></button>
+                </li>
+            `).join(''); // Dynamically create and append filtered history items
         }
 
-        function confirmDeleteHistory() {
-            if (historyNameToDelete) {
-                deleteSavedHistory(historyNameToDelete);
-            }
-            closeDeleteHistoryModal();
-        }
-
-
-        function deleteSavedHistory(historyName) {
-            delete savedHistories[historyName];
-            localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-            loadSavedHistoriesList();
-            alert(`Lịch sử chat "${historyName}" đã bị xóa.`);
-
-        }
-
-
-        function loadChatHistoryByName(historyName) {
-            if (savedHistories[historyName]) {
-                conversationHistory = [...savedHistories[historyName]];
-                saveChatHistory();
-                renderMessages();
-                toggleHistoryMenu();
-                toggleSidebar();
-            } else {
-                alert("Không tìm thấy lịch sử chat đã lưu.");
-            }
-        }
-
-
-        function toggleHistoryMenu() {
-            const submenu = document.getElementById('saved-histories-menu');
-            submenu.classList.toggle('open');
-        }
-
-        function hideHistoryMenu() {
-            const submenu = document.getElementById('saved-histories-menu');
-            submenu.classList.remove('open');
-        }
-
-
-        function loadSavedHistoriesList() {
-            const historiesMenu = document.getElementById('saved-histories-menu');
-            historiesMenu.innerHTML = '<button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>';
-
-            const storedSavedHistories = localStorage.getItem('savedHistories');
-            if (storedSavedHistories) {
-                savedHistories = JSON.parse(storedSavedHistories);
-            } else {
-                savedHistories = {};
-            }
-
-            if (Object.keys(savedHistories).length === 0) {
-                const noHistoryItem = document.createElement('li');
-                noHistoryItem.classList.add('submenu-item');
-                noHistoryItem.textContent = "Chưa có lịch sử nào được lưu.";
-                historiesMenu.appendChild(noHistoryItem);
-                return;
-            }
-
+        // Function to search saved histories based on search term
+        function searchHistories(searchTerm) {
+            const results = {};
             for (const historyName in savedHistories) {
-                const historyItem = document.createElement('li');
-                historyItem.classList.add('submenu-item');
+                if (historyName.toLowerCase().includes(searchTerm)) {
+                    results[historyName] = savedHistories[historyName]; // Add matching histories to results
+                }
+            }
+            return results; // Return filtered histories
+        }
 
-                const nameSpan = document.createElement('span');
-                nameSpan.classList.add('history-name');
-                nameSpan.textContent = historyName;
-                nameSpan.onclick = () => loadChatHistoryByName(historyName);
 
-                const deleteButton = document.createElement('button');
-                deleteButton.classList.add('delete-history-btn');
-                deleteButton.textContent = '...';
-                deleteButton.onclick = (event) => {
-                    event.stopPropagation();
-                    openDeleteHistoryModal(historyName);
-                };
+        // Function to load a specific chat history and display it
+        function loadHistory(historyName) {
+            chatHistory = savedHistories[historyName]; // Retrieve chat history from saved histories
+            messageArea.innerHTML = `<div class="loading-spinner" id="loading-spinner"></div>`; // Keep spinner when loading history
+            loadingSpinner = document.getElementById('loading-spinner'); // Re-assign after innerHTML change
+            hideLoading(); // Hide loading spinner immediately as history is loaded from local storage
+            messageArea.innerHTML = ''; // Clear message area content to avoid flicker
+            chatHistory.forEach(message => {
+                displayMessage(message.sender, message.text); // Display each message in the loaded history
+            });
+            toggleSubmenu('history-submenu', { preventDefault: () => {} }); // Close history submenu after loading
+        }
 
-                historyItem.appendChild(nameSpan);
-                historyItem.appendChild(deleteButton);
-                historiesMenu.appendChild(historyItem);
+        // Function to delete a saved chat history
+        function deleteHistory(historyName) {
+            if (confirm(`Bạn có chắc chắn muốn xóa lịch sử "${historyName}"?`)) {
+                delete savedHistories[historyName]; // Remove history from saved histories object
+                localStorage.setItem('chatHistories', JSON.stringify(savedHistories)); // Update local storage
+                loadSavedHistoryList(); // Refresh history list in sidebar
+                displayConfirmationMessage(`Lịch sử "${historyName}" đã được xóa.`); // Show confirmation message
+            }
+        }
+
+        // Function to automatically save current chat history (if enabled in settings)
+        function saveCurrentHistoryAuto() {
+            if (chatHistory.length > 0) {
+                let autoSaveName = 'Auto Save - ' + new Date().toLocaleString(); // Default auto-save name
+                if (settings.historyNameFirstQuestion && chatHistory[0].sender === 'user') {
+                    autoSaveName = chatHistory[0].text.substring(0, 50) + ' (Auto Saved)'; // Name from first question if setting enabled
+                }
+                savedHistories[autoSaveName] = chatHistory; // Save history with auto-generated name
+                localStorage.setItem('chatHistories', JSON.stringify(savedHistories)); // Update local storage
+                loadSavedHistoryList(); // Refresh history list in sidebar
             }
         }
 
 
-        loadChatHistory();
-        loadSavedHistoriesList();
+        // Settings Management Functions
 
+        // Initialize settings inputs with saved settings or defaults
+        document.getElementById('auto-save').checked = settings.autoSaveHistory;
+        document.getElementById('history-name-first-question').checked = settings.historyNameFirstQuestion;
+        document.getElementById('theme-select').value = settings.theme;
+        document.getElementById('bg-color').value = settings.bgColor;
+        document.getElementById('text-color').value = settings.textColor;
+        document.getElementById('chat-bg-color').value = settings.chatBgColor;
 
-        async function getGeminiResponse() {
-            const userPrompt = document.getElementById('user-prompt').value.trim();
-            if (!userPrompt) {
-                alert("Vui lòng nhập tin nhắn.");
-                return;
-            }
+        // Function to save settings to local storage and apply them
+        function saveSettings() {
+            settings.autoSaveHistory = document.getElementById('auto-save').checked; // Get auto-save setting from checkbox
+            settings.historyNameFirstQuestion = document.getElementById('history-name-first-question').checked; // Get history name setting
+            settings.theme = document.getElementById('theme-select').value; // Get selected Prism.js theme
+            settings.bgColor = document.getElementById('bg-color').value; // Get background color
+            settings.textColor = document.getElementById('text-color').value; // Get text color
+            settings.chatBgColor = document.getElementById('chat-bg-color').value; // Get chat background color
+            localStorage.setItem('chatSettings', JSON.stringify(settings)); // Save settings to local storage
+            applySettings(); // Apply the new settings to the UI
+            toggleSubmenu('settings-submenu', { preventDefault: () => {} }); // Close settings submenu after saving
+            displayConfirmationMessage('Cài đặt đã được lưu.'); // Display confirmation message
+        }
 
-            const sendButton = document.getElementById('send-button');
-            const stopButton = document.getElementById('stop-button');
-            const inputArea = document.querySelector('.input-area textarea');
-
-            sendButton.disabled = true;
-            stopButton.style.display = 'inline-block';
-            inputArea.disabled = true;
-
-
-            const userMessageObject = { role: 'user', parts: [{ text: userPrompt }] };
-            conversationHistory.push(userMessageObject);
-            saveChatHistory();
-            renderMessages();
-            document.getElementById('user-prompt').value = '';
-            adjustTextareaHeight();
-
-            const messagesContainer = document.getElementById('messages-container');
-            const aiMessageDiv = document.createElement('div');
-            aiMessageDiv.classList.add('message', 'ai-message');
-            messagesContainer.appendChild(aiMessageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-            let promptContents = conversationHistory.map(message => ({
-                role: message.role,
-                parts: message.parts
-            }));
-            promptContents.unshift({ role: 'user', parts: [{ text: systemPrompt }] });
-
-
-            const payload = {
-                contents: promptContents
+        // Function to undo settings and revert to last saved or default settings
+        function undoSettings() {
+            settings = JSON.parse(localStorage.getItem('chatSettings')) || { // Reload settings from local storage or default
+                autoSaveHistory: false,
+                historyNameFirstQuestion: false,
+                theme: 'prism-tomorrow',
+                bgColor: '#121212',
+                textColor: '#ffffff',
+                chatBgColor: '#212121'
             };
-
-            try {
-                currentGeminiRequest = fetch(geminiAPIUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                const response = await currentGeminiRequest;
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error("Lỗi API:", errorData);
-                    aiMessageDiv.textContent = `Lỗi API: ${response.status} - ${errorData.error.message || 'Không rõ nguyên nhân'}`;
-                    return;
-                }
-
-                const data = await response.json();
-                console.log("Dữ liệu phản hồi từ API:", data);
-
-                if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
-                    let aiResponseText = data.candidates[0].content.parts[0].text;
-                    aiMessageDiv.innerHTML = aiResponseText; // Gán trực tiếp nội dung phản hồi
-                    const aiMessageObject = { role: 'model', parts: [{ text: aiResponseText }] };
-                    conversationHistory.push(aiMessageObject);
-                    saveChatHistory();
-                    renderMessages(); // Gọi lại renderMessages để highlight code và thêm nút copy
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            // Reset settings inputs to loaded settings
+            document.getElementById('auto-save').checked = settings.autoSaveHistory;
+            document.getElementById('history-name-first-question').checked = settings.historyNameFirstQuestion;
+            document.getElementById('theme-select').value = settings.theme;
+            document.getElementById('bg-color').value = settings.bgColor;
+            document.getElementById('text-color').value = settings.textColor;
+            document.getElementById('chat-bg-color').value = settings.chatBgColor;
+            applySettings(); // Apply the reloaded settings to the UI
+            toggleSubmenu('settings-submenu', { preventDefault: () => {} }); // Close settings submenu after undo
+            displayConfirmationMessage('Cài đặt đã được hoàn tác về trạng thái trước đó.'); // Display confirmation message
+        }
 
 
-                } else {
-                    aiMessageDiv.textContent = "Không nhận được phản hồi hợp lệ từ AI.";
-                }
+        // Function to apply current settings to the UI (colors, theme)
+        function applySettings() {
+            document.body.style.backgroundColor = settings.bgColor; // Set body background color
+            document.body.style.color = settings.textColor; // Set body text color
+            messageArea.style.backgroundColor = settings.chatBgColor; // Set message area background color
 
-            } catch (error) {
-                if (error.name === 'AbortError') {
-                    aiMessageDiv.textContent = "Đã dừng tạo phản hồi.";
-                } else {
-                    console.error("Lỗi fetch:", error);
-                    aiMessageDiv.textContent = "Đã xảy ra lỗi khi kết nối đến API.";
-                }
-            } finally {
-                sendButton.disabled = false;
-                stopButton.style.display = 'none';
-                inputArea.disabled = false;
-                currentGeminiRequest = null;
+            // Apply Prism.js theme dynamically by changing CSS link href
+            const prismThemeLink = document.querySelector('link[href*="prism"]');
+            let newThemeHref = `https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/${settings.theme}.min.css`;
+
+            // Handle "default" theme and invalid theme names
+            if (settings.theme === 'prism') {
+                newThemeHref = `https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.css`; // Default Prism CSS (no theme)
+            } else if (!settings.theme.startsWith('prism-')) {
+                newThemeHref = `https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css`; // Fallback to Tomorrow theme if invalid
+                console.warn(`Invalid Prism.js theme name: ${settings.theme}. Falling back to tomorrow theme.`);
+            }
+
+            prismThemeLink.href = newThemeHref; // Update CSS link href to change Prism.js theme
+
+             // Update CSS variables for theme colors - for dynamic theme changes
+             document.documentElement.style.setProperty('--bg-color', settings.bgColor);
+             document.documentElement.style.setProperty('--text-color', settings.textColor);
+             document.documentElement.style.setProperty('--chat-bg-color', settings.chatBgColor);
+             document.documentElement.style.setProperty('--sidebar-bg-color', settings.bgColor);
+             document.documentElement.style.setProperty('--chat-header-bg-color', settings.bgColor);
+             document.documentElement.style.setProperty('--input-area-bg-color', settings.bgColor);
+             document.documentElement.style.setProperty('--modal-content-bg-color', settings.bgColor);
+        }
+
+        // Function to show loading spinner
+        function showLoading() {
+            loadingSpinner.classList.add('show');
+        }
+
+        // Function to hide loading spinner
+        function hideLoading() {
+            loadingSpinner.classList.remove('show');
+        }
+
+        // Function to display a confirmation message (e.g., saved, deleted)
+        function displayConfirmationMessage(message) {
+            const confirmationElem = document.getElementById('action-confirmation');
+            confirmationElem.textContent = message;
+            confirmationElem.classList.add('show');
+            setTimeout(() => {
+                confirmationElem.classList.remove('show'); // Hide after 3 seconds
+            }, 3000);
+        }
+
+        // Function to display an error message (e.g., API error)
+        function displayErrorMessage(message) {
+            const errorElem = document.getElementById('api-error-message');
+            errorElem.textContent = message;
+            errorElem.classList.add('show');
+            setTimeout(() => {
+                errorElem.classList.remove('show'); // Hide after 5 seconds
+            }, 5000);
+        }
+
+
+        // Close modal if clicked outside of it
+        window.onclick = function(event) {
+            if (event.target == saveHistoryModal) {
+                closeSaveHistoryModal();
             }
         }
-
-        function stopGeneratingResponse() {
-            if (currentGeminiRequest) {
-                currentGeminiRequest.controller.abort();
-                currentGeminiRequest = null;
-            }
-        }
-
-        (function() {
-            const originalFetch = window.fetch;
-            window.fetch = function(url, options = {}) {
-                const controller = new AbortController();
-                const signal = controller.signal;
-                options.signal = signal;
-                const promise = originalFetch(url, options);
-                promise.controller = controller;
-                return promise;
-            };
-        })();
-
-
-        function openEditMessageModal(messageIndex) {
-            messageBeingEdited = messageIndex;
-            document.getElementById('editMessageInput').value = conversationHistory[messageIndex].parts[0].text;
-            document.getElementById('editMessageModalOverlay').classList.add('show-modal');
-        }
-
-        function closeEditMessageModal() {
-            document.getElementById('editMessageModalOverlay').classList.remove('show-modal');
-            messageBeingEdited = null;
-        }
-
-        function confirmEditMessage() {
-            if (messageBeingEdited !== null) {
-                const newMessageText = document.getElementById('editMessageInput').value.trim();
-                if (newMessageText) {
-                    conversationHistory[messageBeingEdited].parts[0].text = newMessageText;
-                    saveChatHistory();
-                    renderMessages();
-                }
-                closeEditMessageModal();
-                messageBeingEdited = null;
-            }
-        }
-
-        function deleteMessage(messageIndex) {
-            conversationHistory.splice(messageIndex, 1);
-            saveChatHistory();
-            renderMessages();
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const textarea = document.getElementById('user-prompt');
-            textarea.addEventListener('input', adjustTextareaHeight);
-            adjustTextareaHeight();
-        });
-
-        function adjustTextareaHeight() {
-            const textarea = document.getElementById('user-prompt');
-            textarea.style.height = 'auto';
-            textarea.style.height = (textarea.scrollHeight) + 'px';
-            if (parseInt(textarea.style.height) > 200) {
-                textarea.style.overflowY = 'scroll';
-            } else {
-                textarea.style.overflowY = 'hidden';
-            }
-        }
-
-
     </script>
 </body>
 </html>
