@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Hiện Đại với Gemini</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no,
+        viewport-fit=cover">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css">
 
 
     <style>
@@ -114,10 +119,11 @@
             border: none;
             border-radius: 12px;
             background-color: #252525;
-             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
-             transition: background-color 0.3s ease;
-             padding-top: 25px;
-             position: relative; /* Container for absolute notification */
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease;
+            padding-top: 25px;
+            position: relative;
+            /* Container for absolute notification */
         }
 
         #messages-container::-webkit-scrollbar {
@@ -141,8 +147,8 @@
             word-wrap: break-word;
             max-width: 90%;
             display: inline-block;
-             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-             transition: background-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease;
         }
 
         .user-message {
@@ -169,7 +175,7 @@
             line-height: 1.7;
             white-space: pre-line;
             font-size: 15px;
-             transition: color 0.3s ease;
+            transition: color 0.3s ease;
         }
 
         .markdown-bold-uppercase {
@@ -178,7 +184,7 @@
             letter-spacing: 0.6px;
             color: #f0f0f0;
             opacity: 1;
-             transition: color 0.3s ease;
+            transition: color 0.3s ease;
         }
 
         .input-area {
@@ -197,9 +203,9 @@
             z-index: 100;
             border-bottom-left-radius: 18px;
             border-bottom-right-radius: 18px;
-             border-top: 1px solid #444;
-             transition: background-color 0.3s ease;
-             padding-bottom: max(14px, env(safe-area-inset-bottom));
+            border-top: 1px solid #444;
+            transition: background-color 0.3s ease;
+            padding-bottom: max(14px, env(safe-area-inset-bottom));
         }
 
         .input-area textarea {
@@ -213,8 +219,8 @@
             resize: none;
             min-height: 40px;
             overflow-y: auto;
-             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
-             transition: background-color 0.3s ease, color 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .input-area textarea:focus {
@@ -254,13 +260,14 @@
             align-items: center;
             margin-right: 14px;
             opacity: 0.8;
-            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
+            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease,
+                border-radius 0.3s ease;
         }
 
         .file-upload-button:hover {
             opacity: 1;
             background-color: #555;
-             transform: scale(1.02);
+            transform: scale(1.02);
         }
 
 
@@ -276,11 +283,11 @@
             transition: transform 0.3s ease, background-color 0.3s ease;
             z-index: 200;
             padding-top: 60px;
-            box-shadow: 4px 0 8px rgba(0,0,0,0.3);
+            box-shadow: 4px 0 8px rgba(0, 0, 0, 0.3);
             overflow-y: auto;
             touch-action: manipulation;
             border-right: 1px solid #444;
-             backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
         }
 
         .sidebar.sidebar--open {
@@ -303,24 +310,26 @@
         .sidebar-menu-item {
             padding: 16px 20px;
             cursor: pointer;
-            transition: background-color 0.2s ease, border-bottom-color 0.3s ease, color 0.3s ease, padding-left 0.2s ease;
+            transition: background-color 0.2s ease, border-bottom-color 0.3s ease, color 0.3s ease,
+                padding-left 0.2s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid transparent;
         }
-         .sidebar-menu-item:active {
-             background-color: #333;
-         }
+
+        .sidebar-menu-item:active {
+            background-color: #333;
+        }
 
 
         .sidebar-menu-item:hover {
             background-color: #303030;
-             border-bottom-color: var(--button-primary-color);
-             padding-left: 26px;
+            border-bottom-color: var(--button-primary-color);
+            padding-left: 26px;
         }
 
-        .sidebar-menu-item.has-submenu > .menu-link::after {
+        .sidebar-menu-item.has-submenu>.menu-link::after {
             content: '>';
             float: right;
             margin-left: 10px;
@@ -335,12 +344,13 @@
             margin: 0;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.35);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35);
             background-color: #282828;
             margin-top: 10px;
             max-height: 0;
             opacity: 0;
-            transition: max-height 0.3s ease-out, opacity 0.2s ease-out, background-color 0.3s ease, margin-top 0.2s ease;
+            transition: max-height 0.3s ease-out, opacity 0.2s ease-out, background-color 0.3s ease,
+                margin-top 0.2s ease;
             overflow-y: hidden;
             padding-top: 0;
             padding-bottom: 0;
@@ -366,9 +376,10 @@
             align-items: center;
             border-bottom: 1px solid #333;
         }
-         .submenu-item:active {
-             background-color: #333;
-         }
+
+        .submenu-item:active {
+            background-color: #333;
+        }
 
 
         .submenu-item:last-child {
@@ -383,8 +394,8 @@
 
         .history-name {
             flex-grow: 1;
-             transition: color 0.3s ease;
-             opacity: 0.85;
+            transition: color 0.3s ease;
+            opacity: 0.85;
         }
 
         .delete-history-btn {
@@ -418,18 +429,19 @@
             align-items: center;
             cursor: pointer;
             z-index: 300;
-             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-             transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
         }
 
         .sidebar-toggle-button:hover {
             background-color: var(--button-primary-hover-color);
-             transform: scale(1.03);
+            transform: scale(1.03);
         }
+
         .sidebar-toggle-button:active {
-             transform: scale(0.97);
-             opacity: 0.9;
-         }
+            transform: scale(0.97);
+            opacity: 0.9;
+        }
 
         .sidebar-overlay {
             position: fixed;
@@ -450,7 +462,9 @@
             opacity: 1;
         }
 
-        .close-history-menu-btn, .close-settings-menu-btn, .modal-button {
+        .close-history-menu-btn,
+        .close-settings-menu-btn,
+        .modal-button {
             padding: 12px 20px;
             background-color: var(--button-primary-color);
             color: white;
@@ -464,29 +478,35 @@
             transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
         }
 
-        .close-history-menu-btn:hover, .close-settings-menu-btn:hover, .modal-button.confirm:hover {
+        .close-history-menu-btn:hover,
+        .close-settings-menu-btn:hover,
+        .modal-button.confirm:hover {
             background-color: var(--button-primary-hover-color);
-             transform: scale(1.02);
+            transform: scale(1.02);
         }
-         .close-history-menu-btn:active, .close-settings-menu-btn:active,  .modal-button.confirm:active {
-             transform: scale(0.97);
-             opacity: 0.9;
-         }
+
+        .close-history-menu-btn:active,
+        .close-settings-menu-btn:active,
+        .modal-button.confirm:active {
+            transform: scale(0.97);
+            opacity: 0.9;
+        }
 
 
-         .modal-button.cancel {
+        .modal-button.cancel {
             background-color: #505050;
             color: white;
         }
 
         .modal-button.cancel:hover {
             background-color: #606060;
-             transform: scale(1.02);
+            transform: scale(1.02);
         }
-         .modal-button.cancel:active {
-             transform: scale(0.97);
-             opacity: 0.9;
-         }
+
+        .modal-button.cancel:active {
+            transform: scale(0.97);
+            opacity: 0.9;
+        }
 
 
         .custom-modal-overlay {
@@ -525,7 +545,8 @@
             border: none;
             transform: scale(0.96);
             opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, border-radius 0.3s ease;
+            transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease,
+                border-radius 0.3s ease;
         }
 
         .custom-modal-overlay.show-modal .custom-modal {
@@ -537,9 +558,9 @@
         .modal-message {
             margin-bottom: 20px;
             font-size: 1.1em;
-             transition: color 0.3s ease;
-             font-weight: 500;
-             opacity: 0.9;
+            transition: color 0.3s ease;
+            font-weight: 500;
+            opacity: 0.9;
         }
 
         .modal-input {
@@ -550,8 +571,8 @@
             border: none;
             background-color: var(--input-text-background-color);
             color: #fff;
-             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
-             transition: background-color 0.3s ease, color 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .modal-buttons {
@@ -578,19 +599,20 @@
             background-color: #2e3440;
             position: relative;
             overflow-x: auto;
-             padding: 1.25em 1.5em;
-             border-radius: 12px;
-             margin-bottom: 18px;
-             z-index: 1;
-             font-size: 14px;
-             border: 1px solid #444;
+            padding: 1.25em 1.5em;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            z-index: 1;
+            font-size: 14px;
+            border: 1px solid #444;
         }
 
-       .code-block-wrapper {  /* Wrapper for code block elements */
+        .code-block-wrapper {
+            /* Wrapper for code block elements */
             position: relative;
         }
 
-       .copy-code-button {
+        .copy-code-button {
             position: absolute;
             bottom: 10px;
             left: 10px;
@@ -602,11 +624,11 @@
             font-size: 0.75em;
             cursor: pointer;
             opacity: 0.7;
-            transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+            transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease,
+                border-color 0.2s ease;
             z-index: 2;
-            bottom: 10px; /* Adjust for bottom position */
-            left: 10px;   /* Adjust for left position */
         }
+
         .copy-code-button:hover {
             opacity: 1;
             background-color: rgba(30, 136, 229, 0.2);
@@ -617,12 +639,14 @@
         .copy-success-notification-inline {
             position: absolute;
             bottom: 10px;
-            left: 60px; /* Adjust position to be next to copy button */
+            left: 60px;
+            /* Adjust position to be next to copy button */
             color: #4CAF50;
             font-size: 0.8em;
             opacity: 0;
             transition: opacity 0.3s ease;
-            white-space: nowrap; /* Prevent text wrapping */
+            white-space: nowrap;
+            /* Prevent text wrapping */
         }
 
         .copy-success-notification-inline.show {
@@ -637,7 +661,8 @@
 
         /* Success Notification Styles - Top of message container - Removed as Inline is used now */
         .copy-success-notification {
-            display: none; /* Hide the top notification */
+            display: none;
+            /* Hide the top notification */
         }
 
 
@@ -645,24 +670,27 @@
         .setting-item .toggle-switch .slider {
             background-color: #666;
         }
-        .setting-item .toggle-switch input:checked + .slider {
+
+        .setting-item .toggle-switch input:checked+.slider {
             background-color: var(--button-primary-color);
         }
+
         .setting-item {
             padding: 14px 20px;
         }
+
         .setting-item:hover {
-             background-color: #303030;
-             padding-left: 26px;
+            background-color: #303030;
+            padding-left: 26px;
         }
+
         .setting-label {
             opacity: 0.9;
         }
-
-
     </style>
 
 </head>
+
 <body>
 
     <aside class="sidebar" id="sidebar">
@@ -678,10 +706,10 @@
             </li>
             <li class="sidebar-menu-item has-submenu" onclick="toggleHistoryMenu()">
                 <span class="menu-link">Lịch sử đã lưu</span>
-                </li>
+            </li>
             <li class="sidebar-menu-item has-submenu" onclick="toggleSettingsMenu()">
                 <span class="menu-link">Cài đặt</span>
-                </li>
+            </li>
         </ul>
 
         <ul class="submenu" id="saved-histories-menu">
@@ -699,7 +727,7 @@
                     </label>
                 </span>
             </li>
-             <li class="setting-item">
+            <li class="setting-item">
                 <span class="setting-label">Tên lịch sử là câu hỏi đầu</span>
                 <span class="setting-control">
                     <label class="toggle-switch">
@@ -708,19 +736,19 @@
                     </label>
                 </span>
             </li>
-             <li class="setting-item">
+            <li class="setting-item">
                 <span class="setting-label">Màu nền</span>
                 <span class="setting-control">
                     <input type="color" id="backgroundColorPicker" class="color-picker-input" value="#1e1e1e">
                 </span>
             </li>
-             <li class="setting-item">
+            <li class="setting-item">
                 <span class="setting-label">Màu chữ</span>
                 <span class="setting-control">
                     <input type="color" id="textColorPicker" class="color-picker-input" value="#e0e0e0">
                 </span>
             </li>
-             <li class="setting-item">
+            <li class="setting-item">
                 <span class="setting-label">Màu nền hộp chat</span>
                 <span class="setting-control">
                     <input type="color" id="containerColorPicker" class="color-picker-input" value="#282828">
@@ -744,9 +772,10 @@
             </div>
         </div>
 
-         <div class="custom-modal-overlay" id="deleteHistoryModalOverlay">
+        <div class="custom-modal-overlay" id="deleteHistoryModalOverlay">
             <div class="custom-modal">
-                <p class="modal-message" id="deleteConfirmationMessage">Bạn có chắc chắn muốn xóa lịch sử chat "<span id="historyNameToDelete"></span>" không?</p>
+                <p class="modal-message" id="deleteConfirmationMessage">Bạn có chắc chắn muốn xóa lịch sử chat "<span
+                        id="historyNameToDelete"></span>" không?</p>
                 <div class="modal-buttons">
                     <button class="modal-button confirm" onclick="confirmDeleteHistory()">Xóa</button>
                     <button class="modal-button cancel" onclick="closeDeleteHistoryModal()">Huỷ</button>
@@ -776,7 +805,7 @@
             <textarea id="user-prompt" placeholder="Nhập tin nhắn"></textarea>
             <button onclick="getGeminiResponse()">Gửi</button>
         </div>
-         <input type="file" id="file-upload" style="display:none" multiple onchange="handleFileUpload(this.files)">
+        <input type="file" id="file-upload" style="display:none" multiple onchange="handleFileUpload(this.files)">
     </div>
 
 
@@ -785,8 +814,10 @@
         hljs.highlightAll();
 
         const apiKey = 'AIzaSyAd9p1hXhUcRx4Pz7EmbUKC-V8ULN8L61Q';
-        const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
-        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác.\n\nKhi bạn trả lời câu hỏi về code, hãy đảm bảo rằng code được đặt trong các khối code markdown, cú pháp ```[language]\n[code]\n```. Hãy tự động xác định ngôn ngữ lập trình nếu không được chỉ định rõ ràng.  Ví dụ:\n\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\n\nhoặc:\n\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\n\nĐối với văn bản thông thường, hãy sử dụng markdown để tăng cường cấu trúc và dễ đọc. Sử dụng các tiêu đề, danh sách, **in đậm**, *in nghiêng* khi phù hợp. Chú ý đến việc xuống dòng và tạo khoảng trống hợp lý để văn bản có cấu trúc tốt hơn.";
+        const geminiAPIUrl =
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
+        const systemPrompt =
+            "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác.\n\nKhi bạn trả lời câu hỏi về code, hãy đảm bảo rằng code được đặt trong các khối code markdown, cú pháp ```[language]\n[code]\n```. Hãy tự động xác định ngôn ngữ lập trình nếu không được chỉ định rõ ràng.  Ví dụ:\n\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\n\nhoặc:\n\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\n\nĐối với văn bản thông thường, hãy sử dụng markdown để tăng cường cấu trúc và dễ đọc. Sử dụng các tiêu đề, danh sách, **in đậm**, *in nghiêng* khi phù hợp. Chú ý đến việc xuống dòng và tạo khoảng trống hợp lý để văn bản có cấu trúc tốt hơn.";
 
 
         let conversationHistory = [];
@@ -812,8 +843,7 @@
                 const codeElement = codeBlockWrapper.querySelector('code');
                 const notificationInline = codeBlockWrapper.querySelector('.copy-success-notification-inline');
 
-                if (codeElement) {
-                    try {
+                if (codeElement) {                    try {
                         await navigator.clipboard.writeText(codeElement.textContent);
                         showCopyNotificationInline(notificationInline);
                     } catch (err) {
@@ -848,7 +878,7 @@
             container.classList.toggle('container.sidebar-open');
             overlay.classList.toggle('sidebar--open');
             if (sidebar.classList.contains('sidebar--open')) {
-                 loadSavedHistoriesList();
+                loadSavedHistoriesList();
             } else {
                 hideHistoryMenu();
                 hideSettingsMenu();
@@ -873,64 +903,61 @@
 
         function renderMessages() {
             const messagesContainer = document.getElementById('messages-container');
-            messagesContainer.innerHTML = ``; // Clear messages, remove the top notification
+            messagesContainer.innerHTML = ``; // Clear messages
             conversationHistory.forEach(message => {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
                 let messageText = message.parts[0].text;
+
                 if (message.role === 'ai') {
-                    // Check for triple backticks to enforce code block
-                    if (messageText.startsWith('```') && messageText.endsWith('```')) {
-                        const codeContent = messageText.slice(3, -3).trim();
-                        const languageMatch = codeContent.startsWith('\n') ? null : codeContent.split('\n')[0].match(/^([a-zA-Z]+)?/);
-                        const language = languageMatch && languageMatch[1] ? languageMatch[1] : '';
-                        const code = language ? codeContent.slice(language.length).trim() : codeContent;
+                    // Split the response into parts, considering the code block markers
+                    const parts = messageText.split(/(\`\`\`[a-zA-Z]*\n[\s\S]*?\`\`\`)/g);
 
-                        messageDiv.innerHTML = `<span class="ai-message-text">
-                            <div class="code-block-wrapper">
-                                <pre><code class="language-${language}">${code}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button><span class="copy-success-notification-inline">Đã sao chép!</span></pre>
-                            </div>
-                        </span>`;
-                    } else if (messageText.startsWith("'''python") && messageText.endsWith("'''")) { // Handle format "'''python ... '''"
-                        const codeContent = messageText.slice(9, -3).trim(); // Remove "'''python" and "'''"
-                        const language = 'python'; // Enforce language as python
-                        const code = codeContent;
+                    let formattedResponse = '';
 
-                        messageDiv.innerHTML = `<span class="ai-message-text">
-                            <div class="code-block-wrapper">
-                                <pre><code class="language-${language}">${code}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button><span class="copy-success-notification-inline">Đã sao chép!</span></pre>
-                            </div>
-                        </span>`;
-
-                    }
-                    else {
-                        messageDiv.innerHTML = `<span class="ai-message-text">${messageText}</span>`;
+                    for (const part of parts) {
+                        if (part.startsWith('```') && part.endsWith('```')) {
+                            // Extract language and code
+                            const codeContent = part.slice(3, -3).trim();
+                            const languageMatch = codeContent.startsWith('\n') ? null : codeContent.split('\n')[0].match(/^([a-zA-Z]+)?/);
+                            const language = languageMatch && languageMatch[1] ? languageMatch[1] : '';
+                            const code = language ? codeContent.slice(language.length).trim() : codeContent;
+                            formattedResponse += `<div class="code-block-wrapper"><pre><code class="language-${language}">${code}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button><span class="copy-success-notification-inline">Đã sao chép!</span></pre></div>`;
+                        } else {
+                            // Escape HTML to prevent execution
+                            formattedResponse += escapeHtml(part);
+                        }
                     }
 
+                    aiMessageDiv.innerHTML = `<span class="ai-message-text">${formattedResponse}</span>`;
 
-                    messageDiv.querySelectorAll('pre code').forEach(codeBlock => { // Target code elements inside pre for highlighting and copy button
-                         let buttonExists =  codeBlock.closest('.code-block-wrapper').querySelector('.copy-code-button') !== null; // Check in wrapper
-                         if(!buttonExists ) { // Should not be needed anymore, button is added above
-                            const wrapperDiv = document.createElement('div');
-                            wrapperDiv.className = 'code-block-wrapper';
-                            codeBlock.parentNode.insertBefore(wrapperDiv, codeBlock);
-                            wrapperDiv.appendChild(codeBlock);
-                             codeBlock.insertAdjacentHTML('beforeend', '<button class="copy-code-button"><i class="fas fa-copy"></i></button><span class="copy-success-notification-inline">Đã sao chép!</span>');
-                         }
-                         hljs.highlightBlock(codeBlock);
-                    });
                 } else {
                     messageDiv.innerHTML = messageText;
                 }
                 messagesContainer.appendChild(messageDiv);
             });
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
-             hljs.highlightAll(); // Re-highlight after rendering new messages
+            hljs.highlightAll(); // Re-highlight after rendering new messages
+        }
+
+        // Helper function to escape HTML
+        function escapeHtml(string) {
+            let entityMap = {
+                '&': '&',
+                '<': '<',
+                '>': '>',
+                '"': '"',
+                "'": ''',
+                '/': '/'
+            };
+            return String(string).replace(/[&<>"'/]/g, function (s) {
+                return entityMap[s];
+            });
         }
 
 
         function startNewChat() {
-             if (currentHistoryName) {
+            if (currentHistoryName) {
                 savedHistories[currentHistoryName] = [...conversationHistory];
                 localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
             }
@@ -946,8 +973,10 @@
             document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
             document.getElementById('historyNameInput').value = '';
 
-            if (useFirstMessageAsNameSetting() && conversationHistory.length > 0 && conversationHistory[0].role === 'user') {
-                document.getElementById('historyNameInput').value = conversationHistory[0].parts[0].text.substring(0, 50);
+            if (useFirstMessageAsNameSetting() && conversationHistory.length > 0 && conversationHistory[0].role ===
+                'user') {
+                document.getElementById('historyNameInput').value = conversationHistory[0].parts[0].text.substring(0,
+                    50);
             }
         }
 
@@ -958,7 +987,8 @@
         function saveHistoryWithInputName() {
             let historyName = document.getElementById('historyNameInput').value.trim();
             if (!historyName) {
-                if (useFirstMessageAsNameSetting() && conversationHistory.length > 0 && conversationHistory[0].role === 'user') {
+                if (useFirstMessageAsNameSetting() && conversationHistory.length > 0 && conversationHistory[0].role ===
+                    'user') {
                     historyName = conversationHistory[0].parts[0].text.substring(0, 50) || 'No Title';
                 } else {
                     alert("Vui lòng nhập tên cho lịch sử chat.");
@@ -971,7 +1001,7 @@
             alert(`Lịch sử chat đã được lưu với tên: ${historyName}`);
             loadSavedHistoriesList();
             closeSaveHistoryModal();
-             currentHistoryName = historyName;
+            currentHistoryName = historyName;
 
         }
 
@@ -1024,7 +1054,7 @@
         function toggleHistoryMenu() {
             const submenu = document.getElementById('saved-histories-menu');
             submenu.classList.toggle('open');
-             hideSettingsMenu();
+            hideSettingsMenu();
         }
 
         function hideHistoryMenu() {
@@ -1037,7 +1067,8 @@
             submenu.classList.toggle('open');
             hideHistoryMenu();
         }
-         function hideSettingsMenu() {
+
+        function hideSettingsMenu() {
             const submenu = document.getElementById('settings-menu');
             submenu.classList.remove('open');
         }
@@ -1045,7 +1076,8 @@
 
         function loadSavedHistoriesList() {
             const historiesMenu = document.getElementById('saved-histories-menu');
-            historiesMenu.innerHTML = '<button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>';
+            historiesMenu.innerHTML =
+                '<button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>';
 
             const storedSavedHistories = localStorage.getItem('savedHistories');
             if (storedSavedHistories) {
@@ -1114,7 +1146,12 @@
                 messagesContainer.appendChild(userMessageDiv);
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-                const userMessageObject = { role: 'user', parts: [{ text: userMessage }] };
+                const userMessageObject = {
+                    role: 'user',
+                    parts: [{
+                        text: userMessage
+                    }]
+                };
                 conversationHistory.push(userMessageObject);
                 saveChatHistory();
                 renderMessages();
@@ -1124,11 +1161,17 @@
 
                     const aiResponseDiv = document.createElement('div');
                     aiResponseDiv.classList.add('message', 'ai-message');
-                    aiResponseDiv.innerHTML = `<span class="ai-message-text">Đã nhận được tệp: ${fileNames}. Vui lòng cho biết bạn muốn AI làm gì với tệp này.</span>`;
+                    aiResponseDiv.innerHTML =
+                        `<span class="ai-message-text">Đã nhận được tệp: ${fileNames}. Vui lòng cho biết bạn muốn AI làm gì với tệp này.</span>`;
                     messagesContainer.appendChild(aiResponseDiv);
                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-                     const aiMessageObject = { role: 'model', parts: [{ text: aiResponseDiv.innerHTML }] };
+                    const aiMessageObject = {
+                        role: 'model',
+                        parts: [{
+                            text: aiResponseDiv.innerHTML
+                        }]
+                    };
                     conversationHistory.push(aiMessageObject);
                     saveChatHistory();
                     renderMessages();
@@ -1148,13 +1191,23 @@
                 return;
             }
 
-             if (currentHistoryName) {
-                savedHistories[currentHistoryName] = [...conversationHistory, { role: 'user', parts: [{ text: userPrompt }] } ];
+            if (currentHistoryName) {
+                savedHistories[currentHistoryName] = [...conversationHistory, {
+                    role: 'user',
+                    parts: [{
+                        text: userPrompt
+                    }]
+                }];
                 localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
             }
 
 
-            const userMessageObject = { role: 'user', parts: [{ text: userPrompt }] };
+            const userMessageObject = {
+                role: 'user',
+                parts: [{
+                    text: userPrompt
+                }]
+            };
             conversationHistory.push(userMessageObject);
             saveChatHistory();
             renderMessages();
@@ -1170,7 +1223,12 @@
                 role: message.role,
                 parts: message.parts
             }));
-            promptContents.unshift({ role: 'user', parts: [{ text: systemPrompt }] });
+            promptContents.unshift({
+                role: 'user',
+                parts: [{
+                    text: systemPrompt
+                }]
+            });
 
 
             const payload = {
@@ -1189,7 +1247,8 @@
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    const errorMsg = `Lỗi API: ${response.status} - ${response.statusText} - ${errorData?.error?.message || 'No details provided'}`;
+                    const errorMsg =
+                        `Lỗi API: ${response.status} - ${response.statusText} - ${errorData?.error?.message || 'No details provided'}`;
                     console.error("Lỗi API:", errorMsg);
                     aiMessageDiv.innerHTML = `<span class="ai-message-text">${errorMsg}</span>`;
                     return;
@@ -1199,64 +1258,63 @@
                 const data = await response.json();
                 console.log("Dữ liệu phản hồi từ API:", data);
 
-                if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
+                if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data
+                    .candidates[0].content.parts[0].text) {
                     let aiResponseText = data.candidates[0].content.parts[0].text;
-                    aiMessageDiv.innerHTML = '';
+                    aiMessageDiv.innerHTML = ''; // Clear the "Đang suy nghĩ..." message
 
-                    // Check for triple backticks and render as code block
-                    if (aiResponseText.startsWith('```') && aiResponseText.endsWith('```')) {
-                         const codeContent = aiResponseText.slice(3, -3).trim();
-                         const languageMatch = codeContent.startsWith('\n') ? null : codeContent.split('\n')[0].match(/^([a-zA-Z]+)?/);
-                         const language = languageMatch && languageMatch[1] ? languageMatch[1] : '';
-                         const code = language ? codeContent.slice(language.length).trim() : codeContent;
+                    // Split the response into parts, considering the code block markers
+                    const parts = aiResponseText.split(/(\`\`\`[a-zA-Z]*\n[\s\S]*?\`\`\`)/g);
 
-                        aiMessageDiv.innerHTML = `<span class="ai-message-text">
-                            <div class="code-block-wrapper">
-                                <pre><code class="language-${language}">${code}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button><span class="copy-success-notification-inline">Đã sao chép!</span></pre>
-                            </div>
-                        </span>`;
-                    } else if (aiResponseText.startsWith("'''python") && aiResponseText.endsWith("'''")) { // Handle format "'''python ... '''"
-                        const codeContent = aiResponseText.slice(9, -3).trim(); // Remove "'''python" and "'''"
-                        const language = 'python'; // Enforce language as python
-                        const code = codeContent;
+                    let formattedResponse = '';
 
-                        aiMessageDiv.innerHTML = `<span class="ai-message-text">
-                            <div class="code-block-wrapper">
-                                <pre><code class="language-${language}">${code}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button><span class="copy-success-notification-inline">Đã sao chép!</span></pre>
-                            </div>
-                        </span>`;
-
-                    }
-                    else {
-                         aiMessageDiv.innerHTML = `<span class="ai-message-text">${aiResponseText}</span>`;
+                    for (const part of parts) {
+                        if (part.startsWith('```') && part.endsWith('```')) {
+                            // Extract language and code
+                            const codeContent = part.slice(3, -3).trim();
+                            const languageMatch = codeContent.startsWith('\n') ? null : codeContent.split('\n')[0].match(/^([a-zA-Z]+)?/);
+                            const language = languageMatch && languageMatch[1] ? languageMatch[1] : '';
+                            const code = language ? codeContent.slice(language.length).trim() : codeContent;
+                            formattedResponse +=
+                                `<div class="code-block-wrapper"><pre><code class="language-${language}">${code}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button><span class="copy-success-notification-inline">Đã sao chép!</span></pre></div>`;
+                        } else {
+                            // Escape HTML to prevent execution
+                            formattedResponse += escapeHtml(part);
+                        }
                     }
 
-
-                    const aiMessageObject = { role: 'model', parts: [{ text: aiMessageDiv.innerHTML }] };
+                    aiMessageDiv.innerHTML = `<span class="ai-message-text">${formattedResponse}</span>`;
+                    const aiMessageObject = {
+                        role: 'model',
+                        parts: [{
+                            text: aiMessageDiv.innerHTML
+                        }]
+                    };
 
                     conversationHistory.push(aiMessageObject);
 
 
-                     if (currentHistoryName) {
+                    if (currentHistoryName) {
                         savedHistories[currentHistoryName] = [...conversationHistory];
                         localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
                     } else {
-                         saveChatHistory();
+                        saveChatHistory();
                     }
 
-                   messagesContainer.appendChild(aiMessageDiv);
+                    messagesContainer.appendChild(aiMessageDiv);
 
-                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                 }
-                else
-                   aiMessageDiv.innerHTML = `<span class="ai-message-text">Không nhận được phản hồi hợp lệ từ AI.</span>`;
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                } else
+                    aiMessageDiv.innerHTML =
+                        `<span class="ai-message-text">Không nhận được phản hồi hợp lệ từ AI.</span>`;
 
 
             } catch (error) {
                 console.error("Lỗi fetch:", error);
-                aiMessageDiv.innerHTML = `<span class="ai-message-text">Đã xảy ra lỗi khi kết nối đến API: ${error}</span>`;
+                aiMessageDiv.innerHTML =
+                    `<span class="ai-message-text">Đã xảy ra lỗi khi kết nối đến API: ${error}</span>`;
             }
-             renderMessages(); // Re-render messages to apply highlighting and copy buttons to the new message
+            renderMessages(); // Re-render messages to apply highlighting and copy buttons to the new message
         }
 
         function loadSettings() {
@@ -1264,7 +1322,8 @@
             if (storedSettings) {
                 const settings = JSON.parse(storedSettings);
                 autoSaveHistory = settings.autoSaveHistory !== undefined ? settings.autoSaveHistory : true;
-                useFirstMessageAsName = settings.useFirstMessageAsName !== undefined ? settings.useFirstMessageAsName : false;
+                useFirstMessageAsName = settings.useFirstMessageAsName !== undefined ? settings.useFirstMessageAsName :
+                    false;
                 currentBackgroundColor = settings.backgroundColor || defaultBackgroundColor;
                 currentTextColor = settings.textColor || defaultTextColor;
                 currentContainerColor = settings.containerColor || defaultContainerColor;
@@ -1277,27 +1336,27 @@
                 document.getElementById('containerColorPicker').value = currentContainerColor;
 
             } else {
-                 document.getElementById('autoSaveHistoryToggle').checked = true;
-                 document.getElementById('useFirstMessageAsNameToggle').checked = false;
-                 currentBackgroundColor = defaultBackgroundColor;
-                 currentTextColor = defaultTextColor;
-                 currentContainerColor = defaultContainerColor;
+                document.getElementById('autoSaveHistoryToggle').checked = true;
+                document.getElementById('useFirstMessageAsNameToggle').checked = false;
+                currentBackgroundColor = defaultBackgroundColor;
+                currentTextColor = defaultTextColor;
+                currentContainerColor = defaultContainerColor;
 
             }
 
-            document.getElementById('autoSaveHistoryToggle').addEventListener('change', function() {
+            document.getElementById('autoSaveHistoryToggle').addEventListener('change', function () {
                 autoSaveHistory = this.checked;
             });
-            document.getElementById('useFirstMessageAsNameToggle').addEventListener('change', function() {
+            document.getElementById('useFirstMessageAsNameToggle').addEventListener('change', function () {
                 useFirstMessageAsName = this.checked;
             });
-            document.getElementById('backgroundColorPicker').addEventListener('change', function() {
+            document.getElementById('backgroundColorPicker').addEventListener('change', function () {
                 currentBackgroundColor = this.value;
             });
-             document.getElementById('textColorPicker').addEventListener('change', function() {
+            document.getElementById('textColorPicker').addEventListener('change', function () {
                 currentTextColor = this.value;
             });
-            document.getElementById('containerColorPicker').addEventListener('change', function() {
+            document.getElementById('containerColorPicker').addEventListener('change', function () {
                 currentContainerColor = this.value;
             });
         }
@@ -1311,6 +1370,7 @@
         function autoSaveHistorySetting() {
             return autoSaveHistory;
         }
+
         function useFirstMessageAsNameSetting() {
             return useFirstMessageAsName;
         }
@@ -1345,8 +1405,7 @@
             applyTheme();
             alert('Giao diện đã hoàn tác về mặc định. Nhấn "Lưu cài đặt" để lưu thay đổi.');
         }
-
-
     </script>
 </body>
+
 </html>
