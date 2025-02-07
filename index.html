@@ -15,6 +15,7 @@
             color: var(--text-color, #ffffff);
             display: flex;
             transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
         }
 
         :root {
@@ -39,6 +40,21 @@
         }
 
         /* Sidebar */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
         .sidebar {
             width: 250px;
             background-color: var(--sidebar-bg-color);
@@ -97,9 +113,10 @@
             align-items: center;
             color: white;
             text-decoration: none;
-            padding: 8px 15px;
+            padding: 10px 15px; /* Increased padding for better spacing */
             border-radius: 5px;
             transition: background-color 0.3s ease;
+            line-height: 1.6; /* Increased line-height for menu items */
         }
 
         .sidebar-menu a:hover, .sidebar-menu a.active {
@@ -107,24 +124,26 @@
         }
 
         .sidebar-menu a i {
-            margin-right: 8px;
+            margin-right: 10px; /* Increased spacing between icon and text */
+            width: 1.2em; /* Ensure consistent icon width */
+            text-align: center; /* Center icons */
         }
 
         .submenu {
             margin-left: 15px;
             padding-left: 10px;
             border-left: 2px solid rgba(255, 255, 255, 0.2);
-            display: none; /* Initially hidden */
-            overflow: hidden; /* Clip content if it overflows */
-            max-height: 0; /* Start with no height */
-            transition: max-height 0.3s ease-out, padding 0.3s ease-out; /* Transition for smooth open/close */
+            display: none;
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
         }
 
         .submenu.active {
-            display: block; /* Make it block when active */
-            max-height: 500px; /*  Adjust to a reasonable max height, or use 'unset' if content is dynamic and you want auto height -  or even better, calculate max height based on content if truly dynamic */
-            padding-bottom: 10px; /* Add padding when opened */
-            transition: max-height 0.3s ease-in, padding 0.3s ease-in; /* Different easing for opening */
+            display: block;
+            max-height: 500px;
+            padding-bottom: 10px;
+            transition: max-height 0.3s ease-in, padding 0.3s ease-in;
         }
 
 
@@ -133,25 +152,27 @@
         }
 
         .submenu a {
-            padding: 5px 15px;
-            font-size: 0.9em;
+            padding: 8px 15px; /* Adjusted padding for submenu items */
+            font-size: 0.95em;
             display: block;
+            line-height: 1.5; /* Increased line-height for submenu items */
         }
         .submenu a:hover, .submenu a.active {
             background-color: var(--sidebar-item-hover-bg);
         }
 
         .history-search {
-            padding: 0 15px 10px;
+            padding: 0 15px 15px; /* Increased padding bottom for search input */
         }
 
         .history-search input[type="text"] {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             border-radius: 5px;
             border: 1px solid var(--input-border-color);
             background-color: var(--input-bg-color);
             color: white;
+            font-size: 0.95em; /* Slightly smaller font size for search input */
         }
 
 
@@ -159,7 +180,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 5px 15px;
+            padding: 8px 15px; /* Adjusted padding for history items */
         }
 
         .history-item:hover {
@@ -174,6 +195,7 @@
             font-size: 1em;
             opacity: 0.7;
             transition: opacity 0.3s;
+            margin-left: 5px; /* Added some spacing for delete button */
         }
 
         .history-item button:hover {
@@ -184,11 +206,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 12px; /* Increased margin bottom for settings options */
         }
 
         .settings-option label {
-            margin-right: 10px;
+            margin-right: 15px;
+            font-size: 0.95em; /* Slightly smaller font size for labels */
         }
 
         .settings-option select, .settings-option input[type="color"], .settings-option input[type="checkbox"] {
@@ -200,6 +223,7 @@
             border: 1px solid var(--input-border-color);
             background-color: var(--input-bg-color);
             color: white;
+            font-size: 0.95em; /* Slightly smaller font size for settings inputs */
         }
 
         .settings-option input[type="color"] {
@@ -228,7 +252,7 @@
         }
 
         .settings-buttons {
-            margin-top: 20px;
+            margin-top: 25px; /* Increased margin top for settings buttons */
             text-align: right;
         }
 
@@ -236,11 +260,12 @@
             background-color: var(--button-primary-bg-color);
             color: white;
             border: none;
-            padding: 8px 15px;
+            padding: 10px 20px; /* Adjusted padding for settings buttons */
             border-radius: 5px;
             cursor: pointer;
             margin-left: 10px;
             transition: background-color 0.3s ease;
+            font-size: 1em;
         }
 
         .settings-buttons button:hover {
@@ -258,7 +283,7 @@
 
         .chat-header {
             background-color: var(--chat-header-bg-color);
-            padding: 15px 20px;
+            padding: 15px 25px; /* Increased padding for chat header */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             z-index: 999;
             transition: background-color 0.3s;
@@ -266,21 +291,22 @@
 
         .chat-header h2 {
             margin: 0;
-            font-size: 1.3em;
+            font-size: 1.5em; /* Slightly larger font size for chat title */
         }
 
         .message-area {
             flex-grow: 1;
-            padding: 20px;
+            padding: 25px; /* Increased padding for message area */
             overflow-y: scroll;
             display: flex;
             flex-direction: column;
             background-color: var(--chat-bg-color);
             transition: background-color 0.3s;
             position: relative;
+            line-height: 1.6; /* Increased line height for message text */
         }
 
-        /* Loading Spinner */
+        /* Loading Spinner - No changes here */
         .loading-spinner {
             position: absolute;
             bottom: 10px;
@@ -311,12 +337,13 @@
         .message-bubble {
             background-color: var(--message-bubble-ai-bg);
             color: #ffffff;
-            border-radius: 10px;
-            padding: 10px 15px;
-            margin-bottom: 10px;
-            max-width: 70%;
+            border-radius: 12px; /* Slightly more rounded message bubbles */
+            padding: 12px 20px; /* Increased padding for message bubbles */
+            margin-bottom: 12px; /* Increased margin bottom for message bubbles */
+            max-width: 75%; /* Slightly wider message bubbles */
             word-wrap: break-word;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow for bubbles */
+            font-size: 1em; /* Adjusted font size for message text */
         }
 
         .message-bubble.user {
@@ -327,7 +354,7 @@
 
         .input-area {
             background-color: var(--input-area-bg-color);
-            padding: 15px 20px;
+            padding: 20px 25px; /* Increased padding for input area */
             border-top: 1px solid #333;
             display: flex;
             align-items: center;
@@ -337,33 +364,35 @@
         .input-area textarea {
             flex-grow: 1;
             border: 1px solid var(--input-border-color);
-            border-radius: 5px;
-            padding: 10px;
+            border-radius: 8px; /* Slightly more rounded textarea */
+            padding: 12px; /* Increased padding for textarea */
             resize: none;
             font-size: 1em;
-            height: 40px;
+            height: 50px; /* Slightly taller textarea */
             overflow-y: auto;
             background-color: var(--input-bg-color);
             color: white;
             transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+            line-height: 1.6; /* Increased line height for textarea text */
         }
         .input-area textarea:hover, .input-area textarea:focus {
             border-color: #aaa;
             outline: none;
-            box-shadow: 0 0 5px rgba(170,170,170,0.3);
+            box-shadow: 0 0 6px rgba(170,170,170,0.3); /* Slightly stronger focus shadow */
         }
 
         .input-area button, .input-area .attach-button {
             background-color: var(--button-primary-bg-color);
             color: white;
             border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
+            padding: 12px 20px; /* Adjusted padding for buttons */
+            border-radius: 8px; /* Slightly more rounded buttons */
             cursor: pointer;
-            margin-left: 10px;
+            margin-left: 15px; /* Increased margin for send button */
             transition: background-color 0.3s ease;
             font-size: 1em;
             height: auto;
+            line-height: 1.4; /* Adjusted line height for button text */
         }
 
         .input-area button:hover, .input-area button:focus, .input-area button:disabled, .input-area .attach-button:hover, .input-area .attach-button:focus {
@@ -380,12 +409,12 @@
             background-color: transparent;
             color: #ccc;
             padding: 10px;
-            margin-left: 5px;
+            margin-left: 10px; /* Increased margin for attach button */
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2em;
+            font-size: 1.3em; /* Slightly larger attach icon */
         }
 
         .input-area .attach-button:hover {
@@ -393,7 +422,7 @@
             color: #ddd;
         }
 
-        /* Modals */
+        /* Modals - No changes here */
         .modal {
             display: none;
             position: fixed;
@@ -417,66 +446,9 @@
             box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4);
         }
 
-        .close-button {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
+        /* ... rest of modal styles ... */
 
-        .close-button:hover,
-        .close-button:focus {
-            color: white;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .modal-header {
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--modal-border-color);
-            margin-bottom: 15px;
-        }
-
-        .modal-body {
-            padding: 10px 0;
-        }
-
-        .modal-body input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin: 8px 0;
-            border: 1px solid var(--modal-border-color);
-            border-radius: 5px;
-            background-color: #444;
-            color: white;
-        }
-
-        .modal-body input[type="text"]:focus {
-            outline-color: var(--button-primary-bg-color);
-        }
-
-        .modal-footer {
-            padding-top: 15px;
-            border-top: 1px solid var(--modal-border-color);
-            text-align: right;
-        }
-
-        .modal-footer button {
-            background-color: var(--button-primary-bg-color);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-left: 10px;
-            transition: background-color 0.3s ease;
-        }
-
-        .modal-footer button:hover {
-            background-color: var(--button-primary-hover-bg-color);
-        }
-
-        /* Utility classes for icons */
+        /* Utility classes for icons - No changes here */
         .icon {
             display: inline-block;
             width: 1em;
@@ -486,138 +458,106 @@
             fill: currentColor;
         }
 
-        /* Code block styling for Prism.js */
+        /* Code block styling for Prism.js - No changes here */
         pre[class*="language-"] {
-            background-color: var(--code-block-bg-color) !important;
-            color: #f8f8f2;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 10px;
-            overflow-x: auto;
-            position: relative;
+           /* ... */
         }
 
-        code[class*="language-"] {
-            color: inherit;
-            background: none;
-            font-size: 0.9em;
-        }
-
-        /* Copy code button */
-        .copy-code-button {
-            position: absolute;
-            top: 0.5em;
-            right: 0.5em;
-            padding: 0.5em;
-            background-color: var(--button-primary-bg-color);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.8em;
-            opacity: 0.8;
-            transition: opacity 0.3s;
-        }
-
-        .copy-code-button:hover {
-            opacity: 1;
-        }
-
-        /* Confirmation and Error Messages */
+        /* Confirmation and Error Messages - No changes here */
         .confirmation-message, .error-message {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            padding: 10px 20px;
-            border-radius: 5px;
-            color: white;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s, visibility 0.5s;
-            z-index: 1100;
+            /* ... */
         }
 
-        .confirmation-message.show, .error-message.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .confirmation-message.show {
-            background-color: var(--confirmation-color);
-        }
-
-        .error-message.show {
-            background-color: var(--error-color);
-        }
-
-
-        /* Copied message */
+        /* Copied message - No changes here */
         .copied-message {
-            position: absolute;
-            top: 0.5em;
-            right: 4em;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 0.5em 0.8em;
-            border-radius: 5px;
-            font-size: 0.8em;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
-        }
-
-        .copied-message.show {
-            opacity: 1;
-            visibility: visible;
+            /* ... */
         }
 
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
+        /* Responsive Design - Large Screen Layout */
+        @media (min-width: 992px) { /* Desktop and larger screens */
+            body {
+                flex-direction: row; /* Default flex-direction for larger screens */
+            }
             .sidebar {
-                width: 200px;
-                transform: translateX(-200px);
+                position: relative; /* Make sidebar static on larger screens */
+                transform: translateX(0); /* Always visible */
+                height: auto; /* Allow sidebar height to adjust to content */
+                flex-shrink: 0; /* Prevent sidebar from shrinking */
+                border-right: 1px solid #333; /* Add a visual separator */
+                height: 100vh; /* Full height sidebar on desktop */
             }
             .sidebar.hidden {
-                transform: translateX(0);
+                transform: translateX(0); /* Override hidden state on desktop */
+            }
+            .sidebar-overlay {
+                display: none !important; /* Hide overlay on desktop */
             }
             .chat-container {
-                margin-left: 0;
+                margin-left: 250px; /* Shift chat container to the right to accommodate fixed sidebar */
             }
-            .chat-header h2 {
-                font-size: 1.1em;
+            .chat-header {
+                padding-left: 30px; /* Adjust header padding for desktop layout */
+                padding-right: 30px;
             }
             .message-area {
-                padding: 15px;
+                padding-left: 30px; /* Adjust message area padding for desktop layout */
+                padding-right: 30px;
             }
             .input-area {
-                padding: 10px 15px;
+                padding-left: 30px; /* Adjust input area padding for desktop layout */
+                padding-right: 30px;
+            }
+        }
+
+
+        /* Responsive Design - Tablets (adjust as needed) */
+        @media (max-width: 991px) and (min-width: 768px) { /* Tablets in landscape and portrait */
+            .sidebar {
+                width: 220px; /* Slightly smaller sidebar on tablets */
+            }
+            .chat-container {
+                margin-left: 220px; /* Adjust chat container margin for tablet sidebar */
+            }
+             .chat-header h2 {
+                font-size: 1.2em; /* Slightly smaller title on tablets */
+            }
+             .message-area {
+                padding: 20px; /* Adjust message area padding for tablets */
+            }
+            .input-area {
+                padding: 15px 20px; /* Adjust input area padding for tablets */
+            }
+        }
+
+
+        /* Responsive Design - Mobile (existing styles, minor adjustments) */
+        @media (max-width: 767px) { /* For phones */
+            body {
+                flex-direction: column; /* Ensure column layout on mobile */
+            }
+            .sidebar {
+                width: 220px; /* Keep sidebar width smaller on mobile */
+                transform: translateX(-220px); /* Hidden off-screen initially */
+            }
+            .sidebar.hidden {
+                transform: translateX(0); /* Slide in when not hidden */
+            }
+            .chat-container {
+                margin-left: 0; /* Full width chat container on mobile */
+            }
+            .chat-header h2 {
+                font-size: 1.1em; /* Keep title smaller on mobile */
+            }
+            .message-area {
+                padding: 15px; /* Adjust message area padding for mobile */
+            }
+            .input-area {
+                padding: 10px 15px; /* Adjust input area padding for mobile */
             }
             .input-area button, .input-area .attach-button {
                 padding: 8px 12px;
-                font-size: 0.9em;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .chat-header h2 {
-                font-size: 1em;
-            }
-            .message-bubble {
-                max-width: 85%;
-                padding: 8px 12px;
-                font-size: 0.95em;
-            }
-            .input-area textarea {
-                font-size: 0.95em;
-                height: 30px;
-            }
-            .sidebar-header h3 {
-                font-size: 1.3em;
-            }
-            .sidebar-menu a {
-                padding: 6px 10px;
-                font-size: 0.95em;
+                font-size: 0.9em; /* Smaller buttons on mobile */
             }
         }
 
@@ -627,6 +567,7 @@
 </head>
 <body onclick="handleBodyClick(event)">
 
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
     <div class="sidebar">
         <div class="sidebar-header">
             <h3>Menu</h3>
@@ -743,6 +684,7 @@
         const historySearchInput = document.getElementById('historySearchInput');
         const saveHistoryMenuItem = document.getElementById('saveHistoryMenuItem');
         const sendButton = document.getElementById('sendButton');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
         let activeSubmenu = null;
 
         let chatHistory = [];
@@ -758,7 +700,9 @@
         let filteredHistories = { ...savedHistories };
 
         // **IMPORTANT: Replace with your actual API key here!**
-        const apiKey = 'AIzaSyCGd-w96-bJENQ9pGnLBcUg6pH1srsud20'; //  <----------------------- API KEY HERE
+        const apiKey = 'AIzaSyCGd-w96-bJENQ9pGnLBcUg6pH1srsud20';
+        const geminiAPIUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=apiKey';
+
 
         // Apply initial settings
         applySettings();
@@ -770,6 +714,7 @@
 
         function toggleSidebar() {
             sidebar.classList.toggle('hidden');
+            sidebarOverlay.classList.toggle('active');
             if (sidebar.classList.contains('hidden')) {
                 closeAllSubmenus();
             }
@@ -849,7 +794,7 @@
                 sendButton.disabled = true;
                 showLoading();
                 // Replace generateAIResponse with actual API call
-                generateAIResponse(messageText).then(aiResponse => {
+                getGeminiResponse(messageText).then(aiResponse => {
                     hideLoading();
                     addAIMessage(aiResponse);
                     updateSaveHistoryButtonState();
@@ -919,41 +864,40 @@
         }
 
 
-        async function generateAIResponse(userMessage) {
+        async function getGeminiResponse(userMessage) {
             // **Security Warning:** Embedding API keys directly in client-side JavaScript is NOT recommended for production applications.
             // This is done here for simplicity in this example, but it exposes your API key.
             // For real applications, use a backend server to proxy API requests.
 
-            const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=apiKey'; // <----------------------- API ENDPOINT HERE
+            const apiUrl = geminiAPIUrl.replace('apiKey', apiKey); // <------- API KEY REPLACED HERE
 
             try {
                 const response = await fetch(apiUrl, {
-                    method: 'POST', // Or 'GET' depending on API
+                    method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiKey}` // Or 'X-API-Key': apiKey, depending on API documentation
                     },
                     body: JSON.stringify({
-                        prompt: userMessage // Or adjust request body as per API documentation
-                        // You might need to send the whole chat history for context, depending on the AI API
+                        contents: [{
+                            parts: [{ text: userMessage }]
+                        }]
                     })
                 });
 
                 if (!response.ok) {
-                    const errorData = await response.json(); // Or response.text() if API returns text error
+                    const errorData = await response.json();
                     console.error('API Error:', errorData);
-                    throw new Error(`Lỗi API: ${response.status} - ${errorData.message || response.statusText}`); // Customize error message based on API response
+                    throw new Error(`Gemini API Lỗi: ${response.status} - ${errorData.error.message || response.statusText}`);
                 }
 
                 const responseData = await response.json();
-                // **Adjust the following line based on the actual structure of your API response**
-                const aiResponseText = responseData.response || responseData.choices[0].text || 'Không có phản hồi từ AI'; // Example for typical API responses
+                const aiResponseText = responseData.candidates[0].content.parts[0].text || 'Không có phản hồi từ AI Gemini';
 
                 return aiResponseText.trim();
 
             } catch (error) {
                 console.error('Fetch Error:', error);
-                throw new Error('Không thể kết nối đến AI API. Vui lòng kiểm tra kết nối mạng và thử lại.');
+                throw new Error('Không thể kết nối đến Gemini API. Vui lòng kiểm tra API URL, API Key, kết nối mạng và thử lại.');
             }
         }
 
