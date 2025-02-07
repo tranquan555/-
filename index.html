@@ -4,940 +4,343 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Hiện Đại với Gemini</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no,
-        viewport-fit=cover">
+    <title>AI Chat with Gemini</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css">
-
-
     <style>
+        /* Gemini-inspired Theme and Layout */
         :root {
-            --background-color: #1e1e1e;
-            --container-background-color: #282828;
-            --text-color: #e0e0e0;
-            --message-user-background-color: #353535;
-            --message-ai-background-color: #424242;
-            --input-area-background-color: #2d2d2d;
-            --input-text-background-color: #383838;
-            --button-primary-color: #1e88e5;
-            --button-primary-hover-color: #1565c0;
-            --sidebar-background-color: #202020;
-            --sidebar-text-color: #fff;
-            --modal-background-color: #333;
+            --primary-color: #0b8043;
+            --background-color: #202124;
+            --text-color: #e8eaed;
+            --input-background: #303134;
+            --message-background: #35363a;
         }
 
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
-            padding: 0;
             background-color: var(--background-color);
             color: var(--text-color);
             display: flex;
-            min-height: 100vh;
-            overflow-x: hidden;
-            -webkit-touch-callout: none;
-            -webkit-user-select: text;
-            -khtml-user-select: text;
-            -moz-user-select: text;
-            -ms-user-select: text;
-            user-select: text;
-            touch-action: manipulation;
-            -webkit-text-size-adjust: 100%;
-            font-size: 16px;
-            overflow-y: scroll;
-            scrollbar-width: thin;
-            scrollbar-color: #555 #202020;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            overscroll-behavior-y: none;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        body::-webkit-scrollbar {
-            width: 6px;
+        #app {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
         }
 
-        body::-webkit-scrollbar-track {
-            background: #202020;
-        }
-
-        body::-webkit-scrollbar-thumb {
-            background-color: #555;
-            border-radius: 3px;
-        }
-
-
-        .container {
-            width: 95%;
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 25px;
-            background-color: var(--container-background-color);
-            border-radius: 18px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+        #sidebar {
+            width: 250px;
+            background-color: #2a2b2e;
+            border-right: 1px solid #333;
+            padding: 1rem;
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 40px);
-            flex-grow: 1;
-            margin-left: auto;
-            transition: margin-left 0.3s ease, background-color 0.3s ease;
-            border: none;
-            padding-top: max(25px, env(safe-area-inset-top));
-            padding-bottom: max(25px, env(safe-area-inset-bottom));
         }
 
-        .container.sidebar-open {
-            margin-left: 240px;
+        #sidebar h2 {
+            margin-bottom: 1rem;
         }
 
-        h1 {
-            text-align: center;
-            color: #fff;
-            margin-bottom: 25px;
-            font-size: 2.4em;
-            letter-spacing: -0.5px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #555;
-            opacity: 0.9;
-            font-weight: 500;
-            transition: color 0.3s ease;
+        #sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
-        #messages-container {
-            flex-grow: 1;
-            padding: 20px;
+        #sidebar li {
+            padding: 0.75rem;
+            cursor: pointer;
+            border-radius: 0.3rem;
+            transition: background-color 0.2s;
+        }
+
+        #sidebar li:hover {
+            background-color: #333;
+        }
+
+
+        #chat-view {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #messages {
+            flex: 1;
             overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            scrollbar-width: thin;
-            scrollbar-color: #666 #202020;
-            padding-bottom: 70px;
-            border: none;
-            border-radius: 12px;
-            background-color: #252525;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
-            transition: background-color 0.3s ease;
-            padding-top: 25px;
-            position: relative;
-            /* Container for absolute notification */
-        }
-
-        #messages-container::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        #messages-container::-webkit-scrollbar::-webkit-scrollbar-track {
-            background: #202020;
-        }
-
-        #messages-container::-webkit-scrollbar::-webkit-scrollbar-thumb {
-            background-color: #666;
-            border-radius: 3px;
+            padding: 1rem;
         }
 
         .message {
-            margin-bottom: 15px;
-            padding: 12px 18px;
-            border-radius: 18px;
-            clear: both;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
             word-wrap: break-word;
-            max-width: 90%;
-            display: inline-block;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease;
+            max-width: 80%;
         }
 
         .user-message {
-            background-color: var(--message-user-background-color);
-            color: #fff;
+            background-color: var(--message-background);
             align-self: flex-end;
-            float: right;
-            border-top-right-radius: 6px;
-            border-bottom-right-radius: 18px;
         }
 
         .ai-message {
-            background-color: var(--message-ai-background-color);
-            color: var(--text-color);
+            background-color: var(--message-background);
             align-self: flex-start;
-            float: left;
-            border-top-left-radius: 6px;
-            border-bottom-left-radius: 18px;
         }
 
-        .ai-message .ai-message-text {
-            font-family: 'Arial', sans-serif;
-            font-weight: 400;
-            line-height: 1.7;
-            white-space: pre-line;
-            font-size: 15px;
-            transition: color 0.3s ease;
-        }
-
-        .markdown-bold-uppercase {
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            color: #f0f0f0;
-            opacity: 1;
-            transition: color 0.3s ease;
-        }
-
-        .input-area {
-            padding: 14px 20px;
-            background-color: var(--input-area-background-color);
-            border-top: 1px solid #444;
+        #input-area {
+            padding: 1rem;
+            background-color: #2a2b2e;
+            border-top: 1px solid #333;
             display: flex;
             align-items: center;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            box-sizing: border-box;
-            padding-left: 20px;
-            padding-right: 20px;
-            z-index: 100;
-            border-bottom-left-radius: 18px;
-            border-bottom-right-radius: 18px;
-            border-top: 1px solid #444;
-            transition: background-color 0.3s ease;
-            padding-bottom: max(14px, env(safe-area-inset-bottom));
         }
 
-        .input-area textarea {
-            flex-grow: 1;
-            padding: 10px 14px;
+        #message-input {
+            flex: 1;
+            padding: 0.75rem;
             border: none;
-            border-radius: 12px;
-            font-size: 15px;
-            background-color: var(--input-text-background-color);
-            color: #fff;
+            border-radius: 0.3rem;
+            background-color: var(--input-background);
+            color: var(--text-color);
             resize: none;
-            min-height: 40px;
-            overflow-y: auto;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
-            transition: background-color 0.3s ease, color 0.3s ease;
+            margin-right: 0.5rem;
         }
 
-        .input-area textarea:focus {
-            border-color: var(--button-primary-color);
-            outline: none;
-            box-shadow: 0 0 6px rgba(30, 136, 229, 0.7);
-        }
-
-        .input-area button {
-            padding: 12px 20px;
-            background-color: var(--button-primary-color);
+        #send-button {
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 0.3rem;
+            padding: 0.75rem 1.25rem;
             cursor: pointer;
-            font-size: 15px;
-            margin-left: 14px;
-            transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
+            transition: background-color 0.2s;
         }
 
-        .input-area button:hover {
-            background-color: var(--button-primary-hover-color);
-            transform: scale(1.02);
+        #send-button:hover {
+            background-color: #096635;
         }
 
-        .file-upload-button {
-            background-color: #444;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 1em;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 14px;
-            opacity: 0.8;
-            transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.2s ease,
-                border-radius 0.3s ease;
+        pre {
+            background-color: #303134;
+            color: #f0f0f0;
+            padding: 0.75rem;
+            border-radius: 0.3rem;
+            overflow-x: auto;
         }
 
-        .file-upload-button:hover {
-            opacity: 1;
-            background-color: #555;
-            transform: scale(1.02);
+        code {
+            font-family: monospace;
         }
-
-
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 240px;
-            height: 100%;
-            background-color: var(--sidebar-background-color);
-            color: var(--sidebar-text-color);
-            transform: translateX(-100%);
-            transition: transform 0.3s ease, background-color 0.3s ease;
-            z-index: 200;
-            padding-top: 60px;
-            box-shadow: 4px 0 8px rgba(0, 0, 0, 0.3);
-            overflow-y: auto;
-            touch-action: manipulation;
-            border-right: 1px solid #444;
-            backdrop-filter: blur(8px);
-        }
-
-        .sidebar.sidebar--open {
-            transform: translateX(0);
-        }
-
-        .sidebar-header {
-            padding: 24px 20px;
-            text-align: center;
-            border-bottom: 1px solid #444;
-            margin-bottom: 25px;
-            transition: background-color 0.3s ease, border-bottom-color 0.3s ease;
-        }
-
-        .sidebar-menu {
-            padding: 0;
-            list-style: none;
-        }
-
-        .sidebar-menu-item {
-            padding: 16px 20px;
-            cursor: pointer;
-            transition: background-color 0.2s ease, border-bottom-color 0.3s ease, color 0.3s ease,
-                padding-left 0.2s ease;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid transparent;
-        }
-
-        .sidebar-menu-item:active {
-            background-color: #333;
-        }
-
-
-        .sidebar-menu-item:hover {
-            background-color: #303030;
-            border-bottom-color: var(--button-primary-color);
-            padding-left: 26px;
-        }
-
-        .sidebar-menu-item.has-submenu>.menu-link::after {
-            content: '>';
-            float: right;
-            margin-left: 10px;
-            font-size: 0.85em;
-            display: inline-block;
-            color: #aaa;
-        }
-
-        .submenu {
-            list-style: none;
-            padding-left: 0;
-            margin: 0;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35);
-            background-color: #282828;
-            margin-top: 10px;
-            max-height: 0;
-            opacity: 0;
-            transition: max-height 0.3s ease-out, opacity 0.2s ease-out, background-color 0.3s ease,
-                margin-top 0.2s ease;
+        .CodeMirror {
+            border: 1px solid #eee;
+            height: auto;
+          }
+          .CodeMirror-scroll {
             overflow-y: hidden;
-            padding-top: 0;
-            padding-bottom: 0;
-        }
+            overflow-x: auto;
+          }
 
-        .submenu.open {
-            display: block;
-            max-height: 500px;
-            opacity: 1;
-            overflow-y: auto;
-            padding-top: 10px;
-            padding-bottom: 14px;
-            margin-top: 12px;
-        }
+          .CodeMirror pre {
+             border-radius: 0;
+          }
 
-
-        .submenu-item {
-            padding: 14px 20px;
-            cursor: pointer;
-            transition: background-color 0.2s ease, color 0.3s ease, padding-left 0.2s ease;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #333;
-        }
-
-        .submenu-item:active {
-            background-color: #333;
-        }
-
-
-        .submenu-item:last-child {
-            border-bottom: none;
-        }
-
-
-        .submenu-item:hover {
-            background-color: #303030;
-            padding-left: 26px;
-        }
-
-        .history-name {
-            flex-grow: 1;
-            transition: color 0.3s ease;
-            opacity: 0.85;
-        }
-
-        .delete-history-btn {
-            background: transparent;
-            border: none;
-            color: #999;
-            cursor: pointer;
-            font-size: 0.9em;
-            padding: 0 8px;
-            opacity: 0.6;
-            transition: opacity 0.2s ease, color 0.2s ease;
-        }
-
-        .delete-history-btn:hover {
-            opacity: 1;
-            color: #ccc;
-        }
-
-        .sidebar-toggle-button {
-            position: fixed;
-            top: 25px;
-            left: 25px;
-            background: var(--button-primary-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            z-index: 300;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
-        }
-
-        .sidebar-toggle-button:hover {
-            background-color: var(--button-primary-hover-color);
-            transform: scale(1.03);
-        }
-
-        .sidebar-toggle-button:active {
-            transform: scale(0.97);
-            opacity: 0.9;
-        }
-
-        .sidebar-overlay {
+           .modal {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
-            z-index: 150;
-            display: none;
-            opacity: 0;
-            transition: opacity 0.3s ease, background-color 0.3s ease;
-
-        }
-
-        .sidebar-overlay.sidebar--open {
-            display: block;
-            opacity: 1;
-        }
-
-        .close-history-menu-btn,
-        .close-settings-menu-btn,
-        .modal-button {
-            padding: 12px 20px;
-            background-color: var(--button-primary-color);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            margin-top: 18px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
-        }
-
-        .close-history-menu-btn:hover,
-        .close-settings-menu-btn:hover,
-        .modal-button.confirm:hover {
-            background-color: var(--button-primary-hover-color);
-            transform: scale(1.02);
-        }
-
-        .close-history-menu-btn:active,
-        .close-settings-menu-btn:active,
-        .modal-button.confirm:active {
-            transform: scale(0.97);
-            opacity: 0.9;
-        }
-
-
-        .modal-button.cancel {
-            background-color: #505050;
-            color: white;
-        }
-
-        .modal-button.cancel:hover {
-            background-color: #606060;
-            transform: scale(1.02);
-        }
-
-        .modal-button.cancel:active {
-            transform: scale(0.97);
-            opacity: 0.9;
-        }
-
-
-        .custom-modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            z-index: 400;
+            z-index: 1000;
             justify-content: center;
             align-items: center;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s ease, background-color 0.3s ease;
-            backdrop-filter: blur(8px);
         }
 
-        .custom-modal-overlay.show-modal {
-            display: flex;
-            opacity: 1;
-            pointer-events: auto;
+        .modal-content {
+            background-color: var(--background-color);
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 80%;
         }
 
-
-        .custom-modal {
-            background-color: var(--modal-background-color);
-            color: #fff;
-            padding: 30px;
-            border-radius: 18px;
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
-            width: 80%;
-            max-width: 450px;
-            text-align: center;
-            border: none;
-            transform: scale(0.96);
-            opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease,
-                border-radius 0.3s ease;
-        }
-
-        .custom-modal-overlay.show-modal .custom-modal {
-            transform: scale(1);
-            opacity: 1;
-        }
-
-
-        .modal-message {
-            margin-bottom: 20px;
-            font-size: 1.1em;
-            transition: color 0.3s ease;
-            font-weight: 500;
-            opacity: 0.9;
-        }
-
-        .modal-input {
-            width: calc(100% - 20px);
-            padding: 12px 14px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            border: none;
-            background-color: var(--input-text-background-color);
-            color: #fff;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .modal-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 8px;
-        }
-
-        .modal-button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 15px;
-            transition: background-color 0.3s ease, transform 0.2s ease, border-radius 0.3s ease;
-            border: none;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-        }
-
-        code[class*="language-"],
-        pre[class*="language-"] {
-            color: #abb2bf;
-            background-color: #2e3440;
-            position: relative;
-            overflow-x: auto;
-            padding: 1.25em 1.5em;
-            border-radius: 12px;
-            margin-bottom: 18px;
-            z-index: 1;
-            font-size: 14px;
-            border: 1px solid #444;
-        }
-
-        .code-block-wrapper {
-            /* Wrapper for code block elements */
-            position: relative;
-        }
-
-        .copy-code-button {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            background-color: rgba(255, 255, 255, 0.08);
-            color: #ddd;
-            border: 1px solid #666;
-            border-radius: 8px;
-            padding: 5px 8px;
-            font-size: 0.75em;
-            cursor: pointer;
-            opacity: 0.7;
-            transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease,
-                border-color 0.2s ease;
-            z-index: 2;
-        }
-
-        .copy-code-button:hover {
-            opacity: 1;
-            background-color: rgba(30, 136, 229, 0.2);
-            color: white;
-            border-color: var(--button-primary-color);
-        }
-
-        .copy-success-notification-inline {
-            position: absolute;
-            bottom: 10px;
-            left: 60px;
-            /* Adjust position to be next to copy button */
-            color: #4CAF50;
-            font-size: 0.8em;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            white-space: nowrap;
-            /* Prevent text wrapping */
-        }
-
-        .copy-success-notification-inline.show {
-            opacity: 1;
-        }
-
-
-        pre[class*="language-"] {
-            position: relative;
-            z-index: 0;
-        }
-
-        /* Success Notification Styles - Top of message container - Removed as Inline is used now */
-        .copy-success-notification {
-            display: none;
-            /* Hide the top notification */
-        }
-
-
-        /* Settings Styles */
-        .setting-item .toggle-switch .slider {
-            background-color: #666;
-        }
-
-        .setting-item .toggle-switch input:checked+.slider {
-            background-color: var(--button-primary-color);
-        }
-
-        .setting-item {
-            padding: 14px 20px;
-        }
-
-        .setting-item:hover {
-            background-color: #303030;
-            padding-left: 26px;
-        }
-
-        .setting-label {
-            opacity: 0.9;
+        .modal-content h2 {
+            margin-bottom: 10px;
         }
     </style>
-
 </head>
 
 <body>
 
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h3>Lịch sử & Cài đặt</h3>
-        </div>
-        <ul class="sidebar-menu">
-            <li class="sidebar-menu-item" onclick="startNewChat()">
-                <span class="menu-link">Đoạn chat mới</span>
-            </li>
-            <li class="sidebar-menu-item" onclick="openSaveHistoryModal()">
-                <span class="menu-link">Lưu đoạn chat này</span>
-            </li>
-            <li class="sidebar-menu-item has-submenu" onclick="toggleHistoryMenu()">
-                <span class="menu-link">Lịch sử đã lưu</span>
-            </li>
-            <li class="sidebar-menu-item has-submenu" onclick="toggleSettingsMenu()">
-                <span class="menu-link">Cài đặt</span>
-            </li>
-        </ul>
+    <div id="app">
 
-        <ul class="submenu" id="saved-histories-menu">
-            <button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>
-        </ul>
+        <aside id="sidebar">
+            <h2>Menu</h2>
+            <ul>
+                <li data-action="new-chat"> <i class="fa fa-plus"></i> New Chat</li>
+                <li data-action="save-chat"> <i class="fa fa-save"></i> Save Chat</li>
+                <li data-action="history"> <i class="fa fa-history"></i> History</li>
+                <li data-action="settings"> <i class="fa fa-cog"></i> Settings</li>
+            </ul>
+        </aside>
 
-        <ul class="submenu" id="settings-menu">
-            <button class="close-settings-menu-btn" onclick="toggleSettingsMenu()">Đóng</button>
-            <li class="setting-item">
-                <span class="setting-label">Tự động lưu lịch sử</span>
-                <span class="setting-control">
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="autoSaveHistoryToggle">
-                        <span class="slider"></span>
-                    </label>
-                </span>
-            </li>
-            <li class="setting-item">
-                <span class="setting-label">Tên lịch sử là câu hỏi đầu</span>
-                <span class="setting-control">
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="useFirstMessageAsNameToggle">
-                        <span class="slider"></span>
-                    </label>
-                </span>
-            </li>
-            <li class="setting-item">
-                <span class="setting-label">Màu nền</span>
-                <span class="setting-control">
-                    <input type="color" id="backgroundColorPicker" class="color-picker-input" value="#1e1e1e">
-                </span>
-            </li>
-            <li class="setting-item">
-                <span class="setting-label">Màu chữ</span>
-                <span class="setting-control">
-                    <input type="color" id="textColorPicker" class="color-picker-input" value="#e0e0e0">
-                </span>
-            </li>
-            <li class="setting-item">
-                <span class="setting-label">Màu nền hộp chat</span>
-                <span class="setting-control">
-                    <input type="color" id="containerColorPicker" class="color-picker-input" value="#282828">
-                </span>
-            </li>
-            <li class="setting-item" style="justify-content: center; border-bottom: none; padding-top: 20px;">
-                <button class="modal-button confirm" onclick="saveSettingsAndApplyTheme()">Lưu cài đặt</button>
-                <button class="modal-button cancel" onclick="resetTheme()">Hoàn tác</button>
-            </li>
-        </ul>
-
-
-        <div class="custom-modal-overlay" id="saveHistoryModalOverlay">
-            <div class="custom-modal">
-                <p class="modal-message">Nhập tên cho đoạn chat này:</p>
-                <input type="text" id="historyNameInput" class="modal-input" placeholder="Tên lịch sử">
-                <div class="modal-buttons">
-                    <button class="modal-button confirm" onclick="saveHistoryWithInputName()">Lưu</button>
-                    <button class="modal-button cancel" onclick="closeSaveHistoryModal()">Huỷ</button>
-                </div>
+        <div id="chat-view">
+            <div id="messages">
+                <!-- Messages will be rendered here -->
+            </div>
+            <div id="input-area">
+                <textarea id="message-input" placeholder="Send a message"></textarea>
+                <button id="send-button">Send</button>
             </div>
         </div>
+    </div>
 
-        <div class="custom-modal-overlay" id="deleteHistoryModalOverlay">
-            <div class="custom-modal">
-                <p class="modal-message" id="deleteConfirmationMessage">Bạn có chắc chắn muốn xóa lịch sử chat "<span
-                        id="historyNameToDelete"></span>" không?</p>
-                <div class="modal-buttons">
-                    <button class="modal-button confirm" onclick="confirmDeleteHistory()">Xóa</button>
-                    <button class="modal-button cancel" onclick="closeDeleteHistoryModal()">Huỷ</button>
-                </div>
-            </div>
+    <div id="modal" class="modal">
+        <div id="modal-content" class="modal-content">
         </div>
-
-    </aside>
-
-    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
-
-    <button class="sidebar-toggle-button" onclick="toggleSidebar()">
-        <i class="fas fa-bars"></i>
-    </button>
-
-    <div class="container" id="container">
-        <h1>AI Hiện Đại với Gemini</h1>
-
-        <div id="messages-container">
-            <!-- Messages will be appended here -->
-        </div>
-
-        <div class="input-area">
-            <button class="file-upload-button" onclick="triggerFileUpload()">
-                <i class="fas fa-paperclip"></i>
-            </button>
-            <textarea id="user-prompt" placeholder="Nhập tin nhắn"></textarea>
-            <button onclick="getGeminiResponse()">Gửi</button>
-        </div>
-        <input type="file" id="file-upload" style="display:none" multiple onchange="handleFileUpload(this.files)">
     </div>
 
 
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script>
-        hljs.highlightAll();
-
-        const apiKey = 'AIzaSyAd9p1hXhUcRx4Pz7EmbUKC-V8ULN8L61Q';
-        const geminiAPIUrl =
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
-        const systemPrompt =
-            "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác.\n\nKhi bạn trả lời câu hỏi về code, hãy đảm bảo rằng code được đặt trong các khối code markdown, cú pháp ```[language]\n[code]\n```. Hãy tự động xác định ngôn ngữ lập trình nếu không được chỉ định rõ ràng.  Ví dụ:\n\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\n\nhoặc:\n\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\n\nĐối với văn bản thông thường, hãy sử dụng markdown để tăng cường cấu trúc và dễ đọc. Sử dụng các tiêu đề, danh sách, **in đậm**, *in nghiêng* khi phù hợp. Chú ý đến việc xuống dòng và tạo khoảng trống hợp lý để văn bản có cấu trúc tốt hơn.";
-
-
-        let conversationHistory = [];
-        let savedHistories = {};
-        let historyNameToDelete = null;
-        let autoSaveHistory = true;
-        let useFirstMessageAsName = false;
-
-        let currentBackgroundColor = '#1e1e1e';
-        let currentTextColor = '#e0e0e0';
-        let currentContainerColor = '#282828';
-
-        const defaultBackgroundColor = '#1e1e1e';
-        const defaultTextColor = '#e0e0e0';
-        const defaultContainerColor = '#282828';
-
-        let currentHistoryName = null;
-
-
-        document.body.addEventListener('click', async (event) => {
-            if (event.target.classList.contains('copy-code-button')) {
-                const codeBlockWrapper = event.target.closest('.code-block-wrapper');
-                const codeElement = codeBlockWrapper.querySelector('code');
-                const notificationInline = codeBlockWrapper.querySelector('.copy-success-notification-inline');
-
-                if (codeElement) {                    try {
-                        await navigator.clipboard.writeText(codeElement.textContent);
-                        showCopyNotificationInline(notificationInline);
-                    } catch (err) {
-                        console.error('Failed to copy code: ', err);
-                        alert('Failed to copy code.');
+          // Initialize Marked.js with syntax highlighting
+        marked.setOptions({
+            breaks: true,
+            highlight: function (code, lang) {
+                if (lang && hljs.getLanguage(lang)) {
+                    try {
+                        return hljs.highlight(code, { language: lang, ignoreIllegals: true }).value;
+                    } catch (__) {
+                        console.log("error highlighting")
                     }
                 }
-            }
+                return "";
+            },
+            langPrefix: 'hljs language-',
+            gfm: true,
+            sanitize: false,
         });
 
-        function showCopyNotificationInline(notificationElement) {
-            notificationElement.classList.add('show');
-            setTimeout(() => {
-                notificationElement.classList.remove('show');
-            }, 2000);
+        // Single State Object
+        const state = {
+            chatHistory: [],
+            API_KEY: 'AIzaSyAd9p1hXhUcRx4Pz7EmbUKC-V8ULN8L61Q', // Your existing API key
+            MODEL_NAME: 'gemini-2.0-flash-exp',// Your existing model Name
+            SYSTEM_PROMPT: "You are a helpful AI assistant...", // Your system prompt
+            autoSaveHistory: true,
+        };
+
+        // API Function
+        async function getGeminiResponse(promptContents) {
+            const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${state.MODEL_NAME}:generateContent?key=${state.API_KEY}`;
+            try {
+                const response = await fetch(GEMINI_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: promptContents
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status} - ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error("API Error:", error);
+                throw error;
+            }
         }
 
+        // Chat Functions
+        async function sendMessage(messageText) {
+            const userMessage = {
+                role: 'user',
+                content: messageText
+            };
+            state.chatHistory.push(userMessage);
+            updateChat();
 
-        function showCopyNotification() {
-            const notification = document.getElementById('copyNotification');
-            notification.classList.add('show');
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 2000);
+            const promptContents = state.chatHistory.map(message => ({
+                role: message.role,
+                parts: [{
+                    text: message.content
+                }]
+            }));
+            promptContents.unshift({
+                role: 'user',
+                parts: [{
+                    text: state.SYSTEM_PROMPT
+                }]
+            });
+
+            try {
+                const data = await getGeminiResponse(promptContents);
+
+                if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
+                    const aiResponseText = data.candidates[0].content.parts[0].text;
+                    const aiMessage = {
+                        role: 'model',
+                        content: aiResponseText
+                    };
+                    state.chatHistory.push(aiMessage);
+                } else {
+                    // Handle no valid response
+                    console.warn("No valid response from AI.");
+                }
+            } catch (error) {
+                // Handle error
+                console.error("Error getting AI response:", error);
+            } finally {
+                updateChat();
+                saveChatHistory();
+
+            }
         }
 
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const container = document.getElementById('container');
-            const overlay = document.getElementById('sidebar-overlay');
-            sidebar.classList.toggle('sidebar--open');
-            container.classList.toggle('container.sidebar-open');
-            overlay.classList.toggle('sidebar--open');
-            if (sidebar.classList.contains('sidebar--open')) {
-                loadSavedHistoriesList();
-            } else {
-                hideHistoryMenu();
-                hideSettingsMenu();
+        function updateChat() {
+            const messagesElement = document.getElementById('messages');
+            messagesElement.innerHTML = '';
+
+            state.chatHistory.forEach(message => {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
+                messageDiv.innerHTML = renderMarkdown(message.content);
+                messagesElement.appendChild(messageDiv);
+            });
+            messagesElement.scrollTop = messagesElement.scrollHeight;
+            hljs.highlightAll();
+        }
+
+        function saveChatHistory() {
+            if (state.autoSaveHistory) {
+                localStorage.setItem('chatHistory', JSON.stringify(state.chatHistory));
             }
         }
 
         function loadChatHistory() {
-            if (autoSaveHistorySetting()) {
-                const storedHistory = localStorage.getItem('chatHistory');
-                if (storedHistory) {
-                    conversationHistory = JSON.parse(storedHistory);
-                    renderMessages();
-                }
-            }
+            const storedHistory = localStorage.getItem('chatHistory');
+            state.chatHistory = storedHistory ? JSON.parse(storedHistory) : [];
+            updateChat(); // Initial render
         }
 
-        function saveChatHistory() {
-            if (autoSaveHistorySetting()) {
-                localStorage.setItem('chatHistory', JSON.stringify(conversationHistory));
-            }
-        }
-
-        function renderMessages() {
-            const messagesContainer = document.getElementById('messages-container');
-            messagesContainer.innerHTML = ``; // Clear messages
-            conversationHistory.forEach(message => {
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
-                let messageText = message.parts[0].text;
-
-                if (message.role === 'ai') {
-                    // Split the response into parts, considering the code block markers
-                    const parts = messageText.split(/(\`\`\`[a-zA-Z]*\n[\s\S]*?\`\`\`)/g);
-
-                    let formattedResponse = '';
-
-                    for (const part of parts) {
-                        if (part.startsWith('```') && part.endsWith('```')) {
-                            // Extract language and code
-                            const codeContent = part.slice(3, -3).trim();
-                            const languageMatch = codeContent.startsWith('\n') ? null : codeContent.split('\n')[0].match(/^([a-zA-Z]+)?/);
-                            const language = languageMatch && languageMatch[1] ? languageMatch[1] : '';
-                            const code = language ? codeContent.slice(language.length).trim() : codeContent;
-                            formattedResponse += `<div class="code-block-wrapper"><pre><code class="language-${language}">${code}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button><span class="copy-success-notification-inline">Đã sao chép!</span></pre></div>`;
-                        } else {
-                            // Escape HTML to prevent execution
-                            formattedResponse += escapeHtml(part);
-                        }
-                    }
-
-                    aiMessageDiv.innerHTML = `<span class="ai-message-text">${formattedResponse}</span>`;
-
-                } else {
-                    messageDiv.innerHTML = messageText;
-                }
-                messagesContainer.appendChild(messageDiv);
-            });
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            hljs.highlightAll(); // Re-highlight after rendering new messages
+        function renderMarkdown(text) {
+            return marked.parse(escapeHtml(text));
         }
 
         // Helper function to escape HTML
@@ -955,456 +358,151 @@
             });
         }
 
+        function showModal(content) {
+            const modal = document.getElementById('modal');
+            const modalContent = document.getElementById('modal-content');
+            modalContent.innerHTML = content;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.style.display = 'none';
+        }
+
+        function showHistoryModal() {
+            const history = JSON.parse(localStorage.getItem("chatHistory") || "[]");
+            let historyContent = "<h2>Chat History</h2>";
+            if (history.length === 0) {
+                historyContent += "<p>No history found.</p>";
+            } else {
+                 historyContent += "<ol>";
+                 history.forEach(item => {
+                      historyContent += `<li>${escapeHtml(item.content)}</li>`
+                 })
+                 historyContent += "</ol>";
+            }
+             historyContent += '<button onclick="closeModal()">Close</button>';
+            showModal(historyContent);
+        }
+
+
+        function showSettingsModal() {
+            let settingsContent = `
+                <h2>Settings</h2>
+                <label>
+                    Auto Save History:
+                    <input type="checkbox" id="autoSaveToggle" ${state.autoSaveHistory ? 'checked' : ''}>
+                </label>
+                <button onclick="saveSettings()">Save Settings</button>
+                <button onclick="closeModal()">Close</button>
+            `;
+            showModal(settingsContent);
+
+             document.getElementById('autoSaveToggle').addEventListener('change', function() {
+                  state.autoSaveHistory = this.checked;
+             });
+
+        }
+
+         function saveSettings() {
+            localStorage.setItem("autoSaveHistory", state.autoSaveHistory);
+             closeModal();
+        }
+
+
+
+        // UI Setup
+        document.addEventListener('DOMContentLoaded', () => {
+            loadChatHistory();
+            state.autoSaveHistory = localStorage.getItem("autoSaveHistory") === "true";
+            const sendButton = document.getElementById('send-button');
+            const messageInput = document.getElementById('message-input');
+
+            sendButton.addEventListener('click', () => {
+                const messageText = messageInput.value.trim();
+                if (messageText) {
+                    messageInput.value = '';
+                    sendMessage(messageText);
+                }
+            });
+
+            messageInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
+                    sendButton.click();
+                }
+            });
+
+
+            document.querySelectorAll('#sidebar li').forEach(item => {
+                item.addEventListener('click', () => {
+                    const action = item.dataset.action;
+                    handleMenuAction(action);
+                });
+            });
+
+            function handleMenuAction(action) {
+                switch (action) {
+                    case 'new-chat':
+                        startNewChat();
+                        break;
+                    case 'save-chat':
+                        saveChat();
+                        break;
+                    case 'history':
+                        showHistoryModal();
+                        break;
+                    case 'settings':
+                        showSettingsModal();
+                        break;
+                }
+            }
+
+        });
 
         function startNewChat() {
-            if (currentHistoryName) {
-                savedHistories[currentHistoryName] = [...conversationHistory];
-                localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-            }
-            conversationHistory = [];
+            state.chatHistory = [];
+            updateChat();
             saveChatHistory();
-            renderMessages();
-            currentHistoryName = null;
-            toggleSidebar();
         }
 
-
-        function openSaveHistoryModal() {
-            document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
-            document.getElementById('historyNameInput').value = '';
-
-            if (useFirstMessageAsNameSetting() && conversationHistory.length > 0 && conversationHistory[0].role ===
-                'user') {
-                document.getElementById('historyNameInput').value = conversationHistory[0].parts[0].text.substring(0,
-                    50);
-            }
-        }
-
-        function closeSaveHistoryModal() {
-            document.getElementById('saveHistoryModalOverlay').classList.remove('show-modal');
-        }
-
-        function saveHistoryWithInputName() {
-            let historyName = document.getElementById('historyNameInput').value.trim();
-            if (!historyName) {
-                if (useFirstMessageAsNameSetting() && conversationHistory.length > 0 && conversationHistory[0].role ===
-                    'user') {
-                    historyName = conversationHistory[0].parts[0].text.substring(0, 50) || 'No Title';
-                } else {
-                    alert("Vui lòng nhập tên cho lịch sử chat.");
-                    return;
-                }
-            }
-
-            savedHistories[historyName] = [...conversationHistory];
-            localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-            alert(`Lịch sử chat đã được lưu với tên: ${historyName}`);
-            loadSavedHistoriesList();
-            closeSaveHistoryModal();
-            currentHistoryName = historyName;
+        function saveChat() {
+            // TO DO
+            alert("Save chat history feature is not implemented yet");
 
         }
-
-        function openDeleteHistoryModal(name) {
-            historyNameToDelete = name;
-            document.getElementById('historyNameToDelete').textContent = name;
-            document.getElementById('deleteHistoryModalOverlay').classList.add('show-modal');
-        }
-
-        function closeDeleteHistoryModal() {
-            document.getElementById('deleteHistoryModalOverlay').classList.remove('show-modal');
-            historyNameToDelete = null;
-        }
-
-        function confirmDeleteHistory() {
-            if (historyNameToDelete) {
-                deleteSavedHistory(historyNameToDelete);
-            }
-            closeDeleteHistoryModal();
-        }
-
-
-        function deleteSavedHistory(historyName) {
-            delete savedHistories[historyName];
-            localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-            loadSavedHistoriesList();
-            alert(`Lịch sử chat "${historyName}" đã bị xóa.`);
-            if (currentHistoryName === historyName) {
-                currentHistoryName = null;
-            }
-
-        }
-
-
-        function loadChatHistoryByName(historyName) {
-            if (savedHistories[historyName]) {
-                conversationHistory = [...savedHistories[historyName]];
-                saveChatHistory();
-                renderMessages();
-                toggleHistoryMenu();
-                toggleSidebar();
-                currentHistoryName = historyName;
-
+        function showHistoryModal() {
+            let historyContent = "<h2>Chat History</h2>";
+            if (state.chatHistory.length === 0) {
+                historyContent += "<p>No history found.</p>";
             } else {
-                alert("Không tìm thấy lịch sử chat đã lưu.");
-            }
-        }
-
-
-        function toggleHistoryMenu() {
-            const submenu = document.getElementById('saved-histories-menu');
-            submenu.classList.toggle('open');
-            hideSettingsMenu();
-        }
-
-        function hideHistoryMenu() {
-            const submenu = document.getElementById('saved-histories-menu');
-            submenu.classList.remove('open');
-        }
-
-        function toggleSettingsMenu() {
-            const submenu = document.getElementById('settings-menu');
-            submenu.classList.toggle('open');
-            hideHistoryMenu();
-        }
-
-        function hideSettingsMenu() {
-            const submenu = document.getElementById('settings-menu');
-            submenu.classList.remove('open');
-        }
-
-
-        function loadSavedHistoriesList() {
-            const historiesMenu = document.getElementById('saved-histories-menu');
-            historiesMenu.innerHTML =
-                '<button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>';
-
-            const storedSavedHistories = localStorage.getItem('savedHistories');
-            if (storedSavedHistories) {
-                savedHistories = JSON.parse(storedSavedHistories);
-            } else {
-                savedHistories = {};
-            }
-
-            if (Object.keys(savedHistories).length === 0) {
-                const noHistoryItem = document.createElement('li');
-                noHistoryItem.classList.add('submenu-item');
-                noHistoryItem.textContent = "Chưa có lịch sử nào được lưu.";
-                historiesMenu.appendChild(noHistoryItem);
-                return;
-            }
-
-            for (const historyName in savedHistories) {
-                const historyItem = document.createElement('li');
-                historyItem.classList.add('submenu-item');
-
-                const nameSpan = document.createElement('span');
-                nameSpan.classList.add('history-name');
-                nameSpan.textContent = historyName;
-                nameSpan.onclick = () => loadChatHistoryByName(historyName);
-
-                const deleteButton = document.createElement('button');
-                deleteButton.classList.add('delete-history-btn');
-                deleteButton.textContent = '...';
-                deleteButton.onclick = (event) => {
-                    event.stopPropagation();
-                    openDeleteHistoryModal(historyName);
-                };
-
-                historyItem.appendChild(nameSpan);
-                historyItem.appendChild(deleteButton);
-                historiesMenu.appendChild(historyItem);
-            }
-        }
-
-
-        loadChatHistory();
-        loadSavedHistoriesList();
-        loadSettings();
-        applyTheme();
-
-
-        function triggerFileUpload() {
-            document.getElementById('file-upload').click();
-        }
-
-        function handleFileUpload(files) {
-            if (files && files.length > 0) {
-                const messagesContainer = document.getElementById('messages-container');
-                const aiMessageDiv = document.createElement('div');
-                aiMessageDiv.classList.add('message', 'ai-message');
-                aiMessageDiv.innerHTML = `<span class="ai-message-text">Đang tải tệp...</span>`;
-                messagesContainer.appendChild(aiMessageDiv);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-                let fileNames = Array.from(files).map(file => file.name).join(', ');
-                const userMessage = `Tệp đã tải lên: ${fileNames}. Đang chờ AI xử lý...`;
-
-                const userMessageDiv = document.createElement('div');
-                userMessageDiv.classList.add('message', 'user-message');
-                userMessageDiv.textContent = userMessage;
-                messagesContainer.appendChild(userMessageDiv);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-                const userMessageObject = {
-                    role: 'user',
-                    parts: [{
-                        text: userMessage
-                    }]
-                };
-                conversationHistory.push(userMessageObject);
-                saveChatHistory();
-                renderMessages();
-
-                setTimeout(() => {
-                    aiMessageDiv.remove();
-
-                    const aiResponseDiv = document.createElement('div');
-                    aiResponseDiv.classList.add('message', 'ai-message');
-                    aiResponseDiv.innerHTML =
-                        `<span class="ai-message-text">Đã nhận được tệp: ${fileNames}. Vui lòng cho biết bạn muốn AI làm gì với tệp này.</span>`;
-                    messagesContainer.appendChild(aiResponseDiv);
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-                    const aiMessageObject = {
-                        role: 'model',
-                        parts: [{
-                            text: aiResponseDiv.innerHTML
-                        }]
-                    };
-                    conversationHistory.push(aiMessageObject);
-                    saveChatHistory();
-                    renderMessages();
-
-                }, 1500);
-            }
-        }
-
-
-        async function getGeminiResponse() {
-            const userPrompt = document.getElementById('user-prompt').value.trim();
-            const messagesContainer = document.getElementById('messages-container');
-            let aiMessageDiv = document.createElement('div');
-
-            if (!userPrompt) {
-                alert("Vui lòng nhập tin nhắn.");
-                return;
-            }
-
-            if (currentHistoryName) {
-                savedHistories[currentHistoryName] = [...conversationHistory, {
-                    role: 'user',
-                    parts: [{
-                        text: userPrompt
-                    }]
-                }];
-                localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-            }
-
-
-            const userMessageObject = {
-                role: 'user',
-                parts: [{
-                    text: userPrompt
-                }]
-            };
-            conversationHistory.push(userMessageObject);
-            saveChatHistory();
-            renderMessages();
-            document.getElementById('user-prompt').value = '';
-
-
-            aiMessageDiv.classList.add('message', 'ai-message');
-            aiMessageDiv.innerHTML = '<span class="ai-message-text">Đang suy nghĩ...</span>';
-            messagesContainer.appendChild(aiMessageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-            let promptContents = conversationHistory.map(message => ({
-                role: message.role,
-                parts: message.parts
-            }));
-            promptContents.unshift({
-                role: 'user',
-                parts: [{
-                    text: systemPrompt
-                }]
-            });
-
-
-            const payload = {
-                contents: promptContents
-            };
-
-
-            try {
-                const response = await fetch(geminiAPIUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
+                historyContent += "<ul>";
+                state.chatHistory.forEach(item => {
+                    historyContent += `<li>${escapeHtml(item.content)}</li>`;
                 });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    const errorMsg =
-                        `Lỗi API: ${response.status} - ${response.statusText} - ${errorData?.error?.message || 'No details provided'}`;
-                    console.error("Lỗi API:", errorMsg);
-                    aiMessageDiv.innerHTML = `<span class="ai-message-text">${errorMsg}</span>`;
-                    return;
-                }
-
-
-                const data = await response.json();
-                console.log("Dữ liệu phản hồi từ API:", data);
-
-                if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data
-                    .candidates[0].content.parts[0].text) {
-                    let aiResponseText = data.candidates[0].content.parts[0].text;
-                    aiMessageDiv.innerHTML = ''; // Clear the "Đang suy nghĩ..." message
-
-                    // Split the response into parts, considering the code block markers
-                    const parts = aiResponseText.split(/(\`\`\`[a-zA-Z]*\n[\s\S]*?\`\`\`)/g);
-
-                    let formattedResponse = '';
-
-                    for (const part of parts) {
-                        if (part.startsWith('```') && part.endsWith('```')) {
-                            // Extract language and code
-                            const codeContent = part.slice(3, -3).trim();
-                            const languageMatch = codeContent.startsWith('\n') ? null : codeContent.split('\n')[0].match(/^([a-zA-Z]+)?/);
-                            const language = languageMatch && languageMatch[1] ? languageMatch[1] : '';
-                            const code = language ? codeContent.slice(language.length).trim() : codeContent;
-                            formattedResponse +=
-                                `<div class="code-block-wrapper"><pre><code class="language-${language}">${code}</code><button class="copy-code-button"><i class="fas fa-copy"></i></button><span class="copy-success-notification-inline">Đã sao chép!</span></pre></div>`;
-                        } else {
-                            // Escape HTML to prevent execution
-                            formattedResponse += escapeHtml(part);
-                        }
-                    }
-
-                    aiMessageDiv.innerHTML = `<span class="ai-message-text">${formattedResponse}</span>`;
-                    const aiMessageObject = {
-                        role: 'model',
-                        parts: [{
-                            text: aiMessageDiv.innerHTML
-                        }]
-                    };
-
-                    conversationHistory.push(aiMessageObject);
-
-
-                    if (currentHistoryName) {
-                        savedHistories[currentHistoryName] = [...conversationHistory];
-                        localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-                    } else {
-                        saveChatHistory();
-                    }
-
-                    messagesContainer.appendChild(aiMessageDiv);
-
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                } else
-                    aiMessageDiv.innerHTML =
-                        `<span class="ai-message-text">Không nhận được phản hồi hợp lệ từ AI.</span>`;
-
-
-            } catch (error) {
-                console.error("Lỗi fetch:", error);
-                aiMessageDiv.innerHTML =
-                    `<span class="ai-message-text">Đã xảy ra lỗi khi kết nối đến API: ${error}</span>`;
+                historyContent += "</ul>";
             }
-            renderMessages(); // Re-render messages to apply highlighting and copy buttons to the new message
+            historyContent += '<button onclick="closeModal()">Close</button>';
+            showModal(historyContent);
         }
 
-        function loadSettings() {
-            const storedSettings = localStorage.getItem('chatSettings');
-            if (storedSettings) {
-                const settings = JSON.parse(storedSettings);
-                autoSaveHistory = settings.autoSaveHistory !== undefined ? settings.autoSaveHistory : true;
-                useFirstMessageAsName = settings.useFirstMessageAsName !== undefined ? settings.useFirstMessageAsName :
-                    false;
-                currentBackgroundColor = settings.backgroundColor || defaultBackgroundColor;
-                currentTextColor = settings.textColor || defaultTextColor;
-                currentContainerColor = settings.containerColor || defaultContainerColor;
-
-
-                document.getElementById('autoSaveHistoryToggle').checked = autoSaveHistory;
-                document.getElementById('useFirstMessageAsNameToggle').checked = useFirstMessageAsName;
-                document.getElementById('backgroundColorPicker').value = currentBackgroundColor;
-                document.getElementById('textColorPicker').value = currentTextColor;
-                document.getElementById('containerColorPicker').value = currentContainerColor;
-
-            } else {
-                document.getElementById('autoSaveHistoryToggle').checked = true;
-                document.getElementById('useFirstMessageAsNameToggle').checked = false;
-                currentBackgroundColor = defaultBackgroundColor;
-                currentTextColor = defaultTextColor;
-                currentContainerColor = defaultContainerColor;
-
-            }
-
-            document.getElementById('autoSaveHistoryToggle').addEventListener('change', function () {
-                autoSaveHistory = this.checked;
-            });
-            document.getElementById('useFirstMessageAsNameToggle').addEventListener('change', function () {
-                useFirstMessageAsName = this.checked;
-            });
-            document.getElementById('backgroundColorPicker').addEventListener('change', function () {
-                currentBackgroundColor = this.value;
-            });
-            document.getElementById('textColorPicker').addEventListener('change', function () {
-                currentTextColor = this.value;
-            });
-            document.getElementById('containerColorPicker').addEventListener('change', function () {
-                currentContainerColor = this.value;
-            });
+        function showSettingsModal() {
+          let settingsContent = `
+              <h2>Settings</h2>
+              <label>
+                  Auto Save History:
+                  <input type="checkbox" id="autoSaveToggle" ${state.autoSaveHistory ? 'checked' : ''} onchange="toggleAutoSave()">
+              </label>
+              <button onclick="closeModal()">Close</button>`;
+             showModal(settingsContent);
         }
-
-        function saveSetting(key, value) {
-            let settings = JSON.parse(localStorage.getItem('chatSettings')) || {};
-            settings[key] = value;
-            localStorage.setItem('chatSettings', JSON.stringify(settings));
-        }
-
-        function autoSaveHistorySetting() {
-            return autoSaveHistory;
-        }
-
-        function useFirstMessageAsNameSetting() {
-            return useFirstMessageAsName;
+         function toggleAutoSave() {
+            state.autoSaveHistory = !state.autoSaveHistory;
+            localStorage.setItem("autoSaveHistory", state.autoSaveHistory);
         }
 
 
-        function applyTheme() {
-            document.documentElement.style.setProperty('--background-color', currentBackgroundColor);
-            document.documentElement.style.setProperty('--text-color', currentTextColor);
-            document.documentElement.style.setProperty('--container-background-color', currentContainerColor);
-        }
-
-        function saveSettingsAndApplyTheme() {
-            saveSetting('autoSaveHistory', autoSaveHistory);
-            saveSetting('useFirstMessageAsName', useFirstMessageAsName);
-            saveSetting('backgroundColor', currentBackgroundColor);
-            saveSetting('textColor', currentTextColor);
-            saveSetting('containerColor', currentContainerColor);
-            applyTheme();
-            toggleSettingsMenu();
-            alert('Cài đặt đã được lưu và áp dụng!');
-        }
-
-        function resetTheme() {
-            currentBackgroundColor = defaultBackgroundColor;
-            currentTextColor = defaultTextColor;
-            currentContainerColor = defaultContainerColor;
-
-            document.getElementById('backgroundColorPicker').value = currentBackgroundColor;
-            document.getElementById('textColorPicker').value = currentTextColor;
-            document.getElementById('containerColorPicker').value = currentContainerColor;
-
-            applyTheme();
-            alert('Giao diện đã hoàn tác về mặc định. Nhấn "Lưu cài đặt" để lưu thay đổi.');
-        }
     </script>
 </body>
 
