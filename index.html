@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <style>
+    <style> /* Same styles as before - included for completeness */
         :root {
             --bg-color: #202123;
             --text-color: #e8eaed;
@@ -562,6 +562,9 @@
             <h3>Lịch sử Chat</h3>
         </div>
         <ul class="sidebar-menu">
+            <li class="sidebar-menu-item" onclick="startNewChat()">
+                <span class="menu-link">Bắt đầu Chat mới</span>
+            </li>
             <li class="sidebar-menu-item" onclick="openSaveHistoryModal()">
                 <span class="menu-link">Lưu lịch sử này</span>
             </li>
@@ -826,6 +829,13 @@
             }
         }
 
+        function startNewChat() {
+            conversationHistory = []; // Clear the current history
+            localStorage.removeItem('chatHistory'); // Remove stored history
+            renderMessages(); // Re-render to show empty chat
+            alert("Đã bắt đầu một cuộc trò chuyện mới.");
+        }
+
 
         loadChatHistory();
         loadSavedHistoriesList();
@@ -893,7 +903,19 @@
                     let aiResponseText = data.candidates[0].content.parts[0].text;
                     aiMessageDiv.innerHTML = ''; // Clear the "Đang suy nghĩ..." message
 
-                     // Simulate streaming effect
+                    // **Handle triple quotes for code blocks**
+                    aiResponseText = aiResponseText.replace(/'''([\s\S]*?)'''/g, (match, code) => {
+                        // Find the language if specified after the first set of triple quotes
+                        const codeParts = code.split('\n');
+                        const language = codeParts.shift().trim(); //get language
+                        const codeText = codeParts.join('\n').trim(); // Code text
+                        const languageClass = language ? `language-${language}` : 'language-plaintext'; // Construct Prism class
+
+                        // Return Prism-formatted code block
+                        return `<pre><code class="${languageClass}">${sanitizeHTML(codeText)}</code></pre>`;
+                    });
+
+                    // Simulate streaming effect
                     let index = 0;
                     const typingSpeed = 20; // milliseconds per character
                     const fullText = aiResponseText;
