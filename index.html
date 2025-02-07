@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chatbot với Gemini</title>
+    <title>AI Hiện Đại với Gemini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+
     <style>
-        /* CSS đã được cải tiến (xem bên dưới) */
+        /* General Styles */
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #262626;
-            color: #d1d5db;
+            background-color: #202123; /* Dark background */
+            color: #e8eaed; /* Light text */
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
@@ -33,16 +33,16 @@
             max-width: 1200px;
             margin: 20px auto;
             padding: 25px;
-            background-color: #333333;
+            background-color: #303134; /* Darker container */
             border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow */
             display: flex;
             flex-direction: column;
             height: 100vh;
             flex-grow: 1;
             margin-left: auto;
             transition: margin-left 0.3s ease;
-            border: 1px solid #444;
+            border: 1px solid #3e3f42;
         }
 
         .container.sidebar-open {
@@ -59,6 +59,7 @@
             border-bottom: 1px solid #444;
         }
 
+        /* Message Container Styles */
         #messages-container {
             flex-grow: 1;
             padding: 20px;
@@ -68,9 +69,9 @@
             scrollbar-width: thin;
             scrollbar-color: #555 #252525;
             padding-bottom: 70px;
-            border: 1px solid #444;
+            border: 1px solid #3e3f42; /* Added border */
             border-radius: 8px;
-            background-color: #262626;
+            background-color: #202123; /* Darker background */
         }
 
         #messages-container::-webkit-scrollbar {
@@ -94,11 +95,42 @@
             word-wrap: break-word;
             max-width: 80%;
             display: inline-block;
-            border: 1px solid #555;
+            border: 1px solid #3e3f42; /* Added border */
+            position: relative; /* For avatar positioning */
+            padding-left: 50px; /* Space for avatar */
+            min-height: 40px; /* Ensure enough height for the avatar */
+            transition: background-color 0.2s ease;
+        }
+
+        .message:hover {
+             background-color: #3e3f42;
+        }
+
+        .message .avatar {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #5f6368; /* Google-like avatar color */
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            overflow: hidden;
+        }
+
+        .message .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .user-message {
-            background-color: #4f4f4f;
+            background-color: #343541;
             color: #fff;
             align-self: flex-end;
             float: right;
@@ -106,16 +138,17 @@
         }
 
         .ai-message {
-            background-color: #595959;
-            color: #d1d5db;
+            background-color: #444654;
+            color: #e8eaed;
             align-self: flex-start;
             float: left;
             border-top-left-radius: 3px;
         }
 
+        /* Input Area Styles */
         .input-area {
             padding: 15px 20px;
-            background-color: #4f4f4f;
+            background-color: #343541;
             border-top: 1px solid #555;
             display: flex;
             align-items: center;
@@ -129,7 +162,8 @@
             z-index: 100;
             border-bottom-left-radius: 12px;
             border-bottom-right-radius: 12px;
-             border-top: 1px solid #444;
+            border-top: 1px solid #444;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
         }
 
         .input-area textarea {
@@ -138,44 +172,51 @@
             border: 1px solid #555;
             border-radius: 8px;
             font-size: 16px;
-            background-color: #595959;
+            background-color: #40414f;
             color: #fff;
             resize: none;
             min-height: 40px;
             overflow-y: auto;
             border: 1px solid #444;
+            transition: border-color 0.2s ease; /* Smooth transition */
         }
 
         .input-area textarea:focus {
-            border-color: #00bcd4;
+            border-color: #8ab4f8; /* Google-like focus color */
             outline: none;
-            box-shadow: 0 0 5px rgba(0, 188, 212, 0.5);
+            box-shadow: 0 0 5px rgba(138, 180, 248, 0.5);
         }
 
         .input-area button {
             padding: 10px 20px;
-            background-color: #00bcd4;
+            background-color: #8ab4f8; /* Google-like blue */
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
             margin-left: 10px;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition */
         }
 
         .input-area button:hover {
-            background-color: #0097a7;
+            background-color: #669df6;
+            transform: translateY(-1px); /* Slight lift on hover */
         }
 
+        .input-area button:active {
+            transform: translateY(0); /* Press effect */
+        }
+
+        /* Sidebar Styles */
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
             width: 250px;
             height: 100%;
-            background-color: #333333;
-            color: #fff;
+            background-color: #202123; /* Dark background */
+            color: #e8eaed; /* Light text */
             transform: translateX(-100%);
             transition: transform 0.3s ease;
             z-index: 200;
@@ -183,7 +224,7 @@
             box-shadow: 2px 0 5px rgba(0,0,0,0.2);
             overflow-y: auto;
             touch-action: manipulation;
-            border-right: 1px solid #444;
+            border-right: 1px solid #3e3f42;
         }
 
         .sidebar.sidebar--open {
@@ -193,9 +234,8 @@
         .sidebar-header {
             padding: 20px;
             text-align: center;
-            border-bottom: 1px solid #555;
+            border-bottom: 1px solid #3e3f42;
             margin-bottom: 20px;
-            border-bottom: 1px solid #444;
         }
 
         .sidebar-menu {
@@ -206,17 +246,16 @@
         .sidebar-menu-item {
             padding: 15px 20px;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.2s ease, transform 0.2s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid transparent;
-            transition: border-bottom-color 0.3s ease;
         }
 
         .sidebar-menu-item:hover {
-            background-color: #4f4f4f;
-             border-bottom-color: #00bcd4;
+            background-color: #3e3f42;
+            transform: translateX(2px); /* Slight slide on hover */
         }
 
         .sidebar-menu-item.has-submenu > .menu-link::after {
@@ -234,7 +273,7 @@
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            background-color: #3a3a3a;
+            background-color: #2a2b2d; /* Slightly lighter dark */
             margin-top: 5px;
             max-height: 0;
             opacity: 0;
@@ -253,24 +292,23 @@
             padding-bottom: 10px;
         }
 
-
         .submenu-item {
             padding: 12px 20px;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.2s ease, transform 0.2s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #444;
+            border-bottom: 1px solid #3e3f42;
         }
 
         .submenu-item:last-child {
             border-bottom: none;
         }
 
-
         .submenu-item:hover {
-            background-color: #4f4f4f;
+            background-color: #3e3f42;
+            transform: translateX(2px);
         }
 
         .history-name {
@@ -280,7 +318,7 @@
         .delete-history-btn {
             background: transparent;
             border: none;
-            color: #aaa;
+            color: #70757a; /* Softer color */
             cursor: pointer;
             font-size: 1em;
             padding: 0 8px;
@@ -290,14 +328,14 @@
 
         .delete-history-btn:hover {
             opacity: 1;
-            color: #fff;
+            color: #e8eaed;
         }
 
         .sidebar-toggle-button {
             position: fixed;
             top: 20px;
             left: 20px;
-            background: #00bcd4;
+            background: #8ab4f8; /* Google-like blue */
             color: white;
             border: none;
             border-radius: 50%;
@@ -308,10 +346,13 @@
             align-items: center;
             cursor: pointer;
             z-index: 300;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .sidebar-toggle-button:hover {
-            background-color: #0097a7;
+            background-color: #669df6;
+            transform: scale(1.1);
         }
 
         .sidebar-overlay {
@@ -330,7 +371,7 @@
         }
 
         .close-history-menu-btn {
-            background-color: #00bcd4;
+            background-color: #8ab4f8; /* Google-like blue */
             color: white;
             border: none;
             border-radius: 8px;
@@ -340,13 +381,15 @@
             display: block;
             margin-left: auto;
             margin-right: auto;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .close-history-menu-btn:hover {
-            background-color: #0097a7;
+            background-color: #669df6;
+            transform: translateY(-1px);
         }
 
+        /* Modal Styles */
         .custom-modal-overlay {
             display: none;
             position: fixed;
@@ -366,17 +409,16 @@
             pointer-events: auto;
         }
 
-
         .custom-modal {
-            background-color: #4f4f4f;
-            color: #fff;
+            background-color: #303134; /* Dark background */
+            color: #e8eaed; /* Light text */
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
             width: 80%;
             max-width: 400px;
             text-align: center;
-            border: 1px solid #444;
+            border: 1px solid #3e3f42;
         }
 
         .modal-message {
@@ -389,7 +431,7 @@
             margin-bottom: 15px;
             border-radius: 8px;
             border: 1px solid #555;
-            background-color: #595959;
+            background-color: #40414f;
             color: #fff;
         }
 
@@ -405,17 +447,18 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s ease;
-            border: 1px solid #444;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border: 1px solid #3e3f42;
         }
 
         .modal-button.confirm {
-            background-color: #00bcd4;
+            background-color: #8ab4f8; /* Google-like blue */
             color: white;
         }
 
         .modal-button.confirm:hover {
-            background-color: #0097a7;
+            background-color: #669df6;
+            transform: translateY(-1px);
         }
 
         .modal-button.cancel {
@@ -425,9 +468,10 @@
 
         .modal-button.cancel:hover {
             background-color: #666;
+            transform: translateY(-1px);
         }
 
-
+        /* Code Highlighting Styles (Prism.js) */
         code[class*="language-"],
         pre[class*="language-"] {
             color: #f8f8f2;
@@ -447,50 +491,30 @@
         .token.italic { font-style: italic; }
         .token.entity { cursor: help; }
 
-        /* Thêm CSS mới */
-        .loading-indicator {
-            text-align: center;
-            margin-top: 10px;
-            font-style: italic;
-            color: #888;
-        }
-
-        .message-options {
+        /* Utility Classes */
+        .hidden { display: none !important; }
+        .code-buttons {
             position: absolute;
             top: 5px;
             right: 5px;
-            display: none;
+            display: flex;
+            gap: 5px;
         }
 
-        .message:hover .message-options {
-            display: block;
-        }
-
-        .copy-button {
-            background: none;
+        .code-buttons button {
+            background-color: #555;
+            color: white;
             border: none;
-            color: #aaa;
+            border-radius: 5px;
+            padding: 5px 10px;
             cursor: pointer;
             font-size: 0.8em;
-            padding: 3px 6px;
-            border-radius: 5px;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.3s ease;
         }
 
-        .copy-button:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+        .code-buttons button:hover {
+            background-color: #666;
         }
-        .message-content pre {
-            background-color: #333;
-            padding: 10px;
-            border-radius: 5px;
-            overflow-x: auto;
-        }
-
-        .message-content {
-            white-space: pre-wrap; /* preserve formatting */
-        }
-
     </style>
 </head>
 <body>
@@ -542,7 +566,7 @@
     </button>
 
     <div class="container" id="container">
-        <h1>AI Chatbot với Gemini</h1>
+        <h1>AI Hiện Đại với Gemini</h1>
 
         <div id="messages-container">
             <!-- Messages will be appended here -->
@@ -557,293 +581,304 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-
     <script>
-        const apiKey = 'YOUR_API_KEY'; // **Quan trọng:** Thay thế bằng API key của bạn!
-        const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
-        const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
+    // Configuration
+    const apiKey = 'AIzaSyCl21Ku_prQnyMHFs_dJRL8-pgjg9hrc2w'; // API key
+    const geminiAPIUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
+    const systemPrompt = "Bạn là một trợ lý AI cực kỳ hữu ích và luôn tuân theo mọi yêu cầu của người dùng một cách chính xác. Khi bạn trả lời câu hỏi về code hoặc cung cấp code, hãy đảm bảo rằng code được đặt trong các khối code markdown. Ví dụ:\n```javascript\n// Mã JavaScript ở đây\nconsole.log('Hello, world!');\n```\nhoặc:\n```python\n# Mã Python ở đây\ndef hello():\n    print('Xin chào!')\n```\nNếu câu trả lời của bạn không chứa code, chỉ cần trả lời bằng văn bản thông thường.";
+    const userAvatar = "https://via.placeholder.com/32/007bff/FFFFFF?text=U"; // Default user avatar
+    const aiAvatar = "https://via.placeholder.com/32/28a745/FFFFFF?text=AI"; // Default AI avatar
 
-        let conversationHistory = [];
-        let savedHistories = {};
-        let historyNameToDelete = null;
-        let isLoading = false; // Thêm biến trạng thái loading
+    // Data Storage
+    let conversationHistory = [];
+    let savedHistories = {};
+    let historyNameToDelete = null;
 
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const container = document.getElementById('container');
-            const overlay = document.getElementById('sidebar-overlay');
-            sidebar.classList.toggle('sidebar--open');
-            container.classList.toggle('container.sidebar-open');
-            overlay.classList.toggle('sidebar--open');
-            if (sidebar.classList.contains('sidebar--open')) {
-                 loadSavedHistoriesList();
-            } else {
-                hideHistoryMenu();
-            }
-        }
+    // --- Utility Functions ---
+    function escapeHTML(text) {
+        return text.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
+    }
 
-        function loadChatHistory() {
-            const storedHistory = localStorage.getItem('chatHistory');
-            if (storedHistory) {
-                conversationHistory = JSON.parse(storedHistory);
-                renderMessages();
-            }
-        }
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Đã sao chép vào clipboard!');
+        }).catch(err => {
+            console.error('Không thể sao chép: ', err);
+            alert('Không thể sao chép code. Vui lòng thử lại.');
+        });
+    }
 
-        function saveChatHistory() {
-            localStorage.setItem('chatHistory', JSON.stringify(conversationHistory));
-        }
-
-       function renderMessages() {
-            const messagesContainer = document.getElementById('messages-container');
-            messagesContainer.innerHTML = '';
-            conversationHistory.forEach(message => {
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
-
-                const messageContentDiv = document.createElement('div');
-                messageContentDiv.classList.add('message-content');
-                messageContentDiv.innerHTML = message.parts[0].text;
-
-                messageDiv.appendChild(messageContentDiv);
-
-                // Thêm nút copy
-                const messageOptions = document.createElement('div');
-                messageOptions.classList.add('message-options');
-                const copyButton = document.createElement('button');
-                copyButton.classList.add('copy-button');
-                copyButton.innerHTML = '<i class="fas fa-copy"></i>';
-                copyButton.onclick = () => copyMessage(message.parts[0].text);
-                messageOptions.appendChild(copyButton);
-                messageDiv.appendChild(messageOptions);
-
-                messagesContainer.appendChild(messageDiv);
-
-                // Highlight code
-                messageContentDiv.querySelectorAll('pre code').forEach(block => {
-                    hljs.highlightBlock(block);
-                });
-            });
-             messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-
-
-        function openSaveHistoryModal() {
-            document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
-            document.getElementById('historyNameInput').value = '';
-        }
-
-        function closeSaveHistoryModal() {
-            document.getElementById('saveHistoryModalOverlay').classList.remove('show-modal');
-        }
-
-        function saveHistoryWithInputName() {
-            const historyName = document.getElementById('historyNameInput').value.trim();
-            if (historyName) {
-                savedHistories[historyName] = [...conversationHistory];
-                localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
-                alert(`Lịch sử chat đã được lưu với tên: ${historyName}`);
-                loadSavedHistoriesList();
-                closeSaveHistoryModal();
-            } else {
-                alert("Vui lòng nhập tên cho lịch sử chat.");
-            }
-        }
-
-        function openDeleteHistoryModal(name) {
-            historyNameToDelete = name;
-            document.getElementById('historyNameToDelete').textContent = name;
-            document.getElementById('deleteHistoryModalOverlay').classList.add('show-modal');
-        }
-
-        function closeDeleteHistoryModal() {
-            document.getElementById('deleteHistoryModalOverlay').classList.remove('show-modal');
-            historyNameToDelete = null;
-        }
-
-        function confirmDeleteHistory() {
-            if (historyNameToDelete) {
-                deleteSavedHistory(historyNameToDelete);
-            }
-            closeDeleteHistoryModal();
-        }
-
-
-        function deleteSavedHistory(historyName) {
-            delete savedHistories[historyName];
-            localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
+    // --- UI Functions ---
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const container = document.getElementById('container');
+        const overlay = document.getElementById('sidebar-overlay');
+        sidebar.classList.toggle('sidebar--open');
+        container.classList.toggle('container.sidebar-open');
+        overlay.classList.toggle('sidebar--open');
+        if (sidebar.classList.contains('sidebar--open')) {
             loadSavedHistoriesList();
-            alert(`Lịch sử chat "${historyName}" đã bị xóa.`);
-
+        } else {
+            hideHistoryMenu();
         }
+    }
 
+    function openSaveHistoryModal() {
+        document.getElementById('saveHistoryModalOverlay').classList.add('show-modal');
+        document.getElementById('historyNameInput').value = '';
+    }
 
-        function loadChatHistoryByName(historyName) {
-            if (savedHistories[historyName]) {
-                conversationHistory = [...savedHistories[historyName]];
-                saveChatHistory();
-                renderMessages();
-                toggleHistoryMenu();
-                toggleSidebar();
-            } else {
-                alert("Không tìm thấy lịch sử chat đã lưu.");
-            }
+    function closeSaveHistoryModal() {
+        document.getElementById('saveHistoryModalOverlay').classList.remove('show-modal');
+    }
+
+    function openDeleteHistoryModal(name) {
+        historyNameToDelete = name;
+        document.getElementById('historyNameToDelete').textContent = name;
+        document.getElementById('deleteHistoryModalOverlay').classList.add('show-modal');
+    }
+
+    function closeDeleteHistoryModal() {
+        document.getElementById('deleteHistoryModalOverlay').classList.remove('show-modal');
+        historyNameToDelete = null;
+    }
+
+    function toggleHistoryMenu() {
+        const submenu = document.getElementById('saved-histories-menu');
+        submenu.classList.toggle('open');
+    }
+
+    function hideHistoryMenu() {
+        const submenu = document.getElementById('saved-histories-menu');
+        submenu.classList.remove('open');
+    }
+
+    // --- Data Management Functions ---
+    function loadChatHistory() {
+        const storedHistory = localStorage.getItem('chatHistory');
+        if (storedHistory) {
+            conversationHistory = JSON.parse(storedHistory);
+            renderMessages();
         }
+    }
 
+    function saveChatHistory() {
+        localStorage.setItem('chatHistory', JSON.stringify(conversationHistory));
+    }
 
-        function toggleHistoryMenu() {
-            const submenu = document.getElementById('saved-histories-menu');
-            submenu.classList.toggle('open');
+    function saveHistoryWithInputName() {
+        const historyName = document.getElementById('historyNameInput').value.trim();
+        if (historyName) {
+            savedHistories[historyName] = [...conversationHistory];
+            localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
+            alert(`Lịch sử chat đã được lưu với tên: ${historyName}`);
+            loadSavedHistoriesList();
+            closeSaveHistoryModal();
+        } else {
+            alert("Vui lòng nhập tên cho lịch sử chat.");
         }
+    }
 
-        function hideHistoryMenu() {
-            const submenu = document.getElementById('saved-histories-menu');
-            submenu.classList.remove('open');
+    function confirmDeleteHistory() {
+        if (historyNameToDelete) {
+            deleteSavedHistory(historyNameToDelete);
         }
+        closeDeleteHistoryModal();
+    }
 
-
-        function loadSavedHistoriesList() {
-            const historiesMenu = document.getElementById('saved-histories-menu');
-            historiesMenu.innerHTML = '<button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>';
-
-            const storedSavedHistories = localStorage.getItem('savedHistories');
-            if (storedSavedHistories) {
-                savedHistories = JSON.parse(storedSavedHistories);
-            } else {
-                savedHistories = {};
-            }
-
-            if (Object.keys(savedHistories).length === 0) {
-                const noHistoryItem = document.createElement('li');
-                noHistoryItem.classList.add('submenu-item');
-                noHistoryItem.textContent = "Chưa có lịch sử nào được lưu.";
-                historiesMenu.appendChild(noHistoryItem);
-                return;
-            }
-
-            for (const historyName in savedHistories) {
-                const historyItem = document.createElement('li');
-                historyItem.classList.add('submenu-item');
-
-                const nameSpan = document.createElement('span');
-                nameSpan.classList.add('history-name');
-                nameSpan.textContent = historyName;
-                nameSpan.onclick = () => loadChatHistoryByName(historyName);
-
-                const deleteButton = document.createElement('button');
-                deleteButton.classList.add('delete-history-btn');
-                deleteButton.textContent = '...';
-                deleteButton.onclick = (event) => {
-                    event.stopPropagation();
-                    openDeleteHistoryModal(historyName);
-                };
-
-                historyItem.appendChild(nameSpan);
-                historyItem.appendChild(deleteButton);
-                historiesMenu.appendChild(historyItem);
-            }
-        }
-
-        function copyMessage(text) {
-            navigator.clipboard.writeText(text)
-                .then(() => {
-                    alert('Đã sao chép tin nhắn!');
-                })
-                .catch(err => {
-                    console.error('Không thể sao chép tin nhắn: ', err);
-                    alert('Không thể sao chép tin nhắn.');
-                });
-        }
-
-        loadChatHistory();
+    function deleteSavedHistory(historyName) {
+        delete savedHistories[historyName];
+        localStorage.setItem('savedHistories', JSON.stringify(savedHistories));
         loadSavedHistoriesList();
+        alert(`Lịch sử chat "${historyName}" đã bị xóa.`);
+    }
 
-
-        async function getGeminiResponse() {
-            const userPrompt = document.getElementById('user-prompt').value.trim();
-            const messagesContainer = document.getElementById('messages-container');
-
-            if (!userPrompt) {
-                alert("Vui lòng nhập tin nhắn.");
-                return;
-            }
-
-            const userMessageObject = { role: 'user', parts: [{ text: userPrompt }] };
-            conversationHistory.push(userMessageObject);
+    function loadChatHistoryByName(historyName) {
+        if (savedHistories[historyName]) {
+            conversationHistory = [...savedHistories[historyName]];
             saveChatHistory();
             renderMessages();
-            document.getElementById('user-prompt').value = '';
+            toggleHistoryMenu();
+            toggleSidebar();
+        } else {
+            alert("Không tìm thấy lịch sử chat đã lưu.");
+        }
+    }
 
+    function loadSavedHistoriesList() {
+        const historiesMenu = document.getElementById('saved-histories-menu');
+        historiesMenu.innerHTML = '<button class="close-history-menu-btn" onclick="toggleHistoryMenu()">Đóng</button>';
 
-            const aiMessageDiv = document.createElement('div');
-            aiMessageDiv.classList.add('message', 'ai-message');
+        const storedSavedHistories = localStorage.getItem('savedHistories');
+        if (storedSavedHistories) {
+            savedHistories = JSON.parse(storedSavedHistories);
+        } else {
+            savedHistories = {};
+        }
 
-             const messageContentDiv = document.createElement('div');
-                messageContentDiv.classList.add('message-content');
-                messageContentDiv.textContent = "Đang suy nghĩ...";
-            aiMessageDiv.appendChild(messageContentDiv);
+        if (Object.keys(savedHistories).length === 0) {
+            const noHistoryItem = document.createElement('li');
+            noHistoryItem.classList.add('submenu-item');
+            noHistoryItem.textContent = "Chưa có lịch sử nào được lưu.";
+            historiesMenu.appendChild(noHistoryItem);
+            return;
+        }
 
+        for (const historyName in savedHistories) {
+            const historyItem = document.createElement('li');
+            historyItem.classList.add('submenu-item');
 
-            messagesContainer.appendChild(aiMessageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            const nameSpan = document.createElement('span');
+            nameSpan.classList.add('history-name');
+            nameSpan.textContent = historyName;
+            nameSpan.onclick = () => loadChatHistoryByName(historyName);
 
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('delete-history-btn');
+            deleteButton.textContent = '...';
+            deleteButton.onclick = (event) => {
+                event.stopPropagation();
+                openDeleteHistoryModal(historyName);
+            };
+
+            historyItem.appendChild(nameSpan);
+            historyItem.appendChild(deleteButton);
+            historiesMenu.appendChild(historyItem);
+        }
+    }
+
+    // --- Message Rendering Functions ---
+    function renderMessage(message) {
+        const messagesContainer = document.getElementById('messages-container');
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
+
+        // Avatar
+        const avatarDiv = document.createElement('div');
+        avatarDiv.classList.add('avatar');
+        const avatarImg = document.createElement('img');
+        avatarImg.src = message.role === 'user' ? userAvatar : aiAvatar; // Use avatars
+        avatarDiv.appendChild(avatarImg);
+        messageDiv.appendChild(avatarDiv);
+
+        messageDiv.innerHTML += message.parts[0].text;
+        messagesContainer.appendChild(messageDiv);
+
+        Prism.highlightAllUnder(messageDiv); // Highlight code
+
+        // Add code copy buttons
+        const codeBlocks = messageDiv.querySelectorAll('pre code');
+        codeBlocks.forEach(codeBlock => {
+            const preElement = codeBlock.parentNode; // Get the <pre> element
+            const codeButtons = document.createElement('div');
+            codeButtons.classList.add('code-buttons');
+
+            const copyButton = document.createElement('button');
+            copyButton.textContent = 'Sao chép';
+            copyButton.addEventListener('click', () => {
+                copyToClipboard(codeBlock.textContent);
+            });
+            codeButtons.appendChild(copyButton);
+
+            preElement.style.position = 'relative'; // Ensure the <pre> element is positioned
+            preElement.appendChild(codeButtons); // Append to the <pre> element
+        });
+
+        messagesContainer.scrollTop = messagesContainer.scrollHeight; // Scroll to bottom
+    }
+
+    function renderMessages() {
+        const messagesContainer = document.getElementById('messages-container');
+        messagesContainer.innerHTML = ''; // Clear existing messages
+        conversationHistory.forEach(message => renderMessage(message));
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // --- Gemini API Interaction ---
+    async function getGeminiResponse() {
+        const userPrompt = document.getElementById('user-prompt').value.trim();
+        if (!userPrompt) {
+            alert("Vui lòng nhập tin nhắn.");
+            return;
+        }
+
+        const userMessageObject = { role: 'user', parts: [{ text: userPrompt }] };
+        conversationHistory.push(userMessageObject);
+        renderMessage(userMessageObject);
+        saveChatHistory();
+        document.getElementById('user-prompt').value = '';
+
+        try {
             let promptContents = conversationHistory.map(message => ({
                 role: message.role,
                 parts: message.parts
             }));
             promptContents.unshift({ role: 'user', parts: [{ text: systemPrompt }] });
 
-
             const payload = {
                 contents: promptContents
             };
 
+            const response = await fetch(geminiAPIUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
 
-            try {
-                const response = await fetch(geminiAPIUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error("Lỗi API:", errorData);
-                      messageContentDiv.textContent = `Lỗi API: ${response.status} - ${errorData.error.message || 'Không rõ nguyên nhân'}`;
-                    return;
-                }
-
-                const data = await response.json();
-                console.log("Dữ liệu phản hồi từ API:", data);
-
-                if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
-                    let aiResponseText = data.candidates[0].content.parts[0].text;
-                       messageContentDiv.innerHTML = aiResponseText;
-
-
-                    const aiMessageObject = { role: 'model', parts: [{ text: aiResponseText }] };
-                    conversationHistory.push(aiMessageObject);
-                    saveChatHistory();
-
-                      messageContentDiv.querySelectorAll('pre code').forEach(block => {
-                        hljs.highlightBlock(block);
-                    });
-
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-
-                } else {
-                   messageContentDiv.textContent = "Không nhận được phản hồi hợp lệ từ AI.";
-                }
-
-            } catch (error) {
-                console.error("Lỗi fetch:", error);
-                messageContentDiv.textContent = "Đã xảy ra lỗi khi kết nối đến API.";
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Lỗi API:", errorData);
+                const errorMessage = `Lỗi API: ${response.status} - ${errorData.error.message ||'Không rõ nguyên nhân'}`;
+                const aiMessageObject = { role: 'model', parts: [{ text: errorMessage }] };
+                conversationHistory.push(aiMessageObject);
+                renderMessage(aiMessageObject);
+                saveChatHistory();
+                return;
             }
+
+            const data = await response.json();
+            console.log("Dữ liệu phản hồi từ API:", data);
+
+            if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
+                let aiResponseText = data.candidates[0].content.parts[0].text;
+
+                const aiMessageObject = { role: 'model', parts: [{ text: aiResponseText }] };
+                conversationHistory.push(aiMessageObject);
+                renderMessage(aiMessageObject);
+                saveChatHistory();
+
+            } else {
+                const errorMessage = "Không nhận được phản hồi hợp lệ từ AI.";
+                const aiMessageObject = { role: 'model', parts: [{ text: errorMessage }] };
+                conversationHistory.push(aiMessageObject);
+                renderMessage(aiMessageObject);
+                saveChatHistory();
+            }
+
+        } catch (error) {
+            console.error("Lỗi fetch:", error);
+            const errorMessage = "Đã xảy ra lỗi khi kết nối đến API.";
+            const aiMessageObject = { role: 'model', parts: [{ text: errorMessage }] };
+            conversationHistory.push(aiMessageObject);
+            renderMessage(aiMessageObject);
+            saveChatHistory();
         }
-    </script>
+    }
+
+    // --- Initialization ---
+    window.onload = () => {
+        loadChatHistory();
+        loadSavedHistoriesList();
+
+        // Auto-resize textarea
+        const textarea = document.getElementById('user-prompt');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+    };
+</script>
 </body>
 </html>
